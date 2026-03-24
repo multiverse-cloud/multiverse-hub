@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import PublicSignInPageClient from './PublicSignInPageClient'
 
 const clerkEnabled = Boolean(
@@ -5,5 +6,9 @@ const clerkEnabled = Boolean(
 )
 
 export default function SignInPage() {
-  return <PublicSignInPageClient clerkEnabled={clerkEnabled} />
+  return (
+    <Suspense fallback={null}>
+      <PublicSignInPageClient clerkEnabled={clerkEnabled} />
+    </Suspense>
+  )
 }

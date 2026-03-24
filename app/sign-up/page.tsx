@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import PublicSignUpPageClient from './PublicSignUpPageClient'
 
 const clerkEnabled = Boolean(
@@ -5,5 +6,9 @@ const clerkEnabled = Boolean(
 )
 
 export default function SignUpPage() {
-  return <PublicSignUpPageClient clerkEnabled={clerkEnabled} />
+  return (
+    <Suspense fallback={null}>
+      <PublicSignUpPageClient clerkEnabled={clerkEnabled} />
+    </Suspense>
+  )
 }
