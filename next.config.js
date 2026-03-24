@@ -16,7 +16,6 @@ const nextConfig = {
   },
   serverExternalPackages: [
     'sharp',
-    '@imgly/background-removal-node',
     'tesseract.js',
     'fluent-ffmpeg',
     'ytdl-core',

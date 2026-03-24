@@ -17,8 +17,47 @@ async function blobToBuffer(blob: Blob): Promise<Buffer> {
   return Buffer.from(await blob.arrayBuffer())
 }
 
-async function removeBackgroundBuffer(imageBuffer: Buffer, mimeType = 'image/png'): Promise<Buffer> {
-  const { removeBackground } = await import('@imgly/background-removal-node')
+async function removeBackgroundWithApi(imageBuffer: Buffer, mimeType: string): Promise<Buffer> {
+  const apiKey = process.env.REMOVEBG_API_KEY
+
+  if (!apiKey) {
+    throw new Error('Background removal is unavailable in the hosted demo right now.')
+  }
+
+  const formData = new FormData()
+  formData.append('size', 'auto')
+  formData.append('image_file', new Blob([Uint8Array.from(imageBuffer)], { type: mimeType }), 'upload.png')
+
+  const response = await fetch('https://api.remove.bg/v1.0/removebg', {
+    method: 'POST',
+    headers: {
+      'X-Api-Key': apiKey,
+    },
+    body: formData,
+  })
+
+  if (!response.ok) {
+    const details = await response.text().catch(() => '')
+    throw new Error(details || 'Background removal failed.')
+  }
+
+  return Buffer.from(await response.arrayBuffer())
+}
+
+async function removeBackgroundWithLocalModel(imageBuffer: Buffer, mimeType: string): Promise<Buffer> {
+  const loadModule = new Function('specifier', 'return import(specifier)') as (specifier: string) => Promise<{
+    removeBackground: (
+      input: Blob,
+      options: {
+        model: string
+        output: {
+          format: string
+          quality: number
+        }
+      }
+    ) => Promise<Blob>
+  }>
+  const { removeBackground } = await loadModule('@imgly/background-removal-node')
   const result = await removeBackground(new Blob([Uint8Array.from(imageBuffer)], { type: mimeType }), {
     model: 'small',
     output: {
@@ -28,6 +67,18 @@ async function removeBackgroundBuffer(imageBuffer: Buffer, mimeType = 'image/png
   })
 
   return blobToBuffer(result)
+}
+
+async function removeBackgroundBuffer(imageBuffer: Buffer, mimeType = 'image/png'): Promise<Buffer> {
+  if (process.env.REMOVEBG_API_KEY) {
+    return removeBackgroundWithApi(imageBuffer, mimeType)
+  }
+
+  if (process.env.VERCEL) {
+    throw new Error('Background removal is unavailable in the hosted demo right now. Add REMOVEBG_API_KEY to enable it.')
+  }
+
+  return removeBackgroundWithLocalModel(imageBuffer, mimeType)
 }
 
 async function getOpaqueBounds(imageBuffer: Buffer): Promise<Bounds | null> {
