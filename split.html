@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Split PDF | The Editorial PDF Suite</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Inter:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#ffb870",
+              "surface-container": "#edeeef",
+              "error-container": "#ffdad6",
+              "tertiary": "#643900",
+              "primary": "#24389c",
+              "on-tertiary-container": "#ffc893",
+              "on-surface-variant": "#454652",
+              "on-secondary-fixed-variant": "#00497d",
+              "on-error-container": "#93000a",
+              "outline": "#757684",
+              "on-tertiary": "#ffffff",
+              "on-secondary-container": "#00355c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffdcbe",
+              "secondary-fixed": "#d1e4ff",
+              "on-primary-fixed-variant": "#293ca0",
+              "secondary-fixed-dim": "#9ecaff",
+              "surface-variant": "#e1e3e4",
+              "primary-fixed": "#dee0ff",
+              "inverse-surface": "#2e3132",
+              "on-error": "#ffffff",
+              "surface": "#f8f9fa",
+              "on-tertiary-fixed": "#2c1600",
+              "primary-fixed-dim": "#bac3ff",
+              "inverse-primary": "#bac3ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-high": "#e7e8e9",
+              "outline-variant": "#c5c5d4",
+              "on-primary-fixed": "#00105c",
+              "surface-bright": "#f8f9fa",
+              "primary-container": "#3f51b5",
+              "on-primary-container": "#cacfff",
+              "background": "#f8f9fa",
+              "surface-container-low": "#f3f4f5",
+              "on-tertiary-fixed-variant": "#693c00",
+              "surface-dim": "#d9dadb",
+              "on-secondary-fixed": "#001d36",
+              "on-background": "#191c1d",
+              "surface-container-highest": "#e1e3e4",
+              "inverse-on-surface": "#f0f1f2",
+              "error": "#ba1a1a",
+              "surface-tint": "#4355b9",
+              "secondary": "#0061a4",
+              "on-secondary": "#ffffff",
+              "secondary-container": "#33a0fd",
+              "on-surface": "#191c1d",
+              "tertiary-container": "#854d00"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8f9fa;
+        color: #191c1d;
+      }
+      h1, h2, h3 {
+        font-family: 'Manrope', sans-serif;
+      }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<main class="max-w-[1440px] mx-auto px-8 py-12 md:py-20 lg:px-24">
+<!-- Hero Header -->
+<header class="mb-16 max-w-2xl">
+<h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-primary mb-6">
+                Split PDF
+            </h1>
+<p class="text-lg md:text-xl text-on-surface-variant leading-relaxed font-light">
+                Professional-grade document precision. Architect your files by extracting, 
+                rearranging, or splitting with pixel-perfect control.
+            </p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<!-- Left Column: Controls -->
+<div class="lg:col-span-5 space-y-10">
+<!-- Upload Section -->
+<section class="group">
+<div class="relative border-2 border-dashed border-outline-variant bg-surface-container-low rounded-xl p-10 flex flex-col items-center justify-center transition-all hover:bg-surface-container-high hover:border-primary-fixed-dim">
+<span class="material-symbols-outlined text-5xl text-primary-container mb-4" data-icon="upload_file">upload_file</span>
+<h3 class="font-headline font-bold text-lg mb-2">Drop your PDF here</h3>
+<p class="text-sm text-on-surface-variant mb-6 font-medium">Files up to 100MB supported</p>
+<button class="bg-primary text-on-primary px-8 py-3 rounded-xl font-bold tracking-wide shadow-sm hover:scale-[1.02] active:scale-95 transition-all bg-gradient-to-br from-primary to-primary-container">
+                            Choose File
+                        </button>
+</div>
+</section>
+<!-- Configuration & Mode -->
+<section class="bg-surface-container-lowest p-8 rounded-xl space-y-8">
+<div>
+<label class="block font-headline font-bold text-sm uppercase tracking-widest text-on-surface-variant mb-4">Split Mode</label>
+<div class="flex p-1 bg-surface-container-low rounded-full">
+<button class="flex-1 py-2 text-sm font-bold rounded-full bg-primary text-on-primary shadow-sm">Custom Ranges</button>
+<button class="flex-1 py-2 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">Split by Pages</button>
+<button class="flex-1 py-2 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">Extract All</button>
+</div>
+</div>
+<!-- Range Selector -->
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<label class="block font-headline font-bold text-sm uppercase tracking-widest text-on-surface-variant">Range Selection</label>
+<button class="text-primary text-xs font-bold hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="add_circle">add_circle</span>
+                                Add Range
+                            </button>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none focus:ring-0 focus:bg-surface-container-lowest rounded-xl py-4 px-6 font-mono text-primary font-bold transition-all" placeholder="e.g. 1-5, 10, 15-20" type="text" value="1-5, 8-12"/>
+<div class="absolute bottom-0 left-0 h-0.5 w-full bg-primary scale-x-100 origin-left"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant font-medium tracking-wider">Use commas to separate multiple ranges or single pages.</p>
+</div>
+<!-- Action Card -->
+<div class="pt-6 border-t border-surface-container">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h4 class="font-headline font-bold text-lg">Ready to Split</h4>
+<p class="text-xs text-on-surface-variant">2 output files will be generated</p>
+</div>
+<span class="material-symbols-outlined text-3xl text-primary" data-icon="task_alt" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary rounded-xl font-headline font-black text-lg tracking-tight hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-primary/20">
+                            Process Split
+                        </button>
+</div>
+</section>
+<!-- Result Card (Mock Output) -->
+<section class="bg-surface-container-high/50 p-6 rounded-xl border-l-4 border-primary">
+<h4 class="font-headline font-bold text-sm mb-4">Generated Assets</h4>
+<div class="space-y-3">
+<div class="flex items-center justify-between bg-surface-container-lowest p-3 rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span class="text-sm font-medium">Part 1 (Pages 1-5).pdf</span>
+</div>
+<button class="p-2 hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined text-secondary" data-icon="download">download</span>
+</button>
+</div>
+<div class="flex items-center justify-between bg-surface-container-lowest p-3 rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span class="text-sm font-medium">Part 2 (Pages 8-12).pdf</span>
+</div>
+<button class="p-2 hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined text-secondary" data-icon="download">download</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Visual Preview Grid -->
+<div class="lg:col-span-7 bg-surface-container-low rounded-2xl p-8 lg:p-12 min-h-[800px]">
+<div class="flex justify-between items-end mb-10">
+<div>
+<h2 class="font-headline font-bold text-2xl mb-1">Document Preview</h2>
+<p class="text-sm text-on-surface-variant">Annual_Report_2024_Final.pdf (16 Pages)</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 bg-surface-container-lowest rounded-lg text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="zoom_in">zoom_in</span>
+</button>
+<button class="p-2 bg-surface-container-lowest rounded-lg text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="zoom_out">zoom_out</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Page 1 (Selected) -->
+<div class="relative group">
+<div class="aspect-[3/4] bg-surface-container-lowest rounded-lg shadow-sm border-2 border-primary ring-4 ring-primary/10 overflow-hidden transition-all relative">
+<img class="w-full h-full object-cover opacity-90" data-alt="Close up of professional document page with charts and clean typography in minimalist style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY_4D_LmUW9Uo6NfwfvbQeDOBb19AbDP3u3613CHzJjU5Ig3THZ6OS1BixlkEmtmDT3UQmrfMbikL3XLzxlfPOjHIBJF2hJFvPwFgPHEWnrjL4aXDfQyUdXeBv1ppd2G07CRM4v5PMTKYWwKlVIB2GeHkaT2J_u0whc54GPGmLRony7ztzRdSS2fPn7dKtxuNNVKi4Sb_X920ObNE16qvjqKx-tR2uswqLA3i0cP3vZE86J0t17wzSsS06ygIgcQrgN_dYE7tovls"/>
+<div class="absolute top-2 right-2 bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold">1</div>
+</div>
+<p class="text-center mt-3 text-xs font-bold text-primary">Page 1</p>
+</div>
+<!-- Page 2 (Selected) -->
+<div class="relative group">
+<div class="aspect-[3/4] bg-surface-container-lowest rounded-lg shadow-sm border-2 border-primary ring-4 ring-primary/10 overflow-hidden transition-all relative">
+<img class="w-full h-full object-cover opacity-90" data-alt="Minimalist layout of a technical document page with abstract geometric diagrams and soft indigo accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCttIpWlaCtMJCzSWnn1EC5LKMCaPIsexwJHGnmuxwri9Q6zhp7nMkF088Ovut_nDuQP-58e8aUqDKJgY2Hqb7hR4LpbJVv0Qjyo13jfrh4jWDsbRsYGI-7nxMwPtwnnJtoT8UguFv4Y5cYmgIji1r7I9b8NvNwPH9kkdyPHIN_21seZjNpJNukFM8xkoeihiWE2Ee2oYZQi088PLj3bEmMNfX21OTFIAwjRX3G1d2aiR8DhLteygY_8teUGXt6w4MUOjgLfHUczac"/>
+<div class="absolute top-2 right-2 bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold">2</div>
+</div>
+<p class="text-center mt-3 text-xs font-bold text-primary">Page 2</p>
+</div>
+<!-- Page 3 (Selected) -->
+<div class="relative group">
+<div class="aspect-[3/4] bg-surface-container-lowest rounded-lg shadow-sm border-2 border-primary ring-4 ring-primary/10 overflow-hidden transition-all relative">
+<img class="w-full h-full object-cover opacity-90" data-alt="Elegant document page with large serif headings and a clean grid-based editorial design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAD339ACP_81t6TrtFKCF0A_TF6siwLK8KyWpgrh8kw4wwJdFjKFbR8ydIQXkyin32HJFrSIZNid4kHPZPrFzx-XRJNw0UMLDFc4Jw3X-YcFpFWEbPevzwEzvjFrks7Xcx93jKHQr1iIXouLrW4nQr5lj6FpQxuJy1IKM-_dlb9ili_ovPbJAleaA_uYS90NMvms9fhl_4kbzLXo-2IJSude9KB_bTluiz2I64_Bfp1QqqYniMSa6QAj5ZL79ZaEWWBUHUsIUgR2CQ"/>
+<div class="absolute top-2 right-2 bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold">3</div>
+</div>
+<p class="text-center mt-3 text-xs font-bold text-primary">Page 3</p>
+</div>
+<!-- Page 4 (Selected) -->
+<div class="relative group">
+<div class="aspect-[3/4] bg-surface-container-lowest rounded-lg shadow-sm border-2 border-primary ring-4 ring-primary/10 overflow-hidden transition-all relative">
+<img class="w-full h-full object-cover opacity-90" data-alt="Detailed financial table on a document page with high legibility and light blue highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4rbrZnR26EqmyRcZCnnp4SJFLgrLxa7_5CUjOi4ZaupKKnIjQrmmNjTxuolFIFY8u43ilzhFvmXBte_tB_HAjQPRkt8fCVBABUSjM5WuTZoEgMJCD2hm85m-tO_Z_He0R5n2fBjHolcmrw_OcGEUUZSWhDURacj8hXS2Zznw3zkaOLtLCjNP5qcuKkN8tAPklHWEY8Uoi_YCCAEWvQUi3cgzN8ncCfMz5a-PW2VccblrNAJGpEZoe4OhMZ_RKCkql_ykCNxM3ocE"/>
+<div class="absolute top-2 right-2 bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold">4</div>
+</div>
+<p class="text-center mt-3 text-xs font-bold text-primary">Page 4</p>
+</div>
+<!-- Page 5 (Selected) -->
+<div class="relative group">
+<div class="aspect-[3/4] bg-surface-container-lowest rounded-lg shadow-sm border-2 border-primary ring-4 ring-primary/10 overflow-hidden transition-all relative">
+<img class="w-full h-full object-cover opacity-90" data-alt="Clean architectural drawing or schematic on a white document page with precise linework" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiaXpk3QxioyIa4nywzcVESwHSDIqdjNPJahj67EZ5biLwRh_mh7mCg73nx739_1Rll18Yim46vkqJBluKgbD_Y1k3q64h9Cfiyk7Lk3EwtqWaxcyiXL3-hr3A205h3X9Rv8uwdn21iAf2atX0JNgczEWVzCNxwVGFh2jZkQyNL2mdHGJh1rTfMzRmVzp1-zPxewhpMDeaNA_4dTL2lK6s18YuRcFOcXKHGXeUWYx9MLzqzIZ8n98ctF-kqw5v16_AjhMrvjdlR2Y"/>
+<div class="absolute top-2 right-2 bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold">5</div>
+</div>
+<p class="text-center mt-3 text-xs font-bold text-primary">Page 5</p>
+</div>
+<!-- Page 6 (Not Selected) -->
+<div class="relative group opacity-40 hover:opacity-100 transition-opacity">
+<div class="aspect-[3/4] bg-surface-container-lowest rounded-lg shadow-sm border-2 border-transparent overflow-hidden transition-all relative">
+<img class="w-full h-full object-cover grayscale" data-alt="Generic document page layout with text blocks and professional spacing" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfvEYyxoa7tiALkzwifR4815UFak__kbkM175FTzQo50piUzyiPBtRtqlqiVj9YgSFEVBUXBrrHepYb7vYxelBVXVnXq80G7WcLmmYsbk_IaJlTG6cE-3Z89PGKzIXgFiPB8qyk6IHokw1wsBOOK8os98jY0zfWe0tccdkQSg9ew9fScHaFkCMGeVQWY9mtMVhvD7VIqMTScMnboTGj5KgpTq1lRz6Fz9U-E8fV5u_h7zit208ZMNq9M6KvftN6bH_J9q8Nk82qqQ"/>
+<div class="absolute top-2 right-2 bg-on-surface-variant/20 text-on-surface w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold">6</div>
+</div>
+<p class="text-center mt-3 text-xs font-medium text-on-surface-variant">Page 6</p>
+</div>
+<!-- Page 7 (Not Selected) -->
+<div class="relative group opacity-40 hover:opacity-100 transition-opacity">
+<div class="aspect-[3/4] bg-surface-container-lowest rounded-lg shadow-sm border-2 border-transparent overflow-hidden transition-all relative">
+<img class="w-full h-full object-cover grayscale" data-alt="Full page text with professional typography and wide margins" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWQN6zG45cdQbqsBvZExpS8zWXDl44J7_fjBUBAzI7Zp39M9XJ22tRrG5fAJ20IPWr1v0PZ2SZTIQJW8MqpTDF68TcOzRkIPNAFnevqxXXtuErl1Gn8aD68Ry1JPK9Sdc837FPalkXRHldPb3gJA9_CRQf4BP_iMTiIDv4tjlmo2AGEMB2l7V3VmKtFCR3A4cyGxJ49yeXa093BEcOEZfLgIEcMBckoMh9QPFXhKSk6JD6EJKLzpCnrpXKqPRg8VHoptLs91lDWJ0"/>
+<div class="absolute top-2 right-2 bg-on-surface-variant/20 text-on-surface w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold">7</div>
+</div>
+<p class="text-center mt-3 text-xs font-medium text-on-surface-variant">Page 7</p>
+</div>
+<!-- Page 8 (Selected - New Range) -->
+<div class="relative group">
+<div class="aspect-[3/4] bg-surface-container-lowest rounded-lg shadow-sm border-2 border-primary ring-4 ring-primary/10 overflow-hidden transition-all relative">
+<img class="w-full h-full object-cover opacity-90" data-alt="Informational graphic with indigo and slate blue tones on a professional white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAym1fW1hQX9z1LSsMUvvNe62SlapDNCBBjWjziZMMvx4x4sA_Tz5-6ijyHCSR3HqAep1U7ntELWepzu_wuR-ktmP-gDpCCv0TwdcJoSQnFA3jOhEtF0jFWY1NrQL_7w0yivJKI5-QwpvAVp9fRQpPijAwRC5Jzs4pyZA3gBr6aDpFgvLrGVwaSPVol7D73IDCnF5GClP1FWSmNtrhOhcfPvhUiAeRJl5MqbE6j05dD7Oq9F0DCVvylHtfj4FhK1fA_rz7PYBxGeU"/>
+<div class="absolute top-2 right-2 bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold">8</div>
+</div>
+<p class="text-center mt-3 text-xs font-bold text-primary">Page 8</p>
+</div>
+<!-- Additional pages following the pattern -->
+<div class="relative group">
+<div class="aspect-[3/4] bg-surface-container-lowest rounded-lg shadow-sm border-2 border-primary ring-4 ring-primary/10 overflow-hidden transition-all relative">
+<img class="w-full h-full object-cover opacity-90" data-alt="Executive summary page with bold headings and clean list styles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoXJrmFrEiUdmg57tVRy9Ai_LbT_eqPFe40COOF90s5aUQV2y7NQG8PhEPGjVx1TOdnonBVSi60pIfXMXfjqljYaHMyRrdQaTTUHXKaptL1NnmXThUdjSauCbyu7lla3_9K8bkysRNMzj7p1j6K8Wxds4CMMO35VoJ2GQyQl-2Rgt2agtq53vOs5PQb8ss4fhbREKlJ2cOabXAXJtbFEJKR-e4twJsFaoQn4xYno_k3S-cHbNS9K7kLobYdJo5NSjCX4vAvi_mYcU"/>
+<div class="absolute top-2 right-2 bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold">9</div>
+</div>
+<p class="text-center mt-3 text-xs font-bold text-primary">Page 9</p>
+</div>
+<div class="relative group">
+<div class="aspect-[3/4] bg-surface-container-lowest rounded-lg shadow-sm border-2 border-primary ring-4 ring-primary/10 overflow-hidden transition-all relative">
+<img class="w-full h-full object-cover opacity-90" data-alt="Data visualization page with soft gradients and precise data points" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9hvge0XPjAg8PoCnL75rmv8QlHhswM7Xdp_7kayPZT7ic7rjg833NMWVLtdqvulg4EPCMlhvn1MjICB2ryUZEa_txLuhyIy0aFwXicDSVcE13BzTUSWmjSLuhEN-iNVG4GoOUUyzdb0qv9FbWfSrrcv_NfVw-1_MwutydqvUv7o_X5N9EeoYdARjJrcRS0y1qbQ0bdCU8C7NojdE6HuEZOA6xjGC5uYkb1WSzoK0njit5lNOaxJH7Yt56I5hW9b4QgaAY1wVhsz0"/>
+<div class="absolute top-2 right-2 bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold">10</div>
+</div>
+<p class="text-center mt-3 text-xs font-bold text-primary">Page 10</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Document Scrubber (Floating Tool) -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 glass-panel border border-white/20 rounded-full px-8 py-4 flex items-center gap-8 shadow-2xl">
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold tracking-widest text-on-surface-variant uppercase">View Mode</span>
+<div class="flex gap-2">
+<button class="p-2 bg-primary/10 text-primary rounded-lg">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="view_list">view_list</span>
+</button>
+</div>
+</div>
+<div class="h-6 w-[1px] bg-outline-variant"></div>
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold tracking-widest text-on-surface-variant uppercase">Zoom</span>
+<input class="w-32 accent-primary" type="range"/>
+</div>
+</div>
+</body></html>
