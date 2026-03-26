@@ -91,17 +91,17 @@ const FILE_STUDIO_SLUGS = new Set([
 ])
 
 const VIDEO_STUDIO_SLUGS = new Set([
-  'convert-video',
   'compress-video',
   'trim-video',
   'merge-video',
   'video-to-gif',
-  'extract-audio',
+  'video-to-mp3',
   'change-video-speed',
-  'resize-video',
   'rotate-video',
   'add-subtitles',
   'screen-recorder',
+  'gif-maker',
+  'mute-video',
 ])
 
 const AUDIO_STUDIO_SLUGS = new Set([

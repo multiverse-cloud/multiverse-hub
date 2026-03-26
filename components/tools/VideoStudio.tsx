@@ -41,6 +41,10 @@ const VIDEO_COPY = {
   'merge-video': { eyebrow: 'Sequence assembly', title: 'Merge Video', summary: 'Upload clips, arrange the order, and export one combined video file.', badges: ['Multi-file queue', 'Order controls', 'Merged output'], actionLabel: 'Merge videos', emptyTitle: 'Merged result appears here', tip: 'Use clips with similar resolution and frame rate for the cleanest merge.' },
   'rotate-video': { eyebrow: 'Orientation control', title: 'Rotate Video', summary: 'Correct orientation with quick rotate and flip controls before export.', badges: ['Rotate 90/180', 'Flip options', 'Corrected preview'], actionLabel: 'Rotate video', emptyTitle: 'Corrected result appears here', tip: 'Use horizontal flip for mirrored selfie footage or front-camera recordings.' },
   'add-subtitles': { eyebrow: 'Caption burn-in', title: 'Add Subtitles', summary: 'Upload a subtitle file or paste SRT text and burn captions directly into the video.', badges: ['SRT support', 'Burned captions', 'Preview-ready export'], actionLabel: 'Add subtitles', emptyTitle: 'Captioned result appears here', tip: 'Paste valid SRT text if you do not have a separate subtitle file.' },
+  'screen-recorder': { eyebrow: 'Live browser capture', title: 'Screen Recorder', summary: 'Record your screen, camera, or both directly in your browser with high-quality exports.', badges: ['No install', 'Privacy first', 'HD Recording'], actionLabel: 'Start recording', emptyTitle: 'Recording will appear here', tip: 'Enable microphone and camera permissions for a full studio experience.' },
+  'convert-video': { eyebrow: 'Format transformation', title: 'Convert Video', summary: 'Change video formats between MP4, WebM, and MOV with high-fidelity output.', badges: ['Multi-format', 'Fast conversion', 'High quality'], actionLabel: 'Convert video', emptyTitle: 'Converted file appears here', tip: 'WebM is often best for web performance and transparent backgrounds.' },
+  'resize-video': { eyebrow: 'Timeline dimensions', title: 'Resize Video', summary: 'Scale your video dimensions for different social platforms and display sizes.', badges: ['Aspect ratios', 'Custom scale', 'Batch-ready'], actionLabel: 'Resize video', emptyTitle: 'Resized video appears here', tip: 'Using standard aspect ratios like 16:9 or 9:16 ensures best playback.' },
+  'extract-audio': { eyebrow: 'Studio audio extraction', title: 'Extract Audio', summary: 'Pull clear audio tracks from any video file for podcasts, samples, or reels.', badges: ['MP3 output', 'Fast extraction', 'Audio preview'], actionLabel: 'Extract audio', emptyTitle: 'Audio track appears here', tip: 'Extracting at high bitrates preserves the best sound quality for editing.' },
 } as const
 
 const PROCESS_MESSAGES: Record<string, { idle: string; loading: string; done: string }> = {
@@ -55,6 +59,10 @@ const PROCESS_MESSAGES: Record<string, { idle: string; loading: string; done: st
   'merge-video': { idle: 'Add at least two clips', loading: 'Merging queued clips', done: 'Merged export ready' },
   'rotate-video': { idle: 'Waiting for video', loading: 'Applying orientation changes', done: 'Orientation corrected' },
   'add-subtitles': { idle: 'Add video and subtitles', loading: 'Burning captions into video', done: 'Captioned export ready' },
+  'screen-recorder': { idle: 'Ready to capture', loading: 'Recording screen', done: 'Recording complete' },
+  'convert-video': { idle: 'Waiting for file', loading: 'Converting video format', done: 'Conversion finished' },
+  'resize-video': { idle: 'Waiting for file', loading: 'Resizing dimensions', done: 'Resize complete' },
+  'extract-audio': { idle: 'Waiting for video', loading: 'Extracting audio track', done: 'Audio is ready' },
 }
 
 const DEFAULT_SRT = `1
