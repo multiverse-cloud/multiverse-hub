@@ -12,6 +12,11 @@ function getFirebaseConfig() {
   }
 }
 
+function isFirebaseAdminConfigured() {
+  const { projectId, clientEmail, privateKey } = getFirebaseConfig()
+  return Boolean(projectId && clientEmail && privateKey)
+}
+
 export function getFirebaseAdminApp() {
   if (getApps().length > 0) {
     return getApps()[0]
@@ -72,6 +77,10 @@ function serializeDoc<T>(doc: any): T {
 
 export const getTools = unstable_cache(
   async (): Promise<Tool[]> => {
+    if (!isFirebaseAdminConfigured()) {
+      return TOOLS
+    }
+
     try {
       const snapshot = await getDb().collection('tools').get()
       if (snapshot.empty) return TOOLS
@@ -88,6 +97,10 @@ export const getTools = unstable_cache(
 
 export const getToolBySlug = unstable_cache(
   async (slug: string): Promise<Tool | null> => {
+    if (!isFirebaseAdminConfigured()) {
+      return TOOLS.find(t => t.slug === slug) || null
+    }
+
     try {
       const snapshot = await getDb().collection('tools').where('slug', '==', slug).limit(1).get()
       if (snapshot.empty) {
@@ -105,6 +118,10 @@ export const getToolBySlug = unstable_cache(
 
 export const getToolsByCategory = unstable_cache(
   async (categorySlug: string): Promise<Tool[]> => {
+    if (!isFirebaseAdminConfigured()) {
+      return TOOLS.filter(t => t.categorySlug === categorySlug)
+    }
+
     try {
       const snapshot = await getDb().collection('tools').where('categorySlug', '==', categorySlug).get()
       if (snapshot.empty) {
