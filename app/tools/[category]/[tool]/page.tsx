@@ -243,7 +243,7 @@ export default async function ToolPage({ params }: Props) {
   const { category, tool: toolSlug } = await params
   const tool = await getToolBySlug(toolSlug)
 
-  if (!tool || tool.categorySlug !== category || !tool.enabled) {
+  if (!tool || tool.categorySlug !== category || tool.enabled === false) {
     notFound()
   }
 
