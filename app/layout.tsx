@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
 import AuthProvider from '@/components/providers/AuthProvider'
 import ClientShell from '@/components/providers/ClientShell'
@@ -76,6 +77,7 @@ export default function RootLayout({
         <AuthProvider>
           <ThemeProvider>
             {children}
+            <SpeedInsights />
             <ClientShell />
           </ThemeProvider>
         </AuthProvider>
