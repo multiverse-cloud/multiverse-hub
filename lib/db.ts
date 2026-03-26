@@ -74,12 +74,12 @@ export const getTools = unstable_cache(
   async (): Promise<Tool[]> => {
     try {
       const snapshot = await getDb().collection('tools').get()
-      if (snapshot.empty) return []
+      if (snapshot.empty) return TOOLS
       
       return snapshot.docs.map(doc => serializeDoc<Tool>(doc))
     } catch (error) {
-      console.error('Failed to fetching tools from Firestore:', error)
-      return []
+      console.error('Failed to fetching tools from Firestore, falling back to local data:', error)
+      return TOOLS
     }
   },
   ['all-tools-cache'],
@@ -90,11 +90,13 @@ export const getToolBySlug = unstable_cache(
   async (slug: string): Promise<Tool | null> => {
     try {
       const snapshot = await getDb().collection('tools').where('slug', '==', slug).limit(1).get()
-      if (snapshot.empty) return null
+      if (snapshot.empty) {
+        return TOOLS.find(t => t.slug === slug) || null
+      }
       return serializeDoc<Tool>(snapshot.docs[0])
     } catch (error) {
-      console.error(`Failed to fetch tool ${slug}:`, error)
-      return null
+      console.error(`Failed to fetch tool ${slug} from Firestore, falling back to local data:`, error)
+      return TOOLS.find(t => t.slug === slug) || null
     }
   },
   ['tool-by-slug-cache'],
@@ -105,10 +107,13 @@ export const getToolsByCategory = unstable_cache(
   async (categorySlug: string): Promise<Tool[]> => {
     try {
       const snapshot = await getDb().collection('tools').where('categorySlug', '==', categorySlug).get()
+      if (snapshot.empty) {
+        return TOOLS.filter(t => t.categorySlug === categorySlug)
+      }
       return snapshot.docs.map(doc => serializeDoc<Tool>(doc))
     } catch (error) {
-      console.error(`Failed to fetch tools for category ${categorySlug}:`, error)
-      return []
+      console.error(`Failed to fetch tools for category ${categorySlug} from Firestore, falling back to local data:`, error)
+      return TOOLS.filter(t => t.categorySlug === categorySlug)
     }
   },
   ['tools-by-category-cache'],
