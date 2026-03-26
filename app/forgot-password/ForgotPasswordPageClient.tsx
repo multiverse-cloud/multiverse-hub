@@ -138,14 +138,6 @@ export default function ForgotPasswordPageClient() {
       eyebrow="Reset password"
       title="Get back into your account"
       description="Reset your password with a secure email code, then continue straight back to your account."
-      sideEyebrow="Recovery"
-      sideTitle="A proper reset flow, without the rough edges."
-      sideDescription="Request a code, set a new password, and return to your tools or admin workspace with the same Clerk account."
-      metrics={[
-        { value: 'Email code', label: 'Verification' },
-        { value: '1 min', label: 'Typical reset' },
-        { value: 'Secure', label: 'Recovery flow' },
-      ]}
       footer={
         <p className="text-center text-sm text-muted-foreground">
           Remembered it already?{' '}

@@ -4,6 +4,7 @@ import { CircleHelp, Sparkles, CheckCircle2 } from 'lucide-react'
 import type { Tool } from '@/lib/tools-data'
 import ToolCard from './ToolCard'
 import ToolBreadcrumb from './ToolBreadcrumb'
+import SEOContent from './SEOContent'
 
 export type PdfStudioContent = {
   howItWorks: ReadonlyArray<{
@@ -118,6 +119,8 @@ export default function PdfStudioPageFrame({
             ))}
           </div>
         </section>
+        
+        <SEOContent tool={tool} />
 
         {content.relatedTools.length > 0 && (
           <section className="mt-8">

@@ -44,9 +44,20 @@ export default function AdminLayout({
     setLoggingOut(true)
 
     try {
-      await signOut({ redirectUrl: '/sign-in' })
+      // Clear our custom admin session first
+      await fetch('/api/admin/logout', { method: 'POST' })
+
+      // Attempt to clear Clerk session
+      try {
+        await signOut({ redirectUrl: '/admin-login' })
+      } catch (e) {
+        // Clerk might not be active, that's fine
+      }
+      
+      // Fallback redirect if Clerk didn't catch the redirect
+      window.location.href = '/admin-login'
     } catch {
-      setLoggingOut(false)
+      window.location.href = '/admin-login'
     }
   }
 

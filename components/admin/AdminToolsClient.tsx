@@ -47,6 +47,7 @@ export interface AdminToolRecord {
   categorySlug: string
   slug: string
   tags: ToolTag[]
+  enabled?: boolean
 }
 
 type ToolState = {
@@ -93,26 +94,57 @@ export default function AdminToolsClient({
     [toolStates]
   )
 
-  function toggleTool(id: string) {
+  async function toggleTool(id: string) {
+    const previousState = toolStates[id]
+    const newState = { ...previousState, enabled: !previousState.enabled }
+    
     setToolStates(previous => ({
       ...previous,
-      [id]: { ...previous[id], enabled: !previous[id].enabled },
+      [id]: newState,
     }))
+
+    try {
+      const res = await fetch('/api/admin/tools', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, updates: { enabled: newState.enabled } })
+      })
+      if (!res.ok) throw new Error('Failed to save state to database')
+    } catch {
+      setToolStates(previous => ({
+        ...previous,
+        [id]: previousState,
+      }))
+    }
   }
 
-  function toggleTag(id: string, tag: (typeof TAG_OPTIONS)[number]) {
-    setToolStates(previous => {
-      const current = previous[id].tags
-      return {
+  async function toggleTag(id: string, tag: (typeof TAG_OPTIONS)[number]) {
+    const previousState = toolStates[id]
+    const currentTags = previousState.tags
+    const newTags = currentTags.includes(tag)
+      ? currentTags.filter(item => item !== tag)
+      : [...currentTags, tag]
+      
+    const newState = { ...previousState, tags: newTags }
+
+    setToolStates(previous => ({
+      ...previous,
+      [id]: newState,
+    }))
+
+    try {
+      const res = await fetch('/api/admin/tools', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, updates: { tags: newTags } })
+      })
+      if (!res.ok) throw new Error('Failed to update tags in database')
+    } catch {
+      setToolStates(previous => ({
         ...previous,
-        [id]: {
-          ...previous[id],
-          tags: current.includes(tag)
-            ? current.filter(item => item !== tag)
-            : [...current, tag],
-        },
-      }
-    })
+        [id]: previousState,
+      }))
+    }
   }
 
   return (

@@ -1194,6 +1194,191 @@ const CALCULATOR_DEFINITIONS: Record<CalculatorStudioSlug, CalculatorDefinition>
       }
     },
   },
+  'discount-calculator': {
+    eyebrow: 'Shopping planner',
+    title: 'Discount Calculator',
+    summary: 'Calculate sale prices, savings, and final totals with percentage or flat discounts.',
+    badges: ['Sale price', 'Total savings', 'Multiple items'],
+    tip: 'Stack percentage and flat discounts by running the discounted price through a second round.',
+    fieldTitle: 'Price inputs',
+    fieldSummary: 'Enter the original price and discount percentage.',
+    fields: [
+      { key: 'originalPrice', label: 'Original price', type: 'number', min: '0', step: '0.01', suffix: '₹' },
+      { key: 'discountPercent', label: 'Discount', type: 'number', min: '0', max: '100', step: '0.1', suffix: '%' },
+      { key: 'quantity', label: 'Quantity', type: 'number', min: '1', step: '1' },
+    ],
+    defaultValues: { originalPrice: '2499', discountPercent: '20', quantity: '1' },
+    presets: [
+      { label: 'Flash sale', hint: '40% off', values: { originalPrice: '4999', discountPercent: '40', quantity: '1' } },
+      { label: 'Bulk buy', hint: '15% off × 3', values: { originalPrice: '999', discountPercent: '15', quantity: '3' } },
+      { label: 'Clearance', hint: '60% off', values: { originalPrice: '7999', discountPercent: '60', quantity: '1' } },
+    ],
+    calculate(values) {
+      const price = parseNumber(values.originalPrice)
+      const disc = parseNumber(values.discountPercent)
+      const qty = Math.max(1, parseNumber(values.quantity))
+      if (price <= 0) return { ready: false, headline: 'Enter a price', subheadline: 'Original price is required.', primaryLabel: 'Sale price', primaryValue: '--', secondaryLabel: 'Savings', secondaryValue: '--', stats: [metric('Discount', '--'), metric('Per item', '--'), metric('Total', '--'), metric('You save', '--')], insight: 'Add a valid price to see the discounted total.', summary: '' }
+      const discountAmount = (price * disc) / 100
+      const salePrice = price - discountAmount
+      const totalOriginal = price * qty
+      const totalSale = salePrice * qty
+      const totalSaved = totalOriginal - totalSale
+      return {
+        ready: true, headline: `${formatPercent(disc, 0)} off applied`, subheadline: `${qty > 1 ? `${qty} items` : 'Single item'} at the discounted rate.`,
+        primaryLabel: 'Sale price', primaryValue: `₹${formatNumber(salePrice, 2)}`,
+        secondaryLabel: 'You save', secondaryValue: `₹${formatNumber(totalSaved, 2)}`,
+        stats: [metric('Original', `₹${formatNumber(price, 2)}`), metric('Per item saved', `₹${formatNumber(discountAmount, 2)}`), metric('Total bill', `₹${formatNumber(totalSale, 2)}`), metric('Total saved', `₹${formatNumber(totalSaved, 2)}`)],
+        insight: disc >= 50 ? 'This is a heavy discount. Great if it is genuine — check for inflated MRP.' : 'A solid discount that keeps savings practical.',
+        summary: `Original ₹${formatNumber(price, 2)} with ${formatPercent(disc, 0)} off = ₹${formatNumber(salePrice, 2)} per item. Total: ₹${formatNumber(totalSale, 2)}, saved ₹${formatNumber(totalSaved, 2)}.`,
+      }
+    },
+  },
+  'aspect-ratio-calculator': {
+    eyebrow: 'Design math',
+    title: 'Aspect Ratio Calculator',
+    summary: 'Calculate and maintain aspect ratios when resizing images, video, or design frames.',
+    badges: ['Width ↔ Height', 'Lock ratio', 'Design ready'],
+    tip: 'Enter width and height to find the ratio, or enter one side plus the ratio to find the other.',
+    fieldTitle: 'Dimension inputs',
+    fieldSummary: 'Enter the original dimensions to calculate the aspect ratio.',
+    fields: [
+      { key: 'width', label: 'Width', type: 'number', min: '1', step: '1', suffix: 'px' },
+      { key: 'height', label: 'Height', type: 'number', min: '1', step: '1', suffix: 'px' },
+      { key: 'newWidth', label: 'New width (optional)', type: 'number', min: '1', step: '1', suffix: 'px' },
+    ],
+    defaultValues: { width: '1920', height: '1080', newWidth: '1280' },
+    presets: [
+      { label: '16:9 HD', hint: 'YouTube / TV', values: { width: '1920', height: '1080', newWidth: '1280' } },
+      { label: '4:3 Classic', hint: 'Presentation', values: { width: '1024', height: '768', newWidth: '800' } },
+      { label: '1:1 Square', hint: 'Instagram post', values: { width: '1080', height: '1080', newWidth: '600' } },
+    ],
+    calculate(values) {
+      const w = parseNumber(values.width); const h = parseNumber(values.height); const nw = parseNumber(values.newWidth)
+      if (w <= 0 || h <= 0) return { ready: false, headline: 'Enter dimensions', subheadline: 'Width and height are required.', primaryLabel: 'Ratio', primaryValue: '--', secondaryLabel: 'New height', secondaryValue: '--', stats: [metric('Width', '--'), metric('Height', '--'), metric('Ratio', '--'), metric('Scaled', '--')], insight: 'Add valid dimensions to calculate.', summary: '' }
+      const gcdFn = (a: number, b: number): number => b === 0 ? a : gcdFn(b, a % b)
+      const gcd = gcdFn(w, h)
+      const ratioW = w / gcd; const ratioH = h / gcd
+      const newHeight = nw > 0 ? Math.round((nw / w) * h) : 0
+      return {
+        ready: true, headline: `${ratioW}:${ratioH} aspect ratio`, subheadline: `From ${w}×${h} original dimensions.`,
+        primaryLabel: 'Aspect ratio', primaryValue: `${ratioW}:${ratioH}`,
+        secondaryLabel: 'Scaled output', secondaryValue: nw > 0 ? `${nw}×${newHeight}` : 'Enter new width',
+        stats: [metric('Original', `${w}×${h}`), metric('Ratio', `${ratioW}:${ratioH}`), metric('Decimal', formatNumber(w / h, 4)), metric('Scaled', nw > 0 ? `${nw}×${newHeight}` : '--')],
+        insight: ratioW === 16 && ratioH === 9 ? 'This is the standard widescreen ratio used by YouTube, Netflix, and most screens.' : 'This ratio is maintained proportionally when scaling.',
+        summary: `${w}×${h} is a ${ratioW}:${ratioH} ratio.${nw > 0 ? ` Scaled to width ${nw} → height ${newHeight}.` : ''}`,
+      }
+    },
+  },
+  'gpa-calculator': {
+    eyebrow: 'Academic tracker',
+    title: 'GPA Calculator',
+    summary: 'Calculate your GPA and CGPA from grades and credit hours with a flexible calculator.',
+    badges: ['GPA score', 'Credit weighted', 'Quick result'],
+    tip: 'Enter total credits and weighted grade points. Use the formula: GPA = total grade points / total credits.',
+    fieldTitle: 'Academic inputs',
+    fieldSummary: 'Enter total credits and grade points earned.',
+    fields: [
+      { key: 'totalCredits', label: 'Total credits', type: 'number', min: '1', step: '1' },
+      { key: 'totalGradePoints', label: 'Total grade points', type: 'number', min: '0', step: '0.1' },
+      { key: 'scale', label: 'GPA scale', type: 'number', min: '4', step: '1' },
+    ],
+    defaultValues: { totalCredits: '120', totalGradePoints: '408', scale: '4' },
+    presets: [
+      { label: 'Dean\'s list', hint: 'High GPA', values: { totalCredits: '120', totalGradePoints: '456', scale: '4' } },
+      { label: 'Average student', hint: 'Solid performance', values: { totalCredits: '120', totalGradePoints: '360', scale: '4' } },
+      { label: '10-point scale', hint: 'Indian university', values: { totalCredits: '150', totalGradePoints: '1200', scale: '10' } },
+    ],
+    calculate(values) {
+      const credits = parseNumber(values.totalCredits); const points = parseNumber(values.totalGradePoints); const scale = parseNumber(values.scale) || 4
+      if (credits <= 0) return { ready: false, headline: 'Enter credits', subheadline: 'Total credits and grade points are required.', primaryLabel: 'GPA', primaryValue: '--', secondaryLabel: 'Percentage', secondaryValue: '--', stats: [metric('Credits', '--'), metric('Points', '--'), metric('GPA', '--'), metric('Grade', '--')], insight: 'Add academic data to calculate.', summary: '' }
+      const gpa = points / credits
+      const percentage = (gpa / scale) * 100
+      const grade = gpa >= scale * 0.9 ? 'A+' : gpa >= scale * 0.8 ? 'A' : gpa >= scale * 0.7 ? 'B+' : gpa >= scale * 0.6 ? 'B' : gpa >= scale * 0.5 ? 'C' : 'D'
+      return {
+        ready: true, headline: `GPA ${formatNumber(gpa, 2)} / ${scale}`, subheadline: `Based on ${credits} credits with ${formatNumber(points, 1)} grade points.`,
+        primaryLabel: 'GPA', primaryValue: `${formatNumber(gpa, 2)} / ${scale}`,
+        secondaryLabel: 'Equivalent', secondaryValue: `${formatNumber(percentage, 1)}%`,
+        stats: [metric('Credits', `${credits}`), metric('Grade points', formatNumber(points, 1)), metric('Grade', grade), metric('Percentage', `${formatNumber(percentage, 1)}%`)],
+        insight: gpa >= scale * 0.85 ? 'Excellent GPA — this is well above the typical academic threshold.' : 'Solid performance. Consider focusing on weaker subjects to raise this further.',
+        summary: `GPA is ${formatNumber(gpa, 2)} out of ${scale} (${formatNumber(percentage, 1)}%, Grade: ${grade}).`,
+      }
+    },
+  },
+  'loan-calculator': {
+    eyebrow: 'Finance planning',
+    title: 'Loan / Mortgage Calculator',
+    summary: 'Estimate monthly payments, total interest paid, and full repayment costs for any loan type.',
+    badges: ['Monthly payment', 'Total interest', 'Amortization'],
+    tip: 'Even a 0.5% rate difference over 20 years can save lakhs. Always compare lenders.',
+    fieldTitle: 'Loan details',
+    fieldSummary: 'Enter loan amount, interest rate, and term to calculate payments.',
+    fields: [
+      { key: 'loanAmount', label: 'Loan amount', type: 'number', min: '1000', step: '1000', suffix: '₹' },
+      { key: 'interestRate', label: 'Annual interest rate', type: 'number', min: '0.1', step: '0.1', suffix: '% p.a.' },
+      { key: 'termYears', label: 'Loan term', type: 'number', min: '1', step: '1', suffix: 'years' },
+    ],
+    defaultValues: { loanAmount: '3000000', interestRate: '8.5', termYears: '20' },
+    presets: [
+      { label: 'Home loan', hint: '20 year mortgage', values: { loanAmount: '5000000', interestRate: '8.5', termYears: '20' } },
+      { label: 'Car loan', hint: '5 year auto', values: { loanAmount: '800000', interestRate: '9.5', termYears: '5' } },
+      { label: 'Personal loan', hint: '3 year term', values: { loanAmount: '500000', interestRate: '14', termYears: '3' } },
+    ],
+    calculate(values) {
+      const loan = parseNumber(values.loanAmount); const rate = parseNumber(values.interestRate); const years = parseNumber(values.termYears)
+      if (loan <= 0 || rate <= 0 || years <= 0) return { ready: false, headline: 'Enter loan details', subheadline: 'All fields are required.', primaryLabel: 'Monthly EMI', primaryValue: '--', secondaryLabel: 'Total interest', secondaryValue: '--', stats: [metric('Loan', '--'), metric('Rate', '--'), metric('Term', '--'), metric('Total', '--')], insight: 'Add loan details to calculate.', summary: '' }
+      const months = years * 12; const mr = rate / 12 / 100
+      const emi = loan * mr * Math.pow(1 + mr, months) / (Math.pow(1 + mr, months) - 1)
+      const totalPaid = emi * months; const totalInterest = totalPaid - loan; const interestRatio = (totalInterest / totalPaid) * 100
+      return {
+        ready: true, headline: `₹${integerFormatter.format(Math.round(emi))} / month`, subheadline: `${years}-year repayment at ${formatNumber(rate, 1)}% per annum.`,
+        primaryLabel: 'Monthly EMI', primaryValue: `₹${integerFormatter.format(Math.round(emi))}`,
+        secondaryLabel: 'Total interest', secondaryValue: `₹${integerFormatter.format(Math.round(totalInterest))}`,
+        stats: [metric('Loan amount', `₹${integerFormatter.format(loan)}`), metric('Total repayment', `₹${integerFormatter.format(Math.round(totalPaid))}`), metric('Interest share', formatPercent(interestRatio, 1)), metric('EMI per lakh', `₹${integerFormatter.format(Math.round((emi / loan) * 100000))}`)],
+        insight: interestRatio > 40 ? 'A significant portion goes to interest. Consider a shorter term or higher EMI to save.' : 'This loan has a reasonable interest-to-principal ratio.',
+        summary: `Monthly EMI ₹${integerFormatter.format(Math.round(emi))} for ${years} years. Total: ₹${integerFormatter.format(Math.round(totalPaid))}, interest: ₹${integerFormatter.format(Math.round(totalInterest))}.`,
+      }
+    },
+  },
+  'online-stopwatch': {
+    eyebrow: 'Time utility',
+    title: 'Online Stopwatch & Timer',
+    summary: 'Use a precise stopwatch or countdown timer right in your browser for workouts, cooking, or study sessions.',
+    badges: ['Stopwatch', 'Countdown', 'Lap times'],
+    tip: 'Enter seconds in the field to use as a countdown timer, or leave at 0 for a stopwatch.',
+    fieldTitle: 'Timer settings',
+    fieldSummary: 'Set a countdown duration or leave at 0 for stopwatch mode.',
+    fields: [
+      { key: 'countdownSeconds', label: 'Countdown (seconds)', type: 'number', min: '0', step: '1' },
+      { key: 'laps', label: 'Number of laps', type: 'number', min: '1', step: '1' },
+    ],
+    defaultValues: { countdownSeconds: '0', laps: '5' },
+    presets: [
+      { label: 'Pomodoro', hint: '25 min focus', values: { countdownSeconds: '1500', laps: '1' } },
+      { label: 'HIIT round', hint: '30 seconds', values: { countdownSeconds: '30', laps: '8' } },
+      { label: 'Stopwatch', hint: 'Free run', values: { countdownSeconds: '0', laps: '10' } },
+    ],
+    calculate(values) {
+      const countdown = parseNumber(values.countdownSeconds); const laps = Math.max(1, parseNumber(values.laps))
+      const mins = Math.floor(countdown / 60); const secs = countdown % 60
+      const totalTime = countdown * laps
+      const totalMins = Math.floor(totalTime / 60); const totalSecs = totalTime % 60
+      if (countdown === 0) return {
+        ready: true, headline: 'Stopwatch mode', subheadline: `Free-running timer with ${laps} lap slots.`,
+        primaryLabel: 'Mode', primaryValue: 'Stopwatch',
+        secondaryLabel: 'Laps', secondaryValue: `${laps} slots`,
+        stats: [metric('Mode', 'Stopwatch'), metric('Laps', `${laps}`), metric('Duration', 'Unlimited'), metric('Ready', 'Start anytime')],
+        insight: 'Stopwatch mode runs freely. Use the calculate button as your lap marker.', summary: `Stopwatch mode with ${laps} lap slots.`,
+      }
+      return {
+        ready: true, headline: `${mins}:${String(secs).padStart(2, '0')} countdown`, subheadline: `${laps} round${laps > 1 ? 's' : ''} of ${mins}m ${secs}s each.`,
+        primaryLabel: 'Per round', primaryValue: `${mins}:${String(secs).padStart(2, '0')}`,
+        secondaryLabel: 'Total time', secondaryValue: `${totalMins}:${String(totalSecs).padStart(2, '0')}`,
+        stats: [metric('Per round', `${countdown}s`), metric('Rounds', `${laps}`), metric('Total seconds', `${totalTime}`), metric('Total', `${totalMins}m ${totalSecs}s`)],
+        insight: laps > 1 ? `${laps} rounds of ${countdown}s = ${totalTime}s total workout time.` : `Single countdown of ${countdown} seconds.`,
+        summary: `${laps}×${countdown}s countdown. Total: ${totalMins}m ${totalSecs}s.`,
+      }
+    },
+  },
 }
 
 function fieldValueLabel(toolSlug: CalculatorStudioSlug, key: string, value: string) {

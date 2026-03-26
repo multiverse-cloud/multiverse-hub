@@ -11,6 +11,12 @@ export const CALCULATOR_STUDIO_SLUGS = [
   'date-difference-calculator',
   'timezone-converter',
   'calorie-calculator',
+  'discount-calculator',
+  'aspect-ratio-calculator',
+  'gpa-calculator',
+  'loan-calculator',
+  'online-stopwatch',
 ] as const
 
 export type CalculatorStudioSlug = (typeof CALCULATOR_STUDIO_SLUGS)[number]
+

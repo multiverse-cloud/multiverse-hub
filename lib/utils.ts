@@ -96,37 +96,36 @@ export function readFileAsArrayBuffer(file: File): Promise<ArrayBuffer> {
   })
 }
 
-export const OPENROUTER_API_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY || ''
 export const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY || ''
 export const GNEWS_API_KEY = process.env.NEXT_PUBLIC_GNEWS_API_KEY || ''
 
+/**
+ * Call the AI API through the server proxy.
+ * The API key stays server-side and is never exposed to the client.
+ */
 export async function callOpenRouter(
   messages: Array<{ role: string; content: string }>,
   model = 'openai/gpt-4o-mini',
   systemPrompt?: string
 ): Promise<string> {
-  const body: Record<string, unknown> = {
-    model,
-    messages: systemPrompt
-      ? [{ role: 'system', content: systemPrompt }, ...messages]
-      : messages,
-    max_tokens: 2048,
-  }
-
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  const res = await fetch('/api/ai', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-      'HTTP-Referer': 'https://multiverse-tools.vercel.app',
-      'X-Title': 'Multiverse Tools',
-    },
-    body: JSON.stringify(body),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages,
+      model,
+      systemPrompt,
+      maxTokens: 2048,
+    }),
   })
 
-  if (!res.ok) throw new Error(`OpenRouter API error: ${res.status}`)
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data.error || `AI request failed: ${res.status}`)
+  }
+
   const data = await res.json()
-  return data.choices?.[0]?.message?.content || ''
+  return data.result || ''
 }
 
 export async function generateImage(prompt: string): Promise<string> {

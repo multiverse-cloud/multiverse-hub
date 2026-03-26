@@ -14,10 +14,13 @@ import ImageTransformStudio from '@/components/tools/ImageTransformStudio'
 import QrCodeStudio from '@/components/tools/QrCodeStudio'
 import ToolCard from '@/components/tools/ToolCard'
 import ToolBreadcrumb from '@/components/tools/ToolBreadcrumb'
+import RecentTracker from '@/components/tools/RecentTracker'
+import SEOContent from '@/components/tools/SEOContent'
 import { getLucideIcon } from '@/lib/icons'
 import { CALCULATOR_STUDIO_SLUGS } from '@/lib/calculator-studio'
 import { PDF_STUDIO_STATIC_CONTENT } from '@/lib/pdf-studio-content'
-import { ACTIVE_CATEGORIES, getToolBySlug, TOOLS, type Tool } from '@/lib/tools-data'
+import { ACTIVE_CATEGORIES, type Tool } from '@/lib/tools-data'
+import { getTools, getToolBySlug } from '@/lib/db'
 
 const ToolDetailClient = dynamic(() => import('@/components/tools/ToolDetailClient'))
 const VideoDownloaderClient = dynamic(() => import('@/components/tools/VideoDownloaderClient'))
@@ -27,6 +30,7 @@ const TextStudio = dynamic(() => import('@/components/tools/TextStudio'))
 const DevStudio = dynamic(() => import('@/components/tools/DevStudio'))
 const SeoStudio = dynamic(() => import('@/components/tools/SeoStudio'))
 const CalculatorStudio = dynamic(() => import('@/components/tools/CalculatorStudio'))
+const FileViewerStudio = dynamic(() => import('@/components/tools/FileViewerStudio'))
 const CompressPdfStudio = dynamic(() => import('@/components/tools/CompressPdfStudio'))
 const PdfToWordStudio = dynamic(() => import('@/components/tools/PdfToWordStudio'))
 const MergePdfStudio = dynamic(() => import('@/components/tools/MergePdfStudio'))
@@ -74,20 +78,30 @@ const IMAGE_STUDIO_COMPONENTS: Record<string, ComponentType<{ tool: Tool }>> = {
   'color-palette-generator': ImagePaletteStudio,
   'qr-code-generator': QrCodeStudio,
   'image-to-pdf': ImageToPdfStudio,
+  'favicon-generator': ImageTransformStudio,
+  'instagram-grid-maker': ImageTransformStudio,
+  'svg-to-png': ImageTransformStudio,
+  'meme-generator': ImageTransformStudio,
 }
 
+const FILE_STUDIO_SLUGS = new Set([
+  'csv-viewer-editor',
+  'json-file-viewer',
+  'zip-extractor',
+])
+
 const VIDEO_STUDIO_SLUGS = new Set([
+  'convert-video',
   'compress-video',
-  'video-to-mp3',
   'trim-video',
-  'video-to-gif',
-  'youtube-thumbnail-downloader',
-  'change-video-speed',
-  'mute-video',
-  'gif-maker',
   'merge-video',
+  'video-to-gif',
+  'extract-audio',
+  'change-video-speed',
+  'resize-video',
   'rotate-video',
   'add-subtitles',
+  'screen-recorder',
 ])
 
 const AUDIO_STUDIO_SLUGS = new Set([
@@ -118,6 +132,11 @@ const TEXT_STUDIO_SLUGS = new Set([
   'text-to-speech',
   'text-url-encoder-decoder',
   'word-counter',
+  'password-generator',
+  'lorem-ipsum-generator',
+  'emoji-copy-paste',
+  'fancy-text-generator',
+  'random-name-picker',
 ])
 
 const DEV_STUDIO_SLUGS = new Set([
@@ -133,6 +152,11 @@ const DEV_STUDIO_SLUGS = new Set([
   'regex-tester',
   'sql-formatter',
   'uuid-generator',
+  'css-gradient-generator',
+  'html-to-markdown',
+  'json-to-csv',
+  'cron-expression-generator',
+  'markdown-previewer',
 ])
 
 const SEO_STUDIO_SLUGS = new Set([
@@ -148,24 +172,31 @@ const SEO_STUDIO_SLUGS = new Set([
   'serp-preview',
   'sitemap-generator',
   'url-slug-generator',
+  'og-image-generator',
+  'schema-markup-generator',
+  'redirect-checker',
 ])
 
 const CALCULATOR_STUDIO_SLUGS_SET = new Set(CALCULATOR_STUDIO_SLUGS)
 
-const PRE_RENDERED_TOOL_SLUGS = new Set([
-  'all-in-one-video-downloader',
-  ...Object.keys(STUDIO_COMPONENTS),
-  ...Object.keys(IMAGE_STUDIO_COMPONENTS),
-  ...VIDEO_STUDIO_SLUGS,
-  ...AUDIO_STUDIO_SLUGS,
-  ...TEXT_STUDIO_SLUGS,
-  ...DEV_STUDIO_SLUGS,
-  ...SEO_STUDIO_SLUGS,
-  ...CALCULATOR_STUDIO_SLUGS,
-  ...TOOLS.filter(tool => tool.popular || tool.tags.includes('trending')).map(tool => tool.slug),
-])
+export async function generateStaticParams() {
+  const TOOLS = await getTools()
+  const trendingSlugs = TOOLS.filter(tool => tool.popular || tool.tags.includes('trending')).map(tool => tool.slug)
+  
+  const PRE_RENDERED_TOOL_SLUGS = new Set([
+    'all-in-one-video-downloader',
+    ...Object.keys(STUDIO_COMPONENTS),
+    ...Object.keys(IMAGE_STUDIO_COMPONENTS),
+    ...VIDEO_STUDIO_SLUGS,
+    ...AUDIO_STUDIO_SLUGS,
+    ...TEXT_STUDIO_SLUGS,
+    ...DEV_STUDIO_SLUGS,
+    ...SEO_STUDIO_SLUGS,
+    ...CALCULATOR_STUDIO_SLUGS,
+    ...FILE_STUDIO_SLUGS,
+    ...trendingSlugs,
+  ])
 
-export function generateStaticParams() {
   return TOOLS.filter(tool => PRE_RENDERED_TOOL_SLUGS.has(tool.slug)).map(tool => ({
     category: tool.categorySlug,
     tool: tool.slug,
@@ -174,7 +205,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { tool: toolSlug } = await params
-  const tool = getToolBySlug(toolSlug)
+  const tool = await getToolBySlug(toolSlug)
   if (!tool) return {}
 
   if (tool.slug === 'all-in-one-video-downloader') {
@@ -182,26 +213,127 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: 'Video Downloader - MP4, WEBM, MP3, M4A and HD Thumbnail',
       description:
         'Download MP4, WEBM, MP3, M4A and HD thumbnails from YouTube, TikTok, Instagram, Twitter/X, Vimeo and more.',
+      keywords: ['video downloader', 'youtube downloader', 'mp4 download', 'mp3 converter', 'tiktok downloader'],
     }
   }
 
+  const title = `${tool.name} - Free Online Tool | Multiverse`
+  const description = `${tool.description} Free, fast, no login required. Use ${tool.name} online instantly.`
+
   return {
-    title: `${tool.name} - Free Online Tool`,
-    description: tool.description,
+    title,
+    description,
+    keywords: [
+      tool.name.toLowerCase(),
+      `${tool.name.toLowerCase()} online`,
+      `free ${tool.name.toLowerCase()}`,
+      `${tool.category.toLowerCase()} tool`,
+      ...tool.tags,
+    ],
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`,
+    },
   }
 }
 
 export default async function ToolPage({ params }: Props) {
   const { category, tool: toolSlug } = await params
-  const tool = getToolBySlug(toolSlug)
+  const tool = await getToolBySlug(toolSlug)
 
-  if (!tool || tool.categorySlug !== category) {
+  if (!tool || tool.categorySlug !== category || !tool.enabled) {
     notFound()
   }
 
-  if (tool.slug === 'all-in-one-video-downloader') {
+  const TOOLS = await getTools()
+
+  const schemaMarkup = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: tool.name,
+    description: tool.description,
+    applicationCategory: 'BrowserApplication',
+    operatingSystem: 'All',
+    offers: {
+      '@type': 'Offer',
+      price: '0.00',
+      priceCurrency: 'USD',
+    },
+    url: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`,
+  }
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://multiverse-tools.vercel.app/'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': 'Tools',
+        'item': 'https://multiverse-tools.vercel.app/tools'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 3,
+        'name': tool.category,
+        'item': `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}`
+      },
+      {
+        '@type': 'ListItem',
+        'position': 4,
+        'name': tool.name,
+        'item': `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`
+      }
+    ]
+  }
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    'mainEntity': [
+      {
+        '@type': 'Question',
+        'name': `How do I use ${tool.name}?`,
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': `Simply upload your input, adjust settings if needed, and click the process button. Our tool handles everything in-browser for maximum speed and privacy.`
+        }
+      },
+      {
+        '@type': 'Question',
+        'name': `Is this ${tool.name} tool free?`,
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': `Yes, all tools on Multiverse are 100% free to use. No registration or credit card is required to access our professional utility features.`
+        }
+      },
+      {
+        '@type': 'Question',
+        'name': `Is my data secure while using ${tool.name}?`,
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': `Absolutely. We use WASM-based client-side processing, meaning your files never leave your computer. Processing happens locally on your device for total privacy.`
+        }
+      }
+    ]
+  }
+
+  const combinedSchema = [schemaMarkup, breadcrumbSchema, faqSchema]
+
+  const DOWNLOADER_SLUGS = new Set(['all-in-one-video-downloader', 'tiktok-downloader', 'instagram-reels-downloader', 'youtube-shorts-downloader'])
+
+  if (DOWNLOADER_SLUGS.has(tool.slug)) {
     return (
-      <PublicLayout>
+      <PublicLayout schemaMarkup={combinedSchema}>
+        <RecentTracker slug={tool.slug} />
         <VideoDownloaderClient />
       </PublicLayout>
     )
@@ -211,12 +343,12 @@ export default async function ToolPage({ params }: Props) {
   const content = PDF_STUDIO_STATIC_CONTENT[tool.slug as keyof typeof PDF_STUDIO_STATIC_CONTENT]
 
   if (StudioComponent && content) {
-    const relatedTools = content.relatedSlugs
-      .map(slug => getToolBySlug(slug))
-      .filter((item): item is Tool => Boolean(item))
+    const relatedToolsData = await Promise.all(content.relatedSlugs.map(slug => getToolBySlug(slug)))
+    const relatedTools = relatedToolsData.filter((item): item is Tool => Boolean(item))
 
     return (
-      <PublicLayout>
+      <PublicLayout schemaMarkup={combinedSchema}>
+        <RecentTracker slug={tool.slug} />
         <PdfStudioPageFrame
           tool={tool}
           content={{
@@ -237,7 +369,8 @@ export default async function ToolPage({ params }: Props) {
     ).slice(0, 4)
 
     return (
-      <PublicLayout>
+      <PublicLayout schemaMarkup={combinedSchema}>
+        <RecentTracker slug={tool.slug} />
         <ImageStudioPageFrame tool={tool} relatedTools={relatedTools}>
           <ImageStudioComponent tool={tool} />
         </ImageStudioPageFrame>
@@ -251,7 +384,8 @@ export default async function ToolPage({ params }: Props) {
     ).slice(0, 4)
 
     return (
-      <PublicLayout>
+      <PublicLayout schemaMarkup={combinedSchema}>
+        <RecentTracker slug={tool.slug} />
         <VideoStudioPageFrame tool={tool} relatedTools={relatedTools}>
           <VideoStudio tool={tool} />
         </VideoStudioPageFrame>
@@ -265,7 +399,8 @@ export default async function ToolPage({ params }: Props) {
     ).slice(0, 4)
 
     return (
-      <PublicLayout>
+      <PublicLayout schemaMarkup={combinedSchema}>
+        <RecentTracker slug={tool.slug} />
         <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
           <AudioStudio tool={tool} />
         </WorkbenchStudioPageFrame>
@@ -279,7 +414,8 @@ export default async function ToolPage({ params }: Props) {
     ).slice(0, 4)
 
     return (
-      <PublicLayout>
+      <PublicLayout schemaMarkup={combinedSchema}>
+        <RecentTracker slug={tool.slug} />
         <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
           <TextStudio tool={tool} />
         </WorkbenchStudioPageFrame>
@@ -293,7 +429,8 @@ export default async function ToolPage({ params }: Props) {
     ).slice(0, 4)
 
     return (
-      <PublicLayout>
+      <PublicLayout schemaMarkup={combinedSchema}>
+        <RecentTracker slug={tool.slug} />
         <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
           <DevStudio tool={tool} />
         </WorkbenchStudioPageFrame>
@@ -307,7 +444,8 @@ export default async function ToolPage({ params }: Props) {
     ).slice(0, 4)
 
     return (
-      <PublicLayout>
+      <PublicLayout schemaMarkup={combinedSchema}>
+        <RecentTracker slug={tool.slug} />
         <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
           <SeoStudio tool={tool} />
         </WorkbenchStudioPageFrame>
@@ -321,9 +459,25 @@ export default async function ToolPage({ params }: Props) {
     ).slice(0, 4)
 
     return (
-      <PublicLayout>
+      <PublicLayout schemaMarkup={combinedSchema}>
+        <RecentTracker slug={tool.slug} />
         <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
           <CalculatorStudio tool={tool} />
+        </WorkbenchStudioPageFrame>
+      </PublicLayout>
+    )
+  }
+
+  if (FILE_STUDIO_SLUGS.has(tool.slug)) {
+    const relatedTools = TOOLS.filter(
+      item => item.categorySlug === 'file' && item.slug !== tool.slug
+    ).slice(0, 4)
+
+    return (
+      <PublicLayout schemaMarkup={combinedSchema}>
+        <RecentTracker slug={tool.slug} />
+        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
+          <FileViewerStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
     )
@@ -472,6 +626,8 @@ export default async function ToolPage({ params }: Props) {
               </ul>
             </div>
           </div>
+
+          <SEOContent tool={tool} />
 
           {related.length > 0 && (
             <div>

@@ -1,14 +1,26 @@
 import { NextRequest } from 'next/server'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
+const AI_STREAM_RATE_LIMIT = { max: 20, windowMs: 60_000 }
+
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req.headers)
+    const limit = checkRateLimit(`ai-stream:${ip}`, AI_STREAM_RATE_LIMIT)
+    if (!limit.allowed) {
+      return new Response(
+        JSON.stringify({ error: 'Rate limit exceeded. Max 20 AI requests per minute.' }),
+        { status: 429, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
+
     const body = await req.json()
     const { messages, model = 'openai/gpt-4o-mini', system = 'You are a helpful AI assistant.' } = body
 
-    const apiKey = process.env.OPENROUTER_API_KEY || process.env.NEXT_PUBLIC_OPENROUTER_API_KEY
+    const apiKey = process.env.OPENROUTER_API_KEY
     if (!apiKey) {
       return new Response(
         JSON.stringify({ error: 'OpenRouter API key not configured. Add OPENROUTER_API_KEY to .env.local' }),

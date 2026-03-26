@@ -295,8 +295,9 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
       return
     }
 
+    const isWasm = ['compress-video', 'video-to-mp3', 'video-to-gif'].includes(tool.slug)
     setLoading(true)
-    const done = startProgress()
+    const done = !isWasm ? startProgress() : () => { setProgress(100) }
     try {
       const leadFile = activeItem?.file || queue[0].file
       const options: Record<string, string | File | undefined> = {}
@@ -320,7 +321,14 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
         Object.assign(options, { fps: gifFps, scale: gifScale })
       }
 
-      const nextResult = await handleVideoTool({ slug: tool.slug, file: leadFile, files: queue.map(item => item.file), textInput, options })
+      const nextResult = await handleVideoTool({ 
+        slug: tool.slug, 
+        file: leadFile, 
+        files: queue.map(item => item.file), 
+        textInput, 
+        options,
+        onProgress: isWasm ? setProgress : undefined
+      })
       if (nextResult.apiError) {
         setError(nextResult.apiError)
         return

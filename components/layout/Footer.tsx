@@ -7,7 +7,6 @@ const COPYRIGHT_YEAR = 2026
 const FOOTER_LINKS = {
   Universes: [
     { name: 'Tools Universe', href: '/tools' },
-    { name: 'AI Hub', href: '/ai' },
     { name: 'Design AI', href: '/design' },
     { name: 'Learn', href: '/learn' },
     { name: 'Discover', href: '/discover' },
@@ -22,7 +21,7 @@ const FOOTER_LINKS = {
     { name: 'All-in-One Downloader', href: '/tools/video/all-in-one-video-downloader' },
     { name: 'Merge PDF', href: '/tools/pdf/merge-pdf' },
     { name: 'Compress Image', href: '/tools/image/compress-image' },
-    { name: 'AI Summarizer', href: '/tools/ai/ai-summarizer' },
+    { name: 'Word Counter', href: '/tools/text/word-counter' },
     { name: 'JSON Formatter', href: '/tools/dev/json-formatter' },
     { name: 'QR Code Generator', href: '/tools/image/qr-code-generator' },
   ],
@@ -32,7 +31,7 @@ const FOOTER_LINKS = {
     { name: 'Image Tools', href: '/tools/image' },
     { name: 'Video Tools', href: '/tools/video' },
     { name: 'Dev Tools', href: '/tools/dev' },
-    { name: 'AI Tools', href: '/tools/ai' },
+    { name: 'SEO Tools', href: '/tools/seo' },
   ],
 }
 

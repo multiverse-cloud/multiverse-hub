@@ -39,6 +39,11 @@ const TEXT_COPY = {
   'text-to-speech': { eyebrow: 'Voice output', title: 'Text to Speech', summary: 'Convert written text into a playable audio file from the same premium text workspace.', badges: ['Audio preview', 'Speed control', 'MP3 output'], actionLabel: 'Generate speech' },
   'text-url-encoder-decoder': { eyebrow: 'Encoding utility', title: 'URL Encoder / Decoder', summary: 'Encode clean URL components or decode an existing encoded string in one focused panel.', badges: ['Encode', 'Decode', 'Clean output'], actionLabel: 'Process URL text' },
   'word-counter': { eyebrow: 'Text metrics', title: 'Word Counter', summary: 'Measure words, reading time, structure, and readability basics from one live editor.', badges: ['Word count', 'Read time', 'Structure'], actionLabel: 'Analyze text' },
+  'password-generator': { eyebrow: 'Security utility', title: 'Password Generator', summary: 'Generate strong, secure random passwords with custom length and character settings.', badges: ['Custom length', 'Symbols & digits', 'Copy ready'], actionLabel: 'Generate password' },
+  'lorem-ipsum-generator': { eyebrow: 'Placeholder content', title: 'Lorem Ipsum Generator', summary: 'Generate placeholder paragraphs for mockups, designs, and wireframes instantly.', badges: ['Custom paragraphs', 'Quick copy', 'Design ready'], actionLabel: 'Generate text' },
+  'emoji-copy-paste': { eyebrow: 'Emoji browser', title: 'Emoji Copy Paste', summary: 'Browse popular emoji categories and copy any emoji to your clipboard with one click.', badges: ['All categories', 'One-click copy', 'Search & browse'], actionLabel: 'Load emojis' },
+  'fancy-text-generator': { eyebrow: 'Style converter', title: 'Fancy Text Generator', summary: 'Convert text into stylish Unicode fonts for Instagram bios, Twitter names, and social media.', badges: ['Fancy fonts', 'Unicode styles', 'Social ready'], actionLabel: 'Generate styles' },
+  'random-name-picker': { eyebrow: 'Randomizer', title: 'Random Name Picker', summary: 'Enter a list of names and pick random winners for raffles, giveaways, or classroom activities.', badges: ['Random pick', 'Spin to win', 'Fair selection'], actionLabel: 'Pick a name' },
 } as const
 
 type StudioResult = FileProcessResult
@@ -306,6 +311,84 @@ export default function TextStudio({ tool }: { tool: Tool }) {
       if (tool.slug === 'word-counter') {
         const resultText = await handleTextTool('word-counter', primaryText, '')
         setResult(makeTextResult(resultText.output || '', [{ label: 'Words', value: `${primaryText.split(/\s+/).filter(Boolean).length}` }, { label: 'Chars', value: `${primaryText.length}` }]))
+        return
+      }
+
+      if (tool.slug === 'password-generator') {
+        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?'
+        const lengths = [16, 20, 24, 32]
+        const passwords = lengths.map(len => {
+          const arr = new Uint32Array(len)
+          crypto.getRandomValues(arr)
+          return Array.from(arr, v => chars[v % chars.length]).join('')
+        })
+        const output = passwords.map((p, i) => `${lengths[i]} chars: ${p}`).join('\n\n')
+        setResult(makeTextResult(output, [{ label: 'Generated', value: `${lengths.length} passwords` }, { label: 'Strength', value: 'Very strong' }]))
+        return
+      }
+
+      if (tool.slug === 'lorem-ipsum-generator') {
+        const loremSentences = [
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+          'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+          'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.',
+          'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.',
+          'Nulla pariatur excepteur sint occaecat cupidatat non proident.',
+          'Curabitur pretium tincidunt lacus nulla gravida orci.',
+          'Praesent blandit dolor sed non massa pulvinar.',
+          'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices.',
+          'Maecenas sed diam eget risus varius blandit sit amet non magna.',
+          'Donec ullamcorper nulla non metus auctor fringilla.',
+          'Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.',
+        ]
+        const paragraphCount = Math.max(1, Math.min(10, parseInt(primaryText) || 3))
+        const paragraphs = Array.from({ length: paragraphCount }, (_, i) => {
+          const start = i % loremSentences.length
+          return Array.from({ length: 4 }, (__, j) => loremSentences[(start + j) % loremSentences.length]).join(' ')
+        })
+        setResult(makeTextResult(paragraphs.join('\n\n'), [{ label: 'Paragraphs', value: `${paragraphCount}` }, { label: 'Words', value: `${paragraphs.join(' ').split(/\s+/).length}` }]))
+        return
+      }
+
+      if (tool.slug === 'emoji-copy-paste') {
+        const emojiGroups: Record<string, string[]> = {
+          'Smileys': ['😀','😂','🤣','😍','🥰','😎','🤩','😴','🤔','😱','🥳','😡','🤯','🥺','😇'],
+          'Hands': ['👍','👎','👏','🙌','🤝','✌️','🤞','👋','🤟','💪','🫶','🙏'],
+          'Hearts': ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','💕','💖','💗','💘'],
+          'Animals': ['🐶','🐱','🐻','🦊','🐼','🐸','🐵','🦁','🐰','🐯','🦄','🐝'],
+          'Food': ['🍕','🍔','🍟','🌮','🍣','🍩','🍪','🎂','🍫','☕','🧋','🍺'],
+          'Travel': ['✈️','🚀','🏖️','🏔️','🌍','🗽','🎡','🚗','🛳️','🏕️','🌅','🎪'],
+          'Symbols': ['⭐','🔥','💯','✅','❌','⚡','💡','🎯','🏆','💎','🎵','📌'],
+        }
+        const output = Object.entries(emojiGroups).map(([group, emojis]) => `${group}:\n${emojis.join('  ')}`).join('\n\n')
+        setResult(makeTextResult(output, [{ label: 'Categories', value: `${Object.keys(emojiGroups).length}` }, { label: 'Total', value: `${Object.values(emojiGroups).flat().length} emojis` }]))
+        return
+      }
+
+      if (tool.slug === 'fancy-text-generator') {
+        const text = primaryText.trim() || 'Hello World'
+        const fancyMaps: Record<string, (c: string) => string> = {
+          '𝗕𝗼𝗹𝗱': c => { const code = c.charCodeAt(0); if (code >= 65 && code <= 90) return String.fromCodePoint(0x1D5D4 + code - 65); if (code >= 97 && code <= 122) return String.fromCodePoint(0x1D5EE + code - 97); return c },
+          '𝘐𝘵𝘢𝘭𝘪𝘤': c => { const code = c.charCodeAt(0); if (code >= 65 && code <= 90) return String.fromCodePoint(0x1D608 + code - 65); if (code >= 97 && code <= 122) return String.fromCodePoint(0x1D622 + code - 97); return c },
+          '𝙼𝚘𝚗𝚘': c => { const code = c.charCodeAt(0); if (code >= 65 && code <= 90) return String.fromCodePoint(0x1D670 + code - 65); if (code >= 97 && code <= 122) return String.fromCodePoint(0x1D68A + code - 97); return c },
+          'Ⓒⓘⓡⓒⓛⓔⓓ': c => { const code = c.charCodeAt(0); if (code >= 65 && code <= 90) return String.fromCodePoint(0x24B6 + code - 65); if (code >= 97 && code <= 122) return String.fromCodePoint(0x24D0 + code - 97); return c },
+        }
+        const output = Object.entries(fancyMaps).map(([style, fn]) => `${style}:\n${text.split('').map(fn).join('')}`).join('\n\n')
+        setResult(makeTextResult(output, [{ label: 'Styles', value: `${Object.keys(fancyMaps).length} variants` }, { label: 'Length', value: `${text.length} chars` }]))
+        return
+      }
+
+      if (tool.slug === 'random-name-picker') {
+        const names = primaryText.split('\n').map(n => n.trim()).filter(Boolean)
+        if (names.length === 0) { setError('Enter names (one per line) to pick from.'); return }
+        const arr = new Uint32Array(1)
+        crypto.getRandomValues(arr)
+        const winner = names[arr[0] % names.length]
+        const shuffled = [...names].sort(() => Math.random() - 0.5)
+        const output = `🎉 Winner: ${winner}\n\nFull shuffle order:\n${shuffled.map((n, i) => `${i + 1}. ${n}`).join('\n')}`
+        setResult(makeTextResult(output, [{ label: 'Entries', value: `${names.length}` }, { label: 'Winner', value: winner }]))
+        return
       }
     } catch (processError) {
       setError((processError as Error).message)

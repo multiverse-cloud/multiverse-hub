@@ -11,8 +11,7 @@ import {
   GraduationCap,
   Home,
   House,
-  Image,
-  Menu,
+  Image as ImageIcon,
   Music,
   Paintbrush,
   Search,
@@ -25,7 +24,11 @@ import {
   Zap,
 } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
+import MobileNav from './MobileNav'
 import { cn } from '@/lib/utils'
+import { ACTIVE_CATEGORIES, type Tool } from '@/lib/tools-data'
+import { getTools } from '@/lib/db'
+import { getLucideIcon } from '@/lib/icons'
 
 type MegaMenuItem = {
   name: string
@@ -38,41 +41,21 @@ type NavLink = {
   name: string
   href: string
   icon: typeof House
+  isToolsMegaMenu?: boolean
   megaItems?: MegaMenuItem[]
 }
 
-const TOOL_MEGA_MENU_ITEMS: MegaMenuItem[] = [
-  { name: 'PDF Tools', href: '/tools/pdf', icon: FileText, desc: 'Convert, merge, compress' },
-  { name: 'Image Tools', href: '/tools/image', icon: Image, desc: 'Resize, crop, convert' },
-  { name: 'Video Tools', href: '/tools/video', icon: Video, desc: 'Downloader, convert, trim' },
-  { name: 'Audio Tools', href: '/tools/audio', icon: Music, desc: 'Edit, convert, record' },
-  { name: 'Text Tools', href: '/tools/text', icon: Type, desc: 'Format, analyze, convert' },
-  { name: 'Dev Tools', href: '/tools/dev', icon: Code2, desc: 'JSON, Base64, regex' },
-  { name: 'SEO Tools', href: '/tools/seo', icon: Search, desc: 'Meta, keywords, sitemap' },
-  { name: 'Calculators', href: '/tools/calculator', icon: Calculator, desc: 'EMI, BMI, currency' },
-  { name: 'AI Tools', href: '/tools/ai', icon: Bot, desc: 'Summarize, translate, write' },
-]
-
 const NAV_LINKS: NavLink[] = [
   { name: 'Home', href: '/', icon: Home },
-  { name: 'Tools', href: '/tools', icon: Wrench, megaItems: TOOL_MEGA_MENU_ITEMS },
-  {
-    name: 'AI',
-    href: '/ai',
-    icon: Bot,
-    megaItems: [
-      { name: 'AI Hub', href: '/ai', icon: Bot, desc: 'Prompts, chat, and creative workflows' },
-      { name: 'AI Tools', href: '/tools/ai', icon: Sparkles, desc: 'Summarize, translate, and write' },
-      { name: 'AI Image Generator', href: '/tools/ai/ai-image-generator', icon: Image, desc: 'Generate visuals from prompts' },
-    ],
-  },
+  { name: 'Tools', href: '/tools', icon: Wrench, isToolsMegaMenu: true },
+  { name: 'My Library', href: '/dashboard', icon: Sparkles },
   {
     name: 'Design',
     href: '/design',
     icon: Paintbrush,
     megaItems: [
       { name: 'Design AI', href: '/design', icon: Paintbrush, desc: 'Layouts, assets, and visual ideas' },
-      { name: 'Image Tools', href: '/tools/image', icon: Image, desc: 'Resize, crop, and remove backgrounds' },
+      { name: 'Image Tools', href: '/tools/image', icon: ImageIcon, desc: 'Resize, crop, and remove backgrounds' },
       { name: 'Marketplace', href: '/marketplace', icon: ShoppingBag, desc: 'Templates and polished UI kits' },
     ],
   },
@@ -83,7 +66,7 @@ const NAV_LINKS: NavLink[] = [
     megaItems: [
       { name: 'Learn Universe', href: '/learn', icon: GraduationCap, desc: 'Study workflows and learning helpers' },
       { name: 'Text Tools', href: '/tools/text', icon: Type, desc: 'Notes, formatting, and text cleanup' },
-      { name: 'AI Summarizer', href: '/tools/ai/ai-summarizer', icon: Sparkles, desc: 'Turn long material into quick notes' },
+      { name: 'Word Counter', href: '/tools/text/word-counter', icon: Sparkles, desc: 'Count words and characters instantly' },
     ],
   },
   {
@@ -118,7 +101,63 @@ const NAV_LINKS: NavLink[] = [
   },
 ]
 
-function MegaMenu({ link }: { link: NavLink }) {
+function MegaMenu({ link, tools }: { link: NavLink; tools?: Tool[] }) {
+  if (link.isToolsMegaMenu && tools) {
+    const categories = ACTIVE_CATEGORIES.map(cat => {
+      const catTools = tools.filter(t => t.categorySlug === cat.slug).slice(0, 3)
+      return { ...cat, tools: catTools }
+    })
+
+    return (
+      <div
+        className={cn(
+          'pointer-events-none absolute left-[30%] top-full z-50 w-[800px] -translate-x-[35%] pt-3 opacity-0 transition-all duration-200',
+          'translate-y-2 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100',
+          'group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100'
+        )}
+      >
+        <div className="rounded-[24px] border border-slate-200/80 bg-white/95 p-6 shadow-[0_32px_64px_-24px_rgba(15,23,42,0.22)] backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/95 dark:shadow-[0_32px_64px_-24px_rgba(2,6,23,0.55)]">
+          <div className="grid grid-cols-3 gap-6">
+            {categories.map(cat => {
+              const CatIcon = getLucideIcon(cat.icon, Wrench)
+              return (
+                <div key={cat.slug} className="flex flex-col gap-3">
+                  <Link href={`/tools/${cat.slug}`} className="group/cat flex items-center gap-2">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/40">
+                      <CatIcon className="h-4 w-4 text-indigo-600 dark:text-indigo-300" />
+                    </div>
+                    <span className="font-display font-bold text-slate-900 transition-colors group-hover/cat:text-indigo-600 dark:text-slate-100 dark:group-hover/cat:text-indigo-400">
+                      {cat.name}
+                    </span>
+                  </Link>
+                  <div className="flex flex-col gap-1.5 pl-10">
+                    {cat.tools.map(t => (
+                      <Link key={t.slug} href={`/tools/${t.categorySlug}/${t.slug}`} className="truncate text-[13px] font-medium text-slate-500 transition-colors hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-300">
+                        {t.name}
+                      </Link>
+                    ))}
+                    <Link href={`/tools/${cat.slug}`} className="mt-1 flex items-center gap-1 text-[13px] font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">
+                      View all <ChevronDown className="h-3 w-3 -rotate-90" />
+                    </Link>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <div className="mt-6 flex justify-center border-t border-slate-200/80 pt-4 dark:border-slate-800/80">
+            <Link
+              href="/tools"
+              className="flex items-center gap-2 rounded-xl bg-slate-100 px-6 py-2.5 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+            >
+              <Zap className="h-4 w-4 text-amber-500" />
+              Explore all 150+ free tools
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   if (!link.megaItems?.length) {
     return null
   }
@@ -170,10 +209,11 @@ function MegaMenu({ link }: { link: NavLink }) {
   )
 }
 
-export default function Navbar() {
+export default async function Navbar() {
   const clerkEnabled = Boolean(
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY
   )
+  const tools = await getTools()
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/88 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.35)] backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/88 dark:shadow-[0_12px_26px_-20px_rgba(2,6,23,0.55)]">
@@ -227,71 +267,36 @@ export default function Navbar() {
             </Link>
           )}
 
-          <details className="relative lg:hidden">
-            <summary className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-xl border border-slate-200 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-900 [&::-webkit-details-marker]:hidden">
-              <Menu className="h-4 w-4" />
-            </summary>
-
-            <div className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_22px_44px_-28px_rgba(15,23,42,0.22)] dark:border-slate-800 dark:bg-slate-950">
-              <form action="/tools" method="get" className="border-b border-slate-200 p-4 dark:border-slate-800">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <input
-                    type="text"
-                    name="q"
-                    placeholder="Search tools"
-                    className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-4 text-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-800 dark:bg-slate-900"
-                  />
-                </div>
-              </form>
-
-              <nav className="space-y-1 p-3">
-                {NAV_LINKS.map(link => {
-                  const Icon = link.icon
-
-                  return (
+          <MobileNav
+            authSlot={
+              clerkEnabled ? (
+                <>
+                  <SignedOut>
                     <Link
-                      key={link.name}
-                      href={link.href}
-                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-slate-100 hover:text-foreground dark:hover:bg-slate-900"
+                      href="/sign-in"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white"
                     >
-                      <Icon className="h-4 w-4" />
-                      {link.name}
+                      <Sparkles className="h-4 w-4" />
+                      Sign In
                     </Link>
-                  )
-                })}
-              </nav>
-
-              <div className="border-t border-slate-200 p-4 dark:border-slate-800">
-                {clerkEnabled ? (
-                  <>
-                    <SignedOut>
-                      <Link
-                        href="/sign-in"
-                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white"
-                      >
-                        <Sparkles className="h-4 w-4" />
-                        Sign In
-                      </Link>
-                    </SignedOut>
-                    <SignedIn>
-                      <div className="flex justify-center">
-                        <UserButton afterSignOutUrl="/" />
-                      </div>
-                    </SignedIn>
-                  </>
-                ) : (
-                  <Link
-                    href="/sign-in"
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white"
-                  >
-                    <Sparkles className="h-4 w-4" />
-                    Sign In
-                  </Link>
-                )}
-              </div>
-            </div>
-          </details>
+                  </SignedOut>
+                  <SignedIn>
+                    <div className="flex justify-center">
+                      <UserButton afterSignOutUrl="/" />
+                    </div>
+                  </SignedIn>
+                </>
+              ) : (
+                <Link
+                  href="/sign-in"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  Sign In
+                </Link>
+              )
+            }
+          />
         </div>
       </div>
 
@@ -303,7 +308,7 @@ export default function Navbar() {
             {NAV_LINKS.map(link => {
               const Icon = link.icon
 
-              if (link.megaItems?.length) {
+              if (link.megaItems?.length || link.isToolsMegaMenu) {
                 return (
                   <div key={link.name} className="group relative -mb-3 pb-3">
                     <Link
@@ -315,7 +320,7 @@ export default function Navbar() {
                       <ChevronDown className="h-3 w-3 transition-transform group-hover:rotate-180" />
                     </Link>
 
-                    <MegaMenu link={link} />
+                    <MegaMenu link={link} tools={tools} />
                   </div>
                 )
               }

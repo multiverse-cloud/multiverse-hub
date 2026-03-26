@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import type { Tool } from '@/lib/tools-data'
 import ToolBreadcrumb from './ToolBreadcrumb'
 import ToolCard from './ToolCard'
+import SEOContent from './SEOContent'
 
 export default function VideoStudioPageFrame({
   tool,
@@ -24,6 +25,8 @@ export default function VideoStudioPageFrame({
         />
 
         {children}
+
+        <SEOContent tool={tool} />
 
         {relatedTools.length > 0 && (
           <section className="mt-10">

@@ -31,6 +31,11 @@ const DEV_COPY = {
   'regex-tester': { eyebrow: 'Pattern debugger', title: 'Regex Tester', summary: 'Test your expression, review matches, and inspect highlight output in one place.', badges: ['Pattern + flags', 'Match list', 'Debug output'], actionLabel: 'Test regex' },
   'sql-formatter': { eyebrow: 'Query cleanup', title: 'SQL Formatter', summary: 'Reformat long SQL queries into cleaner blocks that are easier to scan and share.', badges: ['Readable query', 'Keyword formatting', 'Copy ready'], actionLabel: 'Format SQL' },
   'uuid-generator': { eyebrow: 'ID generator', title: 'UUID Generator', summary: 'Generate fresh UUID values in a compact utility flow with quick copy support.', badges: ['Multiple UUIDs', 'Instant output', 'Copy ready'], actionLabel: 'Generate UUIDs' },
+  'css-gradient-generator': { eyebrow: 'Design utility', title: 'CSS Gradient Generator', summary: 'Create and preview beautiful CSS gradients with a live visual editor and copy-ready code.', badges: ['Linear & radial', 'Live preview', 'Copy CSS'], actionLabel: 'Generate gradient' },
+  'html-to-markdown': { eyebrow: 'Format converter', title: 'HTML to Markdown', summary: 'Convert HTML markup into clean, readable Markdown for docs, README files, and notes.', badges: ['Clean output', 'Tags to Markdown', 'Copy ready'], actionLabel: 'Convert to Markdown' },
+  'json-to-csv': { eyebrow: 'Data converter', title: 'JSON to CSV', summary: 'Transform JSON arrays into downloadable CSV spreadsheet format for analysis.', badges: ['Auto headers', 'CSV download', 'Fast convert'], actionLabel: 'Convert to CSV' },
+  'cron-expression-generator': { eyebrow: 'Schedule builder', title: 'Cron Expression Generator', summary: 'Build cron expressions from plain English descriptions with instant preview.', badges: ['Visual builder', 'Schedule preview', 'Copy ready'], actionLabel: 'Generate cron' },
+  'markdown-previewer': { eyebrow: 'Live render', title: 'Markdown Previewer', summary: 'Write Markdown and preview the rendered output in real time with syntax highlighting.', badges: ['Live preview', 'GitHub style', 'Export ready'], actionLabel: 'Render preview' },
 } as const
 
 type StudioResult = FileProcessResult
@@ -134,6 +139,97 @@ export default function DevStudio({ tool }: { tool: Tool }) {
       if (tool.slug === 'sql-formatter') {
         const output = formatSql(inputText)
         setResult({ output, metrics: [{ label: 'Query lines', value: `${output.split('\n').length}` }] })
+        return
+      }
+
+      if (tool.slug === 'css-gradient-generator') {
+        const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#38f9d7', '#fa709a', '#fee140', '#a18cd1', '#fbc2eb']
+        const randomColors = Array.from({ length: 3 }, () => colors[Math.floor(Math.random() * colors.length)])
+        const angle = Math.floor(Math.random() * 360)
+        const linear = `background: linear-gradient(${angle}deg, ${randomColors[0]}, ${randomColors[1]});`
+        const radial = `background: radial-gradient(circle, ${randomColors[0]}, ${randomColors[2]});`
+        const multi = `background: linear-gradient(${angle}deg, ${randomColors.join(', ')});`
+        const output = `/* Linear Gradient */\n${linear}\n\n/* Radial Gradient */\n${radial}\n\n/* Multi-stop Gradient */\n${multi}\n\n/* Tailwind-style class */\n/* from-[${randomColors[0]}] via-[${randomColors[1]}] to-[${randomColors[2]}] */`
+        setResult({ output, metrics: [{ label: 'Variants', value: '3 gradients' }, { label: 'Angle', value: `${angle}°` }] })
+        return
+      }
+
+      if (tool.slug === 'html-to-markdown') {
+        let md = inputText
+          .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1\n')
+          .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1\n')
+          .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1\n')
+          .replace(/<h4[^>]*>(.*?)<\/h4>/gi, '#### $1\n')
+          .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
+          .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
+          .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
+          .replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*')
+          .replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/gi, '[$2]($1)')
+          .replace(/<img[^>]*src="([^"]*)"[^>]*alt="([^"]*)"[^>]*\/?>/gi, '![$2]($1)')
+          .replace(/<code[^>]*>(.*?)<\/code>/gi, '`$1`')
+          .replace(/<pre[^>]*>([\s\S]*?)<\/pre>/gi, '```\n$1\n```\n')
+          .replace(/<li[^>]*>(.*?)<\/li>/gi, '- $1\n')
+          .replace(/<br\s*\/?>/gi, '\n')
+          .replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n\n')
+          .replace(/<hr[^>]*\/?>/gi, '---\n')
+          .replace(/<[^>]+>/g, '')
+          .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+          .replace(/\n{3,}/g, '\n\n').trim()
+        setResult({ output: md, metrics: [{ label: 'Lines', value: `${md.split('\n').length}` }, { label: 'Mode', value: 'HTML → Markdown' }] })
+        return
+      }
+
+      if (tool.slug === 'json-to-csv') {
+        try {
+          const data = JSON.parse(inputText)
+          const rows = Array.isArray(data) ? data : [data]
+          if (rows.length === 0) throw new Error('Empty array')
+          const headers = [...new Set(rows.flatMap(r => Object.keys(r)))]
+          const csvLines = [headers.join(','), ...rows.map(r => headers.map(h => { const v = String(r[h] ?? ''); return v.includes(',') || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v }).join(','))]
+          const output = csvLines.join('\n')
+          setResult({ output, metrics: [{ label: 'Rows', value: `${rows.length}` }, { label: 'Columns', value: `${headers.length}` }] })
+        } catch { setError('Invalid JSON input. Paste a JSON array like [{...}, {...}].') }
+        return
+      }
+
+      if (tool.slug === 'cron-expression-generator') {
+        const input = (inputText || 'every day at midnight').toLowerCase().trim()
+        const cronMap: Record<string, string[]> = {
+          'every minute': ['* * * * *', 'Runs every single minute'],
+          'every hour': ['0 * * * *', 'Runs at the start of every hour'],
+          'every day at midnight': ['0 0 * * *', 'Runs once per day at 00:00'],
+          'every day at noon': ['0 12 * * *', 'Runs once per day at 12:00'],
+          'every monday': ['0 0 * * 1', 'Runs every Monday at midnight'],
+          'every friday at 5pm': ['0 17 * * 5', 'Runs every Friday at 17:00'],
+          'every weekday': ['0 9 * * 1-5', 'Runs Mon-Fri at 09:00'],
+          'every 5 minutes': ['*/5 * * * *', 'Runs every 5 minutes'],
+          'every 15 minutes': ['*/15 * * * *', 'Runs every 15 minutes'],
+          'every 30 minutes': ['*/30 * * * *', 'Runs every 30 minutes'],
+          'first day of month': ['0 0 1 * *', 'Runs on the 1st of every month'],
+          'every sunday': ['0 0 * * 0', 'Runs every Sunday at midnight'],
+        }
+        const entries = Object.entries(cronMap)
+        const match = entries.find(([key]) => input.includes(key)) || entries[2]
+        const allExamples = entries.map(([desc, [cron, explanation]]) => `${cron}  →  ${desc}  (${explanation})`).join('\n')
+        const output = `Your cron expression:\n${match[1][0]}\n\nDescription: ${match[1][1]}\n\n── All Common Patterns ────────────────\n${allExamples}`
+        setResult({ output, metrics: [{ label: 'Expression', value: match[1][0] }, { label: 'Schedule', value: match[1][1] }] })
+        return
+      }
+
+      if (tool.slug === 'markdown-previewer') {
+        let rendered = inputText
+          .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+          .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+          .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.+?)\*/g, '<em>$1</em>')
+          .replace(/`([^`]+)`/g, '<code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.9em">$1</code>')
+          .replace(/^\- (.+)$/gm, '<li>$1</li>')
+          .replace(/^---$/gm, '<hr>')
+          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:#4f46e5">$1</a>')
+          .replace(/\n\n/g, '<br><br>')
+        setHtmlPreview(`<div style="font-family:system-ui;padding:20px;line-height:1.8;color:#1e293b">${rendered}</div>`)
+        setResult({ output: inputText, metrics: [{ label: 'Preview', value: 'Live render' }, { label: 'Lines', value: `${inputText.split('\n').length}` }] })
         return
       }
 

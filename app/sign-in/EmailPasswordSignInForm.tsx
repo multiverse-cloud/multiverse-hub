@@ -101,8 +101,8 @@ export default function EmailPasswordSignInForm() {
   const forgotPasswordHref = nextPath ? `/forgot-password?next=${encodeURIComponent(nextPath)}` : '/forgot-password'
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-1.5">
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <div className="space-y-1">
         <label className="text-sm font-medium">Email address</label>
         <div className="relative">
           <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -114,12 +114,12 @@ export default function EmailPasswordSignInForm() {
             autoComplete="username"
             inputMode="email"
             required
-            className="w-full rounded-2xl border border-border bg-muted/50 py-3 pl-10 pr-4 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/20 hover:border-slate-300 dark:hover:border-slate-700"
+            className="w-full rounded-2xl border border-border bg-muted/50 py-2.5 pl-10 pr-4 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/20 hover:border-slate-300 dark:hover:border-slate-700"
           />
         </div>
       </div>
 
-      <div className="space-y-1.5">
+      <div className="space-y-1">
         <div className="flex items-center justify-between gap-3">
           <label className="text-sm font-medium">Password</label>
           <Link href={forgotPasswordHref} className="text-xs font-semibold text-indigo-600 hover:underline dark:text-indigo-300">
@@ -136,7 +136,7 @@ export default function EmailPasswordSignInForm() {
             placeholder="Enter your password"
             autoComplete="current-password"
             required
-            className="w-full rounded-2xl border border-border bg-muted/50 py-3 pl-10 pr-11 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/20 hover:border-slate-300 dark:hover:border-slate-700"
+            className="w-full rounded-2xl border border-border bg-muted/50 py-2.5 pl-10 pr-11 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/20 hover:border-slate-300 dark:hover:border-slate-700"
           />
           <button
             type="button"
@@ -149,14 +149,14 @@ export default function EmailPasswordSignInForm() {
         </div>
       </div>
 
-      <label className="flex items-center gap-3 rounded-2xl border border-border bg-card px-3 py-2.5 text-sm text-muted-foreground">
+      <label className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground cursor-pointer">
         <input
           type="checkbox"
           checked={rememberMe}
           onChange={event => setRememberMe(event.target.checked)}
           className="h-4 w-4 rounded border-border text-indigo-600 focus:ring-indigo-500"
         />
-        Remember me on this device
+        Remember me
       </label>
 
       {error ? (

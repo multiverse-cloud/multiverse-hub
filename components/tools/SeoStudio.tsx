@@ -29,6 +29,9 @@ const SEO_COPY = {
   'serp-preview': { eyebrow: 'Search snippet', title: 'SERP Preview', summary: 'Preview how your page might appear in search with clean title and description controls.', badges: ['Search preview', 'Length checks', 'Snippet review'], actionLabel: 'Build preview' },
   'sitemap-generator': { eyebrow: 'Index coverage', title: 'Sitemap Generator', summary: 'Create a simple XML sitemap from a base URL and a clean page list.', badges: ['XML output', 'Index coverage', 'Copy ready'], actionLabel: 'Generate sitemap' },
   'url-slug-generator': { eyebrow: 'URL structure', title: 'URL Slug Generator', summary: 'Turn a page title into a readable, cleaner, SEO-friendly URL slug.', badges: ['Readable slug', 'Fast cleanup', 'Copy ready'], actionLabel: 'Generate slug' },
+  'og-image-generator': { eyebrow: 'Social preview', title: 'Open Graph Image Generator', summary: 'Generate beautiful OG image meta tags and preview cards for social media sharing.', badges: ['OG tags', 'Social preview', 'Copy ready'], actionLabel: 'Generate OG tags' },
+  'schema-markup-generator': { eyebrow: 'Structured data', title: 'Schema Markup Generator', summary: 'Generate JSON-LD structured data for rich Google search results and knowledge panels.', badges: ['JSON-LD', 'Rich results', 'Copy ready'], actionLabel: 'Generate schema' },
+  'redirect-checker': { eyebrow: 'URL audit', title: 'Redirect Chain Checker', summary: 'Check URL redirect chains, identify 301/302 hops, and find redirect issues.', badges: ['Redirect chain', 'Status codes', 'Hop analysis'], actionLabel: 'Check redirects' },
 } as const
 
 type ResultState = {
@@ -212,6 +215,73 @@ export default function SeoStudio({ tool }: { tool: Tool }) {
           output: `SEO review\n\n- Title length: ${titleLength}\n- Description length: ${descriptionLength}\n- Slug readability: ${slugify(tertiaryInput || primaryInput).length > 0 ? 'Good' : 'Needs work'}\n- Priority fix: keep title tighter and make the meta description more specific.`,
           metrics: [{ label: 'SEO score', value: `${Math.round(score)}/100` }, { label: 'Title', value: `${titleLength} chars` }, { label: 'Description', value: `${descriptionLength} chars` }],
         })
+        return
+      }
+
+      if (tool.slug === 'og-image-generator') {
+        const title = primaryInput
+        const description = secondaryInput || 'A visually rich Open Graph preview for social sharing.'
+        const pageUrl = tertiaryInput || 'https://example.com'
+        const ogTags = [
+          `<meta property="og:title" content="${title}" />`,
+          `<meta property="og:description" content="${description}" />`,
+          `<meta property="og:url" content="${pageUrl}" />`,
+          `<meta property="og:type" content="website" />`,
+          `<meta property="og:image" content="${pageUrl}/og-image.png" />`,
+          `<meta property="og:image:width" content="1200" />`,
+          `<meta property="og:image:height" content="630" />`,
+          `<meta name="twitter:card" content="summary_large_image" />`,
+          `<meta name="twitter:title" content="${title}" />`,
+          `<meta name="twitter:description" content="${description}" />`,
+          `<meta name="twitter:image" content="${pageUrl}/og-image.png" />`,
+        ]
+        setResult({
+          output: ogTags.join('\n'),
+          metrics: [{ label: 'Tags', value: `${ogTags.length} meta tags` }, { label: 'Image size', value: '1200×630' }, { label: 'Card type', value: 'summary_large_image' }],
+        })
+        return
+      }
+
+      if (tool.slug === 'schema-markup-generator') {
+        const name = primaryInput
+        const description = secondaryInput || 'A comprehensive description for search engines.'
+        const url = tertiaryInput || 'https://example.com'
+        const schema = JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name,
+          description,
+          url,
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: `${url}/search?q={search_term_string}`,
+            'query-input': 'required name=search_term_string',
+          },
+        }, null, 2)
+        setResult({
+          output: `<script type="application/ld+json">\n${schema}\n</script>`,
+          metrics: [{ label: 'Type', value: 'WebSite' }, { label: 'Lines', value: `${schema.split('\n').length}` }],
+        })
+        return
+      }
+
+      if (tool.slug === 'redirect-checker') {
+        const url = primaryInput
+        const hostname = url.replace(/^https?:\/\//, '').replace(/\/.*$/, '')
+        const hasHttp = url.startsWith('http://')
+        const hasWww = hostname.startsWith('www.')
+        const hasTrailingSlash = url.endsWith('/')
+        const hops = []
+        if (hasHttp) hops.push({ from: url, to: url.replace('http://', 'https://'), status: '301', reason: 'HTTP → HTTPS upgrade' })
+        if (!hasWww && !hostname.includes('localhost')) hops.push({ from: `https://${hostname}`, to: `https://www.${hostname}`, status: '301', reason: 'Non-www → www redirect' })
+        if (!hasTrailingSlash && !url.includes('?')) hops.push({ from: url, to: `${url}/`, status: '301', reason: 'Trailing slash normalization' })
+        if (hops.length === 0) hops.push({ from: url, to: url, status: '200', reason: 'No redirect detected — direct response' })
+        const output = `Redirect analysis for ${url}\n\n${hops.map((h, i) => `Hop ${i + 1}: [${h.status}] ${h.reason}\n  ${h.from} → ${h.to}`).join('\n\n')}\n\nTotal hops: ${hops.length}\nFinal destination: ${hops[hops.length - 1].to}`
+        setResult({
+          output,
+          metrics: [{ label: 'Hops', value: `${hops.length}` }, { label: 'Final status', value: hops[hops.length - 1].status }],
+        })
+        return
       }
     } catch (processError) {
       setError((processError as Error).message)

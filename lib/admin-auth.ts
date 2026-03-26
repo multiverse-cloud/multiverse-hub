@@ -3,9 +3,6 @@ const decoder = new TextDecoder()
 
 export const ADMIN_SESSION_COOKIE = 'multiverse_admin_session'
 export const ADMIN_SESSION_TTL_SECONDS = 60 * 60 * 24 * 7
-export const DEFAULT_ADMIN_EMAIL = 'admin@multiverse.local'
-export const DEFAULT_ADMIN_PASSWORD = 'MultiverseAdmin!2026'
-const DEFAULT_ADMIN_SESSION_SECRET = 'local-multiverse-admin-session-secret-change-me'
 
 export type AdminSession = {
   email: string
@@ -14,14 +11,28 @@ export type AdminSession = {
 }
 
 export function getAdminCredentials() {
-  return {
-    email: process.env.ADMIN_EMAIL?.trim() || DEFAULT_ADMIN_EMAIL,
-    password: process.env.ADMIN_PASSWORD || DEFAULT_ADMIN_PASSWORD,
+  const email = process.env.ADMIN_EMAIL?.trim()
+  const password = process.env.ADMIN_PASSWORD
+
+  if (!email || !password) {
+    throw new Error(
+      'Admin credentials not configured. Set ADMIN_EMAIL and ADMIN_PASSWORD in .env.local'
+    )
   }
+
+  return { email, password }
 }
 
 function getAdminSessionSecret() {
-  return process.env.ADMIN_SESSION_SECRET || DEFAULT_ADMIN_SESSION_SECRET
+  const secret = process.env.ADMIN_SESSION_SECRET
+
+  if (!secret) {
+    throw new Error(
+      'Admin session secret not configured. Set ADMIN_SESSION_SECRET in .env.local'
+    )
+  }
+
+  return secret
 }
 
 function toBase64(binary: string) {

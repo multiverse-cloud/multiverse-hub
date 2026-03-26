@@ -16,38 +16,13 @@ import {
   runYtDlp,
   sanitizeDownloadFilename,
 } from '@/lib/video-downloader'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 export const maxDuration = 300
 
-const rateLimit = new Map<string, { count: number; reset: number }>()
-const MAX_REQUESTS_PER_IP = 10
-const WINDOW_MS = 60_000
 const DOWNLOAD_CONCURRENCY_LIMIT = Number(process.env.DOWNLOAD_CONCURRENCY_LIMIT || 2)
-let lastRateLimitPruneAt = 0
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now()
-
-  if (now - lastRateLimitPruneAt > WINDOW_MS) {
-    for (const [key, record] of rateLimit.entries()) {
-      if (now > record.reset) rateLimit.delete(key)
-    }
-    lastRateLimitPruneAt = now
-  }
-
-  const record = rateLimit.get(ip)
-
-  if (!record || now > record.reset) {
-    rateLimit.set(ip, { count: 1, reset: now + WINDOW_MS })
-    return true
-  }
-
-  if (record.count >= MAX_REQUESTS_PER_IP) return false
-
-  record.count++
-  return true
-}
+const DOWNLOAD_RATE_LIMIT = { max: 10, windowMs: 60_000 }
 
 function findDownloadedFile(id: string, preferredExt: string): string | undefined {
   const candidates = [
@@ -122,8 +97,9 @@ async function downloadThumbnail(videoUrl: string, title: string, quality: strin
 }
 
 export async function GET(req: NextRequest) {
-  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
-  if (!checkRateLimit(ip)) return err('Rate limit exceeded. Max 10 downloads/minute.', 429)
+  const ip = getClientIp(req.headers)
+  const limit = checkRateLimit(`download:${ip}`, DOWNLOAD_RATE_LIMIT)
+  if (!limit.allowed) return err('Rate limit exceeded. Max 10 downloads/minute.', 429)
 
   const requestUrl = new URL(req.url)
   const videoUrl = requestUrl.searchParams.get('url')

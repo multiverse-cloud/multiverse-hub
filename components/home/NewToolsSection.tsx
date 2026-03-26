@@ -1,9 +1,12 @@
 import Link from 'next/link'
 import { ArrowRight, Sparkles } from 'lucide-react'
 import { getLucideIcon } from '@/lib/icons'
-import { NEW_TOOLS } from '@/lib/tools-data'
+import { getTools } from '@/lib/db'
 
-export default function NewToolsSection() {
+export default async function NewToolsSection() {
+  const allTools = await getTools()
+  const NEW_TOOLS = allTools.filter(t => t.tags.includes('new')).slice(0, 8)
+
   return (
     <section className="bg-background py-16 md:py-20">
       <div className="mx-auto max-w-screen-2xl px-4 lg:px-6">

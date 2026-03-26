@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import PublicLayout from '@/components/layout/PublicLayout'
 import CategoryPage from '@/components/tools/CategoryPage'
-import { ACTIVE_CATEGORIES, getToolsByCategory } from '@/lib/tools-data'
+import { ACTIVE_CATEGORIES } from '@/lib/tools-data'
+import { getToolsByCategory } from '@/lib/db'
 
 export const revalidate = 3600
 
@@ -31,7 +32,7 @@ export default async function CategoryRoute({ params }: { params: Promise<{ cate
     notFound()
   }
 
-  const tools = getToolsByCategory(category)
+  const tools = await getToolsByCategory(category)
 
   return (
     <PublicLayout>

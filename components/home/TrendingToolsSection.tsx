@@ -1,9 +1,12 @@
 import Link from 'next/link'
 import { ArrowRight, TrendingUp } from 'lucide-react'
 import { getLucideIcon } from '@/lib/icons'
-import { TRENDING_TOOLS } from '@/lib/tools-data'
+import { getTools } from '@/lib/db'
 
-export default function TrendingToolsSection() {
+export default async function TrendingToolsSection() {
+  const allTools = await getTools()
+  const TRENDING_TOOLS = allTools.filter(t => t.tags.includes('trending')).slice(0, 12)
+
   return (
     <section className="bg-slate-50 py-16 md:py-20 dark:bg-slate-950/40">
       <div className="mx-auto max-w-screen-2xl px-4 lg:px-6">

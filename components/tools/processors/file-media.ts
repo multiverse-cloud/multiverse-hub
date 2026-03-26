@@ -1,6 +1,7 @@
 import { formatBytes } from '@/lib/utils'
 import type { FileProcessResult, FileResultMetric } from './types'
 import { buildOutputFilename, getFileExtension, getResponseFilename } from './file-download'
+import { processVideoWasm } from './wasm-media'
 
 function formatDuration(seconds: number) {
   if (!Number.isFinite(seconds) || seconds <= 0) return '0s'
@@ -219,13 +220,36 @@ export async function handleVideoTool({
   files,
   textInput,
   options = {},
+  onProgress,
 }: {
   slug: string
   file: File
   files: File[]
   textInput: string
-  options?: Record<string, string | File | undefined>
+  options?: Record<string, any>
+  onProgress?: (progress: number) => void
 }): Promise<FileProcessResult> {
+  // Use WASM for selected tools
+  const wasmSlugs = ['compress-video', 'video-to-mp3', 'video-to-gif']
+  if (wasmSlugs.includes(slug)) {
+    try {
+      const action = slug === 'video-to-mp3' ? 'extract-audio' : slug === 'video-to-gif' ? 'to-gif' : 'compress'
+      const outputBlob = await processVideoWasm({ file, action, options, onProgress })
+      
+      const ext = action === 'extract-audio' ? 'mp3' : action === 'to-gif' ? 'gif' : 'mp4'
+      const fallbackFilename = buildOutputFilename(file.name, action, ext)
+      const outputText = `Video ${action} complete (WASM)`
+      
+      if (action === 'extract-audio') {
+        return buildAudioResult(outputBlob, fallbackFilename, outputText)
+      }
+      return buildVideoResult(outputBlob, fallbackFilename, outputText, [], action === 'to-gif' ? 'image' : 'video')
+    } catch (error) {
+      console.error('WASM processing failed, falling back to API', error)
+      // Fallback to API if WASM fails (e.g. browser support)
+    }
+  }
+
   const formData = new FormData()
 
   if (slug === 'gif-maker') {

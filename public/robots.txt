@@ -1,0 +1,10 @@
+# Multiverse Tools - robots.txt
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin-login/
+Disallow: /api/
+Disallow: /sso-callback/
+
+# Sitemaps
+Sitemap: https://multiverse-tools.vercel.app/sitemap.xml

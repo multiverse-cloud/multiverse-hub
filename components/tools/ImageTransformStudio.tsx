@@ -92,6 +92,38 @@ const TRANSFORM_COPY = {
     actionLabel: 'Upscale image',
     emptyTitle: 'Upscaled result appears here',
   },
+  'favicon-generator': {
+    eyebrow: 'Web branding',
+    title: 'Favicon Generator',
+    summary: 'Upload an image and generate a multi-size favicon package for your website.',
+    badges: ['ICO format', 'Multiple sizes', 'Web ready'],
+    actionLabel: 'Generate favicon',
+    emptyTitle: 'Favicon package appears here',
+  },
+  'instagram-grid-maker': {
+    eyebrow: 'Social layout',
+    title: 'Instagram Grid Maker',
+    summary: 'Split your image into a perfect 3×3 grid for a stunning Instagram profile layout.',
+    badges: ['3×3 grid', 'Perfect split', 'Download all'],
+    actionLabel: 'Split into grid',
+    emptyTitle: 'Grid tiles appear here',
+  },
+  'svg-to-png': {
+    eyebrow: 'Vector converter',
+    title: 'SVG to PNG Converter',
+    summary: 'Convert SVG vector files into high-resolution PNG images for any use case.',
+    badges: ['Vector input', 'Hi-res PNG', 'Custom size'],
+    actionLabel: 'Convert to PNG',
+    emptyTitle: 'PNG result appears here',
+  },
+  'meme-generator': {
+    eyebrow: 'Creative editor',
+    title: 'Meme Generator',
+    summary: 'Upload an image and add bold top/bottom text to create shareable memes instantly.',
+    badges: ['Custom text', 'Impact font', 'Quick share'],
+    actionLabel: 'Create meme',
+    emptyTitle: 'Meme preview appears here',
+  },
 } as const
 
 const OCR_LANGUAGES = [

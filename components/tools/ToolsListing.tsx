@@ -100,39 +100,42 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
           </div>
         </div>
 
-        <div className="mb-7 flex flex-wrap gap-2">
-          <Link
-            href={buildHref({ category: 'all' })}
-            className={cn(
-              'shrink-0 whitespace-nowrap rounded-xl border px-4 py-2 text-sm font-semibold transition-colors',
-              activeCategory === 'all'
-                ? 'border-transparent bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
-                : 'border-border bg-background text-muted-foreground hover:border-indigo-300 hover:text-foreground'
-            )}
-          >
-            All Tools ({TOOLS.length})
-          </Link>
+        <div className="-mx-4 mb-7 overflow-x-auto scrollbar-hide px-4 sm:mx-0 sm:px-0">
+          <div className="flex gap-2 pb-2 sm:flex-wrap sm:pb-0">
+            <Link
+              href={buildHref({ category: 'all' })}
+              className={cn(
+                'shrink-0 whitespace-nowrap rounded-xl border px-3 py-1.5 text-xs font-semibold transition-colors sm:px-4 sm:py-2 sm:text-sm',
+                activeCategory === 'all'
+                  ? 'border-transparent bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
+                  : 'border-border bg-background text-muted-foreground hover:border-indigo-300 hover:text-foreground'
+              )}
+            >
+              All Tools ({TOOLS.length})
+            </Link>
 
-          {ACTIVE_CATEGORIES.map(category => {
-            const count = categoryCounts.get(category.slug) ?? 0
-            const Icon = getLucideIcon(category.icon)
+            {ACTIVE_CATEGORIES.map(category => {
+              const count = categoryCounts.get(category.slug) ?? 0
+              const Icon = getLucideIcon(category.icon)
 
-            return (
-              <Link
-                key={category.slug}
-                href={buildHref({ category: category.slug })}
-                className={cn(
-                  'flex items-center gap-2 whitespace-nowrap rounded-xl border px-4 py-2 text-sm font-semibold transition-colors',
-                  activeCategory === category.slug
-                    ? 'border-transparent bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
-                    : 'border-border bg-background text-muted-foreground hover:border-indigo-300 hover:text-foreground'
-                )}
-              >
-                <Icon className="h-3.5 w-3.5" />
-                {category.name} ({count})
-              </Link>
-            )
-          })}
+              return (
+                <Link
+                  key={category.slug}
+                  href={buildHref({ category: category.slug })}
+                  className={cn(
+                    'flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl border px-3 py-1.5 text-xs font-semibold transition-colors sm:gap-2 sm:px-4 sm:py-2 sm:text-sm',
+                    activeCategory === category.slug
+                      ? 'border-transparent bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
+                      : 'border-border bg-background text-muted-foreground hover:border-indigo-300 hover:text-foreground'
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  <span className="truncate">{category.name.replace(' Tools', '')}</span>
+                  <span className="opacity-60">({count})</span>
+                </Link>
+              )
+            })}
+          </div>
         </div>
 
         {filtered.length === 0 ? (
@@ -147,7 +150,7 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
         ) : (
           <>
             <p className="mb-4 text-sm text-muted-foreground">{filtered.length} results</p>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {filtered.map(tool => {
                 const Icon = getLucideIcon(tool.icon)
                 const visibleTag = tool.tags.find(tag => tag !== 'new' && tag !== 'trending')

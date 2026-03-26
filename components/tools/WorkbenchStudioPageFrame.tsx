@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import type { Tool } from '@/lib/tools-data'
 import ToolBreadcrumb from './ToolBreadcrumb'
 import ToolCard from './ToolCard'
+import SEOContent from './SEOContent'
 
 const CATEGORY_COPY: Record<string, { kicker: string; description: string }> = {
   audio: {
@@ -52,6 +53,8 @@ export default function WorkbenchStudioPageFrame({
         />
 
         {children}
+
+        <SEOContent tool={tool} />
 
         {relatedTools.length > 0 && (
           <section className="mt-10">
