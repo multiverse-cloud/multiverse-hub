@@ -72,7 +72,7 @@ export default function SignInClient({ clerkEnabled }: { clerkEnabled: boolean }
               Every tool you need.
             </h2>
             <p className="max-w-md text-lg text-slate-300">
-              150+ tools, AI, entertainment, news, and marketplace workflows in one professional platform.
+              150+ tools, AI, news, and marketplace workflows in one professional platform.
             </p>
           </div>
 
@@ -204,3 +204,4 @@ export default function SignInClient({ clerkEnabled }: { clerkEnabled: boolean }
     </div>
   )
 }
+

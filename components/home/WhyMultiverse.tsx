@@ -47,7 +47,7 @@ export default function WhyMultiverse() {
           <p className="section-label">Why Multiverse</p>
           <h2 className="section-title">Not just another tools site</h2>
           <p className="section-sub">
-            A complete mini-internet with tools, AI, entertainment, news, and marketplace in one unified platform.
+            A complete mini-internet with tools, AI, news, and marketplace in one unified platform.
           </p>
         </div>
 

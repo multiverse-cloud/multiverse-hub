@@ -32,7 +32,7 @@ export default function PdfStudioPageFrame({
   children: ReactNode
 }) {
   return (
-    <div className="premium-shell">
+    <div className="premium-shell" data-tool-shell="true">
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-6 md:py-10">
         <ToolBreadcrumb
           items={[

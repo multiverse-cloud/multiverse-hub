@@ -160,6 +160,132 @@ export async function POST(req: NextRequest) {
           return filePathResponse(outFile, 'speed-changed.mp3', 'audio/mpeg')
         }
 
+        if (action === 'equalizer') {
+          const audio = files.find(f => f.fieldname === 'file')
+          if (!audio) return err('No audio file uploaded')
+
+          const preset = fields.preset || 'balanced'
+          const presetFilters: Record<string, string> = {
+            balanced: 'volume=1',
+            voice: 'highpass=f=120,lowpass=f=6000,equalizer=f=2500:t=q:w=1:g=3',
+            bass: 'equalizer=f=100:t=q:w=1:g=6,equalizer=f=1000:t=q:w=1:g=-2',
+            treble: 'equalizer=f=8000:t=q:w=1:g=6,equalizer=f=120:t=q:w=1:g=-2',
+          }
+          const inputPath = tmpPath(`${id}-input`)
+          const outFile = tmpPath(`${id}-equalized.mp3`)
+          fs.writeFileSync(inputPath, audio.buffer)
+
+          await runFFmpeg([
+            '-i',
+            inputPath,
+            '-filter:a',
+            presetFilters[preset] || presetFilters.balanced,
+            '-acodec',
+            'libmp3lame',
+            '-b:a',
+            '192k',
+            '-y',
+            outFile,
+          ])
+          cleanupFiles(inputPath)
+          return filePathResponse(outFile, 'equalized.mp3', 'audio/mpeg')
+        }
+
+        if (action === 'metadata') {
+          const audio = files.find(f => f.fieldname === 'file')
+          if (!audio) return err('No audio file uploaded')
+
+          const inputPath = tmpPath(`${id}-input`)
+          const outFile = tmpPath(`${id}-tagged.mp3`)
+          fs.writeFileSync(inputPath, audio.buffer)
+
+          const args = ['-i', inputPath, '-map_metadata', '-1', '-acodec', 'libmp3lame', '-b:a', '192k']
+          if (fields.title) args.push('-metadata', `title=${fields.title}`)
+          if (fields.artist) args.push('-metadata', `artist=${fields.artist}`)
+          if (fields.album) args.push('-metadata', `album=${fields.album}`)
+          if (fields.year) args.push('-metadata', `date=${fields.year}`)
+          if (fields.genre) args.push('-metadata', `genre=${fields.genre}`)
+          args.push('-y', outFile)
+
+          await runFFmpeg(args)
+          cleanupFiles(inputPath)
+          return filePathResponse(outFile, 'tagged.mp3', 'audio/mpeg')
+        }
+
+        if (action === 'remove-vocals') {
+          const audio = files.find(f => f.fieldname === 'file')
+          if (!audio) return err('No audio file uploaded')
+
+          const inputPath = tmpPath(`${id}-input`)
+          const outFile = tmpPath(`${id}-instrumental.mp3`)
+          fs.writeFileSync(inputPath, audio.buffer)
+
+          await runFFmpeg([
+            '-i',
+            inputPath,
+            '-af',
+            'pan=stereo|c0=FL-FR|c1=FR-FL',
+            '-acodec',
+            'libmp3lame',
+            '-b:a',
+            '192k',
+            '-y',
+            outFile,
+          ])
+          cleanupFiles(inputPath)
+          return filePathResponse(outFile, 'instrumental.mp3', 'audio/mpeg')
+        }
+
+        if (action === 'trim-silence') {
+          const audio = files.find(f => f.fieldname === 'file')
+          if (!audio) return err('No audio file uploaded')
+
+          const threshold = fields.threshold || '-45'
+          const inputPath = tmpPath(`${id}-input`)
+          const outFile = tmpPath(`${id}-cleaned.mp3`)
+          fs.writeFileSync(inputPath, audio.buffer)
+
+          await runFFmpeg([
+            '-i',
+            inputPath,
+            '-af',
+            `silenceremove=start_periods=1:start_duration=0.2:start_threshold=${threshold}dB:stop_periods=-1:stop_duration=0.3:stop_threshold=${threshold}dB`,
+            '-acodec',
+            'libmp3lame',
+            '-b:a',
+            '192k',
+            '-y',
+            outFile,
+          ])
+          cleanupFiles(inputPath)
+          return filePathResponse(outFile, 'trimmed-silence.mp3', 'audio/mpeg')
+        }
+
+        if (action === 'volume') {
+          const audio = files.find(f => f.fieldname === 'file')
+          if (!audio) return err('No audio file uploaded')
+
+          const boost = fields.boost || '4'
+          const inputPath = tmpPath(`${id}-input`)
+          const outFile = tmpPath(`${id}-boosted.mp3`)
+          fs.writeFileSync(inputPath, audio.buffer)
+
+          await runFFmpeg([
+            '-i',
+            inputPath,
+            '-filter:a',
+            `volume=${boost}dB`,
+            '-acodec',
+            'libmp3lame',
+            '-b:a',
+            '192k',
+            '-y',
+            outFile,
+          ])
+          cleanupFiles(inputPath)
+          return filePathResponse(outFile, 'boosted.mp3', 'audio/mpeg')
+        }
+
         if (action === 'info') {
           const audio = files.find(f => f.fieldname === 'file')
           if (!audio) return err('No audio file uploaded')

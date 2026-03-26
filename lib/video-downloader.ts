@@ -1,6 +1,5 @@
 import { spawn } from 'child_process'
 import { YTDLP_PATH } from '@/lib/server-utils'
-import ytdl from 'ytdl-core'
 
 export type DownloadDelivery = 'direct' | 'server'
 export type DownloadKind = 'video' | 'audio' | 'thumbnail'
@@ -98,8 +97,6 @@ const SUPPORTED_VIDEO_PATTERNS = [
   /dailymotion\.com\/video/i,
 ]
 
-const YOUTUBE_PATTERN = /(?:youtube\.com\/(?:watch|shorts)|youtu\.be\/)/i
-
 const DIRECT_PROTOCOL_BLOCKLIST = ['m3u8', 'dash', 'ism', 'f4m']
 
 const VIDEO_PROFILES: VideoProfile[] = [
@@ -141,10 +138,6 @@ function pruneVideoInfoCache(now: number) {
 
 export function isSupportedVideoUrl(videoUrl: string): boolean {
   return SUPPORTED_VIDEO_PATTERNS.some(pattern => pattern.test(videoUrl))
-}
-
-function isYouTubeUrl(videoUrl: string): boolean {
-  return YOUTUBE_PATTERN.test(videoUrl)
 }
 
 export function detectVideoPlatform(videoUrl: string, extractorKey?: string): string {
@@ -413,153 +406,6 @@ function buildAudioOptions(formats: RawFormat[]): DownloadOption[] {
   ]
 }
 
-function parseYouTubeUploadDate(value?: string): string {
-  if (!value) return ''
-  const match = value.match(/^(\d{4})(\d{2})(\d{2})$/)
-  if (!match) return value
-  return `${match[1]}${match[2]}${match[3]}`
-}
-
-async function fetchYouTubeInfoFallback(videoUrl: string): Promise<VideoInfoPayload> {
-  const info = await ytdl.getInfo(videoUrl)
-  const details = info.videoDetails
-  const formats = info.formats || []
-
-  const thumbnails = [...(details.thumbnails || [])]
-    .filter(item => item.url)
-    .sort((a, b) => (Number(b.width || 0) * Number(b.height || 0)) - (Number(a.width || 0) * Number(a.height || 0)))
-
-  const thumbnailHD = thumbnails[0]?.url || details.thumbnails?.[0]?.url || ''
-  const thumbnailStandard = thumbnails[thumbnails.length - 1]?.url || thumbnailHD
-
-  const progressiveFormats = formats.filter(format =>
-    Boolean(format.url) &&
-    format.hasVideo &&
-    format.hasAudio &&
-    !format.isHLS &&
-    !format.isDashMPD &&
-    ['mp4', 'webm'].includes((format.container || '').toLowerCase())
-  )
-
-  const audioOnlyFormats = formats.filter(format =>
-    Boolean(format.url) &&
-    format.hasAudio &&
-    !format.hasVideo &&
-    !format.isHLS &&
-    !format.isDashMPD &&
-    ['mp4', 'webm'].includes((format.container || '').toLowerCase())
-  )
-
-  const videoFormats: DownloadOption[] = VIDEO_PROFILES
-    .map(profile => {
-      const match = progressiveFormats
-        .filter(format => (format.container || '').toLowerCase() === profile.ext)
-        .filter(format => Number(format.height || 0) >= profile.minDirectHeight)
-        .sort((a, b) => {
-          const aDelta = Math.abs(Number(a.height || 0) - profile.targetHeight)
-          const bDelta = Math.abs(Number(b.height || 0) - profile.targetHeight)
-          if (aDelta !== bDelta) return aDelta - bDelta
-          return Number(b.contentLength || 0) - Number(a.contentLength || 0)
-        })[0]
-
-      if (!match?.url) return null
-
-      return {
-        id: `youtube-${profile.id}-${match.itag || profile.targetHeight}`,
-        label: profile.label,
-        ext: profile.ext,
-        kind: 'video' as const,
-        delivery: 'direct' as const,
-        qualityLabel: profile.qualityLabel,
-        height: Number(match.height || profile.targetHeight),
-        filesize: match.contentLength ? Number(match.contentLength) : null,
-        filesizeMB: match.contentLength ? formatFilesizeMB(Number(match.contentLength)) : null,
-        hasAudio: true,
-        formatId: String(match.itag || profile.targetHeight),
-        cdnUrl: match.url,
-        serverFormat: null,
-        serverQuality: null,
-      }
-    })
-    .filter(Boolean) as DownloadOption[]
-
-  const audioFormats: DownloadOption[] = []
-
-  const bestM4a = audioOnlyFormats
-    .filter(format => (format.container || '').toLowerCase() === 'mp4')
-    .sort((a, b) => Number(b.audioBitrate || 0) - Number(a.audioBitrate || 0))[0]
-
-  if (bestM4a?.url) {
-    audioFormats.push({
-      id: `youtube-audio-m4a-${bestM4a.itag || 'best'}`,
-      label: 'M4A',
-      ext: 'm4a',
-      kind: 'audio',
-      delivery: 'direct',
-      qualityLabel: 'M4A',
-      height: null,
-      filesize: bestM4a.contentLength ? Number(bestM4a.contentLength) : null,
-      filesizeMB: bestM4a.contentLength ? formatFilesizeMB(Number(bestM4a.contentLength)) : null,
-      hasAudio: true,
-      formatId: String(bestM4a.itag || 'best'),
-      cdnUrl: bestM4a.url,
-      serverFormat: null,
-      serverQuality: null,
-    })
-  }
-
-  const bestMp3Like = audioOnlyFormats
-    .sort((a, b) => Number(b.audioBitrate || 0) - Number(a.audioBitrate || 0))[0]
-
-  if (bestMp3Like?.url) {
-    audioFormats.unshift({
-      id: `youtube-audio-mp3-${bestMp3Like.itag || 'best'}`,
-      label: 'MP3',
-      ext: 'mp3',
-      kind: 'audio',
-      delivery: 'direct',
-      qualityLabel: 'MP3',
-      height: null,
-      filesize: bestMp3Like.contentLength ? Number(bestMp3Like.contentLength) : null,
-      filesizeMB: bestMp3Like.contentLength ? formatFilesizeMB(Number(bestMp3Like.contentLength)) : null,
-      hasAudio: true,
-      formatId: String(bestMp3Like.itag || 'best'),
-      cdnUrl: bestMp3Like.url,
-      serverFormat: null,
-      serverQuality: null,
-      note: 'Direct audio stream',
-    })
-  }
-
-  const thumbnailDownloads = buildThumbnailDownloads(thumbnailStandard, thumbnailHD)
-  const quickDownloads = [
-    videoFormats.find(option => option.qualityLabel === '720p'),
-    videoFormats.find(option => option.qualityLabel === '1080p'),
-    audioFormats[0],
-    thumbnailDownloads[0],
-  ].filter(Boolean) as DownloadOption[]
-
-  const title = details.title || 'YouTube video'
-
-  return {
-    title,
-    safeTitle: sanitizeDownloadFilename(title, 'tmp').replace(/\.tmp$/, ''),
-    uploader: details.author?.name || details.ownerChannelName || details.author?.user || 'Unknown creator',
-    duration: Number(details.lengthSeconds || 0),
-    thumbnail: thumbnailStandard,
-    thumbnailHQ: thumbnailHD,
-    viewCount: Number(details.viewCount || 0),
-    likeCount: 0,
-    uploadDate: parseYouTubeUploadDate(details.publishDate || details.uploadDate),
-    webpage_url: details.video_url || videoUrl,
-    platform: 'YouTube',
-    quickDownloads,
-    videoFormats,
-    audioFormats,
-    thumbnailDownloads,
-  }
-}
-
 export async function fetchVideoInfo(videoUrl: string): Promise<VideoInfoPayload> {
   const now = Date.now()
   const cached = videoInfoCache.get(videoUrl)
@@ -572,19 +418,9 @@ export async function fetchVideoInfo(videoUrl: string): Promise<VideoInfoPayload
   pruneVideoInfoCache(now)
 
   const pending = (async () => {
-    let raw: RawVideoInfo
-
-    try {
-      raw = JSON.parse(
-        await runYtDlp(['--dump-single-json', '--no-playlist', '--no-warnings', videoUrl], 45_000)
-      ) as RawVideoInfo
-    } catch (error) {
-      const message = (error as Error).message || ''
-      if ((process.env.VERCEL || message.includes('yt-dlp')) && isYouTubeUrl(videoUrl)) {
-        return fetchYouTubeInfoFallback(videoUrl)
-      }
-      throw error
-    }
+    const raw = JSON.parse(
+      await runYtDlp(['--dump-single-json', '--no-playlist', '--no-warnings', videoUrl], 45_000)
+    ) as RawVideoInfo
 
     const thumbnailHD = getLandscapeThumbnail(raw, 'hd') || raw.thumbnail || ''
     const thumbnailStandard = getLandscapeThumbnail(raw, 'standard') || raw.thumbnail || thumbnailHD

@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     template: '%s | Multiverse',
   },
   description:
-    'One platform. Multiple universes. Professional tools, AI, entertainment, news, learning, developer utilities, and digital products in one ecosystem.',
+    'One platform. Multiple universes. Professional tools, AI, news, learning, developer utilities, and digital products in one ecosystem.',
   keywords: [
     'free tools',
     'AI tools',
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Multiverse - Professional Online Tools',
-    description: 'Professional tools, AI, entertainment, learning, and digital products.',
+    description: 'Professional tools, AI, learning, and digital products.',
   },
   robots: { index: true, follow: true },
 }

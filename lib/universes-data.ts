@@ -45,17 +45,6 @@ export const UNIVERSES: Universe[] = [
     color: 'pink',
   },
   {
-    id: 'entertainment',
-    name: 'Entertainment',
-    description: 'Movies, TV series and OTT streaming',
-    icon: 'Clapperboard',
-    href: '/entertainment',
-    gradient: 'from-orange-500 to-red-600',
-    bgGradient: 'from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20',
-    count: '500K+ Titles',
-    color: 'orange',
-  },
-  {
     id: 'learn',
     name: 'Learn Universe',
     description: 'Notes, summaries and study tools',

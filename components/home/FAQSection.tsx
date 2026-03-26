@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 const FAQS = [
   {
     q: 'Is Multiverse completely free?',
-    a: 'Yes. The core tool library, AI workspace, entertainment browsing, and marketplace browsing are free to use. No payment is required for the main public experience.',
+    a: 'Yes. The core tool library, AI workspace, and marketplace browsing are free to use. No payment is required for the main public experience.',
   },
   {
     q: 'Do I need to create an account?',
@@ -30,8 +30,8 @@ const FAQS = [
     a: 'Yes. The platform is responsive and built to work well across phones, tablets, and desktop screens.',
   },
   {
-    q: 'How is entertainment data powered?',
-    a: 'The Entertainment Universe uses the TMDB API for movies, TV series, cast details, trailers, and streaming availability.',
+    q: 'What calculators are included?',
+    a: 'The calculator suite includes finance, health, date, timezone, conversion, tax, and nutrition calculators with modern live workspaces.',
   },
   {
     q: 'What is the Marketplace?',

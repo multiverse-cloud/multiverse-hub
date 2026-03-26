@@ -218,17 +218,21 @@ export async function handleVideoTool({
   file,
   files,
   textInput,
+  options = {},
 }: {
   slug: string
   file: File
   files: File[]
   textInput: string
+  options?: Record<string, string | File | undefined>
 }): Promise<FileProcessResult> {
   const formData = new FormData()
 
   if (slug === 'gif-maker') {
     files.forEach(image => formData.append('files', image))
     if (textInput.trim()) formData.append('frameDuration', textInput.trim())
+    if (typeof options.fps === 'string') formData.append('fps', options.fps)
+    if (typeof options.scale === 'string') formData.append('scale', options.scale)
     const response = await fetch('/api/tools/video?action=make-gif', { method: 'POST', body: formData })
     if (!response.ok) {
       const data = await response.json()
@@ -248,7 +252,11 @@ export async function handleVideoTool({
     )
   }
 
-  formData.append('file', file)
+  if (slug === 'merge-video') {
+    files.forEach(video => formData.append('files', video))
+  } else {
+    formData.append('file', file)
+  }
 
   const actionMap: Record<string, string> = {
     'compress-video': 'compress',
@@ -257,15 +265,27 @@ export async function handleVideoTool({
     'video-to-gif': 'to-gif',
     'change-video-speed': 'speed',
     'mute-video': 'mute',
+    'merge-video': 'merge',
+    'rotate-video': 'rotate',
+    'add-subtitles': 'add-subtitles',
   }
 
   const action = actionMap[slug] || 'info'
+  Object.entries(options).forEach(([key, value]) => {
+    if (!value) return
+    if (value instanceof File) {
+      formData.append(key, value)
+      return
+    }
+    formData.append(key, value)
+  })
+
   if (slug === 'trim-video') {
     const parts = textInput.split(',')
     formData.append('start', parts[0] || '0')
     formData.append('duration', parts[1] || '30')
   }
-  if (slug === 'change-video-speed') formData.append('speed', textInput || '2')
+  if (slug === 'change-video-speed' && !options.speed) formData.append('speed', textInput || '2')
 
   const response = await fetch(`/api/tools/video?action=${action}`, { method: 'POST', body: formData })
   if (!response.ok) {
@@ -286,7 +306,13 @@ export async function handleVideoTool({
             ? buildOutputFilename(file.name, 'speed', ext)
             : action === 'mute'
               ? buildOutputFilename(file.name, 'muted', ext)
-              : buildOutputFilename(file.name, 'compressed', ext)
+              : action === 'merge'
+                ? buildOutputFilename(file.name, 'merged', ext)
+                : action === 'rotate'
+                  ? buildOutputFilename(file.name, 'rotated', ext)
+                  : action === 'add-subtitles'
+                    ? buildOutputFilename(file.name, 'captioned', ext)
+                    : buildOutputFilename(file.name, 'compressed', ext)
 
   const outputFilename = getResponseFilename(response, fallbackFilename)
   const outputText = `Video ${action} complete (${formatBytes(outputBlob.size)})`
@@ -296,9 +322,17 @@ export async function handleVideoTool({
 
   if (action === 'extract-audio') extraMetrics.push({ label: 'Audio', value: 'MP3' })
   if (action === 'trim') extraMetrics.push({ label: 'Trim', value: textInput.trim() || '0, 30' })
-  if (action === 'speed') extraMetrics.push({ label: 'Speed', value: `${textInput || '2'}x` })
+  if (action === 'speed') extraMetrics.push({ label: 'Speed', value: `${String(options.speed || textInput || '2')}x` })
   if (action === 'mute') extraMetrics.push({ label: 'Audio Track', value: 'Removed' })
   if (action === 'to-gif') extraMetrics.push({ label: 'Clip', value: 'Animated GIF' })
+  if (action === 'merge') extraMetrics.push({ label: 'Clips', value: `${files.length} files` })
+  if (action === 'rotate') {
+    const transformParts = [options.rotation ? `${options.rotation} deg` : '', options.flip && options.flip !== 'none' ? String(options.flip) : '']
+      .filter(Boolean)
+      .join(' + ')
+    extraMetrics.push({ label: 'Transform', value: transformParts || 'Rotation' })
+  }
+  if (action === 'add-subtitles') extraMetrics.push({ label: 'Captions', value: 'Burned in' })
   if (originalSize && processedSize) {
     const saved = Number(originalSize) > Number(processedSize)
       ? Math.round((1 - Number(processedSize) / Number(originalSize)) * 100)
@@ -319,12 +353,14 @@ export async function handleAudioTool({
   files,
   textInput,
   audioFmt,
+  options = {},
 }: {
   slug: string
   file: File
   files: File[]
   textInput: string
   audioFmt: string
+  options?: Record<string, string | File | undefined>
 }): Promise<FileProcessResult> {
   if (slug === 'speech-to-text') {
     const formData = new FormData()
@@ -372,15 +408,26 @@ export async function handleAudioTool({
     'convert-audio': 'convert',
     'trim-audio': 'trim',
     'compress-audio': 'compress',
+    'change-audio-speed': 'speed',
+    'audio-equalizer': 'equalizer',
+    'audio-metadata-editor': 'metadata',
+    'remove-vocals': 'remove-vocals',
+    'trim-silence': 'trim-silence',
+    'volume-booster': 'volume',
   }
 
   const action = actionMap[slug] || 'convert'
+  Object.entries(options).forEach(([key, value]) => {
+    if (!value || value instanceof File) return
+    formData.append(key, value)
+  })
   if (action === 'convert') formData.append('to', audioFmt)
   if (action === 'trim') {
     const parts = textInput.split(',')
     formData.append('start', parts[0] || '0')
     formData.append('duration', parts[1] || '30')
   }
+  if (action === 'speed' && !options.speed) formData.append('speed', textInput || '1.25')
 
   const response = await fetch(`/api/tools/audio?action=${action}`, { method: 'POST', body: formData })
   if (!response.ok) {
@@ -394,7 +441,19 @@ export async function handleAudioTool({
       ? buildOutputFilename(file.name, 'converted', audioFmt)
       : action === 'trim'
         ? buildOutputFilename(file.name, 'trimmed', originalExtension)
-        : buildOutputFilename(file.name, 'compressed', 'mp3')
+        : action === 'speed'
+          ? buildOutputFilename(file.name, 'speed', 'mp3')
+          : action === 'equalizer'
+            ? buildOutputFilename(file.name, 'equalized', 'mp3')
+            : action === 'metadata'
+              ? buildOutputFilename(file.name, 'tagged', 'mp3')
+              : action === 'remove-vocals'
+                ? buildOutputFilename(file.name, 'instrumental', 'mp3')
+                : action === 'trim-silence'
+                  ? buildOutputFilename(file.name, 'cleaned', 'mp3')
+                  : action === 'volume'
+                    ? buildOutputFilename(file.name, 'boosted', 'mp3')
+                    : buildOutputFilename(file.name, 'compressed', 'mp3')
 
   const extraMetrics: FileResultMetric[] = []
   const originalSize = response.headers.get('X-Original-Size')
@@ -402,6 +461,12 @@ export async function handleAudioTool({
 
   if (action === 'convert') extraMetrics.push({ label: 'Target', value: audioFmt.toUpperCase() })
   if (action === 'trim') extraMetrics.push({ label: 'Trim', value: textInput.trim() || '0, 30' })
+  if (action === 'speed') extraMetrics.push({ label: 'Speed', value: `${String(options.speed || textInput || '1.25')}x` })
+  if (action === 'equalizer') extraMetrics.push({ label: 'EQ', value: String(options.preset || 'balanced') })
+  if (action === 'metadata') extraMetrics.push({ label: 'Metadata', value: 'Updated' })
+  if (action === 'remove-vocals') extraMetrics.push({ label: 'Mode', value: 'Center cut' })
+  if (action === 'trim-silence') extraMetrics.push({ label: 'Silence trim', value: `${String(options.threshold || '-45')} dB` })
+  if (action === 'volume') extraMetrics.push({ label: 'Gain', value: `+${String(options.boost || '4')} dB` })
   if (originalSize && processedSize) {
     const saved = Number(originalSize) > Number(processedSize)
       ? Math.round((1 - Number(processedSize) / Number(originalSize)) * 100)

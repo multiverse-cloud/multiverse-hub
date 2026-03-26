@@ -8,7 +8,6 @@ const DEFAULT_FLAGS = [
   { id: 'ai_chat', group: 'AI', label: 'AI Chat Interface', desc: 'Enable the full AI chat page at /ai', enabled: true },
   { id: 'ai_image_gen', group: 'AI', label: 'AI Image Generation', desc: 'Enable Pollinations AI image generator', enabled: true },
   { id: 'design_ai', group: 'Design', label: 'Design AI Universe', desc: 'Enable /design universe', enabled: true },
-  { id: 'entertainment', group: 'Entertainment', label: 'Entertainment Universe', desc: 'Enable /entertainment (TMDB)', enabled: true },
   { id: 'news', group: 'News', label: 'News Universe', desc: 'Enable /news (GNews)', enabled: true },
   { id: 'marketplace', group: 'Marketplace', label: 'Marketplace', desc: 'Enable /marketplace', enabled: true },
   { id: 'discover', group: 'Discover', label: 'Discover Universe', desc: 'Enable /discover top-10 lists', enabled: true },

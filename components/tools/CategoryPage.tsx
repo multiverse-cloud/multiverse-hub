@@ -15,7 +15,7 @@ export default function CategoryPage({ category, tools }: { category: Category; 
   return (
     <PremiumPage>
       <PremiumSection className="py-10 md:py-12">
-        <PremiumContainer className="w-full px-4 sm:px-6 lg:px-6">
+        <PremiumContainer className="w-full px-4 sm:px-6 lg:px-6" data-tool-shell="true">
           <ToolBreadcrumb items={[{ label: 'All Tools', href: '/tools' }, { label: category.name }]} />
 
           <div className="mb-8 flex items-start gap-4">

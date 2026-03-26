@@ -4,15 +4,29 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BookmarkPlus, Share2, Wrench } from 'lucide-react'
 import PublicLayout from '@/components/layout/PublicLayout'
+import ImageStudioPageFrame from '@/components/tools/ImageStudioPageFrame'
 import PdfStudioPageFrame from '@/components/tools/PdfStudioPageFrame'
+import VideoStudioPageFrame from '@/components/tools/VideoStudioPageFrame'
+import WorkbenchStudioPageFrame from '@/components/tools/WorkbenchStudioPageFrame'
+import ImagePaletteStudio from '@/components/tools/ImagePaletteStudio'
+import ImageToPdfStudio from '@/components/tools/ImageToPdfStudio'
+import ImageTransformStudio from '@/components/tools/ImageTransformStudio'
+import QrCodeStudio from '@/components/tools/QrCodeStudio'
 import ToolCard from '@/components/tools/ToolCard'
 import ToolBreadcrumb from '@/components/tools/ToolBreadcrumb'
 import { getLucideIcon } from '@/lib/icons'
+import { CALCULATOR_STUDIO_SLUGS } from '@/lib/calculator-studio'
 import { PDF_STUDIO_STATIC_CONTENT } from '@/lib/pdf-studio-content'
 import { ACTIVE_CATEGORIES, getToolBySlug, TOOLS, type Tool } from '@/lib/tools-data'
 
 const ToolDetailClient = dynamic(() => import('@/components/tools/ToolDetailClient'))
 const VideoDownloaderClient = dynamic(() => import('@/components/tools/VideoDownloaderClient'))
+const VideoStudio = dynamic(() => import('@/components/tools/VideoStudio'))
+const AudioStudio = dynamic(() => import('@/components/tools/AudioStudio'))
+const TextStudio = dynamic(() => import('@/components/tools/TextStudio'))
+const DevStudio = dynamic(() => import('@/components/tools/DevStudio'))
+const SeoStudio = dynamic(() => import('@/components/tools/SeoStudio'))
+const CalculatorStudio = dynamic(() => import('@/components/tools/CalculatorStudio'))
 const CompressPdfStudio = dynamic(() => import('@/components/tools/CompressPdfStudio'))
 const PdfToWordStudio = dynamic(() => import('@/components/tools/PdfToWordStudio'))
 const MergePdfStudio = dynamic(() => import('@/components/tools/MergePdfStudio'))
@@ -47,9 +61,107 @@ const STUDIO_COMPONENTS: Record<string, ComponentType<{ tool: Tool }>> = {
   'pdf-summarizer': PdfSummarizerStudio,
 }
 
+const IMAGE_STUDIO_COMPONENTS: Record<string, ComponentType<{ tool: Tool }>> = {
+  'compress-image': ImageTransformStudio,
+  'resize-image': ImageTransformStudio,
+  'convert-image': ImageTransformStudio,
+  'crop-image': ImageTransformStudio,
+  'remove-background': ImageTransformStudio,
+  'blur-background': ImageTransformStudio,
+  'passport-photo-maker': ImageTransformStudio,
+  'image-to-text': ImageTransformStudio,
+  'image-upscaler': ImageTransformStudio,
+  'color-palette-generator': ImagePaletteStudio,
+  'qr-code-generator': QrCodeStudio,
+  'image-to-pdf': ImageToPdfStudio,
+}
+
+const VIDEO_STUDIO_SLUGS = new Set([
+  'compress-video',
+  'video-to-mp3',
+  'trim-video',
+  'video-to-gif',
+  'youtube-thumbnail-downloader',
+  'change-video-speed',
+  'mute-video',
+  'gif-maker',
+  'merge-video',
+  'rotate-video',
+  'add-subtitles',
+])
+
+const AUDIO_STUDIO_SLUGS = new Set([
+  'compress-audio',
+  'convert-audio',
+  'trim-audio',
+  'audio-equalizer',
+  'audio-metadata-editor',
+  'speech-to-text',
+  'change-audio-speed',
+  'merge-audio',
+  'remove-vocals',
+  'audio-text-to-speech',
+  'trim-silence',
+  'volume-booster',
+])
+
+const TEXT_STUDIO_SLUGS = new Set([
+  'ai-text-generator',
+  'text-case-converter',
+  'remove-duplicate-lines',
+  'text-grammar-checker',
+  'paraphrasing-tool',
+  'plagiarism-checker',
+  'text-speech-to-text',
+  'text-diff-checker',
+  'text-summarizer',
+  'text-to-speech',
+  'text-url-encoder-decoder',
+  'word-counter',
+])
+
+const DEV_STUDIO_SLUGS = new Set([
+  'api-tester',
+  'base64-encoder-decoder',
+  'code-formatter',
+  'color-converter',
+  'css-minifier',
+  'hash-generator',
+  'html-previewer',
+  'json-formatter',
+  'jwt-decoder',
+  'regex-tester',
+  'sql-formatter',
+  'uuid-generator',
+])
+
+const SEO_STUDIO_SLUGS = new Set([
+  'backlink-checker',
+  'broken-link-checker',
+  'domain-authority-checker',
+  'image-seo-checker',
+  'keyword-generator',
+  'meta-tag-generator',
+  'page-speed-checker',
+  'robots-txt-generator',
+  'seo-analyzer',
+  'serp-preview',
+  'sitemap-generator',
+  'url-slug-generator',
+])
+
+const CALCULATOR_STUDIO_SLUGS_SET = new Set(CALCULATOR_STUDIO_SLUGS)
+
 const PRE_RENDERED_TOOL_SLUGS = new Set([
   'all-in-one-video-downloader',
   ...Object.keys(STUDIO_COMPONENTS),
+  ...Object.keys(IMAGE_STUDIO_COMPONENTS),
+  ...VIDEO_STUDIO_SLUGS,
+  ...AUDIO_STUDIO_SLUGS,
+  ...TEXT_STUDIO_SLUGS,
+  ...DEV_STUDIO_SLUGS,
+  ...SEO_STUDIO_SLUGS,
+  ...CALCULATOR_STUDIO_SLUGS,
   ...TOOLS.filter(tool => tool.popular || tool.tags.includes('trending')).map(tool => tool.slug),
 ])
 
@@ -118,13 +230,112 @@ export default async function ToolPage({ params }: Props) {
     )
   }
 
+  const ImageStudioComponent = IMAGE_STUDIO_COMPONENTS[tool.slug]
+  if (ImageStudioComponent) {
+    const relatedTools = TOOLS.filter(
+      item => item.categorySlug === 'image' && item.slug !== tool.slug
+    ).slice(0, 4)
+
+    return (
+      <PublicLayout>
+        <ImageStudioPageFrame tool={tool} relatedTools={relatedTools}>
+          <ImageStudioComponent tool={tool} />
+        </ImageStudioPageFrame>
+      </PublicLayout>
+    )
+  }
+
+  if (VIDEO_STUDIO_SLUGS.has(tool.slug)) {
+    const relatedTools = TOOLS.filter(
+      item => item.categorySlug === 'video' && item.slug !== tool.slug
+    ).slice(0, 4)
+
+    return (
+      <PublicLayout>
+        <VideoStudioPageFrame tool={tool} relatedTools={relatedTools}>
+          <VideoStudio tool={tool} />
+        </VideoStudioPageFrame>
+      </PublicLayout>
+    )
+  }
+
+  if (AUDIO_STUDIO_SLUGS.has(tool.slug)) {
+    const relatedTools = TOOLS.filter(
+      item => item.categorySlug === 'audio' && item.slug !== tool.slug
+    ).slice(0, 4)
+
+    return (
+      <PublicLayout>
+        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
+          <AudioStudio tool={tool} />
+        </WorkbenchStudioPageFrame>
+      </PublicLayout>
+    )
+  }
+
+  if (TEXT_STUDIO_SLUGS.has(tool.slug)) {
+    const relatedTools = TOOLS.filter(
+      item => item.categorySlug === 'text' && item.slug !== tool.slug
+    ).slice(0, 4)
+
+    return (
+      <PublicLayout>
+        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
+          <TextStudio tool={tool} />
+        </WorkbenchStudioPageFrame>
+      </PublicLayout>
+    )
+  }
+
+  if (DEV_STUDIO_SLUGS.has(tool.slug)) {
+    const relatedTools = TOOLS.filter(
+      item => item.categorySlug === 'dev' && item.slug !== tool.slug
+    ).slice(0, 4)
+
+    return (
+      <PublicLayout>
+        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
+          <DevStudio tool={tool} />
+        </WorkbenchStudioPageFrame>
+      </PublicLayout>
+    )
+  }
+
+  if (SEO_STUDIO_SLUGS.has(tool.slug)) {
+    const relatedTools = TOOLS.filter(
+      item => item.categorySlug === 'seo' && item.slug !== tool.slug
+    ).slice(0, 4)
+
+    return (
+      <PublicLayout>
+        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
+          <SeoStudio tool={tool} />
+        </WorkbenchStudioPageFrame>
+      </PublicLayout>
+    )
+  }
+
+  if (CALCULATOR_STUDIO_SLUGS_SET.has(tool.slug as (typeof CALCULATOR_STUDIO_SLUGS)[number])) {
+    const relatedTools = TOOLS.filter(
+      item => item.categorySlug === 'calculator' && item.slug !== tool.slug
+    ).slice(0, 4)
+
+    return (
+      <PublicLayout>
+        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
+          <CalculatorStudio tool={tool} />
+        </WorkbenchStudioPageFrame>
+      </PublicLayout>
+    )
+  }
+
   const categoryInfo = ACTIVE_CATEGORIES.find(item => item.slug === tool.categorySlug)
   const related = TOOLS.filter(item => item.categorySlug === tool.categorySlug && item.id !== tool.id).slice(0, 6)
   const CategoryIcon = getLucideIcon(categoryInfo?.icon, Wrench)
 
   return (
     <PublicLayout>
-      <div className="premium-shell">
+      <div className="premium-shell" data-tool-shell="true">
         <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-6 md:py-10">
           <ToolBreadcrumb
             items={[

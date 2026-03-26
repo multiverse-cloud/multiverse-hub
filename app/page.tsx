@@ -12,7 +12,7 @@ import PublicLayout from '@/components/layout/PublicLayout'
 export const metadata: Metadata = {
   title: 'Multiverse - Universe of Free Tools | 150+ Free Online Tools',
   description:
-    'One platform. Multiple universes. 150+ free tools, AI hub, entertainment, news, learning, and marketplace in one place.',
+    'One platform. Multiple universes. 150+ free tools, AI hub, news, learning, and marketplace in one place.',
 }
 
 export default function HomePage() {

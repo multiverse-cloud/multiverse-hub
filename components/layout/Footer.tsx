@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { ArrowRight, Github, Globe, Mail, Twitter, Youtube } from 'lucide-react'
+import { Github, Globe, Mail, Twitter, Youtube } from 'lucide-react'
+import NewsletterSignup from './NewsletterSignup'
 
 const COPYRIGHT_YEAR = 2026
 
@@ -8,9 +9,9 @@ const FOOTER_LINKS = {
     { name: 'Tools Universe', href: '/tools' },
     { name: 'AI Hub', href: '/ai' },
     { name: 'Design AI', href: '/design' },
-    { name: 'Entertainment', href: '/entertainment' },
     { name: 'Learn', href: '/learn' },
     { name: 'Discover', href: '/discover' },
+    { name: 'Daily Tools', href: '/daily' },
   ],
   'Dev & Daily': [
     { name: 'Dev Tools', href: '/dev' },
@@ -25,13 +26,13 @@ const FOOTER_LINKS = {
     { name: 'JSON Formatter', href: '/tools/dev/json-formatter' },
     { name: 'QR Code Generator', href: '/tools/image/qr-code-generator' },
   ],
-  Company: [
-    { name: 'About', href: '/about' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Careers', href: '/careers' },
-    { name: 'Contact', href: '/contact' },
-    { name: 'Privacy Policy', href: '/privacy' },
-    { name: 'Terms of Service', href: '/terms' },
+  'Tool Collections': [
+    { name: 'All Tools', href: '/tools' },
+    { name: 'PDF Tools', href: '/tools/pdf' },
+    { name: 'Image Tools', href: '/tools/image' },
+    { name: 'Video Tools', href: '/tools/video' },
+    { name: 'Dev Tools', href: '/tools/dev' },
+    { name: 'AI Tools', href: '/tools/ai' },
   ],
 }
 
@@ -47,21 +48,7 @@ export default function Footer() {
             <h2 className="font-display text-2xl font-extrabold md:text-3xl">Subscribe for updates</h2>
             <p className="text-muted-foreground">Product updates, new tools, and release notes.</p>
 
-            <div className="premium-input-shell mx-auto flex max-w-md gap-3" role="form" aria-label="Newsletter signup">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 border-none bg-transparent px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-500"
-              />
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 whitespace-nowrap rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
-              >
-                Subscribe
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-
+            <NewsletterSignup />
           </div>
         </div>
       </div>
@@ -77,7 +64,7 @@ export default function Footer() {
             </Link>
 
             <p className="max-w-xs text-sm text-muted-foreground">
-              A unified platform for tools, AI, entertainment, learning, and digital products.
+              A unified platform for tools, AI, learning, and digital products.
             </p>
 
             <div className="flex items-center gap-3">

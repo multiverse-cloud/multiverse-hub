@@ -42,7 +42,7 @@ export default function HeroSection() {
               <span className="mt-2 block text-indigo-600 dark:text-indigo-300">Multiple Universes.</span>
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base text-muted-foreground md:text-lg">
-              Tools, AI, entertainment, news, learning, and marketplace in one platform.
+              Tools, AI, news, learning, and marketplace in one platform.
             </p>
           </div>
 

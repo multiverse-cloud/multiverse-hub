@@ -264,12 +264,16 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === 'blur-background') {
+      const blur = Math.min(48, Math.max(8, parseInt(fields.blur || '22')))
+      const tint = fields.tint?.trim()
       const foreground = await removeBackgroundBuffer(imgFile.buffer, imgFile.mimetype || 'image/png')
-      const blurredBackground = await sharp(imgFile.buffer)
-        .blur(22)
+      let backgroundPipeline = sharp(imgFile.buffer)
+        .blur(blur)
         .modulate({ brightness: 0.98, saturation: 1.04 })
-        .jpeg({ quality: 92, mozjpeg: true })
-        .toBuffer()
+      if (tint) {
+        backgroundPipeline = backgroundPipeline.tint(tint)
+      }
+      const blurredBackground = await backgroundPipeline.jpeg({ quality: 92, mozjpeg: true }).toBuffer()
       const buf = await sharp(blurredBackground)
         .composite([{ input: foreground, left: 0, top: 0 }])
         .jpeg({ quality: 92, mozjpeg: true })
@@ -281,6 +285,28 @@ export async function POST(req: NextRequest) {
       const foreground = await removeBackgroundBuffer(imgFile.buffer, imgFile.mimetype || 'image/png')
       const buf = await createPassportPhoto(foreground)
       return fileResponse(buf, 'passport-photo.jpg', 'image/jpeg')
+    }
+
+    if (action === 'upscale') {
+      const factor = [2, 4].includes(parseInt(fields.factor || '2')) ? parseInt(fields.factor || '2') : 2
+      const outputFormat = (meta.format || 'png') as keyof sharp.FormatEnum
+      const targetWidth = Math.max(1, Math.round((meta.width || 1) * factor))
+      const targetHeight = Math.max(1, Math.round((meta.height || 1) * factor))
+
+      const buf = await sharp(imgFile.buffer)
+        .resize(targetWidth, targetHeight, {
+          fit: 'fill',
+          kernel: sharp.kernel.lanczos3,
+          withoutEnlargement: false,
+        })
+        .sharpen({ sigma: 1.4, m1: 0.8, m2: 1.5, x1: 2, y2: 10, y3: 20 })
+        .toFormat(outputFormat)
+        .toBuffer()
+
+      const ext = meta.format || 'png'
+      const res = fileResponse(buf, `upscaled-${factor}x.${ext}`, `image/${ext}`)
+      res.headers.set('X-Upscale-Factor', String(factor))
+      return res
     }
 
     if (action === 'watermark') {

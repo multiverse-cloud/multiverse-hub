@@ -13,7 +13,6 @@ import {
   Ruler,
   Sun,
   TrendingUp,
-  Wallet,
 } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -33,7 +32,6 @@ const DAILY_TOOLS = [
   { id: 'date', icon: Calendar, label: 'Date Difference', href: '/tools/calculator/date-difference-calculator', tone: 'bg-teal-100 text-teal-600 dark:bg-teal-950/40 dark:text-teal-300', desc: 'Days between dates' },
   { id: 'timezone', icon: Clock, label: 'Timezone Converter', href: '/tools/calculator/timezone-converter', tone: 'bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-200', desc: 'World time zones' },
   { id: 'calorie', icon: Flame, label: 'Calorie Calculator', href: '/tools/calculator/calorie-calculator', tone: 'bg-red-100 text-red-600 dark:bg-red-950/40 dark:text-red-300', desc: 'Daily calorie needs' },
-  { id: 'salary', icon: Wallet, label: 'Salary Calculator', href: '/tools/calculator/salary-calculator', tone: 'bg-green-100 text-green-600 dark:bg-green-950/40 dark:text-green-300', desc: 'Net salary after tax' },
 ]
 
 function EMICalculator() {

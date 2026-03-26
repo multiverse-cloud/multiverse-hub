@@ -71,6 +71,45 @@ async function getCropFields(file: File, textInput: string) {
   }
 
   const image = await loadImage(file)
+  const aspectMap: Record<string, number | null> = {
+    square: 1,
+    portrait: 4 / 5,
+    story: 9 / 16,
+    landscape: 16 / 9,
+    original: null,
+  }
+  const normalizedAspect = textInput.trim().toLowerCase()
+  if (normalizedAspect in aspectMap) {
+    const requestedAspect = aspectMap[normalizedAspect]
+    if (requestedAspect === null) {
+      return {
+        left: '0',
+        top: '0',
+        width: String(image.width),
+        height: String(image.height),
+      }
+    }
+
+    const sourceAspect = image.width / image.height
+    if (sourceAspect > requestedAspect) {
+      const width = Math.round(image.height * requestedAspect)
+      return {
+        left: String(Math.max(0, Math.round((image.width - width) / 2))),
+        top: '0',
+        width: String(width),
+        height: String(image.height),
+      }
+    }
+
+    const height = Math.round(image.width / requestedAspect)
+    return {
+      left: '0',
+      top: String(Math.max(0, Math.round((image.height - height) / 2))),
+      width: String(image.width),
+      height: String(height),
+    }
+  }
+
   const size = Math.min(image.width, image.height)
   return {
     left: String(Math.floor((image.width - size) / 2)),
@@ -87,6 +126,12 @@ export async function handleImageTool({
   ocrLang,
   imgQuality,
   imgConvertTo,
+  resizeWidth,
+  resizeHeight,
+  resizeFit,
+  blurStrength,
+  blurTint,
+  upscaleFactor,
 }: {
   slug: string
   file: File
@@ -94,6 +139,12 @@ export async function handleImageTool({
   ocrLang: string
   imgQuality: string
   imgConvertTo: string
+  resizeWidth?: string
+  resizeHeight?: string
+  resizeFit?: string
+  blurStrength?: string
+  blurTint?: string
+  upscaleFactor?: string
 }): Promise<FileProcessResult> {
   const formData = new FormData()
   formData.append('file', file)
@@ -133,9 +184,11 @@ export async function handleImageTool({
   }
 
   if (slug === 'resize-image') {
-    const [width, height] = textInput.split('x')
-    formData.append('width', width || '800')
+    const width = resizeWidth || textInput.split('x')[0] || '800'
+    const height = resizeHeight || textInput.split('x')[1] || ''
+    formData.append('width', width)
     if (height) formData.append('height', height)
+    if (resizeFit) formData.append('fit', resizeFit)
     return fetchImageBlobResult(
       formData,
       '/api/tools/image?action=resize',
@@ -168,6 +221,8 @@ export async function handleImageTool({
   }
 
   if (slug === 'blur-background') {
+    if (blurStrength) formData.append('blur', blurStrength)
+    if (blurTint) formData.append('tint', blurTint)
     return fetchImageBlobResult(
       formData,
       '/api/tools/image?action=blur-background',
@@ -182,6 +237,16 @@ export async function handleImageTool({
       '/api/tools/image?action=passport-photo',
       buildOutputFilename(file.name, 'passport-photo', 'jpg'),
       () => 'Passport photo ready'
+    )
+  }
+
+  if (slug === 'image-upscaler') {
+    formData.append('factor', upscaleFactor || '2')
+    return fetchImageBlobResult(
+      formData,
+      '/api/tools/image?action=upscale',
+      buildOutputFilename(file.name, `upscaled-${upscaleFactor || '2'}x`, getFileExtension(file.name, 'jpg')),
+      response => `Upscaled ${response.headers.get('X-Upscale-Factor') || upscaleFactor || '2'}x`
     )
   }
 
@@ -276,6 +341,8 @@ async function fetchImageBlobResult(
 
   const savings = response.headers.get('X-Savings')
   if (savings) extraMetrics.push({ label: 'Saved', value: `${savings}%` })
+  const upscaleFactor = response.headers.get('X-Upscale-Factor')
+  if (upscaleFactor) extraMetrics.push({ label: 'Upscale', value: `${upscaleFactor}x` })
 
   return buildImageResult(response, outputFilename, outputText, extraMetrics)
 }
