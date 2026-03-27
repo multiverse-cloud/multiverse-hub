@@ -3,6 +3,8 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
 import AuthProvider from '@/components/providers/AuthProvider'
 import { FavoritesProvider } from '@/components/providers/FavoritesContext'
+import { UsageGateProvider } from '@/components/providers/UsageGateContext'
+import { LoginGateModal } from '@/components/auth/LoginGateModal'
 import ClientShell from '@/components/providers/ClientShell'
 import ThemeProvider from '@/components/providers/ThemeProvider'
 import './globals.css'
@@ -78,9 +80,12 @@ export default function RootLayout({
         <AuthProvider>
           <ThemeProvider>
             <FavoritesProvider>
-              {children}
-              <SpeedInsights />
-              <ClientShell />
+              <UsageGateProvider>
+                {children}
+                <LoginGateModal />
+                <SpeedInsights />
+                <ClientShell />
+              </UsageGateProvider>
             </FavoritesProvider>
           </ThemeProvider>
         </AuthProvider>

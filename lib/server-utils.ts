@@ -3,6 +3,7 @@ import path from 'path'
 import fs from 'fs'
 import os from 'os'
 import { Readable } from 'stream'
+import { spawnSync } from 'child_process'
 import busboy from 'busboy'
 
 // ── Temp directory ──────────────────────────────────────────────────────────
@@ -251,3 +252,25 @@ export function filePathResponse(
 // ── ffmpeg path ─────────────────────────────────────────────────────────────
 export const FFMPEG_PATH = process.env.FFMPEG_PATH || 'ffmpeg'
 export const YTDLP_PATH = process.env.YTDLP_PATH || 'yt-dlp'
+
+const commandAvailabilityCache = new Map<string, boolean>()
+
+export function isCommandAvailable(command: string, versionArg = '--version') {
+  const cacheKey = `${command} ${versionArg}`
+  const cached = commandAvailabilityCache.get(cacheKey)
+  if (typeof cached === 'boolean') return cached
+
+  try {
+    const result = spawnSync(command, [versionArg], {
+      stdio: 'ignore',
+      timeout: 5000,
+      windowsHide: true,
+    })
+    const available = !result.error && result.status === 0
+    commandAvailabilityCache.set(cacheKey, available)
+    return available
+  } catch {
+    commandAvailabilityCache.set(cacheKey, false)
+    return false
+  }
+}

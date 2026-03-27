@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { verifyAdminSessionToken, ADMIN_SESSION_COOKIE } from '@/lib/admin-auth'
+import { isAdminUser } from '@/lib/admin-access'
 import { updateTool } from '@/lib/db'
 
 export async function PATCH(request: NextRequest) {
@@ -11,8 +12,8 @@ export async function PATCH(request: NextRequest) {
     let isAuthorized = false
     
     if (userId) {
-      // In a full production app, you would verify this userId is in an admin roles list
-      isAuthorized = true 
+      const user = await currentUser()
+      isAuthorized = isAdminUser(user)
     } else if (customToken) {
       const session = await verifyAdminSessionToken(customToken)
       if (session) isAuthorized = true

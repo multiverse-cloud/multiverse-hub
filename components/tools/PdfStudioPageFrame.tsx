@@ -3,8 +3,10 @@ import type { LucideIcon } from 'lucide-react'
 import { CircleHelp, Sparkles, CheckCircle2 } from 'lucide-react'
 import type { Tool } from '@/lib/tools-data'
 import ToolCard from './ToolCard'
+import ToolActions from './ToolActions'
 import ToolBreadcrumb from './ToolBreadcrumb'
 import SEOContent from './SEOContent'
+import { UsageHintBanner } from '@/components/auth/LoginGateModal'
 
 export type PdfStudioContent = {
   howItWorks: ReadonlyArray<{
@@ -35,13 +37,19 @@ export default function PdfStudioPageFrame({
   return (
     <div className="premium-shell" data-tool-shell="true">
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-6 md:py-10">
-        <ToolBreadcrumb
-          items={[
-            { label: 'All Tools', href: '/tools' },
-            { label: tool.category, href: `/tools/${tool.categorySlug}` },
-            { label: tool.name },
-          ]}
-        />
+        <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <ToolBreadcrumb
+            className="mb-0"
+            items={[
+              { label: 'All Tools', href: '/tools' },
+              { label: tool.category, href: `/tools/${tool.categorySlug}` },
+              { label: tool.name },
+            ]}
+          />
+
+          <ToolActions slug={tool.slug} name={tool.name} className="mb-0 w-full justify-start lg:w-auto lg:justify-end" />
+        </div>
+        <UsageHintBanner />
 
         {children}
 

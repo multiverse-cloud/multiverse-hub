@@ -4,6 +4,8 @@ import { ArrowRight, Globe } from 'lucide-react'
 import { getLucideIcon } from '@/lib/icons'
 import { UNIVERSES } from '@/lib/universes-data'
 
+const HOME_UNIVERSES = UNIVERSES.filter(universe => universe.id !== 'ai')
+
 const ICON_TONES: Record<string, string> = {
   blue: 'bg-blue-100 text-blue-700 dark:bg-blue-950/30 dark:text-blue-300',
   violet: 'bg-violet-100 text-violet-700 dark:bg-violet-950/30 dark:text-violet-300',
@@ -24,12 +26,12 @@ export default function UniversesSection() {
         <div className="mx-auto max-w-6xl">
           <div className="section-header">
             <p className="section-label">Explore</p>
-            <h2 className="section-title">9 Universes. One Platform.</h2>
+            <h2 className="section-title">8 Universes. One Platform.</h2>
             <p className="section-sub">Every universe is a standalone product, all connected in one seamless ecosystem.</p>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            {UNIVERSES.map(universe => {
+            {HOME_UNIVERSES.map(universe => {
               const Icon = getLucideIcon(universe.icon, Globe)
 
               return (

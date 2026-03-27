@@ -10,6 +10,9 @@ import DownloaderHero from '@/components/tools/downloader/DownloaderHero'
 import DownloaderHowToSection from '@/components/tools/downloader/DownloaderHowToSection'
 import DownloaderWorkspaceSection from '@/components/tools/downloader/DownloaderWorkspaceSection'
 import ToolBreadcrumb from '@/components/tools/ToolBreadcrumb'
+import ToolActions from '@/components/tools/ToolActions'
+import { UsageHintBanner } from '@/components/auth/LoginGateModal'
+import type { Tool } from '@/lib/tools-data'
 import type { DownloadState, VideoInfo } from '@/components/tools/downloader/types'
 
 function getFilenameFromDisposition(disposition: string | null, fallback: string): string {
@@ -33,7 +36,7 @@ function downloadBlob(blob: Blob, filename: string) {
   window.setTimeout(() => URL.revokeObjectURL(blobUrl), 1000)
 }
 
-export default function VideoDownloaderClient() {
+export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
   const [url, setUrl] = useState('')
   const [info, setInfo] = useState<VideoInfo | null>(null)
   const [loading, setLoading] = useState(false)
@@ -215,14 +218,18 @@ export default function VideoDownloaderClient() {
   return (
     <PremiumPage>
       <div className="mx-auto w-full max-w-7xl px-4 pt-8 sm:px-6 lg:px-6 md:pt-10">
-        <ToolBreadcrumb
-          className="mb-0"
-          items={[
-            { label: 'All Tools', href: '/tools' },
-            { label: 'Video Tools', href: '/tools/video' },
-            { label: 'All-in-One Video Downloader' },
-          ]}
-        />
+        <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <ToolBreadcrumb
+            className="mb-0"
+            items={[
+              { label: 'All Tools', href: '/tools' },
+              { label: 'Video Tools', href: '/tools/video' },
+              { label: tool?.name || 'Video Downloader' },
+            ]}
+          />
+          {tool ? <ToolActions slug={tool.slug} name={tool.name} className="mb-0 w-full justify-start lg:w-auto lg:justify-end" /> : null}
+        </div>
+        <UsageHintBanner />
       </div>
 
       <DownloaderHero

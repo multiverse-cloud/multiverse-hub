@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 const FAQS = [
   {
     q: 'Is Multiverse completely free?',
-    a: 'Yes. The core tool library, AI workspace, and marketplace browsing are free to use. No payment is required for the main public experience.',
+    a: 'Yes. The core tool library and marketplace browsing are free to use. No payment is required for the main public experience.',
   },
   {
     q: 'Do I need to create an account?',
@@ -19,11 +19,11 @@ const FAQS = [
   },
   {
     q: 'How many tools are available?',
-    a: 'There are more than 150 tools across PDF, image, video, audio, text, developer, SEO, calculator, file, and AI categories.',
+    a: 'There are more than 150 tools across PDF, image, video, audio, text, developer, SEO, calculator, and file categories.',
   },
   {
-    q: 'What AI models does the AI Hub use?',
-    a: 'The AI Hub connects to multiple models through OpenRouter, including GPT-4o Mini, Claude, and Gemini, depending on availability.',
+    q: 'Can I save my favourite tools?',
+    a: 'Yes. Sign in to save favourites, sync your profile, and unlock account-based convenience across supported parts of the platform.',
   },
   {
     q: 'Can I use Multiverse on mobile?',

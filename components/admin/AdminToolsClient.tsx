@@ -70,7 +70,7 @@ export default function AdminToolsClient({
   const deferredSearch = useDeferredValue(search)
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [toolStates, setToolStates] = useState<Record<string, ToolState>>(() =>
-    Object.fromEntries(tools.map(tool => [tool.id, { enabled: true, tags: [...tool.tags] }]))
+    Object.fromEntries(tools.map(tool => [tool.id, { enabled: tool.enabled !== false, tags: [...tool.tags] }]))
   )
 
   const normalizedSearch = deferredSearch.trim().toLowerCase()

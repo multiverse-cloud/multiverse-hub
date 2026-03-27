@@ -21,8 +21,8 @@ const FEATURES = [
   },
   {
     icon: Sparkles,
-    title: 'AI-Powered',
-    desc: '15+ AI tools using the latest language models.',
+    title: 'Premium Workspaces',
+    desc: 'Modern editors and focused layouts built for real daily workflows.',
     tone: 'bg-violet-100 text-violet-700 dark:bg-violet-950/30 dark:text-violet-300',
   },
   {
@@ -47,7 +47,7 @@ export default function WhyMultiverse() {
           <p className="section-label">Why Multiverse</p>
           <h2 className="section-title">Not just another tools site</h2>
           <p className="section-sub">
-            A complete mini-internet with tools, AI, news, and marketplace in one unified platform.
+            A complete mini-internet with tools, discovery, and marketplace in one unified platform.
           </p>
         </div>
 

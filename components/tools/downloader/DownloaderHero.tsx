@@ -24,7 +24,7 @@ const SUPPORTED_PLATFORMS = [
 
 export default function DownloaderHero({ url, loading, hasResult = false, onUrlChange, onAnalyze }: Props) {
   return (
-    <PremiumSection className={cn('relative overflow-hidden', hasResult ? 'pb-6 pt-12 md:pb-8 md:pt-14' : 'pt-16 md:pt-20')}>
+    <PremiumSection className={cn('relative overflow-hidden', hasResult ? 'pb-5 pt-5 md:pb-6 md:pt-6' : 'pb-8 pt-6 md:pb-10 md:pt-8')}>
       <PremiumContainer className="relative z-10 max-w-5xl text-center">
         <h1 className="premium-title mx-auto max-w-4xl">
           Download Videos, Audio and <span className="text-indigo-600 dark:text-indigo-300">Thumbnails</span> Instantly
@@ -38,11 +38,11 @@ export default function DownloaderHero({ url, loading, hasResult = false, onUrlC
           loading={loading}
           onUrlChange={onUrlChange}
           onAnalyze={onAnalyze}
-          className={cn('mx-auto max-w-3xl', hasResult ? 'mt-8' : 'mt-10')}
+          className={cn('mx-auto max-w-3xl', hasResult ? 'mt-6' : 'mt-7')}
         />
 
         {/* Supported Platforms Row */}
-        <div className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-2">
+        <div className="mx-auto mt-5 flex max-w-3xl flex-wrap items-center justify-center gap-2">
           {SUPPORTED_PLATFORMS.map(platform => (
             <span
               key={platform.name}
@@ -57,7 +57,7 @@ export default function DownloaderHero({ url, loading, hasResult = false, onUrlC
           ))}
         </div>
 
-        <div className={cn('flex flex-wrap items-center justify-center text-slate-500 dark:text-slate-300', hasResult ? 'mt-5 gap-4 text-xs sm:text-sm' : 'mt-7 gap-5 text-sm')}>
+        <div className={cn('flex flex-wrap items-center justify-center text-slate-500 dark:text-slate-300', hasResult ? 'mt-4 gap-4 text-xs sm:text-sm' : 'mt-5 gap-5 text-sm')}>
           {HERO_TRUST_ITEMS.map(item => (
             <span key={item} className="inline-flex items-center gap-2 font-medium">
               <CheckCircle2 className="h-4 w-4 text-indigo-600 dark:text-indigo-300" />
@@ -71,4 +71,3 @@ export default function DownloaderHero({ url, loading, hasResult = false, onUrlC
     </PremiumSection>
   )
 }
-

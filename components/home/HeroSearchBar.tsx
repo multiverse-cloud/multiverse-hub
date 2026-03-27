@@ -39,7 +39,7 @@ export default function HeroSearchBar() {
   }
 
   return (
-    <div className="relative mb-6 w-full max-w-2xl">
+    <div className="relative mb-4 w-full max-w-2xl">
       <form onSubmit={handleSubmit}>
         <div className="group relative">
           <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-indigo-500 sm:left-4" />
@@ -48,7 +48,7 @@ export default function HeroSearchBar() {
             value={query}
             onChange={event => setQuery(event.target.value)}
             placeholder="Search tools, categories, or..."
-            className="w-full rounded-2xl border-2 border-border bg-card py-3.5 pl-10 pr-24 text-sm shadow-lg shadow-slate-900/5 transition-all focus:border-indigo-400 focus:outline-none focus:shadow-slate-900/10 sm:py-4 sm:pl-12 sm:pr-36 sm:text-base dark:shadow-none"
+            className="w-full rounded-2xl border-2 border-border bg-card py-3 pl-10 pr-24 text-sm shadow-lg shadow-slate-900/5 transition-all focus:border-indigo-400 focus:outline-none focus:shadow-slate-900/10 sm:py-3.5 sm:pl-12 sm:pr-36 sm:text-base dark:shadow-none"
           />
           <button
             type="submit"

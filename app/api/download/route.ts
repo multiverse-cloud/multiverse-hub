@@ -6,9 +6,11 @@ import {
   filePathResponse,
   fileResponse,
   getErrorStatus,
+  isCommandAvailable,
   randomId,
   tmpPath,
   withConcurrencyLimit,
+  YTDLP_PATH,
 } from '@/lib/server-utils'
 import {
   fetchVideoInfo,
@@ -110,6 +112,9 @@ export async function GET(req: NextRequest) {
   if (!videoUrl) return err('Missing ?url= parameter')
   if (!isSupportedVideoUrl(videoUrl)) {
     return err('URL not supported. Try YouTube, TikTok, Instagram, Twitter/X, Vimeo, Facebook or Dailymotion.')
+  }
+  if (format !== 'thumbnail' && !isCommandAvailable(YTDLP_PATH)) {
+    return err('Video downloads are unavailable on this server because yt-dlp is not installed.', 503)
   }
 
   if (format === 'thumbnail') {

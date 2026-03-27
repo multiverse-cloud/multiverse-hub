@@ -1,10 +1,12 @@
 'use client'
 
 import NextImage from 'next/image'
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, type ChangeEvent, type Dispatch, type DragEvent, type SetStateAction } from 'react'
 import { Upload, X, Download, Copy, Check, Loader2, AlertCircle, RefreshCw, Play } from 'lucide-react'
 import { cn, formatBytes, readFileAsText, readFileAsDataURL, downloadFile, downloadBlob, callOpenRouter, generateQRCode, generateImage, copyToClipboard } from '@/lib/utils'
+import { getMaxFileSize, formatLimit } from '@/lib/file-limits'
 import type { Tool } from '@/lib/tools-data'
+import { useUsageGate } from '@/components/providers/UsageGateContext'
 import toast from 'react-hot-toast'
 
 type EngineState = 'idle' | 'loading' | 'done' | 'error'
@@ -21,15 +23,17 @@ export default function ToolEngine({ tool }: { tool: Tool }) {
   const [copied, setCopied] = useState(false)
   const [dragging, setDragging] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
+  const { recordUsage, shouldGate } = useUsageGate()
+  const maxSize = getMaxFileSize(tool.categorySlug)
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
+  const handleDrop = useCallback((e: DragEvent) => {
     e.preventDefault()
     setDragging(false)
     const dropped = Array.from(e.dataTransfer.files)
     if (dropped.length > 0) setFiles(prev => [...prev, ...dropped].slice(0, 10))
   }, [])
 
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) setFiles(Array.from(e.target.files).slice(0, 10))
   }
 
@@ -52,11 +56,30 @@ export default function ToolEngine({ tool }: { tool: Tool }) {
   }
 
   const run = async () => {
+    if (shouldGate) return
+    // Validate file sizes
+    if (files.length > 0) {
+      const oversized = files.find(f => f.size > maxSize)
+      if (oversized) {
+        setState('error')
+        setOutput(`File "${oversized.name}" (${formatBytes(oversized.size)}) exceeds the ${formatLimit(maxSize)} limit.`)
+        toast.error(`File too large. Max ${formatLimit(maxSize)}.`)
+        return
+      }
+      const emptyFile = files.find(f => f.size === 0)
+      if (emptyFile) {
+        setState('error')
+        setOutput(`File "${emptyFile.name}" is empty.`)
+        toast.error('Empty file detected.')
+        return
+      }
+    }
     setState('loading'); setProgress(10); setOutput(''); setOutputUrl('')
     try {
       await runTool(tool, { files, textInput, urlInput, options }, {
         setOutput, setOutputUrl, setProgress, setState
       })
+      recordUsage()
     } catch (err) {
       setState('error')
       setOutput(err instanceof Error ? err.message : 'An error occurred. Please try again.')
@@ -237,7 +260,7 @@ export default function ToolEngine({ tool }: { tool: Tool }) {
 
 // ─────────────────────── Tool Options ────────────────────────────────────────
 
-function ToolOptions({ tool, options, setOptions }: { tool: Tool; options: Record<string, string | number | boolean>; setOptions: React.Dispatch<React.SetStateAction<Record<string, string | number | boolean>>> }) {
+function ToolOptions({ tool, options, setOptions }: { tool: Tool; options: Record<string, string | number | boolean>; setOptions: Dispatch<SetStateAction<Record<string, string | number | boolean>>> }) {
   const set = (k: string, v: string | number | boolean) => setOptions(prev => ({ ...prev, [k]: v }))
 
   if (tool.slug === 'resize-image') {

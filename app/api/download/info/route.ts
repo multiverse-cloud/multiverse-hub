@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { err } from '@/lib/server-utils'
+import { err, isCommandAvailable, YTDLP_PATH } from '@/lib/server-utils'
 import {
   buildThumbnailDownloads,
   fetchVideoInfo,
@@ -21,11 +21,17 @@ export async function GET(req: NextRequest) {
     return err('URL not supported. Try YouTube, TikTok, Instagram, Twitter/X, Vimeo, Facebook or Dailymotion.')
   }
 
+  const ytDlpAvailable = isCommandAvailable(YTDLP_PATH)
+  const ytMatch = videoUrl.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
+
+  if (!ytDlpAvailable && !ytMatch) {
+    return err('Video analysis is unavailable on this server because yt-dlp is not installed.', 503)
+  }
+
   try {
     const info = await fetchVideoInfo(videoUrl)
     return Response.json(info, { headers: INFO_CACHE_HEADERS })
   } catch (error) {
-    const ytMatch = videoUrl.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
     if (ytMatch) {
       const thumbnailHD = `https://img.youtube.com/vi/${ytMatch[1]}/maxresdefault.jpg`
       const thumbnail = `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`

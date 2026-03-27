@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 import type { ComponentType } from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { BookmarkPlus, Share2, Wrench } from 'lucide-react'
+import { Wrench } from 'lucide-react'
 import PublicLayout from '@/components/layout/PublicLayout'
 import ImageStudioPageFrame from '@/components/tools/ImageStudioPageFrame'
 import PdfStudioPageFrame from '@/components/tools/PdfStudioPageFrame'
@@ -16,6 +16,8 @@ import ToolCard from '@/components/tools/ToolCard'
 import ToolBreadcrumb from '@/components/tools/ToolBreadcrumb'
 import RecentTracker from '@/components/tools/RecentTracker'
 import SEOContent from '@/components/tools/SEOContent'
+import ToolActions from '@/components/tools/ToolActions'
+import { UsageHintBanner } from '@/components/auth/LoginGateModal'
 import { getLucideIcon } from '@/lib/icons'
 import { CALCULATOR_STUDIO_SLUGS } from '@/lib/calculator-studio'
 import { PDF_STUDIO_STATIC_CONTENT } from '@/lib/pdf-studio-content'
@@ -85,7 +87,7 @@ const IMAGE_STUDIO_COMPONENTS: Record<string, ComponentType<{ tool: Tool }>> = {
 }
 
 const FILE_STUDIO_SLUGS = new Set([
-  'csv-viewer-editor',
+  'csv-viewer',
   'json-file-viewer',
   'zip-extractor',
 ])
@@ -334,7 +336,7 @@ export default async function ToolPage({ params }: Props) {
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <VideoDownloaderClient />
+        <VideoDownloaderClient tool={tool} />
       </PublicLayout>
     )
   }
@@ -491,39 +493,33 @@ export default async function ToolPage({ params }: Props) {
     <PublicLayout>
       <div className="premium-shell" data-tool-shell="true">
         <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-6 md:py-10">
-          <ToolBreadcrumb
-            items={[
-              { label: 'All Tools', href: '/tools' },
-              { label: tool.category, href: `/tools/${tool.categorySlug}` },
-              { label: tool.name },
-            ]}
-          />
+          <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+            <ToolBreadcrumb
+              className="mb-0"
+              items={[
+                { label: 'All Tools', href: '/tools' },
+                { label: tool.category, href: `/tools/${tool.categorySlug}` },
+                { label: tool.name },
+              ]}
+            />
 
-          <div className="mb-8 flex items-start justify-between gap-4">
-            <div className="flex items-start gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-100">
-                <CategoryIcon className="h-6 w-6" />
-              </div>
-              <div>
-                <div className="mb-1 flex items-center gap-2">
-                  <h1 className="font-display text-2xl font-extrabold md:text-3xl">{tool.name}</h1>
-                  {tool.tags.includes('beta') && <span className="tag-beta">Beta</span>}
-                </div>
-                <p className="text-muted-foreground">{tool.description}</p>
-              </div>
+            <ToolActions slug={tool.slug} name={tool.name} className="mb-0 w-full justify-start lg:w-auto lg:justify-end" />
+          </div>
+
+          <div className="mb-6 flex items-start gap-4">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-100">
+              <CategoryIcon className="h-6 w-6" />
             </div>
-
-            <div className="hidden shrink-0 items-center gap-2 md:flex">
-              <button className="btn-secondary flex items-center gap-2 px-3 py-2 text-sm">
-                <Share2 className="h-4 w-4" />
-                Share
-              </button>
-              <button className="btn-secondary flex items-center gap-2 px-3 py-2 text-sm">
-                <BookmarkPlus className="h-4 w-4" />
-                Save
-              </button>
+            <div>
+              <div className="mb-1 flex items-center gap-2">
+                <h1 className="font-display text-2xl font-extrabold md:text-3xl">{tool.name}</h1>
+                {tool.tags.includes('beta') && <span className="tag-beta">Beta</span>}
+              </div>
+              <p className="text-muted-foreground line-clamp-2 sm:line-clamp-none">{tool.description}</p>
             </div>
           </div>
+
+          <UsageHintBanner />
 
           <div className="premium-panel mb-8 overflow-hidden">
             <ToolDetailClient tool={tool} />

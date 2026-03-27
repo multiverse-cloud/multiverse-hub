@@ -49,7 +49,7 @@ export default function SEOContent({ tool }: { tool: Tool }) {
   ]
 
   return (
-    <div className="mt-16 space-y-16 border-t border-slate-200 pt-16 dark:border-slate-800">
+    <div className="mt-12 hidden md:block space-y-12 border-t border-slate-200 pt-12 dark:border-slate-800">
       {/* How-to Guide */}
       <section className="space-y-8">
         <div>
