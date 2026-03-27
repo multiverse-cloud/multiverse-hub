@@ -3,6 +3,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { useUser } from '@clerk/nextjs'
 
+const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
 const STORAGE_KEY = 'multiverse_anon_usage'
 const SOFT_HINT_THRESHOLD = 3
 const HARD_GATE_THRESHOLD = 5
@@ -23,8 +24,13 @@ interface UsageGateContextType {
 
 const UsageGateContext = createContext<UsageGateContextType | undefined>(undefined)
 
-export function UsageGateProvider({ children }: { children: React.ReactNode }) {
-  const { isSignedIn } = useUser()
+function UsageGateProviderBase({
+  children,
+  isSignedIn,
+}: {
+  children: React.ReactNode
+  isSignedIn: boolean
+}) {
   const [usageCount, setUsageCount] = useState(0)
   const [hintDismissed, setHintDismissed] = useState(false)
 
@@ -59,6 +65,19 @@ export function UsageGateProvider({ children }: { children: React.ReactNode }) {
       {children}
     </UsageGateContext.Provider>
   )
+}
+
+function UsageGateProviderClerk({ children }: { children: React.ReactNode }) {
+  const { isSignedIn } = useUser()
+  return <UsageGateProviderBase isSignedIn={Boolean(isSignedIn)}>{children}</UsageGateProviderBase>
+}
+
+export function UsageGateProvider({ children }: { children: React.ReactNode }) {
+  if (!clerkEnabled) {
+    return <UsageGateProviderBase isSignedIn={false}>{children}</UsageGateProviderBase>
+  }
+
+  return <UsageGateProviderClerk>{children}</UsageGateProviderClerk>
 }
 
 export function useUsageGate() {
