@@ -1,0 +1,174 @@
+DISCOVER SOURCE DUPLICATE AUDIT
+Generated: 2026-03-28T07:42:14.195Z
+
+Audited files:
+- lib/discover-data.ts
+- lib/discover-high-traffic-seeds.ts
+- lib/discover-topic-taxonomy.ts
+- lib/discover-search-intents.ts
+- data/data1.json
+- data/guides-batch1.json
+- data/guides-batch2.json
+- data/guides-batch3.json
+- data/guides-batch4.json
+
+Counts by source:
+- data-data1: 42
+- data-guides-batch1: 10
+- data-guides-batch2: 9
+- data-guides-batch3: 10
+- data-guides-batch4: 10
+- discover-data: 12
+- discover-high-traffic-seeds: 148
+- discover-search-intents: 120
+- discover-topic-taxonomy: 128
+
+Total extracted topic titles/ideas: 489
+Unique normalized topics: 464
+Duplicate normalized groups: 23
+
+Notes:
+- Live Discover page data already has duplicate slug protection in lib/discover-data.ts.
+- Most duplicates below are expected overlap between planning/reference files and live seed files.
+- Data folder JSON guides are included so new imports can avoid title collisions.
+- Use the registry file as the ignore list when adding future topics.
+
+Duplicate groups:
+
+- normalized: beginner guide to understanding geopolitics
+  canonical: Beginner Guide to Understanding Geopolitics
+  count: 2
+  titles: Beginner Guide to Understanding Geopolitics
+  sources: data-data1, data-guides-batch1
+
+- normalized: beginner guide to understanding the stock market
+  canonical: Beginner Guide to Understanding the Stock Market
+  count: 2
+  titles: Beginner Guide to Understanding the Stock Market
+  sources: data-data1, data-guides-batch2
+
+- normalized: best ai models for coding
+  canonical: Best AI Models for Coding
+  count: 3
+  titles: Best AI Models for Coding | Best AI models for coding
+  sources: discover-high-traffic-seeds, discover-search-intents, discover-topic-taxonomy
+
+- normalized: best ai tools for daily work
+  canonical: Best AI Tools for Daily Work
+  count: 2
+  titles: Best AI Tools for Daily Work | Best AI tools for daily work
+  sources: discover-high-traffic-seeds, discover-search-intents
+
+- normalized: best ai tools for students
+  canonical: Best AI Tools for Students
+  count: 3
+  titles: Best AI Tools for Students | Best AI tools for students
+  sources: discover-high-traffic-seeds, discover-search-intents, discover-topic-taxonomy
+
+- normalized: best apps for earning money
+  canonical: Best Apps for Earning Money
+  count: 2
+  titles: Best Apps for Earning Money | Best apps for earning money
+  sources: discover-high-traffic-seeds, discover-search-intents
+
+- normalized: best finance apps for beginners
+  canonical: Best Finance Apps for Beginners
+  count: 2
+  titles: Best Finance Apps for Beginners
+  sources: discover-high-traffic-seeds, discover-topic-taxonomy
+
+- normalized: best note taking apps for students
+  canonical: Best Note Taking Apps for Students
+  count: 2
+  titles: Best Note Taking Apps for Students
+  sources: discover-high-traffic-seeds, discover-topic-taxonomy
+
+- normalized: best online jobs for students
+  canonical: Best Online Jobs for Students
+  count: 2
+  titles: Best Online Jobs for Students | Best online jobs for students
+  sources: discover-high-traffic-seeds, discover-search-intents
+
+- normalized: best productivity apps for daily work
+  canonical: Best Productivity Apps for Daily Work
+  count: 2
+  titles: Best Productivity Apps for Daily Work
+  sources: discover-high-traffic-seeds, discover-topic-taxonomy
+
+- normalized: best seo tools for beginners
+  canonical: Best SEO Tools for Beginners
+  count: 2
+  titles: Best SEO Tools for Beginners
+  sources: discover-high-traffic-seeds, discover-topic-taxonomy
+
+- normalized: best smartphones for battery life
+  canonical: Best Smartphones for Battery Life
+  count: 2
+  titles: Best Smartphones for Battery Life
+  sources: discover-high-traffic-seeds, discover-topic-taxonomy
+
+- normalized: best space documentaries for beginners
+  canonical: Best Space Documentaries for Beginners
+  count: 2
+  titles: Best Space Documentaries for Beginners
+  sources: discover-high-traffic-seeds, discover-topic-taxonomy
+
+- normalized: best tech youtubers to follow
+  canonical: Best Tech YouTubers to Follow
+  count: 2
+  titles: Best Tech YouTubers to Follow
+  sources: discover-high-traffic-seeds, discover-topic-taxonomy
+
+- normalized: how to fix a slow android phone without factory reset
+  canonical: How to Fix a Slow Android Phone Without Factory Reset
+  count: 2
+  titles: How to Fix a Slow Android Phone Without Factory Reset
+  sources: data-data1, data-guides-batch1
+
+- normalized: how to fix phone battery drain fast
+  canonical: How to Fix Phone Battery Drain Fast
+  count: 2
+  titles: How to Fix Phone Battery Drain Fast
+  sources: discover-high-traffic-seeds, discover-topic-taxonomy
+
+- normalized: how to fix phone overheating
+  canonical: How to Fix Phone Overheating
+  count: 2
+  titles: How to Fix Phone Overheating | How to fix phone overheating
+  sources: discover-search-intents, discover-topic-taxonomy
+
+- normalized: how to improve communication skills
+  canonical: How to Improve Communication Skills
+  count: 2
+  titles: How to Improve Communication Skills | How to improve communication skills
+  sources: discover-high-traffic-seeds, discover-search-intents
+
+- normalized: how to start freelancing
+  canonical: How to Start Freelancing
+  count: 2
+  titles: How to Start Freelancing | How to start freelancing
+  sources: discover-high-traffic-seeds, discover-search-intents
+
+- normalized: how to start learning about space
+  canonical: How to Start Learning About Space
+  count: 2
+  titles: How to Start Learning About Space
+  sources: discover-high-traffic-seeds, discover-topic-taxonomy
+
+- normalized: how to stop procrastination
+  canonical: How to Stop Procrastination
+  count: 2
+  titles: How to Stop Procrastination | How to stop procrastination
+  sources: discover-high-traffic-seeds, discover-search-intents
+
+- normalized: how to study effectively
+  canonical: How to Study Effectively
+  count: 2
+  titles: How to Study Effectively | How to study effectively
+  sources: discover-high-traffic-seeds, discover-search-intents
+
+- normalized: what is prompt engineering and how to get better at it
+  canonical: What Is Prompt Engineering and How to Get Better at It
+  count: 2
+  titles: What Is Prompt Engineering and How to Get Better at It
+  sources: data-data1, data-guides-batch4

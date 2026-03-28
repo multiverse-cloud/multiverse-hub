@@ -12,7 +12,7 @@ function getFirebaseConfig() {
   }
 }
 
-function isFirebaseAdminConfigured() {
+export function isFirebaseAdminConfigured() {
   const { projectId, clientEmail, privateKey } = getFirebaseConfig()
   return Boolean(projectId && clientEmail && privateKey)
 }

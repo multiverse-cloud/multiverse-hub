@@ -2,63 +2,82 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { UserButton, useClerk } from '@clerk/nextjs'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Wrench, Layers, Compass, ShoppingBag,
   Home, Search, Flag, Globe2, Bell, Settings, ChevronLeft,
   ChevronRight, Shield, Menu, X, Activity, Loader2, LogOut
 } from 'lucide-react'
+import {
+  AdminClerkLogoutButton,
+  AdminClerkUserButton,
+} from '@/components/admin/AdminClerkSessionControls'
 import ThemeToggle from '@/components/layout/ThemeToggle'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
-  { label: 'Overview', href: '/admin', icon: LayoutDashboard },
-  { label: 'Universes', href: '/admin/universes', icon: Globe2 },
-  { label: 'Tools', href: '/admin/tools', icon: Wrench },
-  { label: 'Categories', href: '/admin/categories', icon: Layers },
-  { label: 'Discover Lists', href: '/admin/discover', icon: Compass },
-  { label: 'Marketplace', href: '/admin/marketplace', icon: ShoppingBag },
-  { label: 'Homepage Sections', href: '/admin/homepage', icon: Home },
-  { label: 'Feature Flags', href: '/admin/flags', icon: Flag },
-  { label: 'API Status', href: '/admin/api-status', icon: Activity },
-  { label: 'SEO Pages', href: '/admin/seo', icon: Search },
-  { label: 'Settings', href: '/admin/settings', icon: Settings },
+  { label: 'Overview', href: '/admin', icon: LayoutDashboard, available: true },
+  { label: 'Universes', href: '/admin/universes', icon: Globe2, available: false },
+  { label: 'Tools', href: '/admin/tools', icon: Wrench, available: true },
+  { label: 'Categories', href: '/admin/categories', icon: Layers, available: false },
+  { label: 'Discover Lists', href: '/admin/discover', icon: Compass, available: true },
+  { label: 'Marketplace', href: '/admin/marketplace', icon: ShoppingBag, available: false },
+  { label: 'Homepage Sections', href: '/admin/homepage', icon: Home, available: false },
+  { label: 'Feature Flags', href: '/admin/flags', icon: Flag, available: true },
+  { label: 'API Status', href: '/admin/api-status', icon: Activity, available: true },
+  { label: 'SEO Pages', href: '/admin/seo', icon: Search, available: false },
+  { label: 'Settings', href: '/admin/settings', icon: Settings, available: false },
 ]
 
 export default function AdminLayout({
   children,
   adminEmail,
+  clerkEnabled,
 }: {
   children: React.ReactNode
   adminEmail?: string | null
+  clerkEnabled: boolean
 }) {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
   const pathname = usePathname()
-  const { signOut } = useClerk()
   const displayEmail = adminEmail || 'Admin'
 
-  async function handleLogout() {
+  async function handleFallbackLogout() {
     setLoggingOut(true)
 
     try {
-      // Clear our custom admin session first
       await fetch('/api/admin/logout', { method: 'POST' })
-
-      // Attempt to clear Clerk session
-      try {
-        await signOut({ redirectUrl: '/admin-login' })
-      } catch (e) {
-        // Clerk might not be active, that's fine
-      }
-      
-      // Fallback redirect if Clerk didn't catch the redirect
-      window.location.href = '/admin-login'
     } catch {
-      window.location.href = '/admin-login'
+      // Redirect anyway so the admin cookie is dropped client-side on next load.
     }
+
+    window.location.href = '/admin-login'
+  }
+
+  function renderLogoutButton({ mobile = false }: { mobile?: boolean }) {
+    const className = mobile
+      ? 'flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-60'
+      : cn(
+          'w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-60',
+          collapsed && 'justify-center px-0'
+        )
+
+    if (clerkEnabled) {
+      return <AdminClerkLogoutButton className={className} showLabel={!collapsed || mobile} />
+    }
+
+    return (
+      <button
+        onClick={handleFallbackLogout}
+        disabled={loggingOut}
+        className={className}
+      >
+        {loggingOut ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4 shrink-0" />}
+        {!collapsed || mobile ? 'Log Out' : null}
+      </button>
+    )
   }
 
   return (
@@ -81,21 +100,56 @@ export default function AdminLayout({
           {NAV_ITEMS.map(item => {
             const Icon = item.icon
             const active = pathname === item.href
+            const itemClassName = cn(
+              'flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm font-medium transition-colors',
+              item.available
+                ? active
+                  ? 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                : 'cursor-not-allowed text-slate-400 dark:text-slate-500',
+              collapsed && 'justify-center px-0'
+            )
+
+            const itemBody = (
+              <>
+                <Icon className="w-4 h-4 shrink-0" />
+                {!collapsed ? (
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span className="truncate">{item.label}</span>
+                    {!item.available ? (
+                      <span className="rounded-full border border-border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                        Soon
+                      </span>
+                    ) : null}
+                  </span>
+                ) : null}
+              </>
+            )
+
+            if (!item.available) {
+              return (
+                <button
+                  key={item.href}
+                  type="button"
+                  disabled
+                  title={collapsed ? `${item.label} (Coming soon)` : undefined}
+                  className={itemClassName}
+                >
+                  {itemBody}
+                </button>
+              )
+            }
+
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 title={collapsed ? item.label : undefined}
                 className={cn(
-                  'flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm font-medium transition-colors',
-                  active
-                    ? 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted',
-                  collapsed && 'justify-center px-0'
+                  itemClassName
                 )}
               >
-                <Icon className="w-4 h-4 shrink-0" />
-                {!collapsed && item.label}
+                {itemBody}
               </Link>
             )
           })}
@@ -107,14 +161,7 @@ export default function AdminLayout({
             <Globe2 className="w-4 h-4 shrink-0" />
             {!collapsed && 'View Site'}
           </Link>
-          <button
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className={cn('w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-60', collapsed && 'justify-center px-0')}
-          >
-            {loggingOut ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4 shrink-0" />}
-            {!collapsed && 'Log Out'}
-          </button>
+          {renderLogoutButton({ mobile: false })}
           <button
             onClick={() => setCollapsed(!collapsed)}
             className={cn('w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors', collapsed && 'justify-center px-0')}
@@ -142,9 +189,36 @@ export default function AdminLayout({
               {NAV_ITEMS.map(item => {
                 const Icon = item.icon
                 const active = pathname === item.href
+                const mobileClassName = cn(
+                  'flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm font-medium transition-colors',
+                  item.available
+                    ? active
+                      ? 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    : 'cursor-not-allowed text-slate-400 dark:text-slate-500'
+                )
+
+                if (!item.available) {
+                  return (
+                    <button key={item.href} type="button" disabled className={mobileClassName}>
+                      <Icon className="w-4 h-4 shrink-0" />
+                      <span className="flex items-center gap-2">
+                        <span>{item.label}</span>
+                        <span className="rounded-full border border-border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                          Soon
+                        </span>
+                      </span>
+                    </button>
+                  )
+                }
+
                 return (
-                  <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}
-                    className={cn('flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm font-medium transition-colors', active ? 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400' : 'text-muted-foreground hover:text-foreground hover:bg-muted')}>
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={mobileClassName}
+                  >
                     <Icon className="w-4 h-4 shrink-0" />
                     {item.label}
                   </Link>
@@ -152,14 +226,7 @@ export default function AdminLayout({
               })}
             </nav>
             <div className="border-t border-border p-2">
-              <button
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-60"
-              >
-                {loggingOut ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4" />}
-                Log Out
-              </button>
+              {renderLogoutButton({ mobile: true })}
             </div>
           </aside>
         </div>
@@ -186,7 +253,13 @@ export default function AdminLayout({
               <p className="text-xs font-medium text-foreground">Admin Session</p>
               <p className="max-w-40 truncate text-[11px] text-muted-foreground">{displayEmail}</p>
             </div>
-            <UserButton afterSignOutUrl="/sign-in" />
+            {clerkEnabled ? (
+              <AdminClerkUserButton />
+            ) : (
+              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-xs font-semibold text-muted-foreground">
+                AD
+              </div>
+            )}
           </div>
         </header>
 

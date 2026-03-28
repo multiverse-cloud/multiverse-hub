@@ -60,5 +60,5 @@ export default async function middleware(request: NextRequest, event: NextFetchE
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|.*\\..*).*)', '/api/auth/:path*'],
+  matcher: ['/((?!_next|api|.*\\..*).*)', '/api/auth/:path*', '/api/admin/:path*'],
 }

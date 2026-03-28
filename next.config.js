@@ -11,9 +11,6 @@ const nextConfig = {
       { protocol: 'https', hostname: 'api.qrserver.com' },
     ],
   },
-  experimental: {
-    optimizePackageImports: ['lucide-react'],
-  },
   serverExternalPackages: [
     'sharp',
     'tesseract.js',

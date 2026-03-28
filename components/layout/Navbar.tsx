@@ -1,30 +1,25 @@
 import Link from 'next/link'
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import {
-  Bot,
   Calculator,
   ChevronDown,
   Code2,
   Compass,
-  FileText,
   Globe,
   GraduationCap,
   Home,
   House,
   Image as ImageIcon,
-  Music,
   Paintbrush,
   Search,
   ShoppingBag,
   Sparkles,
   Star,
   Type,
-  Video,
   Wrench,
   Zap,
 } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
-import MobileNav from './MobileNav'
+import NavbarAuthClient from './NavbarAuthClient'
 import { cn } from '@/lib/utils'
 import { ACTIVE_CATEGORIES, type Tool } from '@/lib/tools-data'
 import { getTools } from '@/lib/db'
@@ -239,64 +234,7 @@ export default async function Navbar() {
 
         <div className="ml-auto flex shrink-0 items-center gap-2">
           <ThemeToggle />
-
-          {clerkEnabled ? (
-            <>
-              <SignedOut>
-                <Link
-                  href="/sign-in"
-                  className="hidden items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition-all hover:bg-indigo-700 hover:shadow-indigo-500/30 sm:flex"
-                >
-                  <Sparkles className="h-3.5 w-3.5" />
-                  Sign In
-                </Link>
-              </SignedOut>
-              <SignedIn>
-                <div className="hidden sm:flex">
-                  <UserButton afterSignOutUrl="/" />
-                </div>
-              </SignedIn>
-            </>
-          ) : (
-            <Link
-              href="/sign-in"
-              className="hidden items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition-all hover:bg-indigo-700 hover:shadow-indigo-500/30 sm:flex"
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              Sign In
-            </Link>
-          )}
-
-          <MobileNav
-            authSlot={
-              clerkEnabled ? (
-                <>
-                  <SignedOut>
-                    <Link
-                      href="/sign-in"
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white"
-                    >
-                      <Sparkles className="h-4 w-4" />
-                      Sign In
-                    </Link>
-                  </SignedOut>
-                  <SignedIn>
-                    <div className="flex justify-center">
-                      <UserButton afterSignOutUrl="/" />
-                    </div>
-                  </SignedIn>
-                </>
-              ) : (
-                <Link
-                  href="/sign-in"
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white"
-                >
-                  <Sparkles className="h-4 w-4" />
-                  Sign In
-                </Link>
-              )
-            }
-          />
+          <NavbarAuthClient clerkEnabled={clerkEnabled} />
         </div>
       </div>
 

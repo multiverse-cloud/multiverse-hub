@@ -4,19 +4,30 @@ import { verifyAdminSessionToken, ADMIN_SESSION_COOKIE } from '@/lib/admin-auth'
 import { isAdminUser } from '@/lib/admin-access'
 import { updateTool } from '@/lib/db'
 
+const clerkEnabled = Boolean(
+  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY
+)
+
 export async function PATCH(request: NextRequest) {
   try {
-    const { userId } = await auth()
     const customToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value
     
     let isAuthorized = false
-    
-    if (userId) {
-      const user = await currentUser()
-      isAuthorized = isAdminUser(user)
-    } else if (customToken) {
+
+    if (customToken) {
       const session = await verifyAdminSessionToken(customToken)
       if (session) isAuthorized = true
+    } else if (clerkEnabled) {
+      try {
+        const { userId } = await auth()
+
+        if (userId) {
+          const user = await currentUser()
+          isAuthorized = isAdminUser(user)
+        }
+      } catch (error) {
+        console.error('Admin tools auth fallback triggered:', error)
+      }
     }
 
     if (!isAuthorized) {

@@ -17,7 +17,11 @@ export default async function Layout({ children }: { children: React.ReactNode }
   if (customSessionToken) {
     const customSession = await verifyAdminSessionToken(customSessionToken)
     if (customSession) {
-      return <AdminLayout adminEmail={customSession.email}>{children}</AdminLayout>
+      return (
+        <AdminLayout adminEmail={customSession.email} clerkEnabled={clerkEnabled}>
+          {children}
+        </AdminLayout>
+      )
     }
   }
 
@@ -26,17 +30,34 @@ export default async function Layout({ children }: { children: React.ReactNode }
     redirect('/admin-login')
   }
 
-  const { userId } = await auth()
+  let userId: string | null = null
+
+  try {
+    const authResult = await auth()
+    userId = authResult.userId
+  } catch {
+    redirect('/admin-login')
+  }
 
   if (!userId) {
     redirect('/admin-login')
   }
 
-  const user = await currentUser()
+  let user = null
+
+  try {
+    user = await currentUser()
+  } catch {
+    redirect('/admin-login')
+  }
 
   if (!user || !isAdminUser(user)) {
     redirect('/')
   }
 
-  return <AdminLayout adminEmail={getPrimaryEmail(user)}>{children}</AdminLayout>
+  return (
+    <AdminLayout adminEmail={getPrimaryEmail(user)} clerkEnabled={clerkEnabled}>
+      {children}
+    </AdminLayout>
+  )
 }
