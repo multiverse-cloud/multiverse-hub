@@ -1,9 +1,11 @@
 'use client'
 
-import { useDeferredValue, useMemo, useState, useTransition } from 'react'
+import { useDeferredValue, useEffect, useMemo, useState, useTransition } from 'react'
 import {
   BookOpen,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Copy,
   Database,
   Info,
@@ -18,6 +20,7 @@ import {
   Upload,
 } from 'lucide-react'
 import type { DiscoverFaq, DiscoverItem, DiscoverList, DiscoverStep } from '@/lib/discover-data'
+import { DISCOVER_ADMIN_PAGE_SIZE, paginateDiscoverItems } from '@/lib/discover-query'
 import { cn, readFileAsText, slugify } from '@/lib/utils'
 
 function createBlankRankingItem(rank: number): DiscoverItem {
@@ -119,6 +122,8 @@ type AdminDiscoverResponse = {
   __rawText?: string
 }
 
+const ADMIN_DISCOVER_PAGE_WINDOW = 5
+
 function getTimestampLabel() {
   return new Intl.DateTimeFormat('en-IN', {
     hour: 'numeric',
@@ -181,6 +186,7 @@ export default function AdminDiscoverClient({
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState<'all' | 'ranking' | 'guide'>('all')
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft'>('all')
+  const [currentPage, setCurrentPage] = useState(1)
   const [feedback, setFeedback] = useState<FeedbackState | null>(null)
   const [importJson, setImportJson] = useState('')
   const [importFilename, setImportFilename] = useState('')
@@ -214,6 +220,22 @@ export default function AdminDiscoverClient({
     })
   }, [deferredSearch, listsState, statusFilter, typeFilter])
 
+  const pagination = useMemo(
+    () => paginateDiscoverItems(filteredLists, currentPage, DISCOVER_ADMIN_PAGE_SIZE),
+    [currentPage, filteredLists]
+  )
+
+  const paginatedLists = pagination.items
+  const visiblePageStart = filteredLists.length > 0 ? pagination.startIndex + 1 : 0
+  const visiblePageEnd = filteredLists.length > 0 ? pagination.endIndex : 0
+  const paginationPages = useMemo(() => {
+    const pages = [1, pagination.page - 1, pagination.page, pagination.page + 1, pagination.totalPages]
+      .filter(page => page >= 1 && page <= pagination.totalPages)
+      .slice(0, ADMIN_DISCOVER_PAGE_WINDOW)
+
+    return Array.from(new Set(pages)).sort((left, right) => left - right)
+  }, [pagination.page, pagination.totalPages])
+
   const discoverCounts = useMemo(() => {
     const published = listsState.filter(list => list.published).length
 
@@ -224,6 +246,31 @@ export default function AdminDiscoverClient({
       visible: filteredLists.length,
     }
   }, [filteredLists.length, listsState])
+
+  useEffect(() => {
+    if (filteredLists.length === 0) {
+      if (currentPage !== 1) {
+        setCurrentPage(1)
+      }
+      return
+    }
+
+    const selectedIndex = filteredLists.findIndex(list => list.id === selectedId)
+
+    if (selectedIndex >= 0) {
+      const selectedPage = Math.floor(selectedIndex / DISCOVER_ADMIN_PAGE_SIZE) + 1
+
+      if (selectedPage !== currentPage) {
+        setCurrentPage(selectedPage)
+      }
+
+      return
+    }
+
+    if (pagination.page !== currentPage) {
+      setCurrentPage(pagination.page)
+    }
+  }, [currentPage, filteredLists, pagination.page, selectedId])
 
   function replaceSelected(nextList: DiscoverList) {
     setListsState(previous => previous.map(list => (list.id === nextList.id ? nextList : list)))
@@ -283,6 +330,7 @@ export default function AdminDiscoverClient({
     const draft = createBlankList(type)
     setListsState(previous => [draft, ...previous])
     setSelectedId(draft.id)
+    setCurrentPage(1)
     pushFeedback(
       'info',
       type === 'ranking' ? 'New ranking draft' : 'New guide draft',
@@ -307,6 +355,7 @@ export default function AdminDiscoverClient({
 
     setListsState(previous => [draft, ...previous])
     setSelectedId(draft.id)
+    setCurrentPage(1)
     pushFeedback('info', 'Draft duplicated', 'The current page was copied into a new draft.')
   }
 
@@ -877,7 +926,10 @@ export default function AdminDiscoverClient({
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={search}
-              onChange={event => setSearch(event.target.value)}
+              onChange={event => {
+                setSearch(event.target.value)
+                setCurrentPage(1)
+              }}
               placeholder="Search discover pages"
               className="w-full rounded-xl border border-border bg-background py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
             />
@@ -887,7 +939,10 @@ export default function AdminDiscoverClient({
             {(['all', 'ranking', 'guide'] as const).map(value => (
               <button
                 key={value}
-                onClick={() => setTypeFilter(value)}
+                onClick={() => {
+                  setTypeFilter(value)
+                  setCurrentPage(1)
+                }}
                 className={cn(
                   'rounded-full px-3 py-1.5 text-xs font-semibold transition-colors',
                   typeFilter === value
@@ -904,7 +959,10 @@ export default function AdminDiscoverClient({
             {(['all', 'published', 'draft'] as const).map(value => (
               <button
                 key={value}
-                onClick={() => setStatusFilter(value)}
+                onClick={() => {
+                  setStatusFilter(value)
+                  setCurrentPage(1)
+                }}
                 className={cn(
                   'rounded-full px-3 py-1.5 text-xs font-semibold transition-colors',
                   statusFilter === value
@@ -917,8 +975,65 @@ export default function AdminDiscoverClient({
             ))}
           </div>
 
+          <div className="rounded-2xl border border-border bg-background p-3">
+            <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+              <span>
+                Page <span className="font-semibold text-foreground">{pagination.page}</span> of{' '}
+                <span className="font-semibold text-foreground">{pagination.totalPages}</span>
+              </span>
+              <span>
+                {visiblePageStart}-{visiblePageEnd} of {filteredLists.length}
+              </span>
+            </div>
+
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrentPage(page => Math.max(1, page - 1))}
+                disabled={pagination.page === 1}
+                className="btn-secondary gap-2 px-3 py-2 text-xs disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Prev
+              </button>
+
+              {paginationPages.map((page, index) => {
+                const previousPage = paginationPages[index - 1]
+                const showGap = previousPage && page - previousPage > 1
+
+                return (
+                  <div key={page} className="flex items-center gap-2">
+                    {showGap ? <span className="px-1 text-xs text-muted-foreground">...</span> : null}
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage(page)}
+                      className={cn(
+                        'inline-flex h-9 min-w-9 items-center justify-center rounded-full border px-3 text-xs font-semibold transition-colors',
+                        pagination.page === page
+                          ? 'border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950'
+                          : 'border-border bg-card text-foreground hover:border-slate-300 hover:text-slate-950 dark:hover:border-slate-700 dark:hover:text-slate-50'
+                      )}
+                    >
+                      {page}
+                    </button>
+                  </div>
+                )
+              })}
+
+              <button
+                type="button"
+                onClick={() => setCurrentPage(page => Math.min(pagination.totalPages, page + 1))}
+                disabled={pagination.page === pagination.totalPages}
+                className="btn-secondary gap-2 px-3 py-2 text-xs disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
           <div className="space-y-2">
-            {filteredLists.map(list => (
+            {paginatedLists.map(list => (
               <button
                 key={list.id}
                 onClick={() => setSelectedId(list.id)}
@@ -952,6 +1067,13 @@ export default function AdminDiscoverClient({
               </button>
             ))}
           </div>
+
+          {filteredLists.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-border bg-background px-4 py-6 text-center">
+              <p className="text-sm font-semibold text-foreground">No discover pages match this filter.</p>
+              <p className="mt-1 text-xs text-muted-foreground">Try another query, type, or status filter.</p>
+            </div>
+          ) : null}
         </aside>
 
         <section className="rounded-2xl border border-border bg-card p-5">

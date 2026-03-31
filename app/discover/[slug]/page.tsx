@@ -98,11 +98,6 @@ function buildDiscoverStructuredData(baseUrl: string, list: DiscoverList) {
   }
 }
 
-export async function generateStaticParams() {
-  const lists = await getPublishedDiscoverLists()
-  return lists.map(list => ({ slug: list.slug }))
-}
-
 export async function generateMetadata({ params }: DiscoverPageProps): Promise<Metadata> {
   const { slug } = await params
   const list = await getDiscoverListBySlug(slug)

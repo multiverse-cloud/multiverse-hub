@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         ...result,
         success: true,
-        message: `Seeded ${result.count || 0} starter discover pages into Firestore.`,
+        message: `Seeded ${result.count || 0} discover pages to Firestore from the local Discover store.`,
         lists,
       })
     }

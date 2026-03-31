@@ -3,6 +3,9 @@ import { getApps, initializeApp, cert } from 'firebase-admin/app'
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'
 import { TOOLS, Tool } from './tools-data'
 
+const FIRESTORE_READ_BACKOFF_MS = 10 * 60 * 1000
+let toolsReadBackoffUntil = 0
+
 function getFirebaseConfig() {
   return {
     projectId: process.env.FIREBASE_PROJECT_ID,
@@ -43,6 +46,30 @@ export function getDb() {
   return getFirestore(app)
 }
 
+function isQuotaExceededError(error: unknown) {
+  if (!error || typeof error !== 'object') {
+    return false
+  }
+
+  const candidate = error as { code?: unknown; details?: unknown; message?: unknown }
+  const details = String(candidate.details || candidate.message || '')
+
+  return candidate.code === 8 || /RESOURCE_EXHAUSTED|quota exceeded/i.test(details)
+}
+
+function isToolsReadBackoffActive() {
+  return toolsReadBackoffUntil > Date.now()
+}
+
+function activateToolsReadBackoff(error: unknown) {
+  if (!isQuotaExceededError(error)) {
+    return false
+  }
+
+  toolsReadBackoffUntil = Date.now() + FIRESTORE_READ_BACKOFF_MS
+  return true
+}
+
 import { unstable_cache, revalidateTag } from 'next/cache'
 
 // ==========================================
@@ -77,7 +104,7 @@ function serializeDoc<T>(doc: any): T {
 
 export const getTools = unstable_cache(
   async (): Promise<Tool[]> => {
-    if (!isFirebaseAdminConfigured()) {
+    if (!isFirebaseAdminConfigured() || isToolsReadBackoffActive()) {
       return TOOLS
     }
 
@@ -87,7 +114,11 @@ export const getTools = unstable_cache(
       
       return snapshot.docs.map(doc => serializeDoc<Tool>(doc))
     } catch (error) {
-      console.error('Failed to fetching tools from Firestore, falling back to local data:', error)
+      if (activateToolsReadBackoff(error)) {
+        console.warn('Firestore tools quota reached, using local tool data temporarily:', error)
+      } else {
+        console.error('Failed to fetching tools from Firestore, falling back to local data:', error)
+      }
       return TOOLS
     }
   },
@@ -97,20 +128,8 @@ export const getTools = unstable_cache(
 
 export const getToolBySlug = unstable_cache(
   async (slug: string): Promise<Tool | null> => {
-    if (!isFirebaseAdminConfigured()) {
-      return TOOLS.find(t => t.slug === slug) || null
-    }
-
-    try {
-      const snapshot = await getDb().collection('tools').where('slug', '==', slug).limit(1).get()
-      if (snapshot.empty) {
-        return TOOLS.find(t => t.slug === slug) || null
-      }
-      return serializeDoc<Tool>(snapshot.docs[0])
-    } catch (error) {
-      console.error(`Failed to fetch tool ${slug} from Firestore, falling back to local data:`, error)
-      return TOOLS.find(t => t.slug === slug) || null
-    }
+    const tools = await getTools()
+    return tools.find(tool => tool.slug === slug) || null
   },
   ['tool-by-slug-cache'],
   { revalidate: 3600, tags: ['tools'] }
@@ -118,20 +137,8 @@ export const getToolBySlug = unstable_cache(
 
 export const getToolsByCategory = unstable_cache(
   async (categorySlug: string): Promise<Tool[]> => {
-    if (!isFirebaseAdminConfigured()) {
-      return TOOLS.filter(t => t.categorySlug === categorySlug)
-    }
-
-    try {
-      const snapshot = await getDb().collection('tools').where('categorySlug', '==', categorySlug).get()
-      if (snapshot.empty) {
-        return TOOLS.filter(t => t.categorySlug === categorySlug)
-      }
-      return snapshot.docs.map(doc => serializeDoc<Tool>(doc))
-    } catch (error) {
-      console.error(`Failed to fetch tools for category ${categorySlug} from Firestore, falling back to local data:`, error)
-      return TOOLS.filter(t => t.categorySlug === categorySlug)
-    }
+    const tools = await getTools()
+    return tools.filter(tool => tool.categorySlug === categorySlug)
   },
   ['tools-by-category-cache'],
   { revalidate: 3600, tags: ['tools'] }

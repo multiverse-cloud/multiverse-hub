@@ -1,17 +1,35 @@
 import 'server-only'
 
-import { unstable_cache, revalidateTag } from 'next/cache'
 import { FieldValue } from 'firebase-admin/firestore'
-import {
-  DISCOVER_LISTS,
-  DiscoverList,
-  getDiscoverListBySlugLocal,
-  getPublishedDiscoverLists as getPublishedDiscoverListsLocal,
-} from '@/lib/discover-data'
+import { revalidateTag } from 'next/cache'
+import { type DiscoverFaq, type DiscoverItem, type DiscoverList, type DiscoverStep } from '@/lib/discover-data'
 import { getDb, isFirebaseAdminConfigured } from '@/lib/db'
+import {
+  getMergedLocalDiscoverLists,
+  saveLocalDiscoverList,
+  saveLocalDiscoverLists,
+} from '@/lib/discover-local-store'
 
 const DISCOVER_TAG = 'discover'
 const DISCOVER_COLLECTION = 'discoverLists'
+const DISCOVER_MEMORY_CACHE_MS = 60 * 1000
+const DISCOVER_READ_BACKOFF_MS = 5 * 60 * 1000
+
+let discoverReadBackoffUntil = 0
+let allDiscoverListsCache:
+  | {
+      lists: DiscoverList[]
+      expiresAt: number
+    }
+  | null = null
+
+function normalizeTopic(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+}
+
+function getListMatchKey(list: DiscoverList) {
+  return list.slug || normalizeTopic(list.title)
+}
 
 function sortDiscoverLists(lists: DiscoverList[]) {
   return [...lists].sort((left, right) => {
@@ -23,168 +41,235 @@ function sortDiscoverLists(lists: DiscoverList[]) {
   })
 }
 
-function serializeDiscoverDoc<T>(doc: any): T {
-  const data = doc.data()
-  const result: Record<string, unknown> = { ...data }
+function asString(value: unknown) {
+  return typeof value === 'string' ? value : ''
+}
 
-  Object.keys(result).forEach(key => {
-    const value = result[key] as any
+function asStringArray(value: unknown) {
+  return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === 'string') : []
+}
 
-    if (value && typeof value === 'object' && '_seconds' in value && '_nanoseconds' in value) {
-      try {
-        const date = value.toDate ? value.toDate() : new Date(value._seconds * 1000)
-        result[key] = date.toISOString().slice(0, 10)
-      } catch {
-        result[key] = null
-      }
-    }
-  })
+function asItems(value: unknown): DiscoverItem[] {
+  return Array.isArray(value) ? (value as DiscoverItem[]) : []
+}
 
-  return result as T
+function asSteps(value: unknown): DiscoverStep[] {
+  return Array.isArray(value) ? (value as DiscoverStep[]) : []
+}
+
+function asFaq(value: unknown): DiscoverFaq[] {
+  return Array.isArray(value) ? (value as DiscoverFaq[]) : []
 }
 
 function normalizeDiscoverList(list: DiscoverList): DiscoverList {
   return {
     ...list,
+    id: asString(list.id),
+    slug: asString(list.slug),
+    title: asString(list.title),
+    seoTitle: asString(list.seoTitle),
+    metaDescription: asString(list.metaDescription),
+    description: asString(list.description),
+    intro: asString(list.intro),
+    category: asString(list.category),
+    subcategory: asString(list.subcategory),
+    angle: asString(list.angle),
+    audience: asString(list.audience),
+    scope: asString(list.scope),
+    icon: asString(list.icon),
     itemCount: list.type === 'guide' ? list.steps.length : list.items.length,
-    subcategory: list.subcategory || '',
-    angle: list.angle || '',
-    audience: list.audience || '',
-    scope: list.scope || '',
+    updatedAt: asString(list.updatedAt) || new Date().toISOString().slice(0, 10),
     featured: Boolean(list.featured),
-    tags: list.tags || [],
-    methodology: list.methodology || [],
-    items: list.items || [],
-    steps: list.steps || [],
-    faq: list.faq || [],
-    relatedSlugs: list.relatedSlugs || [],
+    published: Boolean(list.published),
+    tags: asStringArray(list.tags),
+    methodology: asStringArray(list.methodology),
+    items: asItems(list.items),
+    steps: asSteps(list.steps),
+    faq: asFaq(list.faq),
+    relatedSlugs: asStringArray(list.relatedSlugs),
   }
 }
 
-export const getPublishedDiscoverLists = unstable_cache(
-  async (): Promise<DiscoverList[]> => {
-    if (!isFirebaseAdminConfigured()) {
-      return sortDiscoverLists(getPublishedDiscoverListsLocal().map(normalizeDiscoverList))
+function mergeDiscoverLists(baseLists: DiscoverList[], overrideLists: DiscoverList[]) {
+  if (baseLists.length === 0) {
+    return sortDiscoverLists(overrideLists)
+  }
+
+  const byKey = new Map<string, DiscoverList>()
+
+  for (const list of baseLists) {
+    byKey.set(getListMatchKey(list), list)
+  }
+
+  for (const list of overrideLists) {
+    const matchKey = getListMatchKey(list)
+
+    if (byKey.has(matchKey)) {
+      byKey.set(matchKey, list)
     }
+  }
 
-    try {
-      const snapshot = await getDb()
-        .collection(DISCOVER_COLLECTION)
-        .where('published', '==', true)
-        .get()
+  return sortDiscoverLists(Array.from(byKey.values()))
+}
 
-      if (snapshot.empty) {
-        return sortDiscoverLists(getPublishedDiscoverListsLocal().map(normalizeDiscoverList))
-      }
+function resetDiscoverMemoryCache() {
+  allDiscoverListsCache = null
+}
 
-      return sortDiscoverLists(snapshot.docs.map(doc => normalizeDiscoverList(serializeDiscoverDoc<DiscoverList>(doc))))
-    } catch (error) {
-      console.error('Failed to fetch discover lists from Firestore, falling back to local data:', error)
-      return sortDiscoverLists(getPublishedDiscoverListsLocal().map(normalizeDiscoverList))
-    }
-  },
-  ['discover-published-cache'],
-  { revalidate: 3600, tags: [DISCOVER_TAG] }
-)
+function isQuotaExceededError(error: unknown) {
+  if (!error || typeof error !== 'object') {
+    return false
+  }
 
-export const getDiscoverListBySlug = unstable_cache(
-  async (slug: string): Promise<DiscoverList | null> => {
-    if (!isFirebaseAdminConfigured()) {
-      const local = getDiscoverListBySlugLocal(slug)
-      return local ? normalizeDiscoverList(local) : null
-    }
+  const candidate = error as { code?: unknown; details?: unknown; message?: unknown }
+  const details = String(candidate.details || candidate.message || '')
 
-    try {
-      const snapshot = await getDb()
-        .collection(DISCOVER_COLLECTION)
-        .where('slug', '==', slug)
-        .limit(1)
-        .get()
+  return candidate.code === 8 || /RESOURCE_EXHAUSTED|quota exceeded/i.test(details)
+}
 
-      if (snapshot.empty) {
-        const local = getDiscoverListBySlugLocal(slug)
-        return local ? normalizeDiscoverList(local) : null
-      }
+function isDiscoverReadBackoffActive() {
+  return discoverReadBackoffUntil > Date.now()
+}
 
-      return normalizeDiscoverList(serializeDiscoverDoc<DiscoverList>(snapshot.docs[0]))
-    } catch (error) {
-      console.error(`Failed to fetch discover list ${slug} from Firestore, falling back to local data:`, error)
-      const local = getDiscoverListBySlugLocal(slug)
-      return local ? normalizeDiscoverList(local) : null
-    }
-  },
-  ['discover-by-slug-cache'],
-  { revalidate: 3600, tags: [DISCOVER_TAG] }
-)
+function activateDiscoverReadBackoff(error: unknown) {
+  if (!isQuotaExceededError(error)) {
+    return false
+  }
 
-export async function getAdminDiscoverLists(): Promise<DiscoverList[]> {
-  if (!isFirebaseAdminConfigured()) {
-    return sortDiscoverLists(DISCOVER_LISTS.map(normalizeDiscoverList))
+  discoverReadBackoffUntil = Date.now() + DISCOVER_READ_BACKOFF_MS
+  return true
+}
+
+function serializeDiscoverDoc(doc: FirebaseFirestore.QueryDocumentSnapshot): DiscoverList {
+  const raw = doc.data() as Partial<DiscoverList> & {
+    updatedAtServer?: unknown
+  }
+
+  const { updatedAtServer, ...data } = raw
+  const type = data.type === 'guide' ? 'guide' : 'ranking'
+
+  return normalizeDiscoverList({
+    ...(data as DiscoverList),
+    id: asString(data.id) || doc.id,
+    slug: asString(data.slug) || doc.id,
+    type,
+    title: asString(data.title) || 'Untitled Discover Page',
+    seoTitle: asString(data.seoTitle) || asString(data.title) || 'Untitled Discover Page',
+    metaDescription: asString(data.metaDescription) || asString(data.description),
+    description: asString(data.description),
+    intro: asString(data.intro) || asString(data.description),
+    category: asString(data.category) || (type === 'guide' ? 'Watch Guides' : 'Movies'),
+    subcategory: asString(data.subcategory),
+    angle: asString(data.angle),
+    audience: asString(data.audience),
+    scope: asString(data.scope),
+    icon: asString(data.icon) || (type === 'guide' ? 'ListChecks' : 'Sparkles'),
+    itemCount:
+      typeof data.itemCount === 'number'
+        ? data.itemCount
+        : type === 'guide'
+          ? asSteps(data.steps).length
+          : asItems(data.items).length,
+    updatedAt: asString(data.updatedAt) || new Date().toISOString().slice(0, 10),
+    featured: Boolean(data.featured),
+    published: Boolean(data.published),
+    tags: asStringArray(data.tags),
+    methodology: asStringArray(data.methodology),
+    items: asItems(data.items),
+    steps: asSteps(data.steps),
+    faq: asFaq(data.faq),
+    relatedSlugs: asStringArray(data.relatedSlugs),
+  })
+}
+
+async function getLocalDiscoverLists() {
+  try {
+    return sortDiscoverLists((await getMergedLocalDiscoverLists()).map(normalizeDiscoverList))
+  } catch (error) {
+    console.error('Failed to fetch local discover store:', error)
+    return []
+  }
+}
+
+async function getFirestoreDiscoverLists() {
+  if (!isFirebaseAdminConfigured() || isDiscoverReadBackoffActive()) {
+    return null
   }
 
   try {
     const snapshot = await getDb().collection(DISCOVER_COLLECTION).get()
-
-    if (snapshot.empty) {
-      return sortDiscoverLists(DISCOVER_LISTS.map(normalizeDiscoverList))
+    return snapshot.docs.map(serializeDiscoverDoc)
+  } catch (error) {
+    if (activateDiscoverReadBackoff(error)) {
+      console.warn('Firestore discover quota reached, using local discover data temporarily:', error)
+    } else {
+      console.error('Failed to fetch discover lists from Firestore, using local discover data:', error)
     }
 
-    return sortDiscoverLists(snapshot.docs.map(doc => normalizeDiscoverList(serializeDiscoverDoc<DiscoverList>(doc))))
-  } catch (error) {
-    console.error('Failed to fetch admin discover lists from Firestore, falling back to local data:', error)
-    return sortDiscoverLists(DISCOVER_LISTS.map(normalizeDiscoverList))
+    return null
   }
 }
 
-export async function saveDiscoverList(input: DiscoverList) {
-  if (!isFirebaseAdminConfigured()) {
-    throw new Error('Firebase Admin is not configured for discover persistence.')
+async function getAllDiscoverLists() {
+  if (allDiscoverListsCache && allDiscoverListsCache.expiresAt > Date.now()) {
+    return allDiscoverListsCache.lists
   }
 
-  const list = normalizeDiscoverList(input)
-  const docId = list.id || list.slug
+  const localLists = await getLocalDiscoverLists()
+  const firestoreLists = await getFirestoreDiscoverLists()
+  const lists = firestoreLists ? mergeDiscoverLists(localLists, firestoreLists) : localLists
+
+  allDiscoverListsCache = {
+    lists,
+    expiresAt: Date.now() + DISCOVER_MEMORY_CACHE_MS,
+  }
+
+  return lists
+}
+
+async function writeDiscoverListToFirestore(list: DiscoverList) {
+  const normalizedList = normalizeDiscoverList(list)
+  const docId = normalizedList.id || normalizedList.slug
+
+  if (!docId) {
+    throw new Error('Discover list is missing a stable id/slug.')
+  }
 
   await getDb()
     .collection(DISCOVER_COLLECTION)
     .doc(docId)
     .set(
       {
-        ...list,
-        id: docId,
-        itemCount: list.type === 'guide' ? list.steps.length : list.items.length,
-        updatedAt: list.updatedAt || new Date().toISOString().slice(0, 10),
+        ...normalizedList,
         updatedAtServer: FieldValue.serverTimestamp(),
       },
       { merge: true }
     )
-
-  revalidateTag(DISCOVER_TAG)
-  return true
 }
 
-export async function saveDiscoverLists(inputs: DiscoverList[]) {
-  if (!isFirebaseAdminConfigured()) {
-    throw new Error('Firebase Admin is not configured for discover persistence.')
+async function writeDiscoverListsToFirestore(lists: DiscoverList[]) {
+  const db = getDb()
+  const chunks: DiscoverList[][] = []
+
+  for (let index = 0; index < lists.length; index += 400) {
+    chunks.push(lists.slice(index, index + 400))
   }
 
-  const db = getDb()
-  const batchSize = 350
-
-  for (let index = 0; index < inputs.length; index += batchSize) {
+  for (const chunk of chunks) {
     const batch = db.batch()
-    const chunk = inputs.slice(index, index + batchSize)
 
-    for (const input of chunk) {
-      const list = normalizeDiscoverList(input)
-      const docId = list.id || list.slug
+    for (const list of chunk) {
+      const normalizedList = normalizeDiscoverList(list)
+      const docId = normalizedList.id || normalizedList.slug
+
+      if (!docId) {
+        throw new Error('One of the discover lists is missing a stable id/slug.')
+      }
 
       batch.set(
         db.collection(DISCOVER_COLLECTION).doc(docId),
         {
-          ...list,
-          id: docId,
-          itemCount: list.type === 'guide' ? list.steps.length : list.items.length,
-          updatedAt: list.updatedAt || new Date().toISOString().slice(0, 10),
+          ...normalizedList,
           updatedAtServer: FieldValue.serverTimestamp(),
         },
         { merge: true }
@@ -193,33 +278,61 @@ export async function saveDiscoverLists(inputs: DiscoverList[]) {
 
     await batch.commit()
   }
+}
 
+export async function getPublishedDiscoverLists(): Promise<DiscoverList[]> {
+  const lists = await getAllDiscoverLists()
+  return lists.filter(list => list.published)
+}
+
+export async function getDiscoverListBySlug(slug: string): Promise<DiscoverList | null> {
+  const allLists = await getAllDiscoverLists()
+  return allLists.find(list => list.slug === slug && list.published) || null
+}
+
+export async function getAdminDiscoverLists(): Promise<DiscoverList[]> {
+  return getAllDiscoverLists()
+}
+
+export async function saveDiscoverList(input: DiscoverList) {
+  const list = normalizeDiscoverList(input)
+
+  if (isFirebaseAdminConfigured()) {
+    await writeDiscoverListToFirestore(list)
+  }
+
+  await saveLocalDiscoverList(list)
+  resetDiscoverMemoryCache()
   revalidateTag(DISCOVER_TAG)
-  return { success: true, count: inputs.length }
+  return true
+}
+
+export async function saveDiscoverLists(inputs: DiscoverList[]) {
+  const lists = inputs.map(normalizeDiscoverList)
+
+  if (isFirebaseAdminConfigured()) {
+    await writeDiscoverListsToFirestore(lists)
+  }
+
+  await saveLocalDiscoverLists(lists)
+  resetDiscoverMemoryCache()
+  revalidateTag(DISCOVER_TAG)
+  return { success: true, count: lists.length }
 }
 
 export async function seedFirestoreWithLocalDiscoverLists() {
   if (!isFirebaseAdminConfigured()) {
-    throw new Error('Firebase Admin is not configured for discover seeding.')
+    throw new Error('Firebase Admin SDK is not configured for Discover sync.')
   }
 
-  const db = getDb()
-  const batch = db.batch()
-
-  for (const list of DISCOVER_LISTS) {
-    const normalized = normalizeDiscoverList(list)
-    const docRef = db.collection(DISCOVER_COLLECTION).doc(normalized.id)
-    batch.set(
-      docRef,
-      {
-        ...normalized,
-        updatedAtServer: FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    )
-  }
-
-  await batch.commit()
+  const localLists = await getLocalDiscoverLists()
+  await writeDiscoverListsToFirestore(localLists)
+  resetDiscoverMemoryCache()
   revalidateTag(DISCOVER_TAG)
-  return { success: true, count: DISCOVER_LISTS.length }
+
+  return {
+    success: true,
+    count: localLists.length,
+    target: 'firestore',
+  }
 }

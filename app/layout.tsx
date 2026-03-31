@@ -2,11 +2,7 @@ import type { Metadata } from 'next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
 import AuthProvider from '@/components/providers/AuthProvider'
-import { FavoritesProvider } from '@/components/providers/FavoritesContext'
-import { UsageGateProvider } from '@/components/providers/UsageGateContext'
-import { LoginGateModal } from '@/components/auth/LoginGateModal'
-import ClientShell from '@/components/providers/ClientShell'
-import ThemeProvider from '@/components/providers/ThemeProvider'
+import AppProviders from '@/components/providers/AppProviders'
 import './globals.css'
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -78,16 +74,8 @@ export default function RootLayout({
     >
       <body className="min-h-[100dvh] bg-background font-sans text-foreground antialiased">
         <AuthProvider>
-          <ThemeProvider>
-            <FavoritesProvider>
-              <UsageGateProvider>
-                {children}
-                <LoginGateModal />
-                <SpeedInsights />
-                <ClientShell />
-              </UsageGateProvider>
-            </FavoritesProvider>
-          </ThemeProvider>
+          <AppProviders>{children}</AppProviders>
+          <SpeedInsights />
         </AuthProvider>
       </body>
     </html>
