@@ -15,6 +15,38 @@ const clerkEnabled = Boolean(
   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY
 )
 
+function normalizeTopic(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+}
+
+function getListMatchKey(list: DiscoverList) {
+  return list.slug || normalizeTopic(list.title)
+}
+
+function sortLists(lists: DiscoverList[]) {
+  return [...lists].sort((left, right) => {
+    if (left.featured !== right.featured) {
+      return left.featured ? -1 : 1
+    }
+
+    return right.updatedAt.localeCompare(left.updatedAt)
+  })
+}
+
+function mergeLists(existingLists: DiscoverList[], incomingLists: DiscoverList[]) {
+  const byKey = new Map<string, DiscoverList>()
+
+  for (const list of existingLists) {
+    byKey.set(getListMatchKey(list), list)
+  }
+
+  for (const list of incomingLists) {
+    byKey.set(getListMatchKey(list), list)
+  }
+
+  return sortLists(Array.from(byKey.values()))
+}
+
 function jsonError(error: string, status: number, code?: string, details?: string) {
   return NextResponse.json(
     {
@@ -143,7 +175,7 @@ export async function POST(request: NextRequest) {
       }
 
       await saveDiscoverLists(parsed.lists)
-      const refreshedLists = await getAdminDiscoverLists()
+      const refreshedLists = mergeLists(existingLists, parsed.lists)
 
       return NextResponse.json({
         success: true,
@@ -163,8 +195,9 @@ export async function POST(request: NextRequest) {
       return jsonError('Missing discover list payload', 400, 'missing_discover_payload')
     }
 
+    const existingLists = await getAdminDiscoverLists()
     await saveDiscoverList(list)
-    const lists = await getAdminDiscoverLists()
+    const lists = mergeLists(existingLists, [list])
 
     return NextResponse.json({
       success: true,
@@ -193,8 +226,9 @@ export async function PATCH(request: NextRequest) {
       return jsonError('Missing discover list payload', 400, 'missing_discover_payload')
     }
 
+    const existingLists = await getAdminDiscoverLists()
     await saveDiscoverList(list)
-    const lists = await getAdminDiscoverLists()
+    const lists = mergeLists(existingLists, [list])
 
     return NextResponse.json({
       success: true,

@@ -14,6 +14,7 @@ const DISCOVER_TAG = 'discover'
 const DISCOVER_COLLECTION = 'discoverLists'
 const DISCOVER_MEMORY_CACHE_MS = 60 * 1000
 const DISCOVER_READ_BACKOFF_MS = 5 * 60 * 1000
+const DISCOVER_SYNC_SOURCE = 'local-store-v1'
 
 let discoverReadBackoffUntil = 0
 let allDiscoverListsCache:
@@ -91,10 +92,6 @@ function normalizeDiscoverList(list: DiscoverList): DiscoverList {
 }
 
 function mergeDiscoverLists(baseLists: DiscoverList[], overrideLists: DiscoverList[]) {
-  if (baseLists.length === 0) {
-    return sortDiscoverLists(overrideLists)
-  }
-
   const byKey = new Map<string, DiscoverList>()
 
   for (const list of baseLists) {
@@ -102,11 +99,7 @@ function mergeDiscoverLists(baseLists: DiscoverList[], overrideLists: DiscoverLi
   }
 
   for (const list of overrideLists) {
-    const matchKey = getListMatchKey(list)
-
-    if (byKey.has(matchKey)) {
-      byKey.set(matchKey, list)
-    }
+    byKey.set(getListMatchKey(list), list)
   }
 
   return sortDiscoverLists(Array.from(byKey.values()))
@@ -197,7 +190,10 @@ async function getFirestoreDiscoverLists() {
   }
 
   try {
-    const snapshot = await getDb().collection(DISCOVER_COLLECTION).get()
+    const snapshot = await getDb()
+      .collection(DISCOVER_COLLECTION)
+      .where('syncSource', '==', DISCOVER_SYNC_SOURCE)
+      .get()
     return snapshot.docs.map(serializeDiscoverDoc)
   } catch (error) {
     if (activateDiscoverReadBackoff(error)) {
@@ -241,6 +237,7 @@ async function writeDiscoverListToFirestore(list: DiscoverList) {
     .set(
       {
         ...normalizedList,
+        syncSource: DISCOVER_SYNC_SOURCE,
         updatedAtServer: FieldValue.serverTimestamp(),
       },
       { merge: true }
@@ -270,6 +267,7 @@ async function writeDiscoverListsToFirestore(lists: DiscoverList[]) {
         db.collection(DISCOVER_COLLECTION).doc(docId),
         {
           ...normalizedList,
+          syncSource: DISCOVER_SYNC_SOURCE,
           updatedAtServer: FieldValue.serverTimestamp(),
         },
         { merge: true }
@@ -301,7 +299,9 @@ export async function saveDiscoverList(input: DiscoverList) {
     await writeDiscoverListToFirestore(list)
   }
 
-  await saveLocalDiscoverList(list)
+  if (!process.env.VERCEL) {
+    await saveLocalDiscoverList(list)
+  }
   resetDiscoverMemoryCache()
   revalidateTag(DISCOVER_TAG)
   return true
@@ -314,7 +314,9 @@ export async function saveDiscoverLists(inputs: DiscoverList[]) {
     await writeDiscoverListsToFirestore(lists)
   }
 
-  await saveLocalDiscoverLists(lists)
+  if (!process.env.VERCEL) {
+    await saveLocalDiscoverLists(lists)
+  }
   resetDiscoverMemoryCache()
   revalidateTag(DISCOVER_TAG)
   return { success: true, count: lists.length }
