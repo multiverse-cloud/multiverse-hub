@@ -1,5 +1,11 @@
 const encoder = new TextEncoder()
 const decoder = new TextDecoder()
+let signingKeyCache:
+  | {
+      secret: string
+      keyPromise: Promise<CryptoKey>
+    }
+  | null = null
 
 export const ADMIN_SESSION_COOKIE = 'multiverse_admin_session'
 export const ADMIN_SESSION_TTL_SECONDS = 60 * 60 * 24 * 7
@@ -87,13 +93,22 @@ function base64UrlToBytes(value: string) {
 }
 
 async function importSigningKey() {
-  return crypto.subtle.importKey(
-    'raw',
-    encoder.encode(getAdminSessionSecret()),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign', 'verify']
-  )
+  const secret = getAdminSessionSecret()
+
+  if (!signingKeyCache || signingKeyCache.secret !== secret) {
+    signingKeyCache = {
+      secret,
+      keyPromise: crypto.subtle.importKey(
+        'raw',
+        encoder.encode(secret),
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign', 'verify']
+      ),
+    }
+  }
+
+  return signingKeyCache.keyPromise
 }
 
 export async function createAdminSessionToken(email: string, ttlSeconds = ADMIN_SESSION_TTL_SECONDS) {

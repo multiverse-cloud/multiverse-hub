@@ -1,11 +1,10 @@
 'use client'
 
 import { useEffect } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 export default function NavigationRecovery() {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -17,7 +16,7 @@ export default function NavigationRecovery() {
     document.querySelectorAll('details[open]').forEach(element => {
       element.removeAttribute('open')
     })
-  }, [pathname, searchParams])
+  }, [pathname])
 
   return null
 }

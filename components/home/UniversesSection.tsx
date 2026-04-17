@@ -19,6 +19,19 @@ const ICON_TONES: Record<string, string> = {
   rose: 'bg-rose-100 text-rose-700 dark:bg-rose-950/30 dark:text-rose-300',
 }
 
+const BORDER_HOVER_TONES: Record<string, string> = {
+  blue: 'group-hover:border-blue-300 dark:group-hover:border-blue-800',
+  violet: 'group-hover:border-violet-300 dark:group-hover:border-violet-800',
+  pink: 'group-hover:border-pink-300 dark:group-hover:border-pink-800',
+  orange: 'group-hover:border-orange-300 dark:group-hover:border-orange-800',
+  sky: 'group-hover:border-sky-300 dark:group-hover:border-sky-800',
+  emerald: 'group-hover:border-emerald-300 dark:group-hover:border-emerald-800',
+  slate: 'group-hover:border-slate-400 dark:group-hover:border-slate-600',
+  amber: 'group-hover:border-amber-300 dark:group-hover:border-amber-800',
+  cyan: 'group-hover:border-cyan-300 dark:group-hover:border-cyan-800',
+  rose: 'group-hover:border-rose-300 dark:group-hover:border-rose-800',
+}
+
 export default function UniversesSection() {
   return (
     <section className="bg-background py-16 md:py-20">
@@ -26,24 +39,28 @@ export default function UniversesSection() {
         <div className="mx-auto max-w-6xl">
           <div className="section-header">
             <p className="section-label">Explore</p>
-            <h2 className="section-title">8 Universes. One Platform.</h2>
-            <p className="section-sub">Every universe is a standalone product, all connected in one seamless ecosystem.</p>
+            <h2 className="section-title">Ten studios. One platform.</h2>
+            <p className="section-sub">Each universe is its own workspace — tools, workflows, and resources designed for a single focus.</p>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            {HOME_UNIVERSES.map(universe => {
+            {HOME_UNIVERSES.map((universe, index) => {
               const Icon = getLucideIcon(universe.icon, Globe)
 
               return (
                 <Link
                   key={universe.id}
                   href={universe.href}
-                  className="universe-card group bg-card hover:border-slate-300 hover:shadow-lg"
+                  className={cn(
+                    'universe-card group bg-card transition-all duration-300 hover:shadow-lg animate-fade-in',
+                    BORDER_HOVER_TONES[universe.color] ?? 'group-hover:border-slate-300 dark:group-hover:border-slate-700'
+                  )}
+                  style={{ animationDelay: `${index * 0.06}s`, animationFillMode: 'both' }}
                 >
                   <div className="relative z-10 space-y-3">
                     <div
                       className={cn(
-                        'flex h-12 w-12 items-center justify-center rounded-2xl transition-colors',
+                        'flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110',
                         ICON_TONES[universe.color] ?? 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
                       )}
                     >
@@ -58,10 +75,10 @@ export default function UniversesSection() {
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="rounded-full bg-muted px-2 py-1 text-xs font-semibold text-muted-foreground">
+                      <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground">
                         {universe.count}
                       </span>
-                      <ArrowRight className="h-4 w-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-slate-950 dark:group-hover:text-white" />
+                      <ArrowRight className="h-4 w-4 text-muted-foreground transition-all duration-300 group-hover:translate-x-1 group-hover:text-slate-950 dark:group-hover:text-white" />
                     </div>
                   </div>
                 </Link>

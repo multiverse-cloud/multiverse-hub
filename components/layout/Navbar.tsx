@@ -1,25 +1,29 @@
 import Link from 'next/link'
 import {
+  BatteryWarning,
+  Bot,
+  Briefcase,
   Calculator,
   ChevronDown,
   Code2,
   Compass,
   Globe,
-  GraduationCap,
   Home,
   House,
   Image as ImageIcon,
+  LayoutTemplate,
   Paintbrush,
   Search,
-  ShoppingBag,
+  ShieldAlert,
   Sparkles,
   Star,
-  Type,
+  Wifi,
   Wrench,
   Zap,
 } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
-import NavbarAuthClient from './NavbarAuthClient'
+import MobileNav from './MobileNav'
+import SiteSearchInput from '@/components/search/SiteSearchInput'
 import { cn } from '@/lib/utils'
 import { ACTIVE_CATEGORIES, type Tool } from '@/lib/tools-data'
 import { getTools } from '@/lib/db'
@@ -43,7 +47,6 @@ type NavLink = {
 const NAV_LINKS: NavLink[] = [
   { name: 'Home', href: '/', icon: Home },
   { name: 'Tools', href: '/tools', icon: Wrench, isToolsMegaMenu: true },
-  { name: 'My Library', href: '/dashboard', icon: Sparkles },
   {
     name: 'Design',
     href: '/design',
@@ -51,17 +54,17 @@ const NAV_LINKS: NavLink[] = [
     megaItems: [
       { name: 'Design AI', href: '/design', icon: Paintbrush, desc: 'Layouts, assets, and visual ideas' },
       { name: 'Image Tools', href: '/tools/image', icon: ImageIcon, desc: 'Resize, crop, and remove backgrounds' },
-      { name: 'Marketplace', href: '/marketplace', icon: ShoppingBag, desc: 'Templates and polished UI kits' },
+      { name: 'Prompt Hub', href: '/prompts', icon: Bot, desc: 'Visual prompts and creative workflows' },
     ],
   },
   {
-    name: 'Learn',
-    href: '/learn',
-    icon: GraduationCap,
+    name: 'Library',
+    href: '/library',
+    icon: Sparkles,
     megaItems: [
-      { name: 'Learn Universe', href: '/learn', icon: GraduationCap, desc: 'Study workflows and learning helpers' },
-      { name: 'Text Tools', href: '/tools/text', icon: Type, desc: 'Notes, formatting, and text cleanup' },
-      { name: 'Word Counter', href: '/tools/text/word-counter', icon: Sparkles, desc: 'Count words and characters instantly' },
+      { name: 'Library Hub', href: '/library', icon: Sparkles, desc: 'Shared browse for UI blocks and full templates' },
+      { name: 'UI Universe', href: '/ui', icon: Paintbrush, desc: 'Buttons, components, foundations, and live previews' },
+      { name: 'Templates', href: '/templates', icon: LayoutTemplate, desc: 'Source-backed website templates with code downloads' },
     ],
   },
   {
@@ -81,17 +84,37 @@ const NAV_LINKS: NavLink[] = [
     megaItems: [
       { name: 'Discover', href: '/discover', icon: Compass, desc: 'Curated lists and ranked picks' },
       { name: 'Daily Tools', href: '/daily', icon: Calculator, desc: 'Useful calculators and daily helpers' },
-      { name: 'Marketplace', href: '/marketplace', icon: ShoppingBag, desc: 'Templates and digital products' },
+      { name: 'Fixes Universe', href: '/fixes', icon: ShieldAlert, desc: 'Troubleshooting for phones, PCs, apps, and games' },
     ],
   },
   {
-    name: 'Marketplace',
-    href: '/marketplace',
-    icon: ShoppingBag,
+    name: 'Prompts',
+    href: '/prompts',
+    icon: Bot,
     megaItems: [
-      { name: 'Marketplace', href: '/marketplace', icon: ShoppingBag, desc: 'Products, templates, and starter kits' },
-      { name: 'SaaS Dashboard Pro', href: '/marketplace/saas-dashboard-pro', icon: Sparkles, desc: 'Premium admin dashboard template' },
-      { name: 'Fullstack Auth Starter', href: '/marketplace/fullstack-auth-starter', icon: Code2, desc: 'Starter project with auth and app shell' },
+      { name: 'Prompt Hub', href: '/prompts', icon: Bot, desc: 'Premium prompts for work, study, coding, and visuals' },
+      { name: 'Image Editing', href: '/prompts?category=image-editing', icon: ImageIcon, desc: 'Background, retouch, and consent-based face swap prompts' },
+      { name: 'ChatGPT Prompts', href: '/prompts?model=ChatGPT', icon: Sparkles, desc: 'Sharper prompts for work, writing, and image workflows' },
+    ],
+  },
+  {
+    name: 'Templates',
+    href: '/templates',
+    icon: LayoutTemplate,
+    megaItems: [
+      { name: 'UI Templates', href: '/templates', icon: LayoutTemplate, desc: 'Premium downloadable UI kits with live preview and code bundles' },
+      { name: 'Landing Pages', href: '/templates?category=landing', icon: Briefcase, desc: 'Launch-ready heroes, proof sections, and CTA flow' },
+      { name: 'Dashboards', href: '/templates?category=dashboard', icon: Code2, desc: 'Calm analytics, operations, and builder workspaces' },
+    ],
+  },
+  {
+    name: 'Fixes',
+    href: '/fixes',
+    icon: ShieldAlert,
+    megaItems: [
+      { name: 'Fixes Universe', href: '/fixes', icon: ShieldAlert, desc: 'Troubleshooting for phones, PCs, apps, and games' },
+      { name: 'Battery Drain', href: '/fixes/phone-battery-drain', icon: BatteryWarning, desc: 'Calm battery troubleshooting for everyday phone issues' },
+      { name: 'Wi-Fi Speed', href: '/fixes/slow-wifi-at-home', icon: Wifi, desc: 'Safe home Wi-Fi checks before blaming the router' },
     ],
   },
 ]
@@ -204,14 +227,26 @@ function MegaMenu({ link, tools }: { link: NavLink; tools?: Tool[] }) {
   )
 }
 
-export default async function Navbar() {
-  const clerkEnabled = Boolean(
-    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY
-  )
-  const tools = await getTools()
+export default async function Navbar({ variant = 'default' }: { variant?: 'default' | 'template' } = {}) {
+  let tools: Tool[] = []
+
+  try {
+    tools = await getTools()
+  } catch (error) {
+    console.error('Navbar tools fetch failed:', error)
+  }
+
+  const templateVariant = variant === 'template'
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/88 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.35)] backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/88 dark:shadow-[0_12px_26px_-20px_rgba(2,6,23,0.55)]">
+    <header
+      className={cn(
+        'sticky top-0 z-50 border-b backdrop-blur-xl',
+        templateVariant
+          ? 'border-[#252626] bg-[#121313]/96 shadow-[0_12px_26px_-20px_rgba(0,0,0,0.55)]'
+          : 'border-slate-200/80 bg-white/88 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.35)] dark:border-slate-800/80 dark:bg-slate-950/88 dark:shadow-[0_12px_26px_-20px_rgba(2,6,23,0.55)]'
+      )}
+    >
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3.5 lg:px-6">
         <Link href="/" className="group flex shrink-0 items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-950 shadow-md shadow-slate-900/10 transition-shadow group-hover:shadow-slate-900/20 dark:bg-slate-100">
@@ -222,23 +257,19 @@ export default async function Navbar() {
           </span>
         </Link>
 
-        <form action="/tools" method="get" className="relative mx-auto hidden max-w-xl flex-1 lg:block">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="text"
-            name="q"
-            placeholder="Search the Multiverse..."
-            className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-9 pr-4 text-sm shadow-sm transition-colors placeholder:text-muted-foreground hover:border-indigo-300 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-700"
-          />
-        </form>
+        <SiteSearchInput
+          className="mx-auto hidden max-w-xl flex-1 lg:block"
+          placeholder="Search the Multiverse..."
+          variant="navbar"
+        />
 
         <div className="ml-auto flex shrink-0 items-center gap-2">
           <ThemeToggle />
-          <NavbarAuthClient clerkEnabled={clerkEnabled} />
+          <MobileNav />
         </div>
       </div>
 
-      <div className="hidden border-t border-slate-200/70 dark:border-slate-800/70 lg:block">
+      <div className={cn('hidden border-t lg:block', templateVariant ? 'border-[#252626]' : 'border-slate-200/70 dark:border-slate-800/70')}>
         <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 py-2.5">
           <div />
 

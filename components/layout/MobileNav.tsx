@@ -1,35 +1,40 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { cn } from '@/lib/utils'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
+  Bot,
   Code2,
   Compass,
-  GraduationCap,
   Home,
+  Layers3,
+  LayoutTemplate,
   Menu,
   Paintbrush,
   Search,
-  ShoppingBag,
+  ShieldAlert,
   X,
 } from 'lucide-react'
 
 const MOBILE_NAV_LINKS = [
   { name: 'Home', href: '/', icon: Home },
   { name: 'Tools', href: '/tools', icon: Search },
+  { name: 'Library', href: '/library', icon: Layers3 },
   { name: 'Design', href: '/design', icon: Paintbrush },
-  { name: 'Learn', href: '/learn', icon: GraduationCap },
   { name: 'Dev', href: '/dev', icon: Code2 },
   { name: 'Discover', href: '/discover', icon: Compass },
-  { name: 'Marketplace', href: '/marketplace', icon: ShoppingBag },
+  { name: 'Prompts', href: '/prompts', icon: Bot },
+  { name: 'Templates', href: '/templates', icon: LayoutTemplate },
+  { name: 'Fixes', href: '/fixes', icon: ShieldAlert },
 ]
 
 export default function MobileNav({
   authSlot,
 }: {
-  authSlot: React.ReactNode
+  authSlot?: React.ReactNode
 }) {
   const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -101,12 +106,18 @@ export default function MobileNav({
         <nav className="space-y-1 p-3">
           {MOBILE_NAV_LINKS.map(link => {
             const Icon = link.icon
+            const isActive = pathname === link.href || (link.href !== '/' && pathname?.startsWith(link.href))
             return (
               <Link
                 key={link.name}
                 href={link.href}
                 onClick={close}
-                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+                className={cn(
+                  'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors',
+                  isActive
+                    ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300'
+                    : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                )}
               >
                 <Icon className="h-4 w-4" />
                 {link.name}
@@ -115,10 +126,11 @@ export default function MobileNav({
           })}
         </nav>
 
-        {/* Auth / Sign In */}
-        <div className="border-t border-slate-200 p-4 dark:border-slate-800">
-          {authSlot}
-        </div>
+        {authSlot ? (
+          <div className="border-t border-slate-200 p-4 dark:border-slate-800">
+            {authSlot}
+          </div>
+        ) : null}
       </div>
     </>
   )

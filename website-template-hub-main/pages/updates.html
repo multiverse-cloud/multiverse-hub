@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G18X0L604F"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-G18X0L604F', {
+            'enhanced_measurement': true
+        });
+    </script>
+    <title>Updates & Changelog | Web Templates Hub</title>
+    <meta name="description" content="See the latest updates, new templates, and improvements to Web Templates Hub.">
+    <meta name="keywords" content="changelog, website updates, new templates, web templates hub features">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://web-template-hub.netlify.app/updates.html">
+    <meta property="og:title" content="Updates & Changelog | Web Templates Hub">
+    <meta property="og:description"
+        content="See the latest updates, new templates, and improvements to Web Templates Hub.">
+    <meta property="og:image" content="https://web-template-hub.netlify.app/assets/images/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://web-template-hub.netlify.app/updates.html">
+    <meta property="twitter:title" content="Updates & Changelog | Web Templates Hub">
+    <meta property="twitter:description"
+        content="See the latest updates, new templates, and improvements to Web Templates Hub.">
+    <meta property="twitter:image" content="https://web-template-hub.netlify.app/assets/images/og-image.jpg">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://web-template-hub.netlify.app/updates.html">
+    <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Page Loader -->
+    <script src="../assets/js/loader.js"></script>
+    <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+</head>
+
+<body class="bg-slate-50">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <a href="../index.html" class="flex items-center gap-2">
+                    <div class="w-10 h-10 flex items-center justify-center">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                                stroke="#2563eb" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.3" />
+                            <path d="M4 6L9 18L12 12L15 18L20 6" stroke="#2563eb" stroke-width="3"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M9 18L12 12L15 18" stroke="#2563eb" stroke-width="3" stroke-linecap="round"
+                                stroke-linejoin="round" opacity="0.4" />
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight text-slate-900">WebTemplates<span
+                            class="text-blue-600">Hub</span></span>
+                </a>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="library.html?tab=components"
+                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Components</a>
+                <a href="library.html?tab=templates"
+                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Templates</a>
+                <a href="updates.html" class="text-sm font-medium text-blue-600">Updates</a>
+                <a href="contributors.html"
+                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Contributors</a>
+                <a href="contact.html"
+                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Contact</a>
+            </nav>
+
+            <div class="flex items-center gap-4">
+                <a href="library.html"
+                    class="hidden md:block bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-lg shadow-blue-500/25">Download
+                    Free</a> </a>
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-600 hover:text-blue-600 transition-colors">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu"
+            class="hidden md:hidden absolute top-20 left-4 right-4 bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 flex-col gap-4 animate-in slide-in-from-top-4 duration-300">
+            <a href="library.html?tab=components"
+                class="text-base font-semibold text-slate-900 px-4 py-3 bg-slate-50 rounded-xl hover:text-blue-600 transition-colors">Components</a>
+            <a href="library.html?tab=templates"
+                class="text-base font-semibold text-slate-900 px-4 py-3 bg-slate-50 rounded-xl hover:text-blue-600 transition-colors">Templates</a>
+            <a href="updates.html"
+                class="text-base font-semibold text-slate-900 px-4 py-3 bg-slate-50 rounded-xl hover:text-blue-600 transition-colors">Updates</a>
+            <a href="contributors.html"
+                class="text-base font-semibold text-slate-900 px-4 py-3 bg-slate-50 rounded-xl hover:text-blue-600 transition-colors">Contributors</a>
+            <a href="contact.html"
+                class="text-base font-semibold text-slate-900 px-4 py-3 bg-slate-50 rounded-xl hover:text-blue-600 transition-colors">Contact</a>
+            <a href="library.html"
+                class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold mt-2 shadow-lg shadow-blue-500/25 text-center">
+                Download Free
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-40 pb-16 px-4">
+        <div class="max-w-4xl mx-auto text-center space-y-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 leading-tight">
+                Updates & <span class="text-blue-600">Changelog</span>
+            </h1>
+            <p class="text-lg text-slate-500 max-w-2xl mx-auto">
+                Stay updated with the latest templates, features, and improvements added to Web Templates Hub.
+            </p>
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <main class="max-w-3xl mx-auto px-4 pb-32">
+        <div id="updates-container"
+            class="relative space-y-12 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-slate-200">
+            <!-- Updates will be loaded hear dynamically via JS -->
+            <div class="text-center py-10">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p class="mt-2 text-slate-500 text-sm">Loading updates...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 py-20">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-2 space-y-6">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 flex items-center justify-center">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                                    stroke="#2563eb" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.3" />
+                                <path d="M4 6L9 18L12 12L15 18L20 6" stroke="#2563eb" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M9 18L12 12L15 18" stroke="#2563eb" stroke-width="3" stroke-linecap="round"
+                                    stroke-linejoin="round" opacity="0.4" />
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight text-white">WebTemplatesHub</span>
+                    </div>
+                    <p class="text-slate-400 max-w-sm">
+                        Curating the world's best single-page HTML templates for developers and entrepreneurs. 100% Free
+                        Forever.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="https://github.com/FaizyabHussain07" target="_blank"
+                            class="text-slate-400 hover:text-white transition-colors"><i data-lucide="github"></i></a>
+                        <a href="https://www.linkedin.com/in/faizyabhussain/" target="_blank"
+                            class="text-slate-400 hover:text-white transition-colors"><i data-lucide="linkedin"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-6">Product</h4>
+                    <ul class="space-y-4 text-slate-400 text-sm">
+                        <li><a href="library.html?tab=components"
+                                class="hover:text-white transition-colors">Components</a></li>
+                        <li><a href="library.html?tab=templates"
+                                class="hover:text-white transition-colors">Templates</a></li>
+                        <li><a href="updates.html" class="hover:text-white transition-colors">Updates</a></li>
+                        <li><a href="docs.html" class="hover:text-white transition-colors">Docs</a></li>
+                        <li><a href="contributors.html" class="hover:text-white transition-colors">Contributors</a></li>
+                        <li><a href="contribution-guide.html" class="hover:text-white transition-colors">Contribute
+                                Guide</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-6">Legal</h4>
+                    <ul class="space-y-4 text-slate-400 text-sm">
+                        <li><a href="../legal/terms.html" class="hover:text-white transition-colors">Terms</a></li>
+                        <li><a href="../legal/privacy.html" class="hover:text-white transition-colors">Privacy</a></li>
+                        <li><a href="../legal/help.html" class="hover:text-white transition-colors">Help</a></li>
+                        <li><a href="../legal/license.html" class="hover:text-white transition-colors">License</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-slate-800 text-center text-slate-500 text-sm">
+                &copy; 2026 Web Templates Hub. All rights reserved. Built by <a
+                    href="https://faizyab-hussain.vercel.app/" target="_blank"
+                    class="text-blue-500 hover:text-white transition-colors">Faizyab Hussain</a>.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/analytics.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('updates-container');
+
+            try {
+                // Fetch the JSON data
+                const response = await fetch('../data/updates.json');
+                const updates = await response.json();
+
+                // Clear loading spinner
+                container.innerHTML = '<!-- Updates loaded -->';
+
+                updates.forEach((update, index) => {
+                    const isEven = index % 2 !== 0; // For alternating layout
+
+                    // Determine styling based on type
+                    let icon = 'sparkles';
+                    // Default Blue
+                    let iconBgClass = 'bg-blue-600 text-white border-transparent';
+                    let tagBgClass = 'bg-blue-50 text-blue-600';
+
+                    if (update.type === 'Templates') {
+                        icon = 'package';
+                        // Dark/Green
+                        iconBgClass = 'bg-slate-900 text-white border-transparent';
+                        tagBgClass = 'bg-green-50 text-green-600';
+                    } else if (update.type === 'Fixes') {
+                        icon = 'wrench';
+                        // White/Gray
+                        iconBgClass = 'bg-white text-slate-500 border-slate-200';
+                        tagBgClass = 'bg-slate-100 text-slate-600';
+                    } else if (update.type === 'New') {
+                        icon = 'sparkles';
+                        iconBgClass = 'bg-blue-600 text-white border-transparent';
+                        tagBgClass = 'bg-blue-50 text-blue-600';
+                    }
+
+                    const html = `
+                        <div class="relative flex items-center justify-between md:justify-normal ${isEven ? 'md:flex-row-reverse' : ''} group">
+                            <!-- Icon -->
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border ${iconBgClass} shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-transform md:group-hover:scale-110 duration-300">
+                                <i data-lucide="${icon}" class="w-5 h-5"></i>
+                            </div>
+                            <!-- Card -->
+                            <div class="w-full md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-200 transition-all duration-300 hover:shadow-md">
+                                <div class="flex items-center justify-between mb-2">
+                                    <time class="font-bold text-slate-900">${update.date}</time>
+                                    <span class="text-xs font-semibold px-2 py-1 ${tagBgClass} rounded-full border border-black/5">${update.type}</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-800 mb-2">${update.title}</h3>
+                                <ul class="space-y-2 text-slate-600 text-sm list-disc list-inside">
+                                    ${update.description.map(item => `<li class="marker:text-blue-300">${item}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', html);
+                });
+
+                // Re-initialize Lucide icons for the new content
+                lucide.createIcons();
+
+            } catch (error) {
+                console.error('Error loading updates:', error);
+                container.innerHTML = `
+                    <div class="text-center py-10 bg-red-50 rounded-xl border border-red-100">
+                        <i data-lucide="alert-circle" class="w-8 h-8 text-red-500 mx-auto mb-2"></i>
+                        <p class="text-red-600 font-medium">Unable to load updates.</p>
+                        <p class="text-red-400 text-sm">Please try again later.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+
+</html>

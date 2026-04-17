@@ -2,10 +2,13 @@
 
 import { useState } from 'react'
 import { Loader2, LogOut } from 'lucide-react'
-import { UserButton, useClerk } from '@clerk/nextjs'
 
 export function AdminClerkUserButton() {
-  return <UserButton afterSignOutUrl="/admin-login" />
+  return (
+    <div className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-xs font-semibold text-muted-foreground">
+      AD
+    </div>
+  )
 }
 
 export function AdminClerkLogoutButton({
@@ -15,7 +18,6 @@ export function AdminClerkLogoutButton({
   className?: string
   showLabel?: boolean
 }) {
-  const { signOut } = useClerk()
   const [loggingOut, setLoggingOut] = useState(false)
 
   async function handleLogout() {
@@ -24,15 +26,10 @@ export function AdminClerkLogoutButton({
     try {
       await fetch('/api/admin/logout', { method: 'POST' })
     } catch {
-      // We still want to continue the sign-out flow.
+      // Redirect anyway so the admin cookie is dropped server-side on next load.
     }
 
-    try {
-      await signOut({ redirectUrl: '/admin-login' })
-      return
-    } catch {
-      window.location.href = '/admin-login'
-    }
+    window.location.href = '/admin-login'
   }
 
   return (

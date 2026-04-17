@@ -18,7 +18,7 @@ import {
   Tv,
   Users,
 } from 'lucide-react'
-import { DISCOVER_SCALE_PLAN, type DiscoverList } from '@/lib/discover-data'
+import type { DiscoverList } from '@/lib/discover-data'
 import { getDiscoverIntentLabel } from '@/lib/discover-query'
 import { cn } from '@/lib/utils'
 
@@ -197,8 +197,6 @@ export default function DiscoverClient({
   pageStart,
   pageEnd,
 }: DiscoverClientProps) {
-  const categoryCount = categories.length - 1
-  const intentCount = intents.length - 1
   const hasActiveFilters = activeCategory !== 'All' || activeIntent !== 'All'
   const visibleStart = totalResults > 0 ? pageStart + 1 : 0
   const visibleEnd = totalResults > 0 ? pageEnd : 0
@@ -213,10 +211,9 @@ export default function DiscoverClient({
             </div>
             <span className="section-label">Discover</span>
           </div>
-          <h1 className="text-3xl font-bold md:text-4xl">Curated Rankings And Watch Guides</h1>
-          <p className="mt-2 max-w-3xl text-muted-foreground">
-            Explore editorial rankings, explainers, comparisons, and practical guides across AI, money, mobile
-            problems, apps, business, health, politics, history, space, games, and entertainment.
+          <h1 className="text-3xl font-bold md:text-4xl">Curated Rankings And Guides</h1>
+          <p className="mt-2 max-w-2xl text-muted-foreground">
+            Browse rankings and guides across AI, money, mobile problems, apps, business, politics, games, and entertainment.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-2">
@@ -266,7 +263,7 @@ export default function DiscoverClient({
       </div>
 
       <div className="page-content">
-        <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mb-5 grid gap-4 md:grid-cols-3">
           <div className="rounded-2xl border border-border bg-card p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Published Lists</p>
             <p className="mt-2 text-3xl font-black tracking-tight">{totalPublished}</p>
@@ -278,25 +275,6 @@ export default function DiscoverClient({
           <div className="rounded-2xl border border-border bg-card p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Guide Pages</p>
             <p className="mt-2 text-3xl font-black tracking-tight">{guideCount}</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-card p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Starter Scale Plan</p>
-            <p className="mt-2 text-3xl font-black tracking-tight">{DISCOVER_SCALE_PLAN.targetLists}+</p>
-          </div>
-        </div>
-
-        <div className="mb-5 grid gap-4 md:grid-cols-3">
-          <div className="rounded-2xl border border-border bg-card p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Categories Covered</p>
-            <p className="mt-2 text-3xl font-black tracking-tight">{categoryCount}</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-card p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Search Intents</p>
-            <p className="mt-2 text-3xl font-black tracking-tight">{intentCount}</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-card p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Featured Editorials</p>
-            <p className="mt-2 text-3xl font-black tracking-tight">{featuredLists.length}</p>
           </div>
         </div>
 
@@ -326,7 +304,7 @@ export default function DiscoverClient({
                     </span>
                   </div>
                   <h2 className="mt-3 text-base font-bold">{list.title}</h2>
-                  <p className="mt-2 text-sm text-muted-foreground">{list.description}</p>
+                  <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{list.description}</p>
                 </Link>
               ))}
             </div>
@@ -344,7 +322,7 @@ export default function DiscoverClient({
                   ? `Filtered by ${activeCategory !== 'All' ? activeCategory : 'all categories'} and ${
                       activeIntent !== 'All' ? activeIntent : 'all intents'
                     }.`
-                  : `Page size: ${pageSize}. Use filters to narrow the library before you open detail pages.`}
+                  : `Page size: ${pageSize}.`}
               </p>
             </div>
 

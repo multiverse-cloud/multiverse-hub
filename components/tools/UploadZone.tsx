@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react'
 import { useDropzone, type Accept, type FileRejection } from 'react-dropzone'
-import { Upload, File as FileIcon, X } from 'lucide-react'
+import { Upload, File as FileIcon, X, CloudUpload, Sparkles } from 'lucide-react'
 import { cn, formatBytes } from '@/lib/utils'
 
 interface Props {
@@ -74,46 +74,80 @@ export default function UploadZone({
     <div className="space-y-3">
       <div
         {...getRootProps()}
-        className={cn('upload-zone', isDragActive && 'dragging')}
+        className={cn('upload-zone group', isDragActive && 'dragging')}
       >
         <input {...getInputProps()} />
         <div className="pointer-events-none flex flex-col items-center gap-3">
-          <div className={cn('flex h-14 w-14 items-center justify-center rounded-xl transition-colors', isDragActive ? 'bg-indigo-100' : 'bg-slate-100')}>
-            <Upload className={cn('h-6 w-6 transition-colors', isDragActive ? 'text-indigo-500' : 'text-slate-500')} />
+          {/* Icon with animated background */}
+          <div className={cn(
+            'relative flex h-16 w-16 items-center justify-center rounded-2xl transition-all duration-300',
+            isDragActive
+              ? 'bg-indigo-100 scale-110 dark:bg-indigo-900/40'
+              : 'bg-gradient-to-br from-slate-100 to-slate-50 group-hover:from-indigo-100 group-hover:to-indigo-50 dark:from-slate-800 dark:to-slate-900 dark:group-hover:from-indigo-900/40 dark:group-hover:to-indigo-950/40'
+          )}>
+            {isDragActive ? (
+              <Sparkles className="h-7 w-7 text-indigo-500 animate-icon-bounce" />
+            ) : (
+              <CloudUpload className={cn(
+                'h-7 w-7 transition-colors duration-300',
+                'text-slate-400 group-hover:text-indigo-500 dark:text-slate-500 dark:group-hover:text-indigo-400'
+              )} />
+            )}
+            {/* Subtle glow ring */}
+            <div className={cn(
+              'absolute inset-0 rounded-2xl transition-opacity duration-300',
+              isDragActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+            )} style={{ boxShadow: '0 0 0 4px rgba(99,102,241,0.08)' }} />
           </div>
-          <div>
-            <p className="font-display text-sm font-bold tracking-tight text-slate-950">
-              {label || (isDragActive ? 'Drop file here' : 'Click or drag and drop')}
+
+          <div className="text-center">
+            <p className="font-display text-sm font-bold tracking-tight text-slate-950 dark:text-slate-50">
+              {label || (isDragActive ? 'Release to upload' : 'Click or drag to upload')}
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">{helperText}</p>
+            <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">{helperText}</p>
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="rounded-full bg-slate-100 px-2.5 py-1">Drag and drop</span>
-            <span>or</span>
-            <span className="font-display font-bold text-indigo-600">Browse Files</span>
+
+          {/* Action pills */}
+          <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
+            <span className={cn(
+              'rounded-full px-3 py-1.5 font-medium transition-colors',
+              isDragActive
+                ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300'
+                : 'bg-slate-100 dark:bg-slate-800'
+            )}>
+              Drag and drop
+            </span>
+            <span className="text-slate-300 dark:text-slate-700">or</span>
+            <span className="font-display font-bold text-indigo-600 dark:text-indigo-400 group-hover:underline underline-offset-2">
+              Browse Files
+            </span>
           </div>
         </div>
       </div>
 
       {error && (
-        <p className="text-sm text-red-500 flex items-center gap-1.5">
-          <X className="w-4 h-4" /> {error}
-        </p>
+        <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-400">
+          <X className="w-4 h-4 shrink-0" />
+          <span>{error}</span>
+        </div>
       )}
 
       {files.length > 0 && (
         <div className="space-y-2">
           {files.map((file, i) => (
-            <div key={i} className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50">
-                <FileIcon className="h-4 w-4 text-indigo-600" />
+            <div key={i} className="file-item-chip animate-fade-in">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-50 to-indigo-100/60 dark:from-indigo-900/30 dark:to-indigo-950/30">
+                <FileIcon className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="truncate font-display text-sm font-bold tracking-tight text-slate-950">{file.name}</p>
+                <p className="truncate font-display text-sm font-bold tracking-tight text-slate-950 dark:text-slate-50">{file.name}</p>
                 <p className="text-xs text-muted-foreground">{formatBytes(file.size)}</p>
               </div>
               {onRemove && (
-                <button onClick={() => onRemove(i)} className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-500">
+                <button
+                  onClick={() => onRemove(i)}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-all hover:bg-red-50 hover:text-red-500 hover:scale-110 dark:hover:bg-red-950/30"
+                >
                   <X className="h-4 w-4" />
                 </button>
               )}

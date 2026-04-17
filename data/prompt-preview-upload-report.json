@@ -1,0 +1,702 @@
+[
+  {
+    "slug": "ai-art-styles-ultra-realistic-portrait-of-a-woman-with-freckles",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image1.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-ultra-realistic-portrait-of-a-woman-with-freckles",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-ultra-realistic-portrait-of-a-woman-with-freckles"
+  },
+  {
+    "slug": "ai-art-styles-cyberpunk-city-with-neon-lights-and-rain-reflections",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image2.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-cyberpunk-city-with-neon-lights-and-rain-reflections",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-cyberpunk-city-with-neon-lights-and-rain-reflections"
+  },
+  {
+    "slug": "ai-art-styles-pixar-style-3d-character-smiling-in-sunlight",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image3.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-pixar-style-3d-character-smiling-in-sunlight",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-pixar-style-3d-character-smiling-in-sunlight"
+  },
+  {
+    "slug": "ai-art-styles-studio-ghibli-style-peaceful-countryside",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image4.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-studio-ghibli-style-peaceful-countryside",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-studio-ghibli-style-peaceful-countryside"
+  },
+  {
+    "slug": "ai-art-styles-anime-cinematic-scene-with-dramatic-lighting",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image5.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-anime-cinematic-scene-with-dramatic-lighting",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-anime-cinematic-scene-with-dramatic-lighting"
+  },
+  {
+    "slug": "ai-art-styles-oil-painting-style-royal-king-portrait",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image6.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-oil-painting-style-royal-king-portrait",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-oil-painting-style-royal-king-portrait"
+  },
+  {
+    "slug": "ai-art-styles-watercolor-painting-of-a-quiet-village",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image7.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-watercolor-painting-of-a-quiet-village",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-watercolor-painting-of-a-quiet-village"
+  },
+  {
+    "slug": "ai-art-styles-low-poly-3d-landscape-with-pastel-colors",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image8.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-low-poly-3d-landscape-with-pastel-colors",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-low-poly-3d-landscape-with-pastel-colors"
+  },
+  {
+    "slug": "ai-art-styles-fantasy-concept-art-of-a-warrior-princess",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image9.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-fantasy-concept-art-of-a-warrior-princess",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-fantasy-concept-art-of-a-warrior-princess"
+  },
+  {
+    "slug": "ai-art-styles-comic-book-style-superhero-landing-pose",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image10.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-comic-book-style-superhero-landing-pose",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-comic-book-style-superhero-landing-pose"
+  },
+  {
+    "slug": "ai-art-styles-claymation-style-cute-character",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image11.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-claymation-style-cute-character",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-claymation-style-cute-character"
+  },
+  {
+    "slug": "ai-art-styles-retro-90s-anime-aesthetic-scene",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image12.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-retro-90s-anime-aesthetic-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-retro-90s-anime-aesthetic-scene"
+  },
+  {
+    "slug": "ai-art-styles-dark-fantasy-gothic-castle-with-fog",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image13.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-dark-fantasy-gothic-castle-with-fog",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-dark-fantasy-gothic-castle-with-fog"
+  },
+  {
+    "slug": "ai-art-styles-disney-style-magical-princess-portrait",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image14.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-disney-style-magical-princess-portrait",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-disney-style-magical-princess-portrait"
+  },
+  {
+    "slug": "ai-art-styles-pencil-sketch-of-an-old-man-with-emotions",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image15.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-pencil-sketch-of-an-old-man-with-emotions",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-pencil-sketch-of-an-old-man-with-emotions"
+  },
+  {
+    "slug": "ai-art-styles-minimalist-flat-illustration-of-a-city",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image16.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-minimalist-flat-illustration-of-a-city",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-minimalist-flat-illustration-of-a-city"
+  },
+  {
+    "slug": "ai-art-styles-vaporwave-aesthetic-sunset-scene",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image17.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-vaporwave-aesthetic-sunset-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-vaporwave-aesthetic-sunset-scene"
+  },
+  {
+    "slug": "ai-art-styles-surreal-dreamscape-with-floating-objects",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image18.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-surreal-dreamscape-with-floating-objects",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-surreal-dreamscape-with-floating-objects"
+  },
+  {
+    "slug": "ai-art-styles-pop-art-colorful-celebrity-portrait",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image19.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-pop-art-colorful-celebrity-portrait",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-pop-art-colorful-celebrity-portrait"
+  },
+  {
+    "slug": "ai-art-styles-matte-painting-of-epic-mountains",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image20.png",
+    "publicId": "multiverse/prompt-previews/ai-art-styles-matte-painting-of-epic-mountains",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/ai-art-styles-matte-painting-of-epic-mountains"
+  },
+  {
+    "slug": "tech-futuristic-ai-robot-walking-in-human-city",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image21.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-ai-robot-walking-in-human-city",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-ai-robot-walking-in-human-city"
+  },
+  {
+    "slug": "tech-futuristic-futuristic-smart-home-interior",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image22.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-futuristic-smart-home-interior",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-futuristic-smart-home-interior"
+  },
+  {
+    "slug": "tech-futuristic-a-humanoid-android-with-emotions",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image23.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-a-humanoid-android-with-emotions",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-a-humanoid-android-with-emotions"
+  },
+  {
+    "slug": "tech-futuristic-space-colony-on-mars",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image24.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-space-colony-on-mars",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-space-colony-on-mars"
+  },
+  {
+    "slug": "tech-futuristic-cyberpunk-hacker-room-with-screens",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image25.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-cyberpunk-hacker-room-with-screens",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-cyberpunk-hacker-room-with-screens"
+  },
+  {
+    "slug": "tech-futuristic-futuristic-flying-cars-in-traffic",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image26.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-futuristic-flying-cars-in-traffic",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-futuristic-flying-cars-in-traffic"
+  },
+  {
+    "slug": "tech-futuristic-digital-brain-visualization-glowing",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image27.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-digital-brain-visualization-glowing",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-digital-brain-visualization-glowing"
+  },
+  {
+    "slug": "tech-futuristic-sci-fi-spaceship-landing-on-alien-planet",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image28.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-sci-fi-spaceship-landing-on-alien-planet",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-sci-fi-spaceship-landing-on-alien-planet"
+  },
+  {
+    "slug": "tech-futuristic-augmented-reality-glasses-pov-view",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image29.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-augmented-reality-glasses-pov-view",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-augmented-reality-glasses-pov-view"
+  },
+  {
+    "slug": "tech-futuristic-ai-generated-human-face-hyper-realistic",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image30.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-ai-generated-human-face-hyper-realistic",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-ai-generated-human-face-hyper-realistic"
+  },
+  {
+    "slug": "tech-futuristic-metaverse-virtual-world-scene",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image31.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-metaverse-virtual-world-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-metaverse-virtual-world-scene"
+  },
+  {
+    "slug": "tech-futuristic-robot-chef-cooking-in-kitchen",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image32.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-robot-chef-cooking-in-kitchen",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-robot-chef-cooking-in-kitchen"
+  },
+  {
+    "slug": "tech-futuristic-futuristic-hospital-with-robots",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image33.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-futuristic-hospital-with-robots",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-futuristic-hospital-with-robots"
+  },
+  {
+    "slug": "tech-futuristic-neon-lit-underground-lab",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image34.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-neon-lit-underground-lab",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-neon-lit-underground-lab"
+  },
+  {
+    "slug": "tech-futuristic-space-station-interior-view",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image35.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-space-station-interior-view",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-space-station-interior-view"
+  },
+  {
+    "slug": "tech-futuristic-ai-goddess-with-glowing-aura",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image36.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-ai-goddess-with-glowing-aura",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-ai-goddess-with-glowing-aura"
+  },
+  {
+    "slug": "tech-futuristic-tech-city-at-night-full-of-drones",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image37.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-tech-city-at-night-full-of-drones",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-tech-city-at-night-full-of-drones"
+  },
+  {
+    "slug": "tech-futuristic-cyber-samurai-standing-in-rain",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image38.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-cyber-samurai-standing-in-rain",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-cyber-samurai-standing-in-rain"
+  },
+  {
+    "slug": "tech-futuristic-quantum-computer-visualization",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image39.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-quantum-computer-visualization",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-quantum-computer-visualization"
+  },
+  {
+    "slug": "tech-futuristic-digital-avatar-in-virtual-space",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image40.png",
+    "publicId": "multiverse/prompt-previews/tech-futuristic-digital-avatar-in-virtual-space",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/tech-futuristic-digital-avatar-in-virtual-space"
+  },
+  {
+    "slug": "hyper-realistic-ultra-realistic-food-photography-burger",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image41.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-ultra-realistic-food-photography-burger",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-ultra-realistic-food-photography-burger"
+  },
+  {
+    "slug": "hyper-realistic-realistic-portrait-with-natural-skin-texture",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image42.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-realistic-portrait-with-natural-skin-texture",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-realistic-portrait-with-natural-skin-texture"
+  },
+  {
+    "slug": "hyper-realistic-close-up-macro-of-water-droplets-on-leaf",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image43.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-close-up-macro-of-water-droplets-on-leaf",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-close-up-macro-of-water-droplets-on-leaf"
+  },
+  {
+    "slug": "hyper-realistic-street-photography-in-tokyo-night",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image44.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-street-photography-in-tokyo-night",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-street-photography-in-tokyo-night"
+  },
+  {
+    "slug": "hyper-realistic-realistic-dog-portrait-with-fur-detail",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image45.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-realistic-dog-portrait-with-fur-detail",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-realistic-dog-portrait-with-fur-detail"
+  },
+  {
+    "slug": "hyper-realistic-a-child-laughing-in-golden-sunlight",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image46.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-a-child-laughing-in-golden-sunlight",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-a-child-laughing-in-golden-sunlight"
+  },
+  {
+    "slug": "hyper-realistic-realistic-rainy-window-scene",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image47.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-realistic-rainy-window-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-realistic-rainy-window-scene"
+  },
+  {
+    "slug": "hyper-realistic-coffee-cup-with-steam-in-morning-light",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image48.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-coffee-cup-with-steam-in-morning-light",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-coffee-cup-with-steam-in-morning-light"
+  },
+  {
+    "slug": "hyper-realistic-old-street-with-vintage-cars",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image49.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-old-street-with-vintage-cars",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-old-street-with-vintage-cars"
+  },
+  {
+    "slug": "hyper-realistic-sunset-beach-photography-ultra-hd",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image50.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-sunset-beach-photography-ultra-hd",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-sunset-beach-photography-ultra-hd"
+  },
+  {
+    "slug": "hyper-realistic-realistic-candle-light-portrait",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image51.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-realistic-candle-light-portrait",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-realistic-candle-light-portrait"
+  },
+  {
+    "slug": "hyper-realistic-food-styling-pasta-dish-aesthetic",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image52.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-food-styling-pasta-dish-aesthetic",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-food-styling-pasta-dish-aesthetic"
+  },
+  {
+    "slug": "hyper-realistic-close-up-eye-macro-photography",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image53.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-close-up-eye-macro-photography",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-close-up-eye-macro-photography"
+  },
+  {
+    "slug": "hyper-realistic-realistic-mountain-landscape",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image54.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-realistic-mountain-landscape",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-realistic-mountain-landscape"
+  },
+  {
+    "slug": "hyper-realistic-portrait-with-cinematic-lighting",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image55.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-portrait-with-cinematic-lighting",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-portrait-with-cinematic-lighting"
+  },
+  {
+    "slug": "hyper-realistic-rain-drops-on-glass-with-city-blur",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image56.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-rain-drops-on-glass-with-city-blur",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-rain-drops-on-glass-with-city-blur"
+  },
+  {
+    "slug": "hyper-realistic-realistic-snow-covered-village",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image57.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-realistic-snow-covered-village",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-realistic-snow-covered-village"
+  },
+  {
+    "slug": "hyper-realistic-realistic-hand-holding-light",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image58.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-realistic-hand-holding-light",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-realistic-hand-holding-light"
+  },
+  {
+    "slug": "hyper-realistic-ultra-detailed-butterfly-macro",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image59.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-ultra-detailed-butterfly-macro",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-ultra-detailed-butterfly-macro"
+  },
+  {
+    "slug": "hyper-realistic-realistic-portrait-in-natural-light",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image60.png",
+    "publicId": "multiverse/prompt-previews/hyper-realistic-realistic-portrait-in-natural-light",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/hyper-realistic-realistic-portrait-in-natural-light"
+  },
+  {
+    "slug": "fantasy-mythical-dragon-flying-over-ancient-kingdom",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image61.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-dragon-flying-over-ancient-kingdom",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-dragon-flying-over-ancient-kingdom"
+  },
+  {
+    "slug": "fantasy-mythical-elf-queen-in-magical-forest",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image62.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-elf-queen-in-magical-forest",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-elf-queen-in-magical-forest"
+  },
+  {
+    "slug": "fantasy-mythical-giant-glowing-tree-of-life",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image63.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-giant-glowing-tree-of-life",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-giant-glowing-tree-of-life"
+  },
+  {
+    "slug": "fantasy-mythical-wizard-casting-spell-with-energy",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image64.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-wizard-casting-spell-with-energy",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-wizard-casting-spell-with-energy"
+  },
+  {
+    "slug": "fantasy-mythical-floating-castle-in-sky",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image65.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-floating-castle-in-sky",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-floating-castle-in-sky"
+  },
+  {
+    "slug": "fantasy-mythical-mythical-phoenix-rising-from-fire",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image66.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-mythical-phoenix-rising-from-fire",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-mythical-phoenix-rising-from-fire"
+  },
+  {
+    "slug": "fantasy-mythical-mermaid-underwater-glowing",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image67.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-mermaid-underwater-glowing",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-mermaid-underwater-glowing"
+  },
+  {
+    "slug": "fantasy-mythical-dark-knight-in-cursed-armor",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image68.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-dark-knight-in-cursed-armor",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-dark-knight-in-cursed-armor"
+  },
+  {
+    "slug": "fantasy-mythical-fantasy-village-with-magic-lights",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image69.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-fantasy-village-with-magic-lights",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-fantasy-village-with-magic-lights"
+  },
+  {
+    "slug": "fantasy-mythical-giant-titan-walking-through-land",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image70.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-giant-titan-walking-through-land",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-giant-titan-walking-through-land"
+  },
+  {
+    "slug": "fantasy-mythical-fairy-sitting-on-glowing-mushroom",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image71.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-fairy-sitting-on-glowing-mushroom",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-fairy-sitting-on-glowing-mushroom"
+  },
+  {
+    "slug": "fantasy-mythical-ice-queen-in-frozen-palace",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image72.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-ice-queen-in-frozen-palace",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-ice-queen-in-frozen-palace"
+  },
+  {
+    "slug": "fantasy-mythical-mystic-portal-opening-in-forest",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image73.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-mystic-portal-opening-in-forest",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-mystic-portal-opening-in-forest"
+  },
+  {
+    "slug": "fantasy-mythical-magical-sword-glowing-in-stone",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image74.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-magical-sword-glowing-in-stone",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-magical-sword-glowing-in-stone"
+  },
+  {
+    "slug": "fantasy-mythical-spirit-animal-glowing-aura",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image75.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-spirit-animal-glowing-aura",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-spirit-animal-glowing-aura"
+  },
+  {
+    "slug": "fantasy-mythical-enchanted-forest-with-fog",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image76.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-enchanted-forest-with-fog",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-enchanted-forest-with-fog"
+  },
+  {
+    "slug": "fantasy-mythical-sorcerer-summoning-lightning",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image77.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-sorcerer-summoning-lightning",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-sorcerer-summoning-lightning"
+  },
+  {
+    "slug": "fantasy-mythical-fantasy-creature-hybrid-animal",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image78.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-fantasy-creature-hybrid-animal",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-fantasy-creature-hybrid-animal"
+  },
+  {
+    "slug": "fantasy-mythical-lost-ancient-ruins-in-jungle",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image79.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-lost-ancient-ruins-in-jungle",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-lost-ancient-ruins-in-jungle"
+  },
+  {
+    "slug": "fantasy-mythical-celestial-goddess-in-sky",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image80.png",
+    "publicId": "multiverse/prompt-previews/fantasy-mythical-celestial-goddess-in-sky",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/fantasy-mythical-celestial-goddess-in-sky"
+  },
+  {
+    "slug": "viral-social-media-styles-ai-avatar-profile-picture-aesthetic",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image81.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-ai-avatar-profile-picture-aesthetic",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-ai-avatar-profile-picture-aesthetic"
+  },
+  {
+    "slug": "viral-social-media-styles-instagram-influencer-style-portrait",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image82.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-instagram-influencer-style-portrait",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-instagram-influencer-style-portrait"
+  },
+  {
+    "slug": "viral-social-media-styles-linkedin-professional-headshot-ai",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image83.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-linkedin-professional-headshot-ai",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-linkedin-professional-headshot-ai"
+  },
+  {
+    "slug": "viral-social-media-styles-cartoon-version-of-myself",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image84.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-cartoon-version-of-myself",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-cartoon-version-of-myself"
+  },
+  {
+    "slug": "viral-social-media-styles-pixar-version-of-a-real-person",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image85.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-pixar-version-of-a-real-person",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-pixar-version-of-a-real-person"
+  },
+  {
+    "slug": "viral-social-media-styles-anime-version-of-a-selfie",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image86.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-anime-version-of-a-selfie",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-anime-version-of-a-selfie"
+  },
+  {
+    "slug": "viral-social-media-styles-celebrity-lookalike-ai-portrait",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image87.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-celebrity-lookalike-ai-portrait",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-celebrity-lookalike-ai-portrait"
+  },
+  {
+    "slug": "viral-social-media-styles-glow-up-transformation-before-after",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image88.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-glow-up-transformation-before-after",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-glow-up-transformation-before-after"
+  },
+  {
+    "slug": "viral-social-media-styles-ai-baby-version-of-adult",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image89.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-ai-baby-version-of-adult",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-ai-baby-version-of-adult"
+  },
+  {
+    "slug": "viral-social-media-styles-old-age-transformation-realistic",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image90.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-old-age-transformation-realistic",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-old-age-transformation-realistic"
+  },
+  {
+    "slug": "viral-social-media-styles-ai-fashion-model-in-luxury-outfit",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image91.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-ai-fashion-model-in-luxury-outfit",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-ai-fashion-model-in-luxury-outfit"
+  },
+  {
+    "slug": "viral-social-media-styles-streetwear-photoshoot-urban-style",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image92.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-streetwear-photoshoot-urban-style",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-streetwear-photoshoot-urban-style"
+  },
+  {
+    "slug": "viral-social-media-styles-luxury-lifestyle-aesthetic-scene",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image93.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-luxury-lifestyle-aesthetic-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-luxury-lifestyle-aesthetic-scene"
+  },
+  {
+    "slug": "viral-social-media-styles-travel-influencer-cinematic-shot",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image94.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-travel-influencer-cinematic-shot",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-travel-influencer-cinematic-shot"
+  },
+  {
+    "slug": "viral-social-media-styles-fitness-transformation-aesthetic",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image95.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-fitness-transformation-aesthetic",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-fitness-transformation-aesthetic"
+  },
+  {
+    "slug": "viral-social-media-styles-ai-couple-romantic-photo",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image96.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-ai-couple-romantic-photo",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-ai-couple-romantic-photo"
+  },
+  {
+    "slug": "viral-social-media-styles-dream-house-modern-luxury",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image97.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-dream-house-modern-luxury",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-dream-house-modern-luxury"
+  },
+  {
+    "slug": "viral-social-media-styles-personal-branding-profile-image",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image98.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-personal-branding-profile-image",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-personal-branding-profile-image"
+  },
+  {
+    "slug": "viral-social-media-styles-ai-generated-passport-photo",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image99.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-ai-generated-passport-photo",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-ai-generated-passport-photo"
+  },
+  {
+    "slug": "viral-social-media-styles-ai-dating-profile-picture",
+    "status": "uploaded",
+    "localPath": "/prompt-previews/ai-art-styles/image100.png",
+    "publicId": "multiverse/prompt-previews/viral-social-media-styles-ai-dating-profile-picture",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/viral-social-media-styles-ai-dating-profile-picture"
+  }
+]

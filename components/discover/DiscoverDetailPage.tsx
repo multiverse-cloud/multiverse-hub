@@ -12,7 +12,6 @@ import {
   Sparkles,
   Star,
   Tags,
-  Target,
   Users,
 } from 'lucide-react'
 import { DiscoverList } from '@/lib/discover-data'
@@ -147,29 +146,6 @@ function getQuickAnswer(list: DiscoverList) {
   }. That usually gives you enough structure to keep the rest of the guide practical.`
 }
 
-function getRelatedSearchPrompts(list: DiscoverList, intent: DiscoverIntent) {
-  const prompts = new Set<string>()
-  const subcategory = list.subcategory?.toLowerCase() || list.category.toLowerCase()
-  const firstTag = list.tags[0]
-  const secondTag = list.tags[1]
-
-  prompts.add(list.title)
-  prompts.add(`${intent.label.toLowerCase()} ${subcategory}`.replace(/^ranking /, 'best '))
-  if (firstTag) prompts.add(`best ${firstTag}`)
-  if (secondTag) prompts.add(`top ${secondTag}`)
-
-  if (list.type === 'ranking' && list.items[0]) {
-    prompts.add(`${list.items[0].name} alternatives`)
-  }
-
-  if (list.type === 'guide') {
-    prompts.add(`beginner guide to ${subcategory}`)
-    prompts.add(`common mistakes in ${subcategory}`)
-  }
-
-  return Array.from(prompts).filter(Boolean).slice(0, 6)
-}
-
 function getRankingUseCases(list: DiscoverList) {
   return list.items.slice(0, 4).map(item => ({
     title: item.name,
@@ -253,14 +229,6 @@ function getGuideMistakes(list: DiscoverList, intent: DiscoverIntent) {
   ]
 }
 
-function getGuideOutcomes(list: DiscoverList) {
-  return [
-    `A clearer decision path around ${list.subcategory?.toLowerCase() || 'this topic'}`,
-    `Less guesswork for ${lowerFirst(getAudienceLabel(list))}`,
-    `A more repeatable next move based on ${getAngleLabel(list)}`,
-  ]
-}
-
 function getStepSupportNote(list: DiscoverList, stepIndex: number) {
   if (stepIndex === 0) {
     return `This opening step gives the page its direction, so do not rush it just because it looks simple.`
@@ -288,8 +256,6 @@ export default function DiscoverDetailPage({
   const rankingDecisionNotes = list.type === 'ranking' ? getRankingDecisionNotes(list, intent) : []
   const guideChecklist = list.type === 'guide' ? getGuideChecklist(list, intent) : []
   const guideMistakes = list.type === 'guide' ? getGuideMistakes(list, intent) : []
-  const guideOutcomes = list.type === 'guide' ? getGuideOutcomes(list) : []
-  const relatedSearchPrompts = getRelatedSearchPrompts(list, intent)
 
   return (
     <div className="min-h-screen">
@@ -325,16 +291,11 @@ export default function DiscoverDetailPage({
 
           <h1 className="max-w-5xl text-3xl font-bold md:text-4xl">{list.title}</h1>
           <p className="mt-3 max-w-3xl text-muted-foreground">{list.description}</p>
-          <p className="mt-4 max-w-4xl text-sm leading-7 text-muted-foreground">{list.intro}</p>
 
-          <div className={`mt-6 grid gap-4 sm:grid-cols-2 ${list.scope ? 'xl:grid-cols-6' : 'xl:grid-cols-5'}`}>
+          <div className={`mt-6 grid gap-4 sm:grid-cols-2 ${list.scope ? 'xl:grid-cols-5' : 'xl:grid-cols-4'}`}>
             <div className="rounded-2xl border border-border bg-card p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Updated</p>
               <p className="mt-2 text-sm font-black tracking-tight">{list.updatedAt}</p>
-            </div>
-            <div className="rounded-2xl border border-border bg-card p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Search Intent</p>
-              <p className="mt-2 text-sm font-black tracking-tight">{intent.summary}</p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Audience</p>
@@ -362,42 +323,23 @@ export default function DiscoverDetailPage({
       </div>
 
       <div className="page-content space-y-8">
-        <section className="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-2xl border border-border bg-card p-6">
-            <div className="mb-4 flex items-center gap-2 text-sm font-semibold">
-              <Lightbulb className="h-4 w-4 text-indigo-500" />
-              Quick answer
-            </div>
-            <p className="text-sm leading-7 text-muted-foreground">{quickAnswer}</p>
-
-            <div className="mt-5 flex flex-wrap gap-2">
-              {spotlightTags.map(tag => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-muted-foreground"
-                >
-                  <Tags className="h-3 w-3" />
-                  {tag}
-                </span>
-              ))}
-            </div>
+        <section className="rounded-2xl border border-border bg-card p-6">
+          <div className="mb-4 flex items-center gap-2 text-sm font-semibold">
+            <Lightbulb className="h-4 w-4 text-indigo-500" />
+            Quick answer
           </div>
+          <p className="text-sm leading-7 text-muted-foreground">{quickAnswer}</p>
 
-          <div className="rounded-2xl border border-border bg-card p-6">
-            <div className="mb-4 flex items-center gap-2 text-sm font-semibold">
-              <Target className="h-4 w-4 text-indigo-500" />
-              What this page optimizes for
-            </div>
-            <div className="space-y-3">
-              <div className="rounded-xl bg-muted/40 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Angle</p>
-                <p className="mt-2 text-sm leading-7">{getAngleLabel(list)}</p>
-              </div>
-              <div className="rounded-xl bg-muted/40 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Why it helps</p>
-                <p className="mt-2 text-sm leading-7 text-muted-foreground">{intent.guidance}</p>
-              </div>
-            </div>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {spotlightTags.map(tag => (
+              <span
+                key={tag}
+                className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-muted-foreground"
+              >
+                <Tags className="h-3 w-3" />
+                {tag}
+              </span>
+            ))}
           </div>
         </section>
 
@@ -411,23 +353,6 @@ export default function DiscoverDetailPage({
               <div key={point} className="rounded-xl bg-muted/40 px-4 py-3 text-sm text-foreground">
                 {point}
               </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="rounded-2xl border border-border bg-card p-6">
-          <div className="mb-4 flex items-center gap-2 text-sm font-semibold">
-            <Tags className="h-4 w-4 text-indigo-500" />
-            Related search angles
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {relatedSearchPrompts.map(prompt => (
-              <span
-                key={prompt}
-                className="rounded-full border border-border bg-muted/30 px-3 py-1.5 text-xs font-medium text-muted-foreground"
-              >
-                {prompt}
-              </span>
             ))}
           </div>
         </section>
@@ -627,20 +552,6 @@ export default function DiscoverDetailPage({
                     </div>
                   ))}
                 </div>
-              </div>
-            </section>
-
-            <section className="rounded-2xl border border-border bg-card p-6">
-              <div className="mb-4 flex items-center gap-2 text-sm font-semibold">
-                <Sparkles className="h-4 w-4 text-indigo-500" />
-                What this guide should help you do
-              </div>
-              <div className="grid gap-3 md:grid-cols-3">
-                {guideOutcomes.map(outcome => (
-                  <div key={outcome} className="rounded-xl bg-muted/40 px-4 py-3 text-sm text-foreground">
-                    {outcome}
-                  </div>
-                ))}
               </div>
             </section>
 

@@ -6,6 +6,7 @@ import type { Tool } from '@/lib/tools-data'
 import UploadZone from './UploadZone'
 import { Download, Copy, CheckCircle, Loader2, RefreshCw, Play, AlertCircle, ExternalLink } from 'lucide-react'
 import { cn, copyToClipboard, downloadBlob, formatBytes } from '@/lib/utils'
+import type { ToolRuntimeStatus } from '@/lib/tool-runtime-status'
 import toast from 'react-hot-toast'
 
 function getPlaceholder(slug: string): string {
@@ -82,7 +83,13 @@ function calcTool(slug: string, input: string): string {
   return 'Enter values and click Calculate'
 }
 
-export default function ToolDetailClient({ tool }: { tool: Tool }) {
+export default function ToolDetailClient({
+  tool,
+  runtimeStatus,
+}: {
+  tool: Tool
+  runtimeStatus?: ToolRuntimeStatus | null
+}) {
   const [files, setFiles] = useState<File[]>([])
   const [textInput, setTextInput] = useState('')
   const [output, setOutput] = useState('')
@@ -323,9 +330,16 @@ export default function ToolDetailClient({ tool }: { tool: Tool }) {
   const usesMonoInput = tool.categorySlug === 'dev'
   const textareaClass = cn('premium-textarea', usesMonoInput && 'font-mono')
   const btnLabel = loading?'Processing...': tool.categorySlug==='ai'?'Generate': tool.categorySlug==='calculator'?'Calculate': tool.slug==='qr-code-generator'?'Generate QR': tool.slug==='ai-image-generator'?'Generate Image': tool.inputType==='url'?'Fetch': needsFile?'Process File':'Run Tool'
+  const isRuntimeBlocked = Boolean(runtimeStatus && !runtimeStatus.available)
 
   return (
     <div className="space-y-6 p-5 md:p-6">
+      {isRuntimeBlocked && runtimeStatus ? (
+        <div className="rounded-2xl border border-dashed border-amber-300 bg-amber-50/70 px-4 py-3 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/20 dark:text-amber-100">
+          {runtimeStatus.message}
+        </div>
+      ) : null}
+
       {needsFile && (
         <UploadZone
           onFiles={f=>setFiles(p=>tool.slug==='merge-pdf'||tool.slug==='zip-creator'?[...p,...f]:f)}
@@ -353,26 +367,78 @@ export default function ToolDetailClient({ tool }: { tool: Tool }) {
 
       {/* Actions */}
       <div className="flex gap-3 flex-wrap">
-        <button onClick={handleProcess} disabled={loading||(needsFile&&files.length===0&&tool.inputType!=='both'&&tool.inputType!=='none')} className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none">
+        <button onClick={handleProcess} disabled={isRuntimeBlocked||loading||(needsFile&&files.length===0&&tool.inputType!=='both'&&tool.inputType!=='none')} className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none">
           {loading?<Loader2 className="w-4 h-4 animate-spin"/>:<Play className="w-4 h-4"/>}{btnLabel}
         </button>
         {(output||files.length>0||outputBlob)&&<button onClick={resetAll} className="btn-secondary flex items-center gap-2 text-sm py-2.5 px-4"><RefreshCw className="w-4 h-4"/>Reset</button>}
       </div>
 
       {/* Progress */}
-      {loading&&<div><div className="mb-1.5 flex justify-between text-xs text-muted-foreground"><span className="font-display font-bold tracking-tight">Processing...</span><span>{Math.round(progress)}%</span></div><div className="h-1.5 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-indigo-600 transition-all duration-300" style={{width:`${progress}%`}}/></div></div>}
+      {loading&&<div className="animate-fade-in">
+        <div className="mb-2 flex justify-between text-xs text-muted-foreground">
+          <span className="font-display font-bold tracking-tight flex items-center gap-1.5">
+            <Loader2 className="w-3 h-3 animate-spin" />Processing...
+          </span>
+          <span className="tabular-nums font-semibold text-indigo-600 dark:text-indigo-400">{Math.round(progress)}%</span>
+        </div>
+        <div className="tool-progress-bar">
+          <div className="tool-progress-fill" style={{width:`${progress}%`}}/>
+        </div>
+      </div>}
 
       {/* Error */}
-      {apiError&&<div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-4"><AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500"/><pre className="whitespace-pre-wrap text-xs text-red-600">{apiError}</pre></div>}
+      {apiError&&<div className="tool-output-panel tool-output-panel-error animate-scale-in">
+        <div className="tool-output-header">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 text-red-500"/>
+            <span className="text-sm font-display font-bold text-red-600 dark:text-red-400">Error</span>
+          </div>
+        </div>
+        <div className="tool-output-body"><pre className="whitespace-pre-wrap text-xs text-red-600 dark:text-red-400 leading-relaxed">{apiError}</pre></div>
+      </div>}
 
       {/* Image preview */}
-      {imagePreview&&<div className="space-y-3"><div className="flex items-center justify-between"><h3 className="flex items-center gap-2 font-display text-sm font-bold tracking-tight"><CheckCircle className="w-4 h-4 text-emerald-500"/>Preview</h3><div className="flex gap-2">{outputBlob&&<button onClick={handleDownload} className="btn-primary px-4 py-2 text-sm"><Download className="w-4 h-4"/>Download</button>}<a href={imagePreview} download target="_blank" rel="noreferrer" className="btn-secondary px-4 py-2 text-sm"><ExternalLink className="w-3.5 h-3.5"/>Open</a></div></div><div className="relative h-[280px] w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:h-[360px] lg:h-[450px]"><Image src={imagePreview} alt="Result" fill unoptimized sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1024px" style={{objectFit:'contain'}}/></div></div>}
+      {imagePreview&&<div className="space-y-3 animate-scale-in">
+        <div className="flex items-center justify-between">
+          <h3 className="flex items-center gap-2 font-display text-sm font-bold tracking-tight">
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-emerald-200/50 dark:from-emerald-900/30 dark:to-emerald-950/30">
+              <CheckCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400"/>
+            </div>
+            Preview
+          </h3>
+          <div className="flex gap-2">
+            {outputBlob&&<button onClick={handleDownload} className="btn-primary px-4 py-2 text-sm"><Download className="w-4 h-4"/>Download</button>}
+            <a href={imagePreview} download target="_blank" rel="noreferrer" className="btn-secondary px-4 py-2 text-sm"><ExternalLink className="w-3.5 h-3.5"/>Open</a>
+          </div>
+        </div>
+        <div className="relative h-[280px] w-full overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-b from-white to-slate-50 shadow-lg shadow-slate-900/[0.04] sm:h-[360px] lg:h-[450px] dark:border-slate-800 dark:from-slate-900 dark:to-slate-950">
+          <Image src={imagePreview} alt="Result" fill unoptimized sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1024px" style={{objectFit:'contain'}}/>
+        </div>
+      </div>}
 
       {/* Download button */}
-      {outputBlob&&!imagePreview&&<div><button onClick={handleDownload} className="btn-primary flex items-center gap-2"><Download className="w-4 h-4"/>Download {outputFilename}</button><p className="text-xs text-muted-foreground mt-1">{formatBytes(outputBlob.size)}</p></div>}
+      {outputBlob&&!imagePreview&&<div className="animate-scale-in">
+        <button onClick={handleDownload} className="btn-primary flex items-center gap-2"><Download className="w-4 h-4"/>Download {outputFilename}</button>
+        <p className="text-xs text-muted-foreground mt-1.5">{formatBytes(outputBlob.size)}</p>
+      </div>}
 
       {/* Text output */}
-      {output&&<div className="space-y-2"><div className="flex items-center justify-between"><h3 className="flex items-center gap-2 font-display text-sm font-bold tracking-tight"><CheckCircle className="w-4 h-4 text-emerald-500"/>Output</h3><button onClick={handleCopy} className="btn-secondary px-3 py-1.5 text-xs">{copied?<><CheckCircle className="w-3.5 h-3.5 text-emerald-500"/>Copied</>:<><Copy className="w-3.5 h-3.5"/>Copy</>}</button></div><pre className="custom-scrollbar max-h-[500px] overflow-auto rounded-2xl border border-slate-200 bg-white p-4 text-sm font-mono whitespace-pre-wrap shadow-sm">{output}</pre></div>}
+      {output&&<div className="tool-output-panel animate-scale-in">
+        <div className="tool-output-header">
+          <h3 className="flex items-center gap-2 font-display text-sm font-bold tracking-tight">
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-emerald-200/50 dark:from-emerald-900/30 dark:to-emerald-950/30">
+              <CheckCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400"/>
+            </div>
+            Output
+          </h3>
+          <button onClick={handleCopy} className="btn-secondary px-3 py-1.5 text-xs">
+            {copied?<><CheckCircle className="w-3.5 h-3.5 text-emerald-500"/>Copied</>:<><Copy className="w-3.5 h-3.5"/>Copy</>}
+          </button>
+        </div>
+        <div className="tool-output-body">
+          <pre className="custom-scrollbar max-h-[500px] overflow-auto text-sm font-mono whitespace-pre-wrap leading-relaxed text-slate-800 dark:text-slate-200">{output}</pre>
+        </div>
+      </div>}
     </div>
   )
 }

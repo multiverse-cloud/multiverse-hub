@@ -619,6 +619,110 @@ const DISCOVER_LIST_OVERRIDES: Record<string, DiscoverListOverride> = {
       'Each step is designed to help readers reduce tool clutter while keeping useful structure.',
     ],
   },
+  'best-ai-models-for-coding': {
+    seoTitle: 'Best AI Models for Coding in 2026',
+    metaDescription:
+      'Compare the best AI models for coding based on debugging help, code generation quality, reasoning depth, and workflow fit.',
+    description: 'AI coding models ranked by debugging value, code quality, and day-to-day workflow fit.',
+    intro:
+      'People searching for the best AI model for coding usually do not need a leaderboard snapshot. They need to know which model feels strongest when the work turns messy: debugging, refactoring, architecture tradeoffs, and code that has to survive real use instead of only passing a toy prompt.',
+    methodology: [
+      'We prioritized real coding usefulness over benchmark theater.',
+      'Models were judged on debugging help, reasoning clarity, code edit usefulness, and how well they hold context across a longer task.',
+      'The goal is to help readers pick the safer day-to-day coding model, not the flashiest demo performer.',
+    ],
+  },
+  'best-ai-models-for-long-context-work': {
+    seoTitle: 'Best AI Models for Long Context Work',
+    metaDescription:
+      'A practical ranking of AI models for long-context tasks like document reading, synthesis, research follow-ups, and deeper analysis.',
+    description: 'Long-context AI models ranked by document handling, synthesis quality, and research usefulness.',
+    intro:
+      'Long-context work is where shallow AI comparisons usually break down. Handling a large document or long chain of reasoning is not only about window size. It is about whether the model keeps the thread, pulls the right details forward, and stays useful once the task becomes slower, denser, and more reference-heavy.',
+    methodology: [
+      'We focused on document-heavy reading, synthesis stability, and follow-up usefulness instead of raw context-window marketing.',
+      'The ranking favors models that still feel coherent when the prompt becomes long, layered, and messy.',
+      'Practical research and analysis value mattered more than theoretical specs alone.',
+    ],
+  },
+  'best-ai-tools-for-job-search-in-2026': {
+    seoTitle: 'Best AI Tools for Job Search in 2026',
+    metaDescription:
+      'Compare the best AI tools for job search across resumes, applications, interview prep, and company research without generic hype.',
+    description: 'AI job-search tools ranked by resume help, application quality, and practical interview support.',
+    intro:
+      'Job seekers do not need AI tools that only sound smart. They need tools that improve resumes, sharpen applications, and reduce the friction of researching roles and preparing for interviews. This ranking is built for practical job-search leverage, not generic AI excitement.',
+    methodology: [
+      'We prioritized resume quality, interview prep value, and cleaner company research over novelty.',
+      'Tools had to make sense inside a real job-search workflow rather than as one-off writing toys.',
+      'The ranking rewards clearer execution and lower friction for stressed job seekers.',
+    ],
+  },
+  'best-note-taking-apps-for-college-students': {
+    seoTitle: 'Best Note Taking Apps for College Students',
+    metaDescription:
+      'A practical note-taking apps ranking for college students focused on class capture, organization, revision support, and low-friction usage.',
+    description: 'Note-taking apps ranked by class capture speed, clarity, and revision usefulness.',
+    intro:
+      'College students usually do not need the most feature-rich note app. They need the one that helps them capture class material quickly, clean it up later, and actually use it during revision. This page favors note systems that survive real semester pressure instead of only looking productive on day one.',
+    methodology: [
+      'We prioritized class-to-revision usefulness over feature count.',
+      'The ranking favors tools that reduce note chaos, not tools that encourage endless setup.',
+      'Apps were judged by capture speed, organization clarity, and how usable the notes stay later.',
+    ],
+  },
+  'best-free-software-for-students': {
+    seoTitle: 'Best Free Software for Students',
+    metaDescription:
+      'Compare the best free software for students across writing, assignments, citations, revision, and collaboration.',
+    description: 'Free student software ranked by real academic usefulness and daily workflow value.',
+    intro:
+      'Free student software should do more than save money. It should make assignments, research, collaboration, and exam prep easier without forcing students into bloated or confusing stacks. This ranking focuses on tools that still feel useful after the first week of classes.',
+    methodology: [
+      'We prioritized everyday academic usefulness over flashy feature lists.',
+      'The ranking favors software that reduces friction around assignments, references, revision, or teamwork.',
+      'No-cost entry mattered, but long-term usefulness mattered more.',
+    ],
+  },
+  'best-budget-phones-for-students': {
+    seoTitle: 'Best Budget Phones for Students',
+    metaDescription:
+      'A practical budget phones ranking for students focused on battery, software, value, and everyday reliability instead of spec-sheet hype.',
+    description: 'Budget phones for students ranked by battery, value, and reliable daily use.',
+    intro:
+      'Students buying a budget phone usually care less about bragging rights and more about battery, stability, messaging, classes, maps, payments, and camera quality that is good enough. This ranking favors phones that feel dependable in real student life instead of looking exciting only in spec comparisons.',
+    methodology: [
+      'We prioritized battery, software reliability, and value under daily student use.',
+      'Phones were judged on practical tradeoffs rather than pure spec-sheet excitement.',
+      'The list favors devices that make sense when budget and longevity both matter.',
+    ],
+  },
+  'best-geopolitics-books-for-beginners': {
+    seoTitle: 'Best Geopolitics Books for Beginners',
+    metaDescription:
+      'A beginner-friendly geopolitics books ranking focused on geography, power, energy, and global context without immediate overload.',
+    description: 'Geopolitics books ranked by beginner clarity, context, and long-term usefulness.',
+    intro:
+      'People new to geopolitics often need a clearer mental map before they need more headlines. A strong beginner book should explain why geography, power, energy, and incentives keep shaping world events. This ranking favors books that create context instead of just sounding impressive.',
+    methodology: [
+      'We prioritized readability, context, and strategic clarity for beginners.',
+      'Books were chosen for how well they help readers understand patterns, not just memorize current events.',
+      'The ranking favors cleaner entry points before denser theory.',
+    ],
+  },
+  'best-space-books-for-curious-beginners': {
+    seoTitle: 'Best Space Books for Curious Beginners',
+    metaDescription:
+      'Compare the best beginner-friendly space books for curiosity, missions, big ideas, and accessible science.',
+    description: 'Space books ranked by curiosity-building power, readability, and beginner momentum.',
+    intro:
+      'Good beginner space books do not drown readers in equations too early. They make the subject feel bigger, clearer, and more worth returning to. This ranking is designed for curious readers who want a stronger entry point into missions, astronomy, cosmology, and human spaceflight.',
+    methodology: [
+      'We prioritized curiosity, readability, and momentum for beginners.',
+      'Books were chosen for how well they keep readers engaged while still building real understanding.',
+      'The goal is a better first step into space learning, not instant technical mastery.',
+    ],
+  },
 }
 
 function applyDiscoverListOverride(list: DiscoverList) {

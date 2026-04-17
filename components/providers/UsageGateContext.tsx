@@ -1,83 +1,73 @@
 'use client'
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
-import { useUser } from '@clerk/nextjs'
 
-const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
 const STORAGE_KEY = 'multiverse_anon_usage'
-const SOFT_HINT_THRESHOLD = 3
-const HARD_GATE_THRESHOLD = 5
 
 interface UsageGateContextType {
   usageCount: number
-  /** True when the hard gate should block the user */
   shouldGate: boolean
-  /** True when a soft hint should appear */
   shouldHint: boolean
-  /** Call after a successful tool processing action */
   recordUsage: () => void
-  /** Dismiss the soft hint for this session */
   dismissHint: () => void
-  /** Reset the gate (e.g. after login) */
   clearGate: () => void
 }
 
 const UsageGateContext = createContext<UsageGateContextType | undefined>(undefined)
 
-function UsageGateProviderBase({
-  children,
-  isSignedIn,
-}: {
-  children: React.ReactNode
-  isSignedIn: boolean
-}) {
+export function UsageGateProvider({ children }: { children: React.ReactNode }) {
   const [usageCount, setUsageCount] = useState(0)
-  const [hintDismissed, setHintDismissed] = useState(false)
 
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored) setUsageCount(parseInt(stored, 10) || 0)
-    } catch { /* SSR or localStorage unavailable */ }
+      if (stored) {
+        setUsageCount(parseInt(stored, 10) || 0)
+      }
+    } catch {
+      // no-op
+    }
   }, [])
 
   const recordUsage = useCallback(() => {
-    if (isSignedIn) return // signed-in users have no limits
     setUsageCount(prev => {
       const next = prev + 1
-      try { localStorage.setItem(STORAGE_KEY, String(next)) } catch { /* noop */ }
+      try {
+        localStorage.setItem(STORAGE_KEY, String(next))
+      } catch {
+        // no-op
+      }
       return next
     })
-  }, [isSignedIn])
+  }, [])
 
-  const dismissHint = useCallback(() => setHintDismissed(true), [])
+  const dismissHint = useCallback(() => {
+    // public auth is disabled, so hints stay off
+  }, [])
 
   const clearGate = useCallback(() => {
     setUsageCount(0)
-    try { localStorage.removeItem(STORAGE_KEY) } catch { /* noop */ }
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+    } catch {
+      // no-op
+    }
   }, [])
 
-  const shouldGate = !isSignedIn && usageCount >= HARD_GATE_THRESHOLD
-  const shouldHint = !isSignedIn && !hintDismissed && usageCount >= SOFT_HINT_THRESHOLD && usageCount < HARD_GATE_THRESHOLD
-
   return (
-    <UsageGateContext.Provider value={{ usageCount, shouldGate, shouldHint, recordUsage, dismissHint, clearGate }}>
+    <UsageGateContext.Provider
+      value={{
+        usageCount,
+        shouldGate: false,
+        shouldHint: false,
+        recordUsage,
+        dismissHint,
+        clearGate,
+      }}
+    >
       {children}
     </UsageGateContext.Provider>
   )
-}
-
-function UsageGateProviderClerk({ children }: { children: React.ReactNode }) {
-  const { isSignedIn } = useUser()
-  return <UsageGateProviderBase isSignedIn={Boolean(isSignedIn)}>{children}</UsageGateProviderBase>
-}
-
-export function UsageGateProvider({ children }: { children: React.ReactNode }) {
-  if (!clerkEnabled) {
-    return <UsageGateProviderBase isSignedIn={false}>{children}</UsageGateProviderBase>
-  }
-
-  return <UsageGateProviderClerk>{children}</UsageGateProviderClerk>
 }
 
 export function useUsageGate() {

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import DiscoverDetailPage from '@/components/discover/DiscoverDetailPage'
 import PublicLayout from '@/components/layout/PublicLayout'
+import UniverseTopBar from '@/components/public/UniverseTopBar'
 import { getDiscoverListBySlug, getPublishedDiscoverLists } from '@/lib/discover-db'
 import type { DiscoverList } from '@/lib/discover-data'
 
@@ -147,7 +148,10 @@ export default async function DiscoverSlugPage({ params }: DiscoverPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <UniverseTopBar items={[{ label: 'Discover', href: '/discover' }, { label: list.category, href: `/discover?category=${encodeURIComponent(list.category)}` }, { label: list.title }]} actionName={list.title} actionSlug={list.slug} />
       <DiscoverDetailPage list={list} relatedLists={relatedLists} />
     </PublicLayout>
   )
 }
+
+

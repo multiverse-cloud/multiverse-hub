@@ -1,12 +1,12 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  LayoutDashboard, Wrench, Layers, Compass, ShoppingBag,
+  LayoutDashboard, Wrench, Layers, Compass,
   Home, Search, Flag, Globe2, Bell, Settings, ChevronLeft,
-  ChevronRight, Shield, Menu, X, Activity, Loader2, LogOut
+  ChevronRight, Shield, Menu, X, Activity, Loader2, LogOut, Sparkles
 } from 'lucide-react'
 import {
   AdminClerkLogoutButton,
@@ -21,7 +21,8 @@ const NAV_ITEMS = [
   { label: 'Tools', href: '/admin/tools', icon: Wrench, available: true },
   { label: 'Categories', href: '/admin/categories', icon: Layers, available: false },
   { label: 'Discover Lists', href: '/admin/discover', icon: Compass, available: true },
-  { label: 'Marketplace', href: '/admin/marketplace', icon: ShoppingBag, available: false },
+  { label: 'Prompt Hub', href: '/admin/prompts', icon: Sparkles, available: true },
+  { label: 'UI Templates', href: '/admin/templates', icon: Layers, available: true },
   { label: 'Homepage Sections', href: '/admin/homepage', icon: Home, available: false },
   { label: 'Feature Flags', href: '/admin/flags', icon: Flag, available: true },
   { label: 'API Status', href: '/admin/api-status', icon: Activity, available: true },
@@ -32,11 +33,9 @@ const NAV_ITEMS = [
 export default function AdminLayout({
   children,
   adminEmail,
-  clerkEnabled,
 }: {
   children: React.ReactNode
   adminEmail?: string | null
-  clerkEnabled: boolean
 }) {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -63,10 +62,6 @@ export default function AdminLayout({
           'w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-60',
           collapsed && 'justify-center px-0'
         )
-
-    if (clerkEnabled) {
-      return <AdminClerkLogoutButton className={className} showLabel={!collapsed || mobile} />
-    }
 
     return (
       <button
@@ -253,13 +248,7 @@ export default function AdminLayout({
               <p className="text-xs font-medium text-foreground">Admin Session</p>
               <p className="max-w-40 truncate text-[11px] text-muted-foreground">{displayEmail}</p>
             </div>
-            {clerkEnabled ? (
-              <AdminClerkUserButton />
-            ) : (
-              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-xs font-semibold text-muted-foreground">
-                AD
-              </div>
-            )}
+            <AdminClerkUserButton />
           </div>
         </header>
 
@@ -271,3 +260,10 @@ export default function AdminLayout({
     </div>
   )
 }
+
+
+
+
+
+
+

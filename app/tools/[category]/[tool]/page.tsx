@@ -8,19 +8,17 @@ import ImageStudioPageFrame from '@/components/tools/ImageStudioPageFrame'
 import PdfStudioPageFrame from '@/components/tools/PdfStudioPageFrame'
 import VideoStudioPageFrame from '@/components/tools/VideoStudioPageFrame'
 import WorkbenchStudioPageFrame from '@/components/tools/WorkbenchStudioPageFrame'
-import ImagePaletteStudio from '@/components/tools/ImagePaletteStudio'
-import ImageToPdfStudio from '@/components/tools/ImageToPdfStudio'
-import ImageTransformStudio from '@/components/tools/ImageTransformStudio'
-import QrCodeStudio from '@/components/tools/QrCodeStudio'
 import ToolCard from '@/components/tools/ToolCard'
 import ToolBreadcrumb from '@/components/tools/ToolBreadcrumb'
 import RecentTracker from '@/components/tools/RecentTracker'
 import SEOContent from '@/components/tools/SEOContent'
 import ToolActions from '@/components/tools/ToolActions'
+import ToolRuntimeBanner from '@/components/tools/ToolRuntimeBanner'
 import { UsageHintBanner } from '@/components/auth/LoginGateModal'
 import { getLucideIcon } from '@/lib/icons'
 import { CALCULATOR_STUDIO_SLUGS } from '@/lib/calculator-studio'
 import { PDF_STUDIO_STATIC_CONTENT } from '@/lib/pdf-studio-content'
+import { getToolRuntimeStatus } from '@/lib/tool-runtime-status'
 import { ACTIVE_CATEGORIES, type Tool } from '@/lib/tools-data'
 import { getTools, getToolBySlug } from '@/lib/db'
 
@@ -45,6 +43,10 @@ const PdfOcrStudio = dynamic(() => import('@/components/tools/PdfOcrStudio'))
 const UnlockPdfStudio = dynamic(() => import('@/components/tools/UnlockPdfStudio'))
 const PdfTranslatorStudio = dynamic(() => import('@/components/tools/PdfTranslatorStudio'))
 const PdfSummarizerStudio = dynamic(() => import('@/components/tools/PdfSummarizerStudio'))
+const ImagePaletteStudio = dynamic(() => import('@/components/tools/ImagePaletteStudio'))
+const ImageToPdfStudio = dynamic(() => import('@/components/tools/ImageToPdfStudio'))
+const ImageTransformStudio = dynamic(() => import('@/components/tools/ImageTransformStudio'))
+const QrCodeStudio = dynamic(() => import('@/components/tools/QrCodeStudio'))
 
 interface Props {
   params: Promise<{ category: string; tool: string }>
@@ -181,6 +183,15 @@ const SEO_STUDIO_SLUGS = new Set([
 
 const CALCULATOR_STUDIO_SLUGS_SET = new Set(CALCULATOR_STUDIO_SLUGS)
 
+function getRelatedToolsByCategory(
+  tools: Tool[],
+  categorySlug: string,
+  currentSlug: string,
+  limit: number
+) {
+  return tools.filter(item => item.categorySlug === categorySlug && item.slug !== currentSlug).slice(0, limit)
+}
+
 export async function generateStaticParams() {
   const TOOLS = await getTools()
   const trendingSlugs = TOOLS.filter(tool => tool.popular || tool.tags.includes('trending')).map(tool => tool.slug)
@@ -243,13 +254,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ToolPage({ params }: Props) {
   const { category, tool: toolSlug } = await params
-  const tool = await getToolBySlug(toolSlug)
+  const tools = await getTools()
+  const tool = tools.find(item => item.slug === toolSlug) || null
 
   if (!tool || tool.categorySlug !== category || tool.enabled === false) {
     notFound()
   }
 
-  const TOOLS = await getTools()
+  const runtimeStatus = getToolRuntimeStatus(tool)
 
   const schemaMarkup = {
     '@context': 'https://schema.org',
@@ -336,6 +348,11 @@ export default async function ToolPage({ params }: Props) {
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
+        <div className="premium-shell" data-tool-shell="true">
+          <div className="mx-auto w-full max-w-7xl px-4 pt-8 sm:px-6 lg:px-6 md:pt-10">
+            <ToolRuntimeBanner status={runtimeStatus} />
+          </div>
+        </div>
         <VideoDownloaderClient tool={tool} />
       </PublicLayout>
     )
@@ -345,14 +362,16 @@ export default async function ToolPage({ params }: Props) {
   const content = PDF_STUDIO_STATIC_CONTENT[tool.slug as keyof typeof PDF_STUDIO_STATIC_CONTENT]
 
   if (StudioComponent && content) {
-    const relatedToolsData = await Promise.all(content.relatedSlugs.map(slug => getToolBySlug(slug)))
-    const relatedTools = relatedToolsData.filter((item): item is Tool => Boolean(item))
+    const relatedTools = content.relatedSlugs
+      .map(slug => tools.find(item => item.slug === slug) || null)
+      .filter((item): item is Tool => Boolean(item))
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
         <PdfStudioPageFrame
           tool={tool}
+          runtimeStatus={runtimeStatus}
           content={{
             ...content,
             relatedTools,
@@ -366,14 +385,12 @@ export default async function ToolPage({ params }: Props) {
 
   const ImageStudioComponent = IMAGE_STUDIO_COMPONENTS[tool.slug]
   if (ImageStudioComponent) {
-    const relatedTools = TOOLS.filter(
-      item => item.categorySlug === 'image' && item.slug !== tool.slug
-    ).slice(0, 4)
+    const relatedTools = getRelatedToolsByCategory(tools, 'image', tool.slug, 4)
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <ImageStudioPageFrame tool={tool} relatedTools={relatedTools}>
+        <ImageStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
           <ImageStudioComponent tool={tool} />
         </ImageStudioPageFrame>
       </PublicLayout>
@@ -381,14 +398,12 @@ export default async function ToolPage({ params }: Props) {
   }
 
   if (VIDEO_STUDIO_SLUGS.has(tool.slug)) {
-    const relatedTools = TOOLS.filter(
-      item => item.categorySlug === 'video' && item.slug !== tool.slug
-    ).slice(0, 4)
+    const relatedTools = getRelatedToolsByCategory(tools, 'video', tool.slug, 4)
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <VideoStudioPageFrame tool={tool} relatedTools={relatedTools}>
+        <VideoStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
           <VideoStudio tool={tool} />
         </VideoStudioPageFrame>
       </PublicLayout>
@@ -396,14 +411,12 @@ export default async function ToolPage({ params }: Props) {
   }
 
   if (AUDIO_STUDIO_SLUGS.has(tool.slug)) {
-    const relatedTools = TOOLS.filter(
-      item => item.categorySlug === 'audio' && item.slug !== tool.slug
-    ).slice(0, 4)
+    const relatedTools = getRelatedToolsByCategory(tools, 'audio', tool.slug, 4)
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
+        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
           <AudioStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
@@ -411,14 +424,12 @@ export default async function ToolPage({ params }: Props) {
   }
 
   if (TEXT_STUDIO_SLUGS.has(tool.slug)) {
-    const relatedTools = TOOLS.filter(
-      item => item.categorySlug === 'text' && item.slug !== tool.slug
-    ).slice(0, 4)
+    const relatedTools = getRelatedToolsByCategory(tools, 'text', tool.slug, 4)
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
+        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
           <TextStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
@@ -426,14 +437,12 @@ export default async function ToolPage({ params }: Props) {
   }
 
   if (DEV_STUDIO_SLUGS.has(tool.slug)) {
-    const relatedTools = TOOLS.filter(
-      item => item.categorySlug === 'dev' && item.slug !== tool.slug
-    ).slice(0, 4)
+    const relatedTools = getRelatedToolsByCategory(tools, 'dev', tool.slug, 4)
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
+        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
           <DevStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
@@ -441,14 +450,12 @@ export default async function ToolPage({ params }: Props) {
   }
 
   if (SEO_STUDIO_SLUGS.has(tool.slug)) {
-    const relatedTools = TOOLS.filter(
-      item => item.categorySlug === 'seo' && item.slug !== tool.slug
-    ).slice(0, 4)
+    const relatedTools = getRelatedToolsByCategory(tools, 'seo', tool.slug, 4)
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
+        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
           <SeoStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
@@ -456,14 +463,12 @@ export default async function ToolPage({ params }: Props) {
   }
 
   if (CALCULATOR_STUDIO_SLUGS_SET.has(tool.slug as (typeof CALCULATOR_STUDIO_SLUGS)[number])) {
-    const relatedTools = TOOLS.filter(
-      item => item.categorySlug === 'calculator' && item.slug !== tool.slug
-    ).slice(0, 4)
+    const relatedTools = getRelatedToolsByCategory(tools, 'calculator', tool.slug, 4)
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
+        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
           <CalculatorStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
@@ -471,14 +476,12 @@ export default async function ToolPage({ params }: Props) {
   }
 
   if (FILE_STUDIO_SLUGS.has(tool.slug)) {
-    const relatedTools = TOOLS.filter(
-      item => item.categorySlug === 'file' && item.slug !== tool.slug
-    ).slice(0, 4)
+    const relatedTools = getRelatedToolsByCategory(tools, 'file', tool.slug, 4)
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools}>
+        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
           <FileViewerStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
@@ -486,7 +489,7 @@ export default async function ToolPage({ params }: Props) {
   }
 
   const categoryInfo = ACTIVE_CATEGORIES.find(item => item.slug === tool.categorySlug)
-  const related = TOOLS.filter(item => item.categorySlug === tool.categorySlug && item.id !== tool.id).slice(0, 6)
+  const related = tools.filter(item => item.categorySlug === tool.categorySlug && item.id !== tool.id).slice(0, 6)
   const CategoryIcon = getLucideIcon(categoryInfo?.icon, Wrench)
 
   return (
@@ -506,82 +509,79 @@ export default async function ToolPage({ params }: Props) {
             <ToolActions slug={tool.slug} name={tool.name} className="mb-0 w-full justify-start lg:w-auto lg:justify-end" />
           </div>
 
-          <div className="mb-6 flex items-start gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-100">
-              <CategoryIcon className="h-6 w-6" />
-            </div>
-            <div>
-              <div className="mb-1 flex items-center gap-2">
-                <h1 className="font-display text-2xl font-extrabold md:text-3xl">{tool.name}</h1>
-                {tool.tags.includes('beta') && <span className="tag-beta">Beta</span>}
+          {/* Tool Hero */}
+          <div className="tool-hero-glow mb-8">
+            <div className="relative z-10 flex items-start gap-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-100 to-indigo-50 text-indigo-600 shadow-sm dark:from-indigo-900/30 dark:to-indigo-950/30 dark:text-indigo-400">
+                <CategoryIcon className="h-6 w-6" />
               </div>
-              <p className="text-muted-foreground line-clamp-2 sm:line-clamp-none">{tool.description}</p>
+              <div>
+                <div className="mb-1 flex items-center gap-2.5">
+                  <h1 className="font-display text-2xl font-extrabold tracking-tight md:text-3xl">{tool.name}</h1>
+                  {tool.tags.includes('beta') && <span className="tag-beta">Beta</span>}
+                </div>
+                <p className="text-muted-foreground leading-relaxed line-clamp-2 sm:line-clamp-none">{tool.description}</p>
+              </div>
             </div>
           </div>
 
           <UsageHintBanner />
+          <ToolRuntimeBanner status={runtimeStatus} />
 
           <div className="premium-panel mb-8 overflow-hidden">
-            <ToolDetailClient tool={tool} />
+            <ToolDetailClient tool={tool} runtimeStatus={runtimeStatus} />
           </div>
 
+          {/* How it works + Features */}
           <div className="mb-8 grid gap-6 md:grid-cols-2">
             <div className="premium-card p-6">
-              <h2 className="mb-4 font-display text-lg font-bold">How it works</h2>
-              <ol className="space-y-3">
+              <h2 className="mb-5 font-display text-lg font-bold flex items-center gap-2">
+                <div className="h-1 w-6 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" />
+                How it works
+              </h2>
+              <ol className="relative space-y-4 pl-1">
+                {/* Connecting line */}
+                <div className="absolute left-[15px] top-[2rem] bottom-[1rem] w-px border-l-2 border-dashed border-indigo-100 dark:border-indigo-900/30" />
+
                 {tool.inputType === 'file' && (
-                  <li className="flex items-start gap-3">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
-                      1
-                    </span>
-                    <span className="text-sm text-muted-foreground">
+                  <li className="relative flex items-start gap-3.5">
+                    <span className="step-indicator">1</span>
+                    <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">
                       Upload your {tool.acceptedFormats?.join(', ') || 'file'}
                     </span>
                   </li>
                 )}
                 {tool.inputType === 'text' && (
-                  <li className="flex items-start gap-3">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
-                      1
-                    </span>
-                    <span className="text-sm text-muted-foreground">Enter or paste your text input</span>
+                  <li className="relative flex items-start gap-3.5">
+                    <span className="step-indicator">1</span>
+                    <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">Enter or paste your text input</span>
                   </li>
                 )}
                 {tool.inputType === 'url' && (
-                  <li className="flex items-start gap-3">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
-                      1
-                    </span>
-                    <span className="text-sm text-muted-foreground">Paste the source URL you want to process</span>
+                  <li className="relative flex items-start gap-3.5">
+                    <span className="step-indicator">1</span>
+                    <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">Paste the source URL you want to process</span>
                   </li>
                 )}
                 {tool.inputType === 'both' && (
-                  <li className="flex items-start gap-3">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
-                      1
-                    </span>
-                    <span className="text-sm text-muted-foreground">
+                  <li className="relative flex items-start gap-3.5">
+                    <span className="step-indicator">1</span>
+                    <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">
                       Upload a supported file or enter a prompt to generate your result
                     </span>
                   </li>
                 )}
-                <li className="flex items-start gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
-                    2
-                  </span>
-                  <span className="text-sm text-muted-foreground">Configure options if needed</span>
+                <li className="relative flex items-start gap-3.5">
+                  <span className="step-indicator">2</span>
+                  <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">Configure options if needed</span>
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
-                    3
-                  </span>
-                  <span className="text-sm text-muted-foreground">Click process and wait a few seconds</span>
+                <li className="relative flex items-start gap-3.5">
+                  <span className="step-indicator">3</span>
+                  <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">Click process and wait a few seconds</span>
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
-                    4
-                  </span>
-                  <span className="text-sm text-muted-foreground">
+                <li className="relative flex items-start gap-3.5">
+                  <span className="step-indicator">4</span>
+                  <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">
                     Download or copy your {tool.outputType === 'file' ? 'file' : 'result'}
                   </span>
                 </li>
@@ -589,33 +589,48 @@ export default async function ToolPage({ params }: Props) {
             </div>
 
             <div className="premium-card p-6">
-              <h2 className="mb-4 font-display text-lg font-bold">Key features</h2>
-              <ul className="space-y-2.5">
-                <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="text-emerald-500">+</span>
+              <h2 className="mb-5 font-display text-lg font-bold flex items-center gap-2">
+                <div className="h-1 w-6 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500" />
+                Key features
+              </h2>
+              <ul className="space-y-3.5">
+                <li className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <span className="feature-check">
+                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  </span>
                   100% free, no account required
                 </li>
-                <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="text-emerald-500">+</span>
+                <li className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <span className="feature-check">
+                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  </span>
                   Fast processing, results in seconds
                 </li>
-                <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="text-emerald-500">+</span>
+                <li className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <span className="feature-check">
+                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  </span>
                   Your files are never stored
                 </li>
                 {(tool.inputType === 'file' || tool.inputType === 'both') && (
-                  <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="text-emerald-500">+</span>
+                  <li className="flex items-center gap-3 text-sm text-muted-foreground">
+                    <span className="feature-check">
+                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    </span>
                     Drag and drop support
                   </li>
                 )}
-                <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="text-emerald-500">+</span>
+                <li className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <span className="feature-check">
+                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  </span>
                   Works on desktop and mobile
                 </li>
                 {tool.outputType === 'file' && (
-                  <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="text-emerald-500">+</span>
+                  <li className="flex items-center gap-3 text-sm text-muted-foreground">
+                    <span className="feature-check">
+                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    </span>
                     Instant download after processing
                   </li>
                 )}
@@ -626,14 +641,22 @@ export default async function ToolPage({ params }: Props) {
           <SEOContent tool={tool} />
 
           {related.length > 0 && (
-            <div>
-              <h2 className="mb-4 font-display text-xl font-bold">Related tools</h2>
+            <section className="mt-2">
+              <div className="mb-5">
+                <p className="premium-kicker">More {tool.category.toLowerCase()} workflows</p>
+                <h2 className="font-display text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
+                  Related tools
+                </h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
+                  Continue with more {tool.category.toLowerCase()} tools built in the same premium workspace.
+                </p>
+              </div>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
                 {related.map(item => (
                   <ToolCard key={item.id} tool={item} />
                 ))}
               </div>
-            </div>
+            </section>
           )}
         </div>
       </div>

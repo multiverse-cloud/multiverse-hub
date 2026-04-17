@@ -4,8 +4,11 @@ import ToolsListing from '@/components/tools/ToolsListing'
 import { TOOLS } from '@/lib/tools-data'
 
 export const metadata: Metadata = {
-  title: `${TOOLS.length} Curated Free Online Tools - PDF, Image, Video, Audio and More`,
-  description: `Browse ${TOOLS.length} curated free tools for PDF, image, video, audio, text, developer, SEO, calculator, and file tasks. No login required.`,
+  title: `All ${TOOLS.length} Free Online Tools — PDF, Image, Video, Dev & More`,
+  description: `Browse ${TOOLS.length} free tools: compress PDFs, resize images, download videos, format JSON, generate QR codes, and more. No login required. All tools are free and private.`,
+  alternates: {
+    canonical: 'https://multiverse-tools.vercel.app/tools',
+  },
 }
 
 interface ToolsPageProps {

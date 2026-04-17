@@ -6,7 +6,9 @@ import ToolCard from './ToolCard'
 import ToolActions from './ToolActions'
 import ToolBreadcrumb from './ToolBreadcrumb'
 import SEOContent from './SEOContent'
+import ToolRuntimeBanner from './ToolRuntimeBanner'
 import { UsageHintBanner } from '@/components/auth/LoginGateModal'
+import type { ToolRuntimeStatus } from '@/lib/tool-runtime-status'
 
 export type PdfStudioContent = {
   howItWorks: ReadonlyArray<{
@@ -29,10 +31,12 @@ export default function PdfStudioPageFrame({
   tool,
   content,
   children,
+  runtimeStatus,
 }: {
   tool: Tool
   content: PdfStudioContent
   children: ReactNode
+  runtimeStatus?: ToolRuntimeStatus | null
 }) {
   return (
     <div className="premium-shell" data-tool-shell="true">
@@ -50,6 +54,7 @@ export default function PdfStudioPageFrame({
           <ToolActions slug={tool.slug} name={tool.name} className="mb-0 w-full justify-start lg:w-auto lg:justify-end" />
         </div>
         <UsageHintBanner />
+        <ToolRuntimeBanner status={runtimeStatus || null} />
 
         {children}
 

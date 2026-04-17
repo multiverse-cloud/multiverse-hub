@@ -1,97 +1,144 @@
 import Link from 'next/link'
-import { Github, Globe, Mail, Twitter, Youtube } from 'lucide-react'
+import { Globe, Mail } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import NewsletterSignup from './NewsletterSignup'
 
-const COPYRIGHT_YEAR = 2026
-
 const FOOTER_LINKS = {
-  Universes: [
-    { name: 'Tools Universe', href: '/tools' },
-    { name: 'Design AI', href: '/design' },
-    { name: 'Learn', href: '/learn' },
-    { name: 'Discover', href: '/discover' },
-    { name: 'Daily Tools', href: '/daily' },
-  ],
-  'Dev & Daily': [
-    { name: 'Dev Tools', href: '/dev' },
-    { name: 'Daily Tools', href: '/daily' },
-    { name: 'Marketplace', href: '/marketplace' },
-  ],
-  'Popular Tools': [
-    { name: 'All-in-One Downloader', href: '/tools/video/all-in-one-video-downloader' },
-    { name: 'Merge PDF', href: '/tools/pdf/merge-pdf' },
-    { name: 'Compress Image', href: '/tools/image/compress-image' },
-    { name: 'Word Counter', href: '/tools/text/word-counter' },
-    { name: 'JSON Formatter', href: '/tools/dev/json-formatter' },
-    { name: 'QR Code Generator', href: '/tools/image/qr-code-generator' },
-  ],
   'Tool Collections': [
     { name: 'All Tools', href: '/tools' },
     { name: 'PDF Tools', href: '/tools/pdf' },
     { name: 'Image Tools', href: '/tools/image' },
     { name: 'Video Tools', href: '/tools/video' },
+    { name: 'Text Tools', href: '/tools/text' },
     { name: 'Dev Tools', href: '/tools/dev' },
     { name: 'SEO Tools', href: '/tools/seo' },
   ],
+  'Popular Tools': [
+    { name: 'All-in-One Downloader', href: '/tools/video/all-in-one-video-downloader' },
+    { name: 'Merge PDF', href: '/tools/pdf/merge-pdf' },
+    { name: 'Compress PDF', href: '/tools/pdf/compress-pdf' },
+    { name: 'Compress Image', href: '/tools/image/compress-image' },
+    { name: 'Word Counter', href: '/tools/text/word-counter' },
+    { name: 'JSON Formatter', href: '/tools/dev/json-formatter' },
+    { name: 'QR Code Generator', href: '/tools/image/qr-code-generator' },
+  ],
+  Universes: [
+    { name: 'Library Hub', href: '/library' },
+    { name: 'Design AI', href: '/design' },
+    { name: 'Dev Universe', href: '/dev' },
+    { name: 'Discover', href: '/discover' },
+    { name: 'Prompt Hub', href: '/prompts' },
+    { name: 'Templates', href: '/templates' },
+    { name: 'Fixes', href: '/fixes' },
+    { name: 'Daily Tools', href: '/daily' },
+  ],
+  Resources: [
+    { name: 'Search', href: '/search' },
+    { name: 'UI Universe', href: '/ui' },
+    { name: 'Template Library', href: '/templates' },
+    { name: 'News', href: '/news' },
+  ],
 }
 
-export default function Footer() {
+export default function Footer({ variant = 'default' }: { variant?: 'default' | 'template' } = {}) {
+  const templateVariant = variant === 'template'
+  const year = new Date().getFullYear()
+
   return (
-    <footer className="premium-shell border-t border-slate-200/80 bg-white dark:border-slate-800/80 dark:bg-slate-950">
-      <div className="border-b border-slate-200/80 bg-slate-50/80 dark:border-slate-800/80 dark:bg-slate-900/60">
+    <footer
+      className={cn(
+        'premium-shell border-t',
+        templateVariant
+          ? 'border-[#252626] bg-[#101111] text-[#e7e5e4]'
+          : 'border-slate-200/80 bg-white dark:border-slate-800/80 dark:bg-slate-950'
+      )}
+    >
+      {/* Newsletter Section */}
+      <div
+        className={cn(
+          'border-b',
+          templateVariant
+            ? 'border-[#252626] bg-[#131313]'
+            : 'border-slate-200/80 bg-slate-50/80 dark:border-slate-800/80 dark:bg-slate-900/60'
+        )}
+      >
         <div className="mx-auto max-w-7xl px-4 py-14 lg:px-6">
           <div className="mx-auto max-w-2xl space-y-4 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1.5 text-sm font-semibold text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300">
+            <div
+              className={cn(
+                'inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold',
+                templateVariant
+                  ? 'bg-[#1b1c1c] text-[#c6c6c7]'
+                  : 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300'
+              )}
+            >
               Product Updates
             </div>
-            <h2 className="font-display text-2xl font-extrabold md:text-3xl">Subscribe for updates</h2>
-            <p className="text-muted-foreground">Product updates, new tools, and release notes.</p>
+            <h2 className="font-display text-2xl font-extrabold md:text-3xl">Stay in the loop</h2>
+            <p className={cn(templateVariant ? 'text-[#acabaa]' : 'text-muted-foreground')}>
+              New tools, feature drops, and product updates — straight to your inbox.
+            </p>
 
             <NewsletterSignup />
           </div>
         </div>
       </div>
 
+      {/* Footer Links Grid */}
       <div className="mx-auto max-w-7xl px-4 py-12 lg:px-6">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-6">
+          {/* Brand Column */}
           <div className="col-span-2 space-y-4 lg:col-span-2">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-slate-950 shadow-lg shadow-slate-900/15 dark:bg-slate-100">
-                <Globe className="h-4 w-4 text-white dark:text-slate-950" />
+              <div
+                className={cn(
+                  'flex h-9 w-9 items-center justify-center rounded-2xl shadow-lg',
+                  templateVariant
+                    ? 'bg-[#e7e5e4] shadow-black/20'
+                    : 'bg-slate-950 shadow-slate-900/15 dark:bg-slate-100'
+                )}
+              >
+                <Globe className={cn('h-4 w-4', templateVariant ? 'text-[#0f1010]' : 'text-white dark:text-slate-950')} />
               </div>
-              <span className="font-display text-lg font-extrabold tracking-tight text-slate-950 dark:text-slate-50">Multiverse</span>
+              <span className={cn('font-display text-lg font-extrabold tracking-tight', templateVariant ? 'text-[#e7e5e4]' : 'text-slate-950 dark:text-slate-50')}>
+                Multiverse
+              </span>
             </Link>
 
-            <p className="max-w-xs text-sm text-muted-foreground">
-              A unified platform for tools, AI, learning, and digital products.
+            <p className={cn('max-w-xs text-sm leading-relaxed', templateVariant ? 'text-[#acabaa]' : 'text-muted-foreground')}>
+              150+ free online tools for PDF, image, video, text, and developer workflows. Fast, private, and always free.
             </p>
 
             <div className="flex items-center gap-3">
-              {[
-                { icon: Twitter, href: '#', label: 'Twitter' },
-                { icon: Github, href: '#', label: 'GitHub' },
-                { icon: Youtube, href: '#', label: 'YouTube' },
-                { icon: Mail, href: '/contact', label: 'Email' },
-              ].map(({ icon: Icon, href, label }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-2xl border border-slate-200 text-muted-foreground transition-colors hover:border-indigo-300 hover:text-foreground dark:border-slate-800 dark:hover:border-slate-700"
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                </Link>
-              ))}
+              <Link
+                href="/contact"
+                aria-label="Email"
+                className={cn(
+                  'flex h-9 w-9 items-center justify-center rounded-2xl border transition-colors',
+                  templateVariant
+                    ? 'border-[#252626] text-[#acabaa] hover:border-[#3a3b3b] hover:text-[#e7e5e4]'
+                    : 'border-slate-200 text-muted-foreground hover:border-indigo-300 hover:text-foreground dark:border-slate-800 dark:hover:border-slate-700'
+                )}
+              >
+                <Mail className="h-3.5 w-3.5" />
+              </Link>
             </div>
           </div>
 
+          {/* Link Columns */}
           {Object.entries(FOOTER_LINKS).map(([section, links]) => (
             <div key={section} className="space-y-3">
               <h3 className="text-sm font-semibold">{section}</h3>
               <ul className="space-y-2">
                 {links.map(link => (
                   <li key={link.name}>
-                    <Link href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        'text-sm transition-colors',
+                        templateVariant ? 'text-[#acabaa] hover:text-[#e7e5e4]' : 'text-muted-foreground hover:text-foreground'
+                      )}
+                    >
                       {link.name}
                     </Link>
                   </li>
@@ -101,18 +148,13 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-6 dark:border-slate-800 sm:flex-row">
-          <p className="text-sm text-muted-foreground">
-            Copyright {COPYRIGHT_YEAR} Multiverse Tools
+        {/* Bottom Bar */}
+        <div className={cn('mt-12 flex flex-col items-center justify-between gap-4 border-t pt-6 sm:flex-row', templateVariant ? 'border-[#252626]' : 'border-slate-200 dark:border-slate-800')}>
+          <p className={cn('text-sm', templateVariant ? 'text-[#767575]' : 'text-muted-foreground')}>
+            © {year} Multiverse Tools. All rights reserved.
           </p>
 
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <Link href="/privacy" className="transition-colors hover:text-foreground">
-              Privacy
-            </Link>
-            <Link href="/terms" className="transition-colors hover:text-foreground">
-              Terms
-            </Link>
+          <div className={cn('flex items-center gap-4 text-sm', templateVariant ? 'text-[#767575]' : 'text-muted-foreground')}>
             <Link href="/sitemap.xml" className="transition-colors hover:text-foreground">
               Sitemap
             </Link>

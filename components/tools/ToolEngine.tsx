@@ -173,11 +173,12 @@ export default function ToolEngine({ tool }: { tool: Tool }) {
           onClick={run}
           disabled={!canRun || state === 'loading'}
           className={cn(
-            'flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all',
+            'flex-1 flex items-center justify-center gap-2.5 py-3 rounded-xl font-display font-bold text-sm tracking-tight transition-all duration-200',
             canRun && state !== 'loading'
-              ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25 hover:bg-indigo-700 hover:shadow-indigo-500/35'
+              ? 'text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 active:scale-[0.97]'
               : 'bg-muted text-muted-foreground cursor-not-allowed'
           )}
+          style={canRun && state !== 'loading' ? { background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #4338ca 100%)' } : undefined}
         >
           {state === 'loading' ? (
             <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
@@ -186,7 +187,7 @@ export default function ToolEngine({ tool }: { tool: Tool }) {
           )}
         </button>
         {state !== 'idle' && (
-          <button onClick={reset} className="px-4 py-3 rounded-xl border border-border hover:bg-muted transition-colors text-sm font-semibold">
+          <button onClick={reset} className="px-4 py-3 rounded-xl border border-border hover:bg-muted transition-all hover:scale-105 text-sm font-semibold">
             <RefreshCw className="w-4 h-4" />
           </button>
         )}
@@ -194,33 +195,40 @@ export default function ToolEngine({ tool }: { tool: Tool }) {
 
       {/* Progress */}
       {state === 'loading' && (
-        <div className="space-y-2">
-          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-            <div className="h-full rounded-full bg-indigo-600 transition-all duration-500" style={{ width: `${progress}%` }} />
+        <div className="space-y-2 animate-fade-in">
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span className="flex items-center gap-1.5 font-display font-bold tracking-tight">
+              <Loader2 className="w-3 h-3 animate-spin" />Processing...
+            </span>
+            <span className="tabular-nums font-semibold text-indigo-600 dark:text-indigo-400">{progress}%</span>
           </div>
-          <p className="text-xs text-muted-foreground text-center">Processing your file...</p>
+          <div className="tool-progress-bar">
+            <div className="tool-progress-fill" style={{ width: `${progress}%` }} />
+          </div>
         </div>
       )}
 
       {/* Output */}
       {(state === 'done' || state === 'error') && (
-        <div className={cn('rounded-2xl border overflow-hidden', state === 'error' ? 'border-red-200 dark:border-red-900' : 'border-emerald-200 dark:border-emerald-900')}>
-          <div className={cn('px-4 py-3 flex items-center justify-between', state === 'error' ? 'bg-red-50 dark:bg-red-950/20' : 'bg-emerald-50 dark:bg-emerald-950/20')}>
+        <div className={cn('animate-scale-in', state === 'error' ? 'tool-output-panel tool-output-panel-error' : 'tool-output-panel')}>
+          <div className="tool-output-header">
             <div className="flex items-center gap-2">
               {state === 'error' ? (
                 <AlertCircle className="w-4 h-4 text-red-500" />
               ) : (
-                <Check className="w-4 h-4 text-emerald-500" />
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-emerald-200/50 dark:from-emerald-900/30 dark:to-emerald-950/30">
+                  <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                </div>
               )}
-              <span className="text-sm font-semibold">{state === 'error' ? 'Error' : 'Result'}</span>
+              <span className="text-sm font-display font-bold tracking-tight">{state === 'error' ? 'Error' : 'Result'}</span>
             </div>
             {state === 'done' && output && (
               <div className="flex gap-2">
-                <button onClick={handleCopy} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-background border border-border text-xs font-semibold hover:bg-muted transition-colors">
+                <button onClick={handleCopy} className="btn-secondary px-3 py-1.5 text-xs">
                   {copied ? <Check className="w-3 h-3 text-emerald-500" /> : <Copy className="w-3 h-3" />}
                   {copied ? 'Copied' : 'Copy'}
                 </button>
-                <button onClick={handleDownloadText} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition-colors">
+                <button onClick={handleDownloadText} className="btn-primary px-3 py-1.5 text-xs">
                   <Download className="w-3 h-3" /> Download
                 </button>
               </div>
@@ -228,8 +236,8 @@ export default function ToolEngine({ tool }: { tool: Tool }) {
           </div>
 
           {outputUrl ? (
-            <div className="p-4 space-y-3">
-              <div className="relative mx-auto h-80 w-full max-w-sm overflow-hidden rounded-xl border border-border bg-background">
+            <div className="tool-output-body space-y-3">
+              <div className="relative mx-auto h-80 w-full max-w-sm overflow-hidden rounded-xl border border-border bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950">
                 <NextImage
                   src={outputUrl}
                   alt="Output"
@@ -246,8 +254,8 @@ export default function ToolEngine({ tool }: { tool: Tool }) {
               </div>
             </div>
           ) : output && (
-            <div className="p-4">
-              <pre className="text-sm whitespace-pre-wrap break-words font-mono max-h-80 overflow-y-auto custom-scrollbar text-foreground">
+            <div className="tool-output-body">
+              <pre className="text-sm whitespace-pre-wrap break-words font-mono max-h-80 overflow-y-auto custom-scrollbar text-slate-800 dark:text-slate-200 leading-relaxed">
                 {output}
               </pre>
             </div>

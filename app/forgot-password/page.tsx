@@ -1,10 +1,5 @@
-import { Suspense } from 'react'
-import ForgotPasswordPageClient from './ForgotPasswordPageClient'
+import { redirect } from 'next/navigation'
 
 export default function ForgotPasswordPage() {
-  return (
-    <Suspense fallback={null}>
-      <ForgotPasswordPageClient />
-    </Suspense>
-  )
+  redirect('/admin-login')
 }

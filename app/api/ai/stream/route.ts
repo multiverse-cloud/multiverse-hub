@@ -57,9 +57,10 @@ export async function POST(req: NextRequest) {
         'Connection': 'keep-alive',
       },
     })
-  } catch (e) {
+  } catch (error) {
+    console.error('AI stream failed:', error)
     return new Response(
-      JSON.stringify({ error: `Stream failed: ${(e as Error).message}` }),
+      JSON.stringify({ error: 'Stream failed. Please try again.' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     )
   }

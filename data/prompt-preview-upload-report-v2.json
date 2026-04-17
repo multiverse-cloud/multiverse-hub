@@ -1,0 +1,702 @@
+[
+  {
+    "id": "prompt-v2-001",
+    "slug": "social-media-vlog-style-iphone-selfie-style-photo-in-messy-bedroom",
+    "sourceImage": "image1.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-iphone-selfie-style-photo-in-messy-bedroom",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-iphone-selfie-style-photo-in-messy-bedroom"
+  },
+  {
+    "id": "prompt-v2-002",
+    "slug": "social-media-vlog-style-instagram-reel-thumbnail-cinematic-shot",
+    "sourceImage": "image2.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-instagram-reel-thumbnail-cinematic-shot",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-instagram-reel-thumbnail-cinematic-shot"
+  },
+  {
+    "id": "prompt-v2-003",
+    "slug": "social-media-vlog-style-youtuber-setup-with-rgb-lights-and-camera-gear",
+    "sourceImage": "image3.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-youtuber-setup-with-rgb-lights-and-camera-gear",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-youtuber-setup-with-rgb-lights-and-camera-gear"
+  },
+  {
+    "id": "prompt-v2-004",
+    "slug": "social-media-vlog-style-pov-shot-walking-in-busy-city-street",
+    "sourceImage": "image4.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-pov-shot-walking-in-busy-city-street",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-pov-shot-walking-in-busy-city-street"
+  },
+  {
+    "id": "prompt-v2-005",
+    "slug": "social-media-vlog-style-tiktok-aesthetic-mirror-selfie-with-neon-lighting",
+    "sourceImage": "image5.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-tiktok-aesthetic-mirror-selfie-with-neon-lighting",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-tiktok-aesthetic-mirror-selfie-with-neon-lighting"
+  },
+  {
+    "id": "prompt-v2-006",
+    "slug": "social-media-vlog-style-influencer-holding-coffee-in-cozy-caf",
+    "sourceImage": "image6.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-influencer-holding-coffee-in-cozy-caf",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-influencer-holding-coffee-in-cozy-caf"
+  },
+  {
+    "id": "prompt-v2-007",
+    "slug": "social-media-vlog-style-casual-vlog-style-street-walking-shot",
+    "sourceImage": "image7.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-casual-vlog-style-street-walking-shot",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-casual-vlog-style-street-walking-shot"
+  },
+  {
+    "id": "prompt-v2-008",
+    "slug": "social-media-vlog-style-gym-selfie-transformation-mirror-shot",
+    "sourceImage": "image8.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-gym-selfie-transformation-mirror-shot",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-gym-selfie-transformation-mirror-shot"
+  },
+  {
+    "id": "prompt-v2-009",
+    "slug": "social-media-vlog-style-travel-vlog-cinematic-wide-angle-shot",
+    "sourceImage": "image9.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-travel-vlog-cinematic-wide-angle-shot",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-travel-vlog-cinematic-wide-angle-shot"
+  },
+  {
+    "id": "prompt-v2-010",
+    "slug": "social-media-vlog-style-before-after-glow-up-transformation",
+    "sourceImage": "image10.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-before-after-glow-up-transformation",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-before-after-glow-up-transformation"
+  },
+  {
+    "id": "prompt-v2-011",
+    "slug": "social-media-vlog-style-daily-life-realistic-candid-photo",
+    "sourceImage": "image11.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-daily-life-realistic-candid-photo",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-daily-life-realistic-candid-photo"
+  },
+  {
+    "id": "prompt-v2-012",
+    "slug": "social-media-vlog-style-authentic-no-filter-lifestyle-photo",
+    "sourceImage": "image12.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-authentic-no-filter-lifestyle-photo",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-authentic-no-filter-lifestyle-photo"
+  },
+  {
+    "id": "prompt-v2-013",
+    "slug": "social-media-vlog-style-story-style-vertical-portrait",
+    "sourceImage": "image13.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-story-style-vertical-portrait",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-story-style-vertical-portrait"
+  },
+  {
+    "id": "prompt-v2-014",
+    "slug": "social-media-vlog-style-night-drive-pov-with-dashboard-lights",
+    "sourceImage": "image14.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-night-drive-pov-with-dashboard-lights",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-night-drive-pov-with-dashboard-lights"
+  },
+  {
+    "id": "prompt-v2-015",
+    "slug": "social-media-vlog-style-food-vlog-overhead-shot-aesthetic",
+    "sourceImage": "image15.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-food-vlog-overhead-shot-aesthetic",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-food-vlog-overhead-shot-aesthetic"
+  },
+  {
+    "id": "prompt-v2-016",
+    "slug": "social-media-vlog-style-friends-laughing-candid-moment",
+    "sourceImage": "image16.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-friends-laughing-candid-moment",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-friends-laughing-candid-moment"
+  },
+  {
+    "id": "prompt-v2-017",
+    "slug": "social-media-vlog-style-college-campus-lifestyle-shot",
+    "sourceImage": "image17.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-college-campus-lifestyle-shot",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-college-campus-lifestyle-shot"
+  },
+  {
+    "id": "prompt-v2-018",
+    "slug": "social-media-vlog-style-couple-walking-hand-in-hand-pov",
+    "sourceImage": "image18.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-couple-walking-hand-in-hand-pov",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-couple-walking-hand-in-hand-pov"
+  },
+  {
+    "id": "prompt-v2-019",
+    "slug": "social-media-vlog-style-street-photography-candid-emotion",
+    "sourceImage": "image19.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-street-photography-candid-emotion",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-street-photography-candid-emotion"
+  },
+  {
+    "id": "prompt-v2-020",
+    "slug": "social-media-vlog-style-day-in-my-life-scene",
+    "sourceImage": "image20.png",
+    "publicId": "multiverse/prompt-previews/social-media-vlog-style-day-in-my-life-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/social-media-vlog-style-day-in-my-life-scene"
+  },
+  {
+    "id": "prompt-v2-021",
+    "slug": "cinematic-film-style-hollywood-movie-poster-style-hero-shot",
+    "sourceImage": "image21.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-hollywood-movie-poster-style-hero-shot",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-hollywood-movie-poster-style-hero-shot"
+  },
+  {
+    "id": "prompt-v2-022",
+    "slug": "cinematic-film-style-dark-moody-thriller-scene-with-rain",
+    "sourceImage": "image22.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-dark-moody-thriller-scene-with-rain",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-dark-moody-thriller-scene-with-rain"
+  },
+  {
+    "id": "prompt-v2-023",
+    "slug": "cinematic-film-style-cinematic-desert-scene-with-lone-traveler",
+    "sourceImage": "image23.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-cinematic-desert-scene-with-lone-traveler",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-cinematic-desert-scene-with-lone-traveler"
+  },
+  {
+    "id": "prompt-v2-024",
+    "slug": "cinematic-film-style-film-noir-black-and-white-detective-scene",
+    "sourceImage": "image24.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-film-noir-black-and-white-detective-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-film-noir-black-and-white-detective-scene"
+  },
+  {
+    "id": "prompt-v2-025",
+    "slug": "cinematic-film-style-slow-motion-action-shot-explosion-background",
+    "sourceImage": "image25.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-slow-motion-action-shot-explosion-background",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-slow-motion-action-shot-explosion-background"
+  },
+  {
+    "id": "prompt-v2-026",
+    "slug": "cinematic-film-style-dramatic-lighting-portrait-like-movie-scene",
+    "sourceImage": "image26.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-dramatic-lighting-portrait-like-movie-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-dramatic-lighting-portrait-like-movie-scene"
+  },
+  {
+    "id": "prompt-v2-027",
+    "slug": "cinematic-film-style-war-scene-cinematic-battlefield",
+    "sourceImage": "image27.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-war-scene-cinematic-battlefield",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-war-scene-cinematic-battlefield"
+  },
+  {
+    "id": "prompt-v2-028",
+    "slug": "cinematic-film-style-romantic-sunset-couple-cinematic-frame",
+    "sourceImage": "image28.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-romantic-sunset-couple-cinematic-frame",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-romantic-sunset-couple-cinematic-frame"
+  },
+  {
+    "id": "prompt-v2-029",
+    "slug": "cinematic-film-style-sci-fi-movie-spaceship-interior",
+    "sourceImage": "image29.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-sci-fi-movie-spaceship-interior",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-sci-fi-movie-spaceship-interior"
+  },
+  {
+    "id": "prompt-v2-030",
+    "slug": "cinematic-film-style-epic-fantasy-battle-scene-wide-shot",
+    "sourceImage": "image30.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-epic-fantasy-battle-scene-wide-shot",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-epic-fantasy-battle-scene-wide-shot"
+  },
+  {
+    "id": "prompt-v2-031",
+    "slug": "cinematic-film-style-cinematic-car-chase-scene",
+    "sourceImage": "image31.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-cinematic-car-chase-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-cinematic-car-chase-scene"
+  },
+  {
+    "id": "prompt-v2-032",
+    "slug": "cinematic-film-style-rainy-night-neon-lit-city-film-shot",
+    "sourceImage": "image32.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-rainy-night-neon-lit-city-film-shot",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-rainy-night-neon-lit-city-film-shot"
+  },
+  {
+    "id": "prompt-v2-033",
+    "slug": "cinematic-film-style-close-up-emotional-tear-cinematic",
+    "sourceImage": "image33.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-close-up-emotional-tear-cinematic",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-close-up-emotional-tear-cinematic"
+  },
+  {
+    "id": "prompt-v2-034",
+    "slug": "cinematic-film-style-vintage-film-grain-80s-movie-scene",
+    "sourceImage": "image34.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-vintage-film-grain-80s-movie-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-vintage-film-grain-80s-movie-scene"
+  },
+  {
+    "id": "prompt-v2-035",
+    "slug": "cinematic-film-style-horror-movie-abandoned-house-scene",
+    "sourceImage": "image35.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-horror-movie-abandoned-house-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-horror-movie-abandoned-house-scene"
+  },
+  {
+    "id": "prompt-v2-036",
+    "slug": "cinematic-film-style-hero-walking-away-slow-motion",
+    "sourceImage": "image36.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-hero-walking-away-slow-motion",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-hero-walking-away-slow-motion"
+  },
+  {
+    "id": "prompt-v2-037",
+    "slug": "cinematic-film-style-dream-sequence-blurry-cinematic",
+    "sourceImage": "image37.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-dream-sequence-blurry-cinematic",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-dream-sequence-blurry-cinematic"
+  },
+  {
+    "id": "prompt-v2-038",
+    "slug": "cinematic-film-style-spotlight-stage-performance-shot",
+    "sourceImage": "image38.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-spotlight-stage-performance-shot",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-spotlight-stage-performance-shot"
+  },
+  {
+    "id": "prompt-v2-039",
+    "slug": "cinematic-film-style-mafia-boss-cinematic-portrait",
+    "sourceImage": "image39.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-mafia-boss-cinematic-portrait",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-mafia-boss-cinematic-portrait"
+  },
+  {
+    "id": "prompt-v2-040",
+    "slug": "cinematic-film-style-police-interrogation-room-scene",
+    "sourceImage": "image40.png",
+    "publicId": "multiverse/prompt-previews/cinematic-film-style-police-interrogation-room-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/cinematic-film-style-police-interrogation-room-scene"
+  },
+  {
+    "id": "prompt-v2-041",
+    "slug": "real-person-style-transform-turn-a-person-into-pixar-character",
+    "sourceImage": "image41.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-turn-a-person-into-pixar-character",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-turn-a-person-into-pixar-character"
+  },
+  {
+    "id": "prompt-v2-042",
+    "slug": "real-person-style-transform-convert-photo-into-anime-version",
+    "sourceImage": "image42.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-convert-photo-into-anime-version",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-convert-photo-into-anime-version"
+  },
+  {
+    "id": "prompt-v2-043",
+    "slug": "real-person-style-transform-turn-human-into-marvel-superhero",
+    "sourceImage": "image43.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-turn-human-into-marvel-superhero",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-turn-human-into-marvel-superhero"
+  },
+  {
+    "id": "prompt-v2-044",
+    "slug": "real-person-style-transform-real-person-as-medieval-knight",
+    "sourceImage": "image44.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-real-person-as-medieval-knight",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-real-person-as-medieval-knight"
+  },
+  {
+    "id": "prompt-v2-045",
+    "slug": "real-person-style-transform-face-into-cyberpunk-version",
+    "sourceImage": "image45.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-face-into-cyberpunk-version",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-face-into-cyberpunk-version"
+  },
+  {
+    "id": "prompt-v2-046",
+    "slug": "real-person-style-transform-person-into-cartoon-avatar",
+    "sourceImage": "image46.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-person-into-cartoon-avatar",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-person-into-cartoon-avatar"
+  },
+  {
+    "id": "prompt-v2-047",
+    "slug": "real-person-style-transform-turn-selfie-into-oil-painting",
+    "sourceImage": "image47.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-turn-selfie-into-oil-painting",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-turn-selfie-into-oil-painting"
+  },
+  {
+    "id": "prompt-v2-048",
+    "slug": "real-person-style-transform-convert-human-into-ai-robot-version",
+    "sourceImage": "image48.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-convert-human-into-ai-robot-version",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-convert-human-into-ai-robot-version"
+  },
+  {
+    "id": "prompt-v2-049",
+    "slug": "real-person-style-transform-real-person-into-barbie-doll-style",
+    "sourceImage": "image49.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-real-person-into-barbie-doll-style",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-real-person-into-barbie-doll-style"
+  },
+  {
+    "id": "prompt-v2-050",
+    "slug": "real-person-style-transform-person-as-gta-game-character",
+    "sourceImage": "image50.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-person-as-gta-game-character",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-person-as-gta-game-character"
+  },
+  {
+    "id": "prompt-v2-051",
+    "slug": "real-person-style-transform-human-into-disney-prince-princess",
+    "sourceImage": "image51.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-human-into-disney-prince-princess",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-human-into-disney-prince-princess"
+  },
+  {
+    "id": "prompt-v2-052",
+    "slug": "real-person-style-transform-person-into-minecraft-character",
+    "sourceImage": "image52.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-person-into-minecraft-character",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-person-into-minecraft-character"
+  },
+  {
+    "id": "prompt-v2-053",
+    "slug": "real-person-style-transform-face-into-renaissance-painting",
+    "sourceImage": "image53.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-face-into-renaissance-painting",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-face-into-renaissance-painting"
+  },
+  {
+    "id": "prompt-v2-054",
+    "slug": "real-person-style-transform-real-person-into-zombie-apocalypse-survivor",
+    "sourceImage": "image54.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-real-person-into-zombie-apocalypse-survivor",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-real-person-into-zombie-apocalypse-survivor"
+  },
+  {
+    "id": "prompt-v2-055",
+    "slug": "real-person-style-transform-person-into-futuristic-astronaut",
+    "sourceImage": "image55.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-person-into-futuristic-astronaut",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-person-into-futuristic-astronaut"
+  },
+  {
+    "id": "prompt-v2-056",
+    "slug": "real-person-style-transform-human-into-warrior-in-fantasy-world",
+    "sourceImage": "image56.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-human-into-warrior-in-fantasy-world",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-human-into-warrior-in-fantasy-world"
+  },
+  {
+    "id": "prompt-v2-057",
+    "slug": "real-person-style-transform-face-into-clay-animation-style",
+    "sourceImage": "image57.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-face-into-clay-animation-style",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-face-into-clay-animation-style"
+  },
+  {
+    "id": "prompt-v2-058",
+    "slug": "real-person-style-transform-person-into-simpsons-character",
+    "sourceImage": "image58.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-person-into-simpsons-character",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-person-into-simpsons-character"
+  },
+  {
+    "id": "prompt-v2-059",
+    "slug": "real-person-style-transform-turn-person-into-funko-pop-toy",
+    "sourceImage": "image59.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-turn-person-into-funko-pop-toy",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-turn-person-into-funko-pop-toy"
+  },
+  {
+    "id": "prompt-v2-060",
+    "slug": "real-person-style-transform-real-person-into-action-figure",
+    "sourceImage": "image60.png",
+    "publicId": "multiverse/prompt-previews/real-person-style-transform-real-person-into-action-figure",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/real-person-style-transform-real-person-into-action-figure"
+  },
+  {
+    "id": "prompt-v2-061",
+    "slug": "lifestyle-aesthetic-cozy-bedroom-with-warm-lighting-aesthetic",
+    "sourceImage": "image61.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-cozy-bedroom-with-warm-lighting-aesthetic",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-cozy-bedroom-with-warm-lighting-aesthetic"
+  },
+  {
+    "id": "prompt-v2-062",
+    "slug": "lifestyle-aesthetic-minimalist-workspace-setup-clean-desk",
+    "sourceImage": "image62.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-minimalist-workspace-setup-clean-desk",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-minimalist-workspace-setup-clean-desk"
+  },
+  {
+    "id": "prompt-v2-063",
+    "slug": "lifestyle-aesthetic-dream-luxury-villa-interior-modern-design",
+    "sourceImage": "image63.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-dream-luxury-villa-interior-modern-design",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-dream-luxury-villa-interior-modern-design"
+  },
+  {
+    "id": "prompt-v2-064",
+    "slug": "lifestyle-aesthetic-rainy-window-aesthetic-calm-mood",
+    "sourceImage": "image64.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-rainy-window-aesthetic-calm-mood",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-rainy-window-aesthetic-calm-mood"
+  },
+  {
+    "id": "prompt-v2-065",
+    "slug": "lifestyle-aesthetic-study-desk-with-books-and-coffee",
+    "sourceImage": "image65.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-study-desk-with-books-and-coffee",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-study-desk-with-books-and-coffee"
+  },
+  {
+    "id": "prompt-v2-066",
+    "slug": "lifestyle-aesthetic-korean-aesthetic-caf-interior",
+    "sourceImage": "image66.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-korean-aesthetic-caf-interior",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-korean-aesthetic-caf-interior"
+  },
+  {
+    "id": "prompt-v2-067",
+    "slug": "lifestyle-aesthetic-japanese-minimalist-home-interior",
+    "sourceImage": "image67.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-japanese-minimalist-home-interior",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-japanese-minimalist-home-interior"
+  },
+  {
+    "id": "prompt-v2-068",
+    "slug": "lifestyle-aesthetic-sunset-balcony-chill-vibe",
+    "sourceImage": "image68.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-sunset-balcony-chill-vibe",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-sunset-balcony-chill-vibe"
+  },
+  {
+    "id": "prompt-v2-069",
+    "slug": "lifestyle-aesthetic-boho-style-room-decor-aesthetic",
+    "sourceImage": "image69.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-boho-style-room-decor-aesthetic",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-boho-style-room-decor-aesthetic"
+  },
+  {
+    "id": "prompt-v2-070",
+    "slug": "lifestyle-aesthetic-small-apartment-cozy-lighting",
+    "sourceImage": "image70.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-small-apartment-cozy-lighting",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-small-apartment-cozy-lighting"
+  },
+  {
+    "id": "prompt-v2-071",
+    "slug": "lifestyle-aesthetic-luxury-bathroom-marble-aesthetic",
+    "sourceImage": "image71.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-luxury-bathroom-marble-aesthetic",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-luxury-bathroom-marble-aesthetic"
+  },
+  {
+    "id": "prompt-v2-072",
+    "slug": "lifestyle-aesthetic-home-office-productivity-setup",
+    "sourceImage": "image72.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-home-office-productivity-setup",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-home-office-productivity-setup"
+  },
+  {
+    "id": "prompt-v2-073",
+    "slug": "lifestyle-aesthetic-vintage-retro-bedroom-90s-style",
+    "sourceImage": "image73.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-vintage-retro-bedroom-90s-style",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-vintage-retro-bedroom-90s-style"
+  },
+  {
+    "id": "prompt-v2-074",
+    "slug": "lifestyle-aesthetic-scandinavian-design-living-room",
+    "sourceImage": "image74.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-scandinavian-design-living-room",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-scandinavian-design-living-room"
+  },
+  {
+    "id": "prompt-v2-075",
+    "slug": "lifestyle-aesthetic-aesthetic-kitchen-morning-sunlight",
+    "sourceImage": "image75.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-aesthetic-kitchen-morning-sunlight",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-aesthetic-kitchen-morning-sunlight"
+  },
+  {
+    "id": "prompt-v2-076",
+    "slug": "lifestyle-aesthetic-library-study-calm-environment",
+    "sourceImage": "image76.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-library-study-calm-environment",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-library-study-calm-environment"
+  },
+  {
+    "id": "prompt-v2-077",
+    "slug": "lifestyle-aesthetic-plant-filled-green-aesthetic-room",
+    "sourceImage": "image77.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-plant-filled-green-aesthetic-room",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-plant-filled-green-aesthetic-room"
+  },
+  {
+    "id": "prompt-v2-078",
+    "slug": "lifestyle-aesthetic-chill-lo-fi-setup-with-laptop",
+    "sourceImage": "image78.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-chill-lo-fi-setup-with-laptop",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-chill-lo-fi-setup-with-laptop"
+  },
+  {
+    "id": "prompt-v2-079",
+    "slug": "lifestyle-aesthetic-night-city-view-from-apartment",
+    "sourceImage": "image79.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-night-city-view-from-apartment",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-night-city-view-from-apartment"
+  },
+  {
+    "id": "prompt-v2-080",
+    "slug": "lifestyle-aesthetic-cozy-winter-room-fireplace",
+    "sourceImage": "image80.png",
+    "publicId": "multiverse/prompt-previews/lifestyle-aesthetic-cozy-winter-room-fireplace",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/lifestyle-aesthetic-cozy-winter-room-fireplace"
+  },
+  {
+    "id": "prompt-v2-081",
+    "slug": "experimental-weird-trends-talking-banana-with-human-face",
+    "sourceImage": "image81.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-talking-banana-with-human-face",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-talking-banana-with-human-face"
+  },
+  {
+    "id": "prompt-v2-082",
+    "slug": "experimental-weird-trends-giant-human-in-tiny-city",
+    "sourceImage": "image82.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-giant-human-in-tiny-city",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-giant-human-in-tiny-city"
+  },
+  {
+    "id": "prompt-v2-083",
+    "slug": "experimental-weird-trends-mini-world-inside-coffee-cup",
+    "sourceImage": "image83.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-mini-world-inside-coffee-cup",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-mini-world-inside-coffee-cup"
+  },
+  {
+    "id": "prompt-v2-084",
+    "slug": "experimental-weird-trends-floating-objects-in-sky-surreal",
+    "sourceImage": "image84.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-floating-objects-in-sky-surreal",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-floating-objects-in-sky-surreal"
+  },
+  {
+    "id": "prompt-v2-085",
+    "slug": "experimental-weird-trends-gravity-defying-upside-down-city",
+    "sourceImage": "image85.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-gravity-defying-upside-down-city",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-gravity-defying-upside-down-city"
+  },
+  {
+    "id": "prompt-v2-086",
+    "slug": "experimental-weird-trends-human-with-galaxy-inside-body",
+    "sourceImage": "image86.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-human-with-galaxy-inside-body",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-human-with-galaxy-inside-body"
+  },
+  {
+    "id": "prompt-v2-087",
+    "slug": "experimental-weird-trends-time-freeze-moment-mid-air",
+    "sourceImage": "image87.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-time-freeze-moment-mid-air",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-time-freeze-moment-mid-air"
+  },
+  {
+    "id": "prompt-v2-088",
+    "slug": "experimental-weird-trends-melting-objects-surreal-art",
+    "sourceImage": "image88.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-melting-objects-surreal-art",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-melting-objects-surreal-art"
+  },
+  {
+    "id": "prompt-v2-089",
+    "slug": "experimental-weird-trends-infinite-mirror-loop-scene",
+    "sourceImage": "image89.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-infinite-mirror-loop-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-infinite-mirror-loop-scene"
+  },
+  {
+    "id": "prompt-v2-090",
+    "slug": "experimental-weird-trends-split-world-half-day-half-night",
+    "sourceImage": "image90.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-split-world-half-day-half-night",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-split-world-half-day-half-night"
+  },
+  {
+    "id": "prompt-v2-091",
+    "slug": "experimental-weird-trends-tiny-people-living-in-everyday-objects",
+    "sourceImage": "image91.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-tiny-people-living-in-everyday-objects",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-tiny-people-living-in-everyday-objects"
+  },
+  {
+    "id": "prompt-v2-092",
+    "slug": "experimental-weird-trends-human-made-of-water-or-fire",
+    "sourceImage": "image92.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-human-made-of-water-or-fire",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-human-made-of-water-or-fire"
+  },
+  {
+    "id": "prompt-v2-093",
+    "slug": "experimental-weird-trends-optical-illusion-impossible-shapes",
+    "sourceImage": "image93.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-optical-illusion-impossible-shapes",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-optical-illusion-impossible-shapes"
+  },
+  {
+    "id": "prompt-v2-094",
+    "slug": "experimental-weird-trends-giant-cat-walking-in-city",
+    "sourceImage": "image94.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-giant-cat-walking-in-city",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-giant-cat-walking-in-city"
+  },
+  {
+    "id": "prompt-v2-095",
+    "slug": "experimental-weird-trends-dream-inside-dream-scene",
+    "sourceImage": "image95.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-dream-inside-dream-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-dream-inside-dream-scene"
+  },
+  {
+    "id": "prompt-v2-096",
+    "slug": "experimental-weird-trends-parallel-universe-version-of-city",
+    "sourceImage": "image96.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-parallel-universe-version-of-city",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-parallel-universe-version-of-city"
+  },
+  {
+    "id": "prompt-v2-097",
+    "slug": "experimental-weird-trends-object-transforming-into-another",
+    "sourceImage": "image97.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-object-transforming-into-another",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-object-transforming-into-another"
+  },
+  {
+    "id": "prompt-v2-098",
+    "slug": "experimental-weird-trends-person-dissolving-into-particles",
+    "sourceImage": "image98.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-person-dissolving-into-particles",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-person-dissolving-into-particles"
+  },
+  {
+    "id": "prompt-v2-099",
+    "slug": "experimental-weird-trends-cartoon-and-real-world-mixed-scene",
+    "sourceImage": "image99.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-cartoon-and-real-world-mixed-scene",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-cartoon-and-real-world-mixed-scene"
+  },
+  {
+    "id": "prompt-v2-100",
+    "slug": "experimental-weird-trends-ai-glitch-distorted-reality",
+    "sourceImage": "image100.png",
+    "publicId": "multiverse/prompt-previews/experimental-weird-trends-ai-glitch-distorted-reality",
+    "imageUrl": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1400,h_900/multiverse/prompt-previews/experimental-weird-trends-ai-glitch-distorted-reality"
+  }
+]

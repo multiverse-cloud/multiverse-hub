@@ -4,7 +4,9 @@ import ToolBreadcrumb from './ToolBreadcrumb'
 import ToolActions from './ToolActions'
 import ToolCard from './ToolCard'
 import SEOContent from './SEOContent'
+import ToolRuntimeBanner from './ToolRuntimeBanner'
 import { UsageHintBanner } from '@/components/auth/LoginGateModal'
+import type { ToolRuntimeStatus } from '@/lib/tool-runtime-status'
 
 const CATEGORY_COPY: Record<string, { kicker: string; description: string }> = {
   audio: {
@@ -33,10 +35,12 @@ export default function WorkbenchStudioPageFrame({
   tool,
   children,
   relatedTools,
+  runtimeStatus,
 }: {
   tool: Tool
   children: ReactNode
   relatedTools: Tool[]
+  runtimeStatus?: ToolRuntimeStatus | null
 }) {
   const copy = CATEGORY_COPY[tool.categorySlug] || {
     kicker: 'Related tools',
@@ -59,6 +63,7 @@ export default function WorkbenchStudioPageFrame({
           <ToolActions slug={tool.slug} name={tool.name} className="mb-0 w-full justify-start lg:w-auto lg:justify-end" />
         </div>
         <UsageHintBanner />
+        <ToolRuntimeBanner status={runtimeStatus || null} />
 
         {children}
 
@@ -68,10 +73,10 @@ export default function WorkbenchStudioPageFrame({
           <section className="mt-10">
             <div className="mb-5">
               <p className="premium-kicker">{copy.kicker}</p>
-              <h2 className="font-display text-2xl font-extrabold tracking-tight text-slate-950">
+              <h2 className="font-display text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
                 Related tools
               </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
                 {copy.description}
               </p>
             </div>

@@ -42,6 +42,7 @@
     "components/auth/FirebaseUserSync.tsx",
     "components/public/PublicSignInClient.tsx",
     "components/admin/AdminSignInClient.tsx",
-    "lib/admin-auth.ts"
+    "lib/admin-auth.ts",
+    "projects/**/*"
   ]
 }

@@ -8,6 +8,8 @@ import {
   ChevronRight,
   Copy,
   Database,
+  Download,
+  Eye,
   Info,
   ListOrdered,
   Plus,
@@ -20,8 +22,9 @@ import {
   Upload,
 } from 'lucide-react'
 import type { DiscoverFaq, DiscoverItem, DiscoverList, DiscoverStep } from '@/lib/discover-data'
+import { parseDiscoverImportPayload } from '@/lib/discover-import'
 import { DISCOVER_ADMIN_PAGE_SIZE, paginateDiscoverItems } from '@/lib/discover-query'
-import { cn, readFileAsText, slugify } from '@/lib/utils'
+import { cn, downloadBlob, readFileAsText, slugify } from '@/lib/utils'
 
 function createBlankRankingItem(rank: number): DiscoverItem {
   return {
@@ -122,6 +125,11 @@ type AdminDiscoverResponse = {
   __rawText?: string
 }
 
+type ImportPreviewState = {
+  summary: ImportSummary
+  previewLists: Pick<DiscoverList, 'title' | 'slug' | 'type' | 'category'>[]
+}
+
 const ADMIN_DISCOVER_PAGE_WINDOW = 5
 
 function getTimestampLabel() {
@@ -129,6 +137,10 @@ function getTimestampLabel() {
     hour: 'numeric',
     minute: '2-digit',
   }).format(new Date())
+}
+
+function normalizeTopicKey(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
 }
 
 async function parseAdminResponse(response: Response): Promise<AdminDiscoverResponse> {
@@ -193,6 +205,7 @@ export default function AdminDiscoverClient({
   const [publishImported, setPublishImported] = useState(true)
   const [replaceExisting, setReplaceExisting] = useState(false)
   const [importSummary, setImportSummary] = useState<ImportSummary | null>(null)
+  const [importPreview, setImportPreview] = useState<ImportPreviewState | null>(null)
   const [busyAction, setBusyAction] = useState<null | 'save' | 'seed' | 'import' | 'refresh'>(null)
   const [isSaving, startSaving] = useTransition()
   const deferredSearch = useDeferredValue(search)
@@ -247,6 +260,32 @@ export default function AdminDiscoverClient({
     }
   }, [filteredLists.length, listsState])
 
+  const duplicateInsights = useMemo(() => {
+    const titleMap = new Map<string, string[]>()
+    const slugMap = new Map<string, string[]>()
+
+    for (const list of listsState) {
+      const normalizedTitle = normalizeTopicKey(list.title)
+      if (normalizedTitle) {
+        titleMap.set(normalizedTitle, [...(titleMap.get(normalizedTitle) || []), list.title])
+      }
+
+      if (list.slug) {
+        slugMap.set(list.slug, [...(slugMap.get(list.slug) || []), list.title || list.slug])
+      }
+    }
+
+    const titleDuplicates = Array.from(titleMap.values()).filter(group => group.length > 1)
+    const slugDuplicates = Array.from(slugMap.entries())
+      .filter(([, group]) => group.length > 1)
+      .map(([slug, group]) => `${slug} (${group.length})`)
+
+    return {
+      titleDuplicates,
+      slugDuplicates,
+    }
+  }, [listsState])
+
   useEffect(() => {
     if (filteredLists.length === 0) {
       if (currentPage !== 1) {
@@ -271,6 +310,10 @@ export default function AdminDiscoverClient({
       setCurrentPage(pagination.page)
     }
   }, [currentPage, filteredLists, pagination.page, selectedId])
+
+  useEffect(() => {
+    setImportPreview(null)
+  }, [importJson, publishImported, replaceExisting])
 
   function replaceSelected(nextList: DiscoverList) {
     setListsState(previous => previous.map(list => (list.id === nextList.id ? nextList : list)))
@@ -601,7 +644,7 @@ export default function AdminDiscoverClient({
         pushFeedback(
           'success',
           'Starter data seeded',
-          result.message || `Seeded ${result.count || 0} starter discover pages into Firestore.`
+          result.message || `Seeded ${result.count || 0} starter discover pages into the local data store.`
         )
       } catch (error: any) {
         pushFeedback('error', 'Seed failed', error.message || 'Failed to seed starter data.')
@@ -646,6 +689,7 @@ export default function AdminDiscoverClient({
       setImportJson(text)
       setImportFilename(file.name)
       setImportSummary(null)
+      setImportPreview(null)
       pushFeedback('info', 'JSON loaded', `Loaded ${file.name} for discover import.`)
     } catch {
       pushFeedback('error', 'File read failed', 'Failed to read the JSON file.')
@@ -656,7 +700,73 @@ export default function AdminDiscoverClient({
     setImportJson('')
     setImportFilename('')
     setImportSummary(null)
+    setImportPreview(null)
     pushFeedback('info', 'Import form reset', 'The JSON payload, loaded file, and last import summary were cleared.')
+  }
+
+  function previewImportData() {
+    if (!importJson.trim()) {
+      pushFeedback('error', 'Nothing to preview', 'Paste JSON or upload a JSON file before previewing.')
+      return
+    }
+
+    try {
+      const payload = JSON.parse(importJson)
+      const parsed = parseDiscoverImportPayload(payload, listsState, {
+        publishImported,
+        replaceExisting,
+      })
+
+      setImportPreview({
+        summary: {
+          ...parsed.summary,
+          imported: parsed.lists.length,
+        },
+        previewLists: parsed.lists.slice(0, 8).map(list => ({
+          title: list.title,
+          slug: list.slug,
+          type: list.type,
+          category: list.category,
+        })),
+      })
+
+      pushFeedback(
+        'info',
+        'Preview ready',
+        parsed.lists.length > 0
+          ? `Prepared ${parsed.lists.length} discover pages for import preview.`
+          : 'This payload did not produce any new importable pages.',
+        [
+          `Received: ${parsed.summary.received}`,
+          `Prepared: ${parsed.summary.prepared}`,
+          `Skipped existing: ${parsed.summary.skippedExisting}`,
+          `Skipped duplicates: ${parsed.summary.skippedIncomingDuplicates}`,
+          `Invalid: ${parsed.summary.invalid}`,
+        ]
+      )
+    } catch (error: any) {
+      setImportPreview(null)
+      pushFeedback('error', 'Preview failed', error.message || 'Invalid JSON payload.')
+    }
+  }
+
+  function exportCurrentDiscoverJson() {
+    const payload = {
+      rankings: listsState.filter(list => list.type === 'ranking'),
+      guides: listsState.filter(list => list.type === 'guide'),
+      meta: {
+        exportedAt: new Date().toISOString(),
+        total: listsState.length,
+        published: listsState.filter(list => list.published).length,
+      },
+    }
+
+    downloadBlob(
+      new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }),
+      `discover-export-${new Date().toISOString().slice(0, 10)}.json`
+    )
+
+    pushFeedback('success', 'Export ready', 'The current discover library was exported as JSON.')
   }
 
   function importJsonData() {
@@ -684,6 +794,7 @@ export default function AdminDiscoverClient({
 
         setListsState(nextLists)
         setImportSummary(summary)
+        setImportPreview(null)
 
         if (importedIds[0]) {
           setSelectedId(importedIds[0])
@@ -750,6 +861,10 @@ export default function AdminDiscoverClient({
           <button onClick={refreshFromServer} disabled={isSaving} className="btn-secondary gap-2 px-4 py-2 text-sm">
             <RefreshCw className={cn('h-4 w-4', busyAction === 'refresh' ? 'animate-spin' : '')} />
             {busyAction === 'refresh' ? 'Refreshing...' : 'Refresh'}
+          </button>
+          <button onClick={exportCurrentDiscoverJson} className="btn-secondary gap-2 px-4 py-2 text-sm">
+            <Download className="h-4 w-4" />
+            Export JSON
           </button>
           <button onClick={seedStarterData} disabled={isSaving} className="btn-secondary gap-2 px-4 py-2 text-sm">
             <Database className="h-4 w-4" />
@@ -901,21 +1016,91 @@ export default function AdminDiscoverClient({
               </div>
             ) : null}
 
+            {importPreview ? (
+              <div className="rounded-2xl border border-border bg-card p-4 text-sm text-muted-foreground">
+                <p className="font-semibold text-foreground">Import Preview</p>
+                <div className="mt-3 grid grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <p className="font-semibold text-foreground">Prepared</p>
+                    <p>{importPreview.summary.prepared}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">Will import</p>
+                    <p>{importPreview.summary.imported}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">Skipped existing</p>
+                    <p>{importPreview.summary.skippedExisting}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">Invalid</p>
+                    <p>{importPreview.summary.invalid}</p>
+                  </div>
+                </div>
+                {importPreview.previewLists.length > 0 ? (
+                  <div className="mt-4 space-y-2">
+                    {importPreview.previewLists.map(list => (
+                      <div key={list.slug} className="rounded-xl bg-muted/40 px-3 py-2 text-xs">
+                        <p className="font-semibold text-foreground">{list.title}</p>
+                        <p className="mt-1 text-muted-foreground">
+                          /{list.slug} • {list.type} • {list.category}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
+            <div className="rounded-2xl border border-border bg-card p-4 text-sm text-muted-foreground">
+              <p className="font-semibold text-foreground">Duplicate Health</p>
+              <div className="mt-3 grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <p className="font-semibold text-foreground">Duplicate titles</p>
+                  <p>{duplicateInsights.titleDuplicates.length}</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-foreground">Duplicate slugs</p>
+                  <p>{duplicateInsights.slugDuplicates.length}</p>
+                </div>
+              </div>
+              {duplicateInsights.titleDuplicates.length > 0 || duplicateInsights.slugDuplicates.length > 0 ? (
+                <div className="mt-4 space-y-2">
+                  {duplicateInsights.titleDuplicates.slice(0, 4).map(group => (
+                    <div key={group.join('|')} className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:bg-amber-950/20 dark:text-amber-100">
+                      Title collision: {group.join(' / ')}
+                    </div>
+                  ))}
+                  {duplicateInsights.slugDuplicates.slice(0, 4).map(entry => (
+                    <div key={entry} className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:bg-amber-950/20 dark:text-amber-100">
+                      Slug collision: {entry}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-3 text-xs">No duplicate titles or slugs detected in the current discover library.</p>
+              )}
+            </div>
+
             <div className="grid gap-2 sm:grid-cols-2">
+              <button onClick={previewImportData} disabled={isSaving} className="btn-secondary w-full gap-2 px-4 py-2 text-sm">
+                <Eye className="h-4 w-4" />
+                Preview Import
+              </button>
               <button onClick={importJsonData} disabled={isSaving} className="btn-primary w-full gap-2 px-4 py-2 text-sm">
                 <Upload className="h-4 w-4" />
                 {busyAction === 'import' ? 'Importing...' : 'Import JSON into Discover'}
               </button>
-              <button
-                type="button"
-                onClick={resetImportState}
-                disabled={isSaving || (!importJson && !importFilename && !importSummary)}
-                className="btn-secondary w-full gap-2 px-4 py-2 text-sm"
-              >
-                <RotateCcw className="h-4 w-4" />
-                Reset Import
-              </button>
             </div>
+            <button
+              type="button"
+              onClick={resetImportState}
+              disabled={isSaving || (!importJson && !importFilename && !importSummary && !importPreview)}
+              className="btn-secondary w-full gap-2 px-4 py-2 text-sm"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Reset Import
+            </button>
           </div>
         </div>
       </div>

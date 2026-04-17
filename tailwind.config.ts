@@ -112,6 +112,29 @@ const config: Config = {
           from: { transform: 'translateX(-100%)' },
           to: { transform: 'translateX(0)' },
         },
+        'border-rotate': {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
+        'progress-glow': {
+          '0%': { backgroundPosition: '-200% 0', boxShadow: '0 0 6px rgba(99,102,241,0.3)' },
+          '50%': { boxShadow: '0 0 12px rgba(99,102,241,0.5)' },
+          '100%': { backgroundPosition: '200% 0', boxShadow: '0 0 6px rgba(99,102,241,0.3)' },
+        },
+        'scale-in': {
+          from: { opacity: '0', transform: 'scale(0.96)' },
+          to: { opacity: '1', transform: 'scale(1)' },
+        },
+        'gradient-shift': {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
+        'icon-bounce': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-3px)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -122,6 +145,11 @@ const config: Config = {
         'spin-slow': 'spin-slow 8s linear infinite',
         'fade-in': 'fade-in 0.5s ease-out',
         'slide-in': 'slide-in 0.3s ease-out',
+        'border-rotate': 'border-rotate 3s ease-in-out infinite',
+        'progress-glow': 'progress-glow 2s ease-in-out infinite',
+        'scale-in': 'scale-in 0.3s ease-out',
+        'gradient-shift': 'gradient-shift 4s ease-in-out infinite',
+        'icon-bounce': 'icon-bounce 2s ease-in-out infinite',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

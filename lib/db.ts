@@ -1,126 +1,71 @@
 import 'server-only'
-import { getApps, initializeApp, cert } from 'firebase-admin/app'
-import { getFirestore, FieldValue } from 'firebase-admin/firestore'
-import { TOOLS, Tool } from './tools-data'
+import { unstable_cache, revalidateTag } from 'next/cache'
+import { TOOLS, type Tool, type ToolTag } from './tools-data'
 
-const FIRESTORE_READ_BACKOFF_MS = 10 * 60 * 1000
-let toolsReadBackoffUntil = 0
-
-function getFirebaseConfig() {
-  return {
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  }
-}
+const VALID_TOOL_TAGS = new Set<ToolTag>(['new', 'trending', 'beta', 'hot', 'free'])
 
 export function isFirebaseAdminConfigured() {
-  const { projectId, clientEmail, privateKey } = getFirebaseConfig()
-  return Boolean(projectId && clientEmail && privateKey)
+  return false
 }
 
-export function getFirebaseAdminApp() {
-  if (getApps().length > 0) {
-    return getApps()[0]
+function normalizeTool(rawTool: Partial<Tool> | null | undefined, fallbackId?: string): Tool | null {
+  if (!rawTool || typeof rawTool !== 'object') {
+    return null
   }
 
-  const { projectId, clientEmail, privateKey, storageBucket } = getFirebaseConfig()
+  const id =
+    typeof rawTool.id === 'string' && rawTool.id.trim().length > 0
+      ? rawTool.id
+      : fallbackId || ''
+  const name = typeof rawTool.name === 'string' ? rawTool.name : ''
+  const description = typeof rawTool.description === 'string' ? rawTool.description : ''
+  const category = typeof rawTool.category === 'string' ? rawTool.category : ''
+  const categorySlug = typeof rawTool.categorySlug === 'string' ? rawTool.categorySlug : ''
+  const icon =
+    typeof rawTool.icon === 'string' && rawTool.icon.trim().length > 0
+      ? rawTool.icon
+      : 'Wrench'
+  const slug = typeof rawTool.slug === 'string' ? rawTool.slug : ''
 
-  if (!projectId || !clientEmail || !privateKey) {
-    throw new Error('Firebase Admin SDK is not configured.')
+  if (!id || !name || !category || !categorySlug || !slug) {
+    return null
   }
 
-  return initializeApp({
-    credential: cert({
-      projectId,
-      clientEmail,
-      privateKey,
-    }),
-    storageBucket,
-  })
-}
+  const tags = Array.isArray(rawTool.tags)
+    ? rawTool.tags.filter((tag): tag is ToolTag => VALID_TOOL_TAGS.has(tag as ToolTag))
+    : []
 
-export function getDb() {
-  const app = getFirebaseAdminApp()
-  return getFirestore(app)
-}
+  const acceptedFormats = Array.isArray(rawTool.acceptedFormats)
+    ? rawTool.acceptedFormats.filter((format): format is string => typeof format === 'string')
+    : undefined
 
-function isQuotaExceededError(error: unknown) {
-  if (!error || typeof error !== 'object') {
-    return false
+  return {
+    id,
+    name,
+    description,
+    category,
+    categorySlug,
+    icon,
+    slug,
+    tags,
+    popular: Boolean(rawTool.popular),
+    implemented: typeof rawTool.implemented === 'boolean' ? rawTool.implemented : false,
+    enabled: typeof rawTool.enabled === 'boolean' ? rawTool.enabled : true,
+    inputType: rawTool.inputType,
+    outputType: rawTool.outputType,
+    acceptedFormats,
+    createdAt: typeof rawTool.createdAt === 'string' ? rawTool.createdAt : undefined,
+    updatedAt: typeof rawTool.updatedAt === 'string' ? rawTool.updatedAt : undefined,
   }
-
-  const candidate = error as { code?: unknown; details?: unknown; message?: unknown }
-  const details = String(candidate.details || candidate.message || '')
-
-  return candidate.code === 8 || /RESOURCE_EXHAUSTED|quota exceeded/i.test(details)
 }
 
-function isToolsReadBackoffActive() {
-  return toolsReadBackoffUntil > Date.now()
-}
-
-function activateToolsReadBackoff(error: unknown) {
-  if (!isQuotaExceededError(error)) {
-    return false
-  }
-
-  toolsReadBackoffUntil = Date.now() + FIRESTORE_READ_BACKOFF_MS
-  return true
-}
-
-import { unstable_cache, revalidateTag } from 'next/cache'
-
-// ==========================================
-// DATA ACCESS METHODS (CACHED)
-// ==========================================
-
-/**
- * Normalizes Firestore documents by converting Timestamps to ISO strings
- * to ensure they are "plain objects" compatible with Client Components.
- */
-function serializeDoc<T>(doc: any): T {
-  const data = doc.data()
-  const result: any = { ...data }
-
-  // Recursively convert Timestamps to ISO strings
-  Object.keys(result).forEach(key => {
-    const value = result[key]
-    if (value && typeof value === 'object' && '_seconds' in value && '_nanoseconds' in value) {
-      // It's a Firestore Timestamp-like object
-      try {
-        // Handle both actual Timestamp class and plain object representation
-        const date = value.toDate ? value.toDate() : new Date(value._seconds * 1000)
-        result[key] = date.toISOString()
-      } catch (e) {
-        result[key] = null
-      }
-    }
-  })
-
-  return result as T
+function getNormalizedLocalTools() {
+  return TOOLS.map(tool => normalizeTool(tool, tool.id)).filter((tool): tool is Tool => Boolean(tool))
 }
 
 export const getTools = unstable_cache(
   async (): Promise<Tool[]> => {
-    if (!isFirebaseAdminConfigured() || isToolsReadBackoffActive()) {
-      return TOOLS
-    }
-
-    try {
-      const snapshot = await getDb().collection('tools').get()
-      if (snapshot.empty) return TOOLS
-      
-      return snapshot.docs.map(doc => serializeDoc<Tool>(doc))
-    } catch (error) {
-      if (activateToolsReadBackoff(error)) {
-        console.warn('Firestore tools quota reached, using local tool data temporarily:', error)
-      } else {
-        console.error('Failed to fetching tools from Firestore, falling back to local data:', error)
-      }
-      return TOOLS
-    }
+    return getNormalizedLocalTools()
   },
   ['all-tools-cache'],
   { revalidate: 3600, tags: ['tools'] }
@@ -144,54 +89,15 @@ export const getToolsByCategory = unstable_cache(
   { revalidate: 3600, tags: ['tools'] }
 )
 
-export async function updateTool(id: string, updates: Partial<Tool>) {
-  try {
-    await getDb().collection('tools').doc(id).update({
-      ...updates,
-      updatedAt: FieldValue.serverTimestamp()
-    })
-    revalidateTag('tools')
-    return true
-  } catch (error) {
-    console.error(`Failed to update tool ${id}:`, error)
-    return false
-  }
+export async function updateTool(_id: string, _updates: Partial<Tool>) {
+  revalidateTag('tools')
+  return false
 }
 
-// ==========================================
-// MIGRATION SCRIPT
-// ==========================================
-
 export async function seedFirestoreWithLocalTools() {
-  const db = getDb()
-  const toolsCollection = db.collection('tools')
-  const batchSize = 400
-  let totalMigrated = 0
-
-  try {
-    // Split TOOLS into batches of 400 (Firestore batch limit is 500)
-    for (let i = 0; i < TOOLS.length; i += batchSize) {
-      const batchTools = TOOLS.slice(i, i + batchSize)
-      const batch = db.batch()
-
-      for (const tool of batchTools) {
-        const docRef = toolsCollection.doc(tool.id)
-        batch.set(docRef, {
-          ...tool,
-          enabled: true, // Set default admin state
-          createdAt: FieldValue.serverTimestamp(),
-          updatedAt: FieldValue.serverTimestamp()
-        }, { merge: true }) // merge to prevent wiping if already there
-      }
-
-      await batch.commit()
-      totalMigrated += batchTools.length
-      console.log(`Migrated ${totalMigrated}/${TOOLS.length} tools to Firestore...`)
-    }
-    
-    return { success: true, count: totalMigrated }
-  } catch (error) {
-    console.error('Failed to seed tools:', error)
-    throw error
+  return {
+    success: false,
+    count: 0,
+    message: 'Firebase and Firestore sync have been removed. Tools are now local-only.',
   }
 }

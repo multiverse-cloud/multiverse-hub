@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth, currentUser } from '@clerk/nextjs/server'
-import { verifyAdminSessionToken, ADMIN_SESSION_COOKIE } from '@/lib/admin-auth'
-import { isAdminUser } from '@/lib/admin-access'
+import { authorizeAdminRequest } from '@/lib/admin-request-auth'
 import {
   getAdminDiscoverLists,
   saveDiscoverLists,
   saveDiscoverList,
-  seedFirestoreWithLocalDiscoverLists,
+  seedLocalDiscoverLists,
 } from '@/lib/discover-db'
 import { parseDiscoverImportPayload } from '@/lib/discover-import'
 import type { DiscoverList } from '@/lib/discover-data'
-
-const clerkEnabled = Boolean(
-  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY
-)
 
 function normalizeTopic(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
@@ -67,33 +61,15 @@ function getSafeErrorMessage(error: unknown, fallback: string) {
   return fallback
 }
 
+function isLocalDiscoverReadOnlyError(error: unknown) {
+  return (
+    error instanceof Error &&
+    /Discover is currently in local-only mode/i.test(error.message)
+  )
+}
+
 async function isAuthorizedRequest(request: NextRequest) {
-  const customToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value
-
-  if (customToken) {
-    const session = await verifyAdminSessionToken(customToken)
-    if (session) {
-      return true
-    }
-  }
-
-  if (!clerkEnabled) {
-    return false
-  }
-
-  try {
-    const { userId } = await auth()
-
-    if (!userId) {
-      return false
-    }
-
-    const user = await currentUser()
-    return isAdminUser(user)
-  } catch (error) {
-    console.error('Admin discover auth fallback triggered:', error)
-    return false
-  }
+  return (await authorizeAdminRequest(request)).authorized
 }
 
 export async function GET(request: NextRequest) {
@@ -123,12 +99,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
 
     if (body?.action === 'seed') {
-      const result = await seedFirestoreWithLocalDiscoverLists()
+      const result = await seedLocalDiscoverLists()
       const lists = await getAdminDiscoverLists()
       return NextResponse.json({
         ...result,
         success: true,
-        message: `Seeded ${result.count || 0} discover pages to Firestore from the local Discover store.`,
+        message: `Built ${result.count || 0} local discover entries from the data folder JSON files.`,
         lists,
       })
     }
@@ -207,7 +183,9 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Admin discover POST failed:', error)
-    return jsonError(getSafeErrorMessage(error, 'Failed to save discover list'), 500, 'discover_save_failed')
+    const status = isLocalDiscoverReadOnlyError(error) ? 409 : 500
+    const code = isLocalDiscoverReadOnlyError(error) ? 'discover_local_read_only' : 'discover_save_failed'
+    return jsonError(getSafeErrorMessage(error, 'Failed to save discover list'), status, code)
   }
 }
 
@@ -238,6 +216,8 @@ export async function PATCH(request: NextRequest) {
     })
   } catch (error) {
     console.error('Admin discover PATCH failed:', error)
-    return jsonError(getSafeErrorMessage(error, 'Failed to update discover list'), 500, 'discover_update_failed')
+    const status = isLocalDiscoverReadOnlyError(error) ? 409 : 500
+    const code = isLocalDiscoverReadOnlyError(error) ? 'discover_local_read_only' : 'discover_update_failed'
+    return jsonError(getSafeErrorMessage(error, 'Failed to update discover list'), status, code)
   }
 }

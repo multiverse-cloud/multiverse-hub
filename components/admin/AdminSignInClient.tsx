@@ -73,7 +73,7 @@ export default function AdminSignInClient() {
               Admin dashboard only.
             </h2>
             <p className="max-w-md text-lg text-slate-300">
-              This sign-in route is separate from the public Clerk account flow and only unlocks the admin workspace.
+              This sign-in route only unlocks the admin workspace and stays separate from the public site.
             </p>
           </div>
 
@@ -85,7 +85,7 @@ export default function AdminSignInClient() {
               <div>
                 <p className="text-sm font-semibold text-white">Separate session boundary</p>
                 <p className="mt-1 text-sm text-slate-300">
-                  Public users stay on Clerk, while admin access continues to use the local signed session cookie.
+                  Admin access continues to use the local signed session cookie with its own protected flow.
                 </p>
               </div>
             </div>
@@ -121,7 +121,7 @@ export default function AdminSignInClient() {
               <div>
                 <p className="text-sm font-medium text-foreground">Private admin route</p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  This form is for dashboard access only. Public users should continue with Clerk on the main sign-in page.
+                  This form is for dashboard access only and is kept separate from the public site experience.
                 </p>
               </div>
             </div>
@@ -188,13 +188,6 @@ export default function AdminSignInClient() {
               {!loading ? <ArrowRight className="h-4 w-4" /> : null}
             </button>
           </form>
-
-          <p className="text-center text-sm text-muted-foreground">
-            Need a public account instead?{' '}
-            <Link href="/sign-in" className="font-semibold text-indigo-600 hover:underline dark:text-indigo-300">
-              Use Clerk sign in
-            </Link>
-          </p>
         </div>
       </div>
     </div>

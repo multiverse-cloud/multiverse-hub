@@ -38,6 +38,7 @@ const DEV_TOOLS = [
   { id: 'cron-gen', icon: Clock, label: 'Cron Generator', href: '/tools/dev/cron-generator', tone: 'bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300', tag: 'beta' },
   { id: 'gitignore', icon: GitBranch, label: '.gitignore Generator', href: '/tools/dev/gitignore-generator', tone: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200', tag: 'new' },
   { id: 'api-tester', icon: Globe, label: 'API Tester', href: '/tools/dev/api-tester', tone: 'bg-sky-100 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300', tag: 'beta' },
+  { id: 'css-effects-library', icon: Sparkles, label: 'UI Universe', href: '/ui', tone: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200', tag: 'new' },
 ]
 
 function JSONFormatter() {

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import DiscoverClient from '@/components/discover/DiscoverClient'
 import PublicLayout from '@/components/layout/PublicLayout'
+import UniverseTopBar from '@/components/public/UniverseTopBar'
 import { getPublishedDiscoverLists } from '@/lib/discover-db'
 import {
   DISCOVER_PUBLIC_PAGE_SIZE,
@@ -55,6 +56,7 @@ export default async function DiscoverPage({ searchParams }: DiscoverPageProps) 
 
   return (
     <PublicLayout>
+      <UniverseTopBar items={[{ label: 'Home', href: '/' }, { label: 'Discover' }]} actionName="Discover" actionSlug="discover" />
       <DiscoverClient
         lists={pagination.items}
         featuredLists={featuredLists}
@@ -75,3 +77,5 @@ export default async function DiscoverPage({ searchParams }: DiscoverPageProps) 
     </PublicLayout>
   )
 }
+
+

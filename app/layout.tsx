@@ -25,41 +25,94 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Multiverse - Professional Online Tools',
-    template: '%s | Multiverse',
+    default: 'Multiverse — 150+ Free Online Tools',
+    template: '%s | Multiverse Tools',
   },
   description:
-    'One platform. Multiple universes. Professional tools, AI, news, learning, developer utilities, and digital products in one ecosystem.',
+    'One platform, 150+ free tools. Compress PDFs, resize images, download videos, format JSON, and more — all free, private, and instant.',
   keywords: [
-    'free tools',
-    'AI tools',
+    'free online tools',
     'PDF tools',
-    'image tools',
-    'video tools',
+    'compress PDF',
+    'merge PDF',
+    'image compressor',
+    'video downloader',
     'text tools',
     'developer tools',
+    'JSON formatter',
+    'QR code generator',
     'calculator',
-    'multiverse',
-    'online tools',
+    'SEO tools',
+    'file converter',
+    'multiverse tools',
   ],
   authors: [{ name: 'Multiverse Team' }],
   creator: 'Multiverse',
+  publisher: 'Multiverse Tools',
   metadataBase: new URL('https://multiverse-tools.vercel.app'),
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://multiverse-tools.vercel.app',
-    title: 'Multiverse - Professional Online Tools',
-    description: 'One platform. Multiple universes. Professional tools and utilities for everyday work.',
-    siteName: 'Multiverse',
+    title: 'Multiverse — 150+ Free Online Tools',
+    description: 'Compress PDFs, resize images, download videos, and more — 150+ free tools in one platform.',
+    siteName: 'Multiverse Tools',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Multiverse - Professional Online Tools',
-    description: 'Professional tools, AI, learning, and digital products.',
+    title: 'Multiverse — 150+ Free Online Tools',
+    description: '150+ free tools for PDF, image, video, text, and developer workflows. No login required.',
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
+
+const LOCALHOST_RECOVERY_SCRIPT = `
+(() => {
+  if (typeof window === 'undefined') return;
+  const hostname = window.location.hostname;
+  const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+
+  if (!isLocalhost) return;
+
+  const reloadKey = '__multiverse_localhost_runtime_recovered__';
+  const shouldReload = window.sessionStorage.getItem(reloadKey) !== '1';
+  const clearCaches = () =>
+    'caches' in window
+      ? caches.keys().then(keys => Promise.all(keys.map(key => caches.delete(key)))).then(() => undefined)
+      : Promise.resolve();
+
+  const unregisterServiceWorkers = () =>
+    'serviceWorker' in navigator
+      ? navigator.serviceWorker
+          .getRegistrations()
+          .then(registrations =>
+            Promise.all(registrations.map(registration => registration.unregister())).then(
+              () => registrations.length > 0
+            )
+          )
+      : Promise.resolve(false);
+
+  unregisterServiceWorkers()
+    .then(hadRegistrations => clearCaches().then(() => hadRegistrations))
+    .then(hadRegistrations => {
+      if (hadRegistrations && shouldReload) {
+        window.sessionStorage.setItem(reloadKey, '1');
+        window.location.reload();
+      }
+    })
+    .catch(() => {});
+})();
+`
 
 export default function RootLayout({
   children,
@@ -72,7 +125,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${plusJakarta.variable} ${inter.variable} ${jetbrains.variable}`}
     >
-      <body className="min-h-[100dvh] bg-background font-sans text-foreground antialiased">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: LOCALHOST_RECOVERY_SCRIPT }} />
+      </head>
+      <body className="min-h-[100dvh] overflow-x-hidden bg-background font-sans text-foreground antialiased">
         <AuthProvider>
           <AppProviders>{children}</AppProviders>
           <SpeedInsights />
@@ -81,3 +137,4 @@ export default function RootLayout({
     </html>
   )
 }
+

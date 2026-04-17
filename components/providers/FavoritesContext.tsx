@@ -18,32 +18,40 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
   // Load from localStorage on mount
   useEffect(() => {
-    const savedFavorites = localStorage.getItem('multiverse_favorites')
-    if (savedFavorites) {
-      try {
+    try {
+      const savedFavorites = localStorage.getItem('multiverse_favorites')
+      if (savedFavorites) {
         setFavorites(JSON.parse(savedFavorites))
-      } catch (e) {
-        console.error('Failed to parse favorites', e)
       }
+    } catch (e) {
+      console.error('Failed to read favorites', e)
     }
 
-    const savedRecents = localStorage.getItem('multiverse_recents')
-    if (savedRecents) {
-      try {
+    try {
+      const savedRecents = localStorage.getItem('multiverse_recents')
+      if (savedRecents) {
         setRecents(JSON.parse(savedRecents))
-      } catch (e) {
-        console.error('Failed to parse recents', e)
       }
+    } catch (e) {
+      console.error('Failed to read recents', e)
     }
   }, [])
 
   // Save to localStorage when state changes
   useEffect(() => {
-    localStorage.setItem('multiverse_favorites', JSON.stringify(favorites))
+    try {
+      localStorage.setItem('multiverse_favorites', JSON.stringify(favorites))
+    } catch (e) {
+      console.error('Failed to save favorites', e)
+    }
   }, [favorites])
 
   useEffect(() => {
-    localStorage.setItem('multiverse_recents', JSON.stringify(recents))
+    try {
+      localStorage.setItem('multiverse_recents', JSON.stringify(recents))
+    } catch (e) {
+      console.error('Failed to save recents', e)
+    }
   }, [recents])
 
   const toggleFavorite = React.useCallback((slug: string) => {
