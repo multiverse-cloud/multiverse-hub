@@ -1,0 +1,18 @@
+
+> multiverse-tools@1.0.0 dev
+> next dev
+
+   ▲ Next.js 15.5.14
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.3:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 7s
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 17.6s (1199 modules)
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 1066ms (275 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 9.6s (2792 modules)
+ GET / 200 in 5394ms
