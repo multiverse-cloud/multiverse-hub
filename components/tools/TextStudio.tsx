@@ -412,82 +412,82 @@ export default function TextStudio({ tool }: { tool: Tool }) {
     : [{ label: 'Words', value: `${primaryText.split(/\s+/).filter(Boolean).length}` }, { label: 'Chars', value: `${primaryText.length}` }, { label: 'Mode', value: tool.slug === 'text-summarizer' ? summaryMode : writingTone }]
 
   return (
-    <div className="space-y-8" data-tool-shell="true">
+    <div className="space-y-4 sm:space-y-5" data-tool-shell="true">
       <header className="max-w-3xl">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {copy.badges.map(item => (
-            <span key={item} className="premium-chip">
+            <span key={item} className="premium-chip text-[10px] px-2 py-0.5 sm:text-xs sm:px-2.5 sm:py-1">
               {item}
             </span>
           ))}
         </div>
-        <p className="mt-6 premium-kicker">{copy.eyebrow}</p>
-        <h1 className="mt-2 font-display text-4xl font-extrabold tracking-tight text-slate-950 md:text-5xl dark:text-slate-50">
+        <p className="mt-3 premium-kicker text-[10px] sm:mt-6 sm:text-xs">{copy.eyebrow}</p>
+        <h1 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-slate-950 md:text-4xl dark:text-slate-50 sm:text-3xl md:text-5xl">
           {copy.title}
         </h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300">
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300 sm:mt-4 sm:text-base sm:leading-7">
           {copy.summary}
         </p>
       </header>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.14fr)_360px]">
-        <div className="space-y-5">
-          <section className="premium-panel p-5 sm:p-6">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.14fr)_360px] sm:gap-6">
+        <div className="space-y-4 sm:space-y-5">
+          <section className="premium-panel p-4 sm:p-5 sm:p-6">
             {acceptsAudioUpload ? (
               <div {...getRootProps()} className="group">
                 <input {...getInputProps()} />
                 <div
                   className={cn(
-                    'flex min-h-[280px] flex-col items-center justify-center rounded-[28px] border border-dashed px-8 py-10 text-center transition',
+                    'flex min-h-[200px] flex-col items-center justify-center rounded-[20px] border border-dashed px-6 py-8 text-center transition sm:min-h-[280px] sm:rounded-[28px] sm:px-8 sm:py-10',
                     isDragActive
                       ? 'border-indigo-400 bg-indigo-50/70 dark:border-indigo-500 dark:bg-indigo-950/20'
                       : 'border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70'
                   )}
                 >
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition group-hover:bg-indigo-50 group-hover:text-indigo-600 dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-indigo-950/30">
-                    <UploadCloud className="h-8 w-8" />
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition group-hover:bg-indigo-50 group-hover:text-indigo-600 dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-indigo-950/30 sm:h-20 sm:w-20">
+                    <UploadCloud className="h-7 w-7 sm:h-8 sm:w-8" />
                   </div>
-                  <h2 className="mt-6 font-display text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
+                  <h2 className="mt-4 font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:mt-6 sm:text-2xl">
                     Drop your speech file here
                   </h2>
-                  <p className="mt-2 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400">
+                  <p className="mt-2 max-w-md text-xs leading-5 text-slate-500 dark:text-slate-400 sm:mt-2 sm:text-sm sm:leading-6">
                     Upload {acceptLabel} files and turn spoken audio into readable text.
                   </p>
-                  <div className="mt-6 flex flex-wrap justify-center gap-3">
+                  <div className="mt-4 flex flex-wrap justify-center gap-2 sm:mt-6 sm:gap-3">
                     <button
                       type="button"
                       onClick={open}
-                      className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#24389c,#465fd6)] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:scale-[1.01]"
+                      className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#24389c,#465fd6)] px-4 py-2.5 text-[11px] font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:scale-[1.01] sm:px-5 sm:py-3 sm:text-sm"
                     >
-                      <UploadCloud className="h-4 w-4" />
+                      <UploadCloud className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       Choose file
                     </button>
                     <button
                       type="button"
                       onClick={resetAll}
-                      className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+                      className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2.5 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 sm:px-5 sm:py-3 sm:text-sm"
                     >
-                      <RefreshCw className="h-4 w-4" />
+                      <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       Reset
                     </button>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <textarea
                   value={primaryText}
                   onChange={event => setPrimaryText(event.target.value)}
-                  rows={12}
-                  className="min-h-[280px] w-full rounded-[28px] bg-white px-5 py-4 text-sm leading-7 text-slate-700 outline-none ring-1 ring-slate-200 transition focus:ring-2 focus:ring-indigo-300 dark:bg-slate-900/70 dark:text-slate-100 dark:ring-slate-800"
+                  rows={10}
+                  className="min-h-[200px] w-full rounded-[20px] bg-white px-4 py-3 text-xs leading-6 text-slate-700 outline-none ring-1 ring-slate-200 transition focus:ring-2 focus:ring-indigo-300 dark:bg-slate-900/70 dark:text-slate-100 dark:ring-slate-800 sm:rounded-[28px] sm:min-h-[280px] sm:px-5 sm:py-4 sm:text-sm sm:leading-7"
                   placeholder="Paste or write your source text here."
                 />
                 {tool.slug === 'text-diff-checker' && (
                   <textarea
                     value={secondaryText}
                     onChange={event => setSecondaryText(event.target.value)}
-                    rows={8}
-                    className="min-h-[200px] w-full rounded-[28px] bg-slate-50 px-5 py-4 text-sm leading-7 text-slate-700 outline-none ring-1 ring-slate-200 transition focus:ring-2 focus:ring-indigo-300 dark:bg-slate-950/30 dark:text-slate-100 dark:ring-slate-800"
+                    rows={6}
+                    className="min-h-[150px] w-full rounded-[20px] bg-slate-50 px-4 py-3 text-xs leading-6 text-slate-700 outline-none ring-1 ring-slate-200 transition focus:ring-2 focus:ring-indigo-300 dark:bg-slate-950/30 dark:text-slate-100 dark:ring-slate-800 sm:min-h-[200px] sm:rounded-[28px] sm:px-5 sm:py-4 sm:text-sm sm:leading-7"
                     placeholder="Paste the second version here."
                   />
                 )}
@@ -495,40 +495,40 @@ export default function TextStudio({ tool }: { tool: Tool }) {
             )}
 
             {audioFile && audioPreviewUrl && (
-              <div className="mt-5 rounded-3xl bg-slate-50 px-4 py-4 ring-1 ring-slate-200 dark:bg-slate-950/30 dark:ring-slate-800">
-                <div className="flex items-center justify-between gap-3">
+              <div className="mt-4 rounded-[20px] bg-slate-50 px-3 py-3 ring-1 ring-slate-200 dark:bg-slate-950/30 dark:ring-slate-800 sm:mt-5 sm:rounded-3xl sm:px-4 sm:py-4">
+                <div className="flex items-center justify-between gap-2.5 sm:gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">{audioFile.name}</p>
-                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{formatBytes(audioFile.size)}</p>
+                    <p className="text-xs font-semibold text-slate-950 dark:text-slate-50 sm:text-sm">{audioFile.name}</p>
+                    <p className="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400 sm:mt-1 sm:text-xs">{formatBytes(audioFile.size)}</p>
                   </div>
-                  <Mic2 className="h-5 w-5 text-slate-400" />
+                  <Mic2 className="h-4 w-4 text-slate-400 sm:h-5 sm:w-5" />
                 </div>
-                <audio src={audioPreviewUrl} controls className="mt-4 w-full" />
+                <audio src={audioPreviewUrl} controls className="mt-3 w-full sm:mt-4" />
               </div>
             )}
           </section>
 
-          <section className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
-            <div className="premium-card p-5 sm:p-6">
-              <div className="mb-5 flex items-center justify-between gap-3">
+          <section className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_280px] sm:gap-5">
+            <div className="premium-card p-4 sm:p-5 sm:p-6">
+              <div className="mb-4 flex items-center justify-between gap-2.5 sm:mb-5 sm:gap-3">
                 <div>
-                  <p className="premium-kicker">Workspace options</p>
-                  <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
+                  <p className="premium-kicker text-[10px] sm:text-xs">Workspace options</p>
+                  <h2 className="font-display text-base font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:text-xl">
                     Tune the output
                   </h2>
                 </div>
-                <Sparkles className="h-5 w-5 text-indigo-500" />
+                <Sparkles className="h-4 w-4 text-indigo-500 sm:h-5 sm:w-5" />
               </div>
 
               {['ai-text-generator', 'text-grammar-checker', 'paraphrasing-tool'].includes(tool.slug) && (
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-2">
                   {['clear', 'professional', 'persuasive'].map(tone => (
                     <button
                       key={tone}
                       type="button"
                       onClick={() => setWritingTone(tone)}
                       className={cn(
-                        'rounded-full px-4 py-2 text-sm font-semibold capitalize transition',
+                        'rounded-full px-3 py-1.5 text-[11px] font-semibold capitalize transition sm:px-4 sm:py-2 sm:text-sm',
                         writingTone === tone
                           ? 'bg-indigo-600 text-white'
                           : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
@@ -541,7 +541,7 @@ export default function TextStudio({ tool }: { tool: Tool }) {
               )}
 
               {['ai-text-generator', 'text-summarizer'].includes(tool.slug) && (
-                <div className="mt-4 flex flex-wrap gap-3">
+                <div className="mt-3 flex flex-wrap gap-2 sm:mt-4 sm:gap-3">
                   {['short', 'medium', 'long', 'bullet'].map(mode => (
                     <button
                       key={mode}
@@ -561,15 +561,15 @@ export default function TextStudio({ tool }: { tool: Tool }) {
               )}
 
               {tool.slug === 'text-to-speech' && (
-                <div className="space-y-4">
-                  <div className="flex flex-wrap gap-3">
+                <div className="space-y-3">
+                  <div className="flex flex-wrap gap-2">
                     {['0.9', '1', '1.1', '1.25'].map(speed => (
                       <button
                         key={speed}
                         type="button"
                         onClick={() => setSpeechSpeed(speed)}
                         className={cn(
-                          'rounded-full px-4 py-2 text-sm font-semibold transition',
+                          'rounded-full px-3 py-1.5 text-[11px] font-semibold transition sm:px-4 sm:py-2 sm:text-sm',
                           speechSpeed === speed
                             ? 'bg-indigo-600 text-white'
                             : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
@@ -579,18 +579,18 @@ export default function TextStudio({ tool }: { tool: Tool }) {
                       </button>
                     ))}
                   </div>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Voice: Alloy • Output: MP3</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 sm:text-sm">Voice: Alloy • Output: MP3</p>
                 </div>
               )}
             </div>
 
-            <div className="premium-card p-5">
-              <p className="premium-kicker">Source stats</p>
-              <div className="mt-4 space-y-4">
+            <div className="premium-card p-4 sm:p-5">
+              <p className="premium-kicker text-[10px] sm:text-xs">Source stats</p>
+              <div className="mt-3 space-y-3 sm:mt-4 sm:space-y-4">
                 {sourceMetrics.map(metric => (
                   <div key={metric.label}>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">{metric.label}</p>
-                    <p className="mt-1 text-sm font-semibold text-slate-950 dark:text-slate-50">{metric.value}</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 sm:text-[11px]">{metric.label}</p>
+                    <p className="mt-1 text-xs font-semibold text-slate-950 dark:text-slate-50 sm:mt-1 sm:text-sm">{metric.value}</p>
                   </div>
                 ))}
               </div>
@@ -598,101 +598,101 @@ export default function TextStudio({ tool }: { tool: Tool }) {
           </section>
         </div>
 
-        <div className="space-y-5">
-          <section className="premium-card p-5">
+        <div className="space-y-4 sm:space-y-5">
+          <section className="premium-card p-4 sm:p-5">
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">Live process</h2>
-              <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-300">{Math.round(progress)}%</span>
+              <h2 className="font-display text-base font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:text-xl">Live process</h2>
+              <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-300 sm:text-sm">{Math.round(progress)}%</span>
             </div>
-            <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800 sm:mt-4 sm:h-2">
               <div className="h-full rounded-full bg-[linear-gradient(135deg,#24389c,#465fd6)] transition-all" style={{ width: `${progress}%` }} />
             </div>
-            <div className="mt-5 flex items-start gap-3 rounded-2xl bg-slate-50 px-4 py-4 ring-1 ring-slate-200 dark:bg-slate-950/30 dark:ring-slate-800">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-300">
-                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Type className="h-5 w-5" />}
+            <div className="mt-4 flex items-start gap-2.5 rounded-xl bg-slate-50 px-3 py-3 ring-1 ring-slate-200 dark:bg-slate-950/30 dark:ring-slate-800 sm:mt-5 sm:gap-3 sm:rounded-2xl sm:px-4 sm:py-4">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-300 sm:h-11 sm:w-11 sm:rounded-2xl">
+                {loading ? <Loader2 className="h-4 w-4 animate-spin sm:h-5 sm:w-5" /> : <Type className="h-4 w-4 sm:h-5 sm:w-5" />}
               </div>
               <div>
-                <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">
+                <p className="text-xs font-semibold text-slate-950 dark:text-slate-50 sm:text-sm">
                   {loading ? 'Processing input' : result ? 'Result ready' : 'Waiting for input'}
                 </p>
-                <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
+                <p className="mt-0.5 text-[10px] leading-5 text-slate-500 dark:text-slate-400 sm:mt-1 sm:text-xs sm:leading-6">
                   The output, text preview, and download controls appear here after processing.
                 </p>
               </div>
             </div>
           </section>
 
-          <section className="overflow-hidden rounded-[28px] bg-[radial-gradient(circle_at_top,#1f2560,#090c18_68%)] p-6 text-white shadow-[0_28px_80px_-32px_rgba(15,23,42,0.75)]">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-white">
-              <CheckCircle2 className="h-5 w-5" />
+          <section className="overflow-hidden rounded-[20px] bg-[radial-gradient(circle_at_top,#1f2560,#090c18_68%)] p-4 text-white shadow-[0_28px_80px_-32px_rgba(15,23,42,0.75)] sm:rounded-[28px] sm:p-6">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white sm:h-12 sm:w-12 sm:rounded-2xl">
+              <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
-            <h2 className="mt-6 font-display text-3xl font-extrabold tracking-tight">
+            <h2 className="mt-4 font-display text-xl font-extrabold tracking-tight sm:mt-6 sm:text-3xl">
               {result ? 'Result ready' : 'Processed output appears here'}
             </h2>
-            <p className="mt-3 text-sm leading-6 text-white/70">
+            <p className="mt-2 text-xs leading-5 text-white/70 sm:mt-3 sm:text-sm sm:leading-6">
               {result?.output || 'Run the tool to see the cleaned text, rewritten output, or playable audio result.'}
             </p>
             {error && (
-              <div className="mt-5 rounded-2xl bg-rose-500/12 px-4 py-4 text-sm text-rose-100 ring-1 ring-rose-400/20">
+              <div className="mt-4 rounded-xl bg-rose-500/12 px-3 py-3 text-xs text-rose-100 ring-1 ring-rose-400/20 sm:mt-5 sm:rounded-2xl sm:px-4 sm:py-4 sm:text-sm">
                 {error}
               </div>
             )}
             {result?.previewUrl && result.previewType === 'audio' && (
-              <div className="mt-5 rounded-2xl bg-white/8 p-4 ring-1 ring-white/10">
+              <div className="mt-4 rounded-xl bg-white/8 p-3 ring-1 ring-white/10 sm:mt-5 sm:rounded-2xl sm:p-4">
                 <audio src={result.previewUrl} controls className="w-full" />
               </div>
             )}
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <div className="mt-4 grid gap-2 sm:mt-6 sm:gap-3 sm:grid-cols-2">
               {(result?.metrics || [{ label: 'Output', value: 'Pending' }, { label: 'Mode', value: tool.name }]).slice(0, 4).map(metric => (
-                <div key={metric.label} className="rounded-2xl bg-white/6 px-4 py-4 ring-1 ring-white/10">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">{metric.label}</p>
-                  <p className="mt-2 text-sm font-semibold text-white">{metric.value}</p>
+                <div key={metric.label} className="rounded-xl bg-white/6 px-3 py-2.5 ring-1 ring-white/10 sm:rounded-2xl sm:px-4 sm:py-4">
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-white/45 sm:text-[11px]">{metric.label}</p>
+                  <p className="mt-1.5 text-xs font-semibold text-white sm:mt-2 sm:text-sm">{metric.value}</p>
                 </div>
               ))}
             </div>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-4 flex flex-wrap gap-2 sm:mt-6 sm:gap-3">
               <button
                 type="button"
                 onClick={handleDownload}
                 disabled={!result?.output && !result?.outputBlob}
-                className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[11px] font-semibold text-slate-950 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50 sm:px-5 sm:py-3 sm:text-sm"
               >
-                <Download className="h-4 w-4" />
+                <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 Download result
               </button>
               <button
                 type="button"
                 onClick={() => void copyText(result?.output || '')}
                 disabled={!result?.output}
-                className="inline-flex items-center gap-2 rounded-full bg-white/8 px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/15 transition hover:bg-white/12 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-full bg-white/8 px-4 py-2.5 text-[11px] font-semibold text-white ring-1 ring-white/15 transition hover:bg-white/12 disabled:cursor-not-allowed disabled:opacity-50 sm:px-5 sm:py-3 sm:text-sm"
               >
-                <Copy className="h-4 w-4" />
+                <Copy className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 Copy output
               </button>
             </div>
           </section>
 
-          <section className="premium-card p-5">
-            <p className="premium-kicker">Result insight</p>
-            <div className="mt-4 space-y-4">
-              <div className="flex items-start gap-3">
-                <FileText className="mt-0.5 h-4 w-4 text-slate-400" />
+          <section className="premium-card p-4 sm:p-5">
+            <p className="premium-kicker text-[10px] sm:text-xs">Result insight</p>
+            <div className="mt-3 space-y-3 sm:mt-4 sm:space-y-4">
+              <div className="flex items-start gap-2.5 sm:gap-3">
+                <FileText className="mt-0.5 h-3.5 w-3.5 text-slate-400 sm:h-4 sm:w-4" />
                 <div>
-                  <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">
+                  <p className="text-xs font-semibold text-slate-950 dark:text-slate-50 sm:text-sm">
                     {result?.output ? `${result.output.length} characters ready` : 'No output yet'}
                   </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
+                  <p className="mt-0.5 text-[10px] leading-5 text-slate-500 dark:text-slate-400 sm:mt-1 sm:text-xs sm:leading-6">
                     Clean text output stays easy to copy, review, and export.
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <FileAudio2 className="mt-0.5 h-4 w-4 text-slate-400" />
+              <div className="flex items-start gap-2.5 sm:gap-3">
+                <FileAudio2 className="mt-0.5 h-3.5 w-3.5 text-slate-400 sm:h-4 sm:w-4" />
                 <div>
-                  <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">
+                  <p className="text-xs font-semibold text-slate-950 dark:text-slate-50 sm:text-sm">
                     {result?.previewUrl ? 'Audio preview ready' : 'Text-only result'}
                   </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
+                  <p className="mt-0.5 text-[10px] leading-5 text-slate-500 dark:text-slate-400 sm:mt-1 sm:text-xs sm:leading-6">
                     Audio preview appears automatically for text-to-speech results.
                   </p>
                 </div>
@@ -702,22 +702,22 @@ export default function TextStudio({ tool }: { tool: Tool }) {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-2">
         <button
           type="button"
           onClick={handleProcess}
           disabled={loading}
-          className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#24389c,#465fd6)] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#24389c,#465fd6)] px-3 py-2 text-[11px] font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 sm:py-2.5 sm:text-xs sm:px-6 sm:py-3 sm:text-sm"
         >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+          {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin sm:h-4 sm:w-4" /> : <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
           {copy.actionLabel}
         </button>
         <button
           type="button"
           onClick={resetAll}
-          className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+          className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 sm:px-4 sm:py-2.5 sm:text-xs sm:px-6 sm:py-3 sm:text-sm"
         >
-          <RefreshCw className="h-4 w-4" />
+          <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           Reset workspace
         </button>
       </div>

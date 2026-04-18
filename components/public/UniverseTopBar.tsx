@@ -16,10 +16,10 @@ export default function UniverseTopBar({
   actionSlug: string
 }) {
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 lg:px-6">
-      <div className="flex flex-col gap-2.5 md:flex-row md:items-center md:justify-between">
-        <ToolBreadcrumb className="mb-0" items={items} />
-        <ToolActions slug={actionSlug} name={actionName} className="mb-0 w-full justify-start md:w-auto md:justify-end" />
+    <div className="mx-auto w-full max-w-7xl px-3 py-2 sm:px-4 sm:py-4 lg:px-6 lg:py-6">
+      <div className="flex items-center justify-between gap-2">
+        <ToolBreadcrumb className="mb-0 text-[10px]" items={items} />
+        <ToolActions slug={actionSlug} name={actionName} className="mb-0 w-auto justify-end" />
       </div>
     </div>
   )

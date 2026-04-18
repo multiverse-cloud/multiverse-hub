@@ -74,33 +74,33 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
 
       <section className="page-content">
         {/* Search + Filter row */}
-        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Search */}
           <form action="/tools" method="get" className="relative w-full sm:max-w-lg">
-            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               name="q"
               defaultValue={search}
               placeholder="Search tools by name or category..."
-              className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-10 pr-10 text-sm font-medium shadow-sm transition-all focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-800 dark:bg-slate-900 dark:focus:border-indigo-500"
+              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-9 text-xs font-medium shadow-sm transition-all focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-800 dark:bg-slate-900 dark:focus:border-indigo-500 sm:py-3 sm:pl-10 sm:pr-10 sm:text-sm"
             />
             {activeCategory !== 'all' && <input type="hidden" name="category" value={activeCategory} />}
             {activeTag && <input type="hidden" name="tag" value={activeTag} />}
             {search ? (
-              <Link href={buildHref({ q: null })} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-0.5 hover:bg-slate-100 dark:hover:bg-slate-800">
-                <X className="h-3.5 w-3.5 text-muted-foreground" />
+              <Link href={buildHref({ q: null })} className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md p-1 hover:bg-slate-100 dark:hover:bg-slate-800 sm:right-3">
+                <X className="h-3 w-3 text-muted-foreground sm:h-3.5 sm:w-3.5" />
               </Link>
             ) : null}
           </form>
 
           {/* Filter pills */}
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1">
             {FILTER_TAGS.map(tag => (
               <Link
                 key={tag}
                 href={buildHref({ tag: activeTag === tag ? null : tag })}
                 className={cn(
-                  'rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition-all',
+                  'rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide transition-all sm:px-3 sm:py-1.5 sm:text-[11px]',
                   activeTag === tag
                     ? 'border-indigo-500 bg-indigo-500 text-white shadow-sm shadow-indigo-500/20'
                     : 'border-slate-200 bg-white text-muted-foreground hover:border-indigo-200 hover:text-foreground dark:border-slate-800 dark:bg-slate-900'
@@ -113,12 +113,12 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
         </div>
 
         {/* Category tabs */}
-        <div className="-mx-4 mb-6 overflow-x-auto scrollbar-hide px-4 sm:mx-0 sm:px-0">
-          <div className="flex min-w-max gap-1.5 sm:flex-wrap sm:gap-2">
+        <div className="-mx-4 mb-4 overflow-x-auto scrollbar-hide px-4 sm:mx-0 sm:px-0 sm:mb-5">
+          <div className="flex min-w-max gap-1 sm:flex-wrap sm:gap-1.5">
             <Link
               href={buildHref({ category: 'all' })}
               className={cn(
-                'shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:py-2 sm:text-sm',
+                'shrink-0 whitespace-nowrap rounded-full border px-3 py-1 text-[11px] font-semibold transition-all sm:px-3.5 sm:py-1.5 sm:text-xs',
                 activeCategory === 'all'
                   ? 'border-indigo-500/60 bg-gradient-to-b from-indigo-500 to-indigo-600 text-white shadow-md shadow-indigo-500/20'
                   : 'border-slate-200 bg-white text-muted-foreground hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800'
@@ -137,15 +137,15 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
                   key={category.slug}
                   href={buildHref({ category: category.slug })}
                   className={cn(
-                    'flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-semibold transition-all sm:px-3.5 sm:py-2 sm:text-sm',
+                    'flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-all sm:px-3 sm:py-1.5 sm:text-xs',
                     isActive
                       ? 'border-indigo-500/60 bg-gradient-to-b from-indigo-500 to-indigo-600 text-white shadow-md shadow-indigo-500/20'
                       : 'border-slate-200 bg-white text-muted-foreground hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800'
                   )}
                 >
-                  <Icon className="h-3.5 w-3.5" />
+                  <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   <span>{category.name.replace(' Tools', '')}</span>
-                  <span className={cn('rounded-md px-1 py-0.5 text-[10px] font-bold tabular-nums', isActive ? 'bg-white/20' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400')}>
+                  <span className={cn('rounded-md px-1 py-0.5 text-[9px] font-bold tabular-nums sm:text-[10px]', isActive ? 'bg-white/20' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400')}>
                     {count}
                   </span>
                 </Link>
@@ -174,7 +174,7 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 sm:gap-3">
               {filtered.map(tool => {
                 const Icon = getLucideIcon(tool.icon)
                 const visibleTag = tool.tags.find(tag => tag !== 'new' && tag !== 'trending')
@@ -183,16 +183,16 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
                   <Link
                     key={tool.id}
                     href={`/tools/${tool.categorySlug}/${tool.slug}`}
-                    className="group relative flex flex-col gap-2.5 rounded-xl border border-slate-200/70 bg-white p-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-500/[0.06] dark:border-slate-800/70 dark:bg-slate-900/80 dark:hover:border-indigo-800 dark:hover:shadow-indigo-500/[0.06]"
+                    className="group relative flex flex-col gap-2 rounded-xl border border-slate-200/70 bg-white p-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-500/[0.06] dark:border-slate-800/70 dark:bg-slate-900/80 dark:hover:border-indigo-800 dark:hover:shadow-indigo-500/[0.06] sm:p-3.5 sm:gap-2.5"
                   >
                     <div className="flex items-start justify-between">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 transition-all duration-200 group-hover:bg-indigo-600 group-hover:scale-105 dark:bg-indigo-950/30 dark:group-hover:bg-indigo-500">
-                        <Icon className="h-4 w-4 text-indigo-600 transition-colors group-hover:text-white dark:text-indigo-300 dark:group-hover:text-white" />
+                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-50 transition-all duration-200 group-hover:bg-indigo-600 group-hover:scale-105 dark:bg-indigo-950/30 dark:group-hover:bg-indigo-500 sm:h-9 sm:w-9">
+                        <Icon className="h-3.5 w-3.5 text-indigo-600 transition-colors group-hover:text-white dark:text-indigo-300 dark:group-hover:text-white sm:h-4 sm:w-4" />
                       </div>
                       {visibleTag && (
                         <span
                           className={cn(
-                            'rounded-md px-1.5 py-0.5 text-[10px] font-semibold',
+                            'rounded-md px-1 py-0.5 text-[9px] font-semibold sm:px-1.5 sm:py-0.5 sm:text-[10px]',
                             visibleTag === 'hot' ? 'tag-hot' : 'tag-beta'
                           )}
                         >
@@ -202,10 +202,10 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
                     </div>
 
                     <div>
-                      <h3 className="line-clamp-1 text-sm font-semibold leading-tight transition-colors group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                      <h3 className="line-clamp-1 text-[11px] font-semibold leading-tight transition-colors group-hover:text-indigo-600 dark:group-hover:text-indigo-400 sm:text-sm">
                         {tool.name}
                       </h3>
-                      <p className="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">
+                      <p className="mt-0.5 line-clamp-2 text-[10px] leading-relaxed text-muted-foreground sm:mt-0.5 sm:text-[11px]">
                         {tool.description}
                       </p>
                     </div>

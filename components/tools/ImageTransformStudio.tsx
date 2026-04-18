@@ -550,62 +550,62 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
   }
 
   return (
-    <div className="space-y-7">
-      <div className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
-        <div className="space-y-6">
-          <div className="space-y-4">
-            <div className="flex flex-wrap gap-2">
+    <div className="space-y-4 sm:space-y-5">
+      <div className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr] sm:gap-6">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex flex-wrap gap-1.5">
               {copy.badges.map(badge => (
                 <span
                   key={badge}
-                  className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-slate-700 shadow-sm"
+                  className="rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold text-slate-700 shadow-sm sm:px-4 sm:py-1.5 sm:text-sm"
                 >
                   {badge}
                 </span>
               ))}
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-indigo-600">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-indigo-600 sm:text-xs">
                 {copy.eyebrow}
               </p>
-              <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-slate-950 md:text-5xl">
+              <h1 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-slate-950 sm:mt-3 sm:text-4xl md:text-5xl">
                 {copy.title}
               </h1>
-              <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-600">{copy.summary}</p>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 sm:mt-4 sm:text-base sm:leading-8">{copy.summary}</p>
             </div>
           </div>
 
-          <div className="rounded-[2rem] bg-white p-6 shadow-[0_24px_50px_-34px_rgba(15,23,42,0.22)]">
+          <div className="rounded-[1.5rem] bg-white p-4 shadow-[0_24px_50px_-34px_rgba(15,23,42,0.22)] sm:rounded-[2rem] sm:p-6">
             <div
               {...getRootProps()}
               className={cn(
-                'rounded-[1.75rem] border-2 border-dashed px-6 py-8 transition-colors',
+                'rounded-[1.25rem] border-2 border-dashed px-4 py-6 transition-colors sm:rounded-[1.75rem] sm:px-6 sm:py-8',
                 isDragActive ? 'border-indigo-500 bg-indigo-50/60' : 'border-slate-200 bg-slate-50/70'
               )}
             >
               <input {...getInputProps()} />
               {!file ? (
-                <div className="flex min-h-[320px] flex-col items-center justify-center text-center">
-                  <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-indigo-100 text-indigo-600">
-                    <UploadCloud className="h-7 w-7" />
+                <div className="flex min-h-[240px] flex-col items-center justify-center text-center sm:min-h-[320px]">
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600 sm:mb-5 sm:h-16 sm:w-16 sm:rounded-3xl">
+                    <UploadCloud className="h-6 w-6 sm:h-7 sm:w-7" />
                   </div>
-                  <h2 className="font-display text-2xl font-bold tracking-tight text-slate-950">
+                  <h2 className="font-display text-xl font-bold tracking-tight text-slate-950 sm:text-2xl">
                     Drop your image here
                   </h2>
-                  <p className="mt-3 max-w-md text-sm leading-6 text-slate-500">
+                  <p className="mt-2 max-w-md text-xs leading-5 text-slate-500 sm:mt-3 sm:text-sm sm:leading-6">
                     {acceptLabel ? `Supports ${acceptLabel}.` : 'Upload a supported image file.'}
                   </p>
                   <button
                     type="button"
                     onClick={open}
-                    className="mt-6 rounded-2xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
+                    className="mt-4 rounded-xl bg-indigo-600 px-3 py-2 text-[11px] font-semibold text-white transition-colors hover:bg-indigo-700 sm:mt-6 sm:rounded-2xl sm:px-4 sm:py-2 sm:text-xs sm:px-6 sm:py-3 sm:text-sm"
                   >
                     Choose image
                   </button>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  <div className="relative h-[320px] overflow-hidden rounded-[1.5rem] bg-white">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="relative h-[240px] overflow-hidden rounded-[1.25rem] bg-white sm:h-[320px] sm:rounded-[1.5rem]">
                     <Image
                       src={sourcePreview}
                       alt={file.name}
@@ -615,17 +615,17 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                       className="object-contain"
                     />
                   </div>
-                  <div className="flex items-center justify-between gap-4 rounded-[1.4rem] bg-white px-5 py-4">
+                  <div className="flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 sm:gap-4 sm:rounded-[1.4rem] sm:px-5 sm:py-4">
                     <div className="min-w-0">
-                      <p className="truncate font-display text-base font-bold tracking-tight text-slate-950">
+                      <p className="truncate font-display text-sm font-bold tracking-tight text-slate-950 sm:text-base">
                         {file.name}
                       </p>
-                      <p className="mt-1 text-sm text-slate-500">{formatBytes(file.size)}</p>
+                      <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{formatBytes(file.size)}</p>
                     </div>
                     <button
                       type="button"
                       onClick={open}
-                      className="rounded-2xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200"
+                      className="rounded-xl bg-slate-100 px-3 py-1.5 text-[11px] font-semibold text-slate-700 transition-colors hover:bg-slate-200 sm:rounded-2xl sm:px-4 sm:py-2 sm:text-sm"
                     >
                       Replace
                     </button>
@@ -635,17 +635,17 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
             </div>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-[1.12fr_0.88fr]">
-            <section className="rounded-[1.8rem] bg-slate-100/90 p-5">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-indigo-600">
-                  <Settings2 className="h-5 w-5" />
+          <div className="grid gap-3 lg:grid-cols-[1.12fr_0.88fr] sm:gap-4">
+            <section className="rounded-xl bg-slate-100/90 p-4 sm:rounded-[1.8rem] sm:p-5">
+              <div className="mb-3 flex items-center gap-2.5 sm:mb-4 sm:gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-indigo-600 sm:h-11 sm:w-11 sm:rounded-2xl">
+                  <Settings2 className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500 sm:text-xs">
                     Controls
                   </p>
-                  <h2 className="font-display text-lg font-bold tracking-tight text-slate-950">
+                  <h2 className="font-display text-sm font-bold tracking-tight text-slate-950 sm:text-lg">
                     Workflow settings
                   </h2>
                 </div>
@@ -653,51 +653,51 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
               {renderOptions()}
             </section>
 
-            <section className="rounded-[1.8rem] bg-indigo-50/70 p-5">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-indigo-600">
-                  <SlidersHorizontal className="h-5 w-5" />
+            <section className="rounded-xl bg-indigo-50/70 p-4 sm:rounded-[1.8rem] sm:p-5">
+              <div className="mb-3 flex items-center gap-2.5 sm:mb-4 sm:gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-indigo-600 sm:h-11 sm:w-11 sm:rounded-2xl">
+                  <SlidersHorizontal className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500 sm:text-xs">
                     Live stats
                   </p>
-                  <h2 className="font-display text-lg font-bold tracking-tight text-slate-950">
+                  <h2 className="font-display text-sm font-bold tracking-tight text-slate-950 sm:text-lg">
                     Active output
                   </h2>
                 </div>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl bg-white p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+              <div className="grid gap-2 sm:gap-3 sm:grid-cols-2">
+                <div className="rounded-xl bg-white p-3 sm:rounded-2xl sm:p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500 sm:text-xs">
                     Source size
                   </p>
-                  <p className="mt-2 font-display text-xl font-bold tracking-tight text-slate-950">
+                  <p className="mt-1.5 font-display text-base font-bold tracking-tight text-slate-950 sm:mt-2 sm:text-xl">
                     {file ? formatBytes(file.size) : 'No file'}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-white p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                <div className="rounded-xl bg-white p-3 sm:rounded-2xl sm:p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500 sm:text-xs">
                     Result size
                   </p>
-                  <p className="mt-2 font-display text-xl font-bold tracking-tight text-slate-950">
+                  <p className="mt-1.5 font-display text-base font-bold tracking-tight text-slate-950 sm:mt-2 sm:text-xl">
                     {metricValue(result, 'Size')}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-white p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                <div className="rounded-xl bg-white p-3 sm:rounded-2xl sm:p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500 sm:text-xs">
                     Format
                   </p>
-                  <p className="mt-2 font-display text-xl font-bold tracking-tight text-slate-950">
+                  <p className="mt-1.5 font-display text-base font-bold tracking-tight text-slate-950 sm:mt-2 sm:text-xl">
                     {metricValue(result, 'Format')}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-white p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                <div className="rounded-xl bg-white p-3 sm:rounded-2xl sm:p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500 sm:text-xs">
                     Dimensions
                   </p>
-                  <p className="mt-2 font-display text-xl font-bold tracking-tight text-slate-950">
+                  <p className="mt-1.5 font-display text-base font-bold tracking-tight text-slate-950 sm:mt-2 sm:text-xl">
                     {metricValue(result, 'Dimensions')}
                   </p>
                 </div>
@@ -706,27 +706,27 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
           </div>
         </div>
 
-        <div className="space-y-4">
-          <section className="rounded-[1.8rem] bg-white p-5 shadow-[0_20px_44px_-32px_rgba(15,23,42,0.2)]">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-xl font-bold tracking-tight text-slate-950">
+        <div className="space-y-3 sm:space-y-4">
+          <section className="rounded-xl bg-white p-4 shadow-[0_20px_44px_-32px_rgba(15,23,42,0.2)] sm:rounded-[1.8rem] sm:p-5">
+            <div className="mb-3 flex items-center justify-between sm:mb-4">
+              <h2 className="font-display text-base font-bold tracking-tight text-slate-950 sm:text-xl">
                 Live Process
               </h2>
-              <span className="text-sm font-semibold text-indigo-600">
+              <span className="text-xs font-semibold text-indigo-600 sm:text-sm">
                 {loading ? 'Running' : result ? 'Ready' : 'Idle'}
               </span>
             </div>
-            <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+            <div className="h-2 overflow-hidden rounded-full bg-slate-100 sm:h-3">
               <div
                 className="h-full rounded-full bg-indigo-600 transition-all duration-500"
                 style={{ width: loading ? '76%' : result ? '100%' : '18%' }}
               />
             </div>
-            <div className="mt-4 rounded-2xl bg-slate-50 p-4">
-              <p className="font-display text-base font-bold tracking-tight text-slate-950">
+            <div className="mt-3 rounded-xl bg-slate-50 p-3 sm:mt-4 sm:rounded-2xl sm:p-4">
+              <p className="font-display text-sm font-bold tracking-tight text-slate-950 sm:text-base">
                 {loading ? 'Processing image...' : result ? 'Output ready' : 'Waiting for source'}
               </p>
-              <p className="mt-1 text-sm leading-6 text-slate-600">
+              <p className="mt-1 text-xs leading-5 text-slate-600 sm:mt-1 sm:text-sm sm:leading-6">
                 {loading
                   ? 'Analyzing the source and preparing the next export.'
                   : result
@@ -736,30 +736,30 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
             </div>
           </section>
 
-          <section className="rounded-[2rem] bg-slate-950 p-6 text-white">
-            <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/20 text-indigo-300">
+          <section className="rounded-[1.5rem] bg-slate-950 p-4 text-white sm:rounded-[2rem] sm:p-6">
+            <div className="mb-3 flex items-center gap-2.5 sm:mb-4 sm:gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-300 sm:h-12 sm:w-12 sm:rounded-2xl">
                 {tool.slug === 'image-to-text' ? (
-                  <ScanSearch className="h-5 w-5" />
+                  <ScanSearch className="h-4 w-4 sm:h-5 sm:w-5" />
                 ) : (
-                  <BadgeCheck className="h-5 w-5" />
+                  <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5" />
                 )}
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-slate-400">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-slate-400 sm:text-xs">
                   Result
                 </p>
-                <h2 className="font-display text-2xl font-extrabold tracking-tight">
+                <h2 className="font-display text-lg font-extrabold tracking-tight sm:text-2xl">
                   {result ? 'Your export is ready' : copy.emptyTitle}
                 </h2>
               </div>
             </div>
 
             {error ? (
-              <div className="rounded-2xl bg-rose-500/12 p-4 text-sm leading-6 text-rose-200">{error}</div>
+              <div className="rounded-xl bg-rose-500/12 p-3 text-xs leading-5 text-rose-200 sm:rounded-2xl sm:p-4 sm:text-sm sm:leading-6">{error}</div>
             ) : result?.previewUrl ? (
-              <div className="space-y-4">
-                <div className="relative h-[320px] overflow-hidden rounded-[1.7rem] bg-white">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="relative h-[240px] overflow-hidden rounded-[1.25rem] bg-white sm:h-[320px] sm:rounded-[1.7rem]">
                   <Image
                     src={result.previewUrl}
                     alt={`${tool.name} result`}
@@ -769,48 +769,48 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                     className="object-contain"
                   />
                 </div>
-                <div className="grid gap-2 sm:grid-cols-2">
+                <div className="grid gap-2 sm:gap-2 sm:grid-cols-2">
                   {result.metrics?.map(metric => (
-                    <div key={metric.label} className="rounded-2xl bg-white/8 px-4 py-3">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
+                    <div key={metric.label} className="rounded-xl bg-white/8 px-3 py-2.5 sm:rounded-2xl sm:px-4 sm:py-3">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-400 sm:text-[11px]">
                         {metric.label}
                       </p>
-                      <p className="mt-1 text-sm font-semibold text-white">{metric.value}</p>
+                      <p className="mt-1 text-xs font-semibold text-white sm:mt-1 sm:text-sm">{metric.value}</p>
                     </div>
                   ))}
                 </div>
               </div>
             ) : result?.output ? (
-              <div className="space-y-4">
-                <pre className="max-h-[320px] overflow-auto rounded-[1.6rem] bg-white/6 p-4 text-sm leading-6 text-slate-200 whitespace-pre-wrap">
+              <div className="space-y-3 sm:space-y-4">
+                <pre className="max-h-[240px] overflow-auto rounded-[1.25rem] bg-white/6 p-3 text-xs leading-5 text-slate-200 whitespace-pre-wrap sm:max-h-[320px] sm:rounded-[1.6rem] sm:p-4 sm:text-sm sm:leading-6">
                   {result.output}
                 </pre>
               </div>
             ) : (
-              <div className="rounded-[1.7rem] bg-white/6 p-6">
-                <p className="text-sm leading-6 text-slate-300">
+              <div className="rounded-[1.25rem] bg-white/6 p-4 sm:rounded-[1.7rem] sm:p-6">
+                <p className="text-xs leading-5 text-slate-300 sm:text-sm sm:leading-6">
                   Upload the source file, tune the settings, and run the workflow to see the final export here.
                 </p>
               </div>
             )}
 
-            <div className="mt-5 flex flex-wrap gap-3">
+            <div className="mt-4 flex flex-wrap gap-2 sm:mt-5 sm:gap-3">
               <button
                 type="button"
                 onClick={handleProcess}
                 disabled={!file || loading}
-                className="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-[11px] font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 sm:rounded-2xl sm:px-5 sm:py-3 sm:text-sm"
               >
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin sm:h-4 sm:w-4" /> : <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
                 {copy.actionLabel}
               </button>
               {(result?.outputBlob || result?.output) && (
                 <button
                   type="button"
                   onClick={handleDownload}
-                  className="inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-slate-100"
+                  className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-[11px] font-semibold text-slate-950 transition-colors hover:bg-slate-100 sm:rounded-2xl sm:px-5 sm:py-3 sm:text-sm"
                 >
-                  <Download className="h-4 w-4" />
+                  <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   Download result
                 </button>
               )}
@@ -818,7 +818,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="inline-flex items-center gap-2 rounded-2xl border border-white/15 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/5"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2.5 text-[11px] font-semibold text-white transition-colors hover:bg-white/5 sm:rounded-2xl sm:px-5 sm:py-3 sm:text-sm"
                 >
                   Reset
                 </button>

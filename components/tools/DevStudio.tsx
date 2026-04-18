@@ -271,70 +271,70 @@ export default function DevStudio({ tool }: { tool: Tool }) {
   }
 
   return (
-    <div className="space-y-8" data-tool-shell="true">
+    <div className="space-y-4 sm:space-y-5" data-tool-shell="true">
       <header className="max-w-3xl">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {copy.badges.map(item => (
-            <span key={item} className="premium-chip">{item}</span>
+            <span key={item} className="premium-chip text-[10px] px-2 py-0.5 sm:text-xs sm:px-2.5 sm:py-1">{item}</span>
           ))}
         </div>
-        <p className="mt-6 premium-kicker">{copy.eyebrow}</p>
-        <h1 className="mt-2 font-display text-4xl font-extrabold tracking-tight text-slate-950 md:text-5xl dark:text-slate-50">{copy.title}</h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300">{copy.summary}</p>
+        <p className="mt-3 premium-kicker text-[10px] sm:mt-6 sm:text-xs">{copy.eyebrow}</p>
+        <h1 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-slate-950 md:text-4xl dark:text-slate-50 sm:text-3xl md:text-5xl">{copy.title}</h1>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300 sm:mt-4 sm:text-base sm:leading-7">{copy.summary}</p>
       </header>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.14fr)_360px]">
-        <div className="space-y-5">
-          <section className="premium-panel p-5 sm:p-6">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.14fr)_360px] sm:gap-6">
+        <div className="space-y-4 sm:space-y-5">
+          <section className="premium-panel p-4 sm:p-5 sm:p-6">
             <textarea
               value={inputText}
               onChange={event => setInputText(event.target.value)}
-              rows={12}
-              className="min-h-[280px] w-full rounded-[28px] bg-white px-5 py-4 font-mono text-sm leading-7 text-slate-700 outline-none ring-1 ring-slate-200 transition focus:ring-2 focus:ring-indigo-300 dark:bg-slate-900/70 dark:text-slate-100 dark:ring-slate-800"
+              rows={10}
+              className="min-h-[200px] w-full rounded-[20px] bg-white px-4 py-3 font-mono text-xs leading-6 text-slate-700 outline-none ring-1 ring-slate-200 transition focus:ring-2 focus:ring-indigo-300 dark:bg-slate-900/70 dark:text-slate-100 dark:ring-slate-800 sm:rounded-[28px] sm:min-h-[280px] sm:px-5 sm:py-4 sm:text-sm sm:leading-7"
               placeholder="Paste your input here."
             />
 
             {tool.slug === 'regex-tester' && (
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                <input value={regexPattern} onChange={event => setRegexPattern(event.target.value)} className="w-full rounded-2xl bg-slate-50 px-4 py-3 text-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-300 dark:bg-slate-950/30 dark:ring-slate-800" placeholder="Pattern" />
-                <input value={regexFlags} onChange={event => setRegexFlags(event.target.value)} className="w-full rounded-2xl bg-slate-50 px-4 py-3 text-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-300 dark:bg-slate-950/30 dark:ring-slate-800" placeholder="Flags" />
+              <div className="mt-3 grid gap-3 sm:mt-4 sm:gap-4 sm:grid-cols-2">
+                <input value={regexPattern} onChange={event => setRegexPattern(event.target.value)} className="w-full rounded-xl bg-slate-50 px-3 py-2.5 text-xs outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-300 dark:bg-slate-950/30 dark:ring-slate-800 sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm" placeholder="Pattern" />
+                <input value={regexFlags} onChange={event => setRegexFlags(event.target.value)} className="w-full rounded-xl bg-slate-50 px-3 py-2.5 text-xs outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-300 dark:bg-slate-950/30 dark:ring-slate-800 sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm" placeholder="Flags" />
               </div>
             )}
 
             {tool.slug === 'api-tester' && (
-              <div className="mt-4 space-y-4">
-                <div className="flex flex-wrap gap-3">
+              <div className="mt-3 space-y-3 sm:mt-4 sm:space-y-4">
+                <div className="flex flex-wrap gap-2">
                   {['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].map(method => (
-                    <button key={method} type="button" onClick={() => setApiMethod(method)} className={cn('rounded-full px-4 py-2 text-sm font-semibold transition', apiMethod === method ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700')}>{method}</button>
+                    <button key={method} type="button" onClick={() => setApiMethod(method)} className={cn('rounded-full px-3 py-1.5 text-[11px] font-semibold transition sm:px-4 sm:py-2 sm:text-sm', apiMethod === method ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700')}>{method}</button>
                   ))}
                 </div>
-                <textarea value={apiHeaders} onChange={event => setApiHeaders(event.target.value)} rows={4} className="w-full rounded-2xl bg-slate-50 px-4 py-3 text-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-300 dark:bg-slate-950/30 dark:ring-slate-800" placeholder="Content-Type: application/json" />
-                <textarea value={apiBody} onChange={event => setApiBody(event.target.value)} rows={5} className="w-full rounded-2xl bg-slate-50 px-4 py-3 text-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-300 dark:bg-slate-950/30 dark:ring-slate-800" placeholder='{"hello":"world"}' />
+                <textarea value={apiHeaders} onChange={event => setApiHeaders(event.target.value)} rows={3} className="w-full rounded-xl bg-slate-50 px-3 py-2.5 text-xs outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-300 dark:bg-slate-950/30 dark:ring-slate-800 sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm sm:rows-4" placeholder="Content-Type: application/json" />
+                <textarea value={apiBody} onChange={event => setApiBody(event.target.value)} rows={4} className="w-full rounded-xl bg-slate-50 px-3 py-2.5 text-xs outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-300 dark:bg-slate-950/30 dark:ring-slate-800 sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm sm:rows-5" placeholder='{"hello":"world"}' />
               </div>
             )}
           </section>
 
-          <section className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
-            <div className="premium-card p-5 sm:p-6">
-              <div className="mb-5 flex items-center justify-between gap-3">
+          <section className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_280px] sm:gap-5">
+            <div className="premium-card p-4 sm:p-5 sm:p-6">
+              <div className="mb-4 flex items-center justify-between gap-2.5 sm:mb-5 sm:gap-3">
                 <div>
-                  <p className="premium-kicker">Workspace options</p>
-                  <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">Tool context</h2>
+                  <p className="premium-kicker text-[10px] sm:text-xs">Workspace options</p>
+                  <h2 className="font-display text-base font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:text-xl">Tool context</h2>
                 </div>
-                <Sparkles className="h-5 w-5 text-indigo-500" />
+                <Sparkles className="h-4 w-4 text-indigo-500 sm:h-5 sm:w-5" />
               </div>
-              <div className="rounded-2xl bg-slate-50 px-4 py-4 text-sm text-slate-600 ring-1 ring-slate-200 dark:bg-slate-950/30 dark:text-slate-300 dark:ring-slate-800">
+              <div className="rounded-xl bg-slate-50 px-3 py-3 text-xs text-slate-600 ring-1 ring-slate-200 dark:bg-slate-950/30 dark:text-slate-300 dark:ring-slate-800 sm:rounded-2xl sm:px-4 sm:py-4 sm:text-sm">
                 {tool.slug === 'html-previewer' ? 'Rendered preview appears below the result panel.' : 'The processed output keeps a clean developer-friendly text layout for easy copy and review.'}
               </div>
             </div>
 
-            <div className="premium-card p-5">
-              <p className="premium-kicker">Source stats</p>
-              <div className="mt-4 space-y-4">
+            <div className="premium-card p-4 sm:p-5">
+              <p className="premium-kicker text-[10px] sm:text-xs">Source stats</p>
+              <div className="mt-3 space-y-3 sm:mt-4 sm:space-y-4">
                 {sourceMetrics.map(metric => (
                   <div key={metric.label}>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">{metric.label}</p>
-                    <p className="mt-1 text-sm font-semibold text-slate-950 dark:text-slate-50">{metric.value}</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 sm:text-[11px]">{metric.label}</p>
+                    <p className="mt-1 text-xs font-semibold text-slate-950 dark:text-slate-50 sm:mt-1 sm:text-sm">{metric.value}</p>
                   </div>
                 ))}
               </div>
@@ -342,42 +342,42 @@ export default function DevStudio({ tool }: { tool: Tool }) {
           </section>
         </div>
 
-        <div className="space-y-5">
-          <section className="premium-card p-5">
+        <div className="space-y-4 sm:space-y-5">
+          <section className="premium-card p-4 sm:p-5">
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">Live process</h2>
-              <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-300">{Math.round(progress)}%</span>
+              <h2 className="font-display text-base font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:text-xl">Live process</h2>
+              <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-300 sm:text-sm">{Math.round(progress)}%</span>
             </div>
-            <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800 sm:mt-4 sm:h-2">
               <div className="h-full rounded-full bg-[linear-gradient(135deg,#24389c,#465fd6)] transition-all" style={{ width: `${progress}%` }} />
             </div>
-            <div className="mt-5 flex items-start gap-3 rounded-2xl bg-slate-50 px-4 py-4 ring-1 ring-slate-200 dark:bg-slate-950/30 dark:ring-slate-800">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-300">
-                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Code2 className="h-5 w-5" />}
+            <div className="mt-4 flex items-start gap-2.5 rounded-xl bg-slate-50 px-3 py-3 ring-1 ring-slate-200 dark:bg-slate-950/30 dark:ring-slate-800 sm:mt-5 sm:gap-3 sm:rounded-2xl sm:px-4 sm:py-4">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-300 sm:h-11 sm:w-11 sm:rounded-2xl">
+                {loading ? <Loader2 className="h-4 w-4 animate-spin sm:h-5 sm:w-5" /> : <Code2 className="h-4 w-4 sm:h-5 sm:w-5" />}
               </div>
               <div>
-                <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">{loading ? 'Processing input' : result ? 'Result ready' : 'Waiting for input'}</p>
-                <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">Use the result card to copy, download, or review the processed output.</p>
+                <p className="text-xs font-semibold text-slate-950 dark:text-slate-50 sm:text-sm">{loading ? 'Processing input' : result ? 'Result ready' : 'Waiting for input'}</p>
+                <p className="mt-0.5 text-[10px] leading-5 text-slate-500 dark:text-slate-400 sm:mt-1 sm:text-xs sm:leading-6">Use the result card to copy, download, or review the processed output.</p>
               </div>
             </div>
           </section>
 
-          <section className="overflow-hidden rounded-[28px] bg-[radial-gradient(circle_at_top,#1f2560,#090c18_68%)] p-6 text-white shadow-[0_28px_80px_-32px_rgba(15,23,42,0.75)]">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-white"><CheckCircle2 className="h-5 w-5" /></div>
-            <h2 className="mt-6 font-display text-3xl font-extrabold tracking-tight">{result ? 'Result ready' : 'Processed output appears here'}</h2>
-            <p className="mt-3 text-sm leading-6 text-white/70">{result?.output || 'Run the tool to populate the result panel.'}</p>
-            {error && <div className="mt-5 rounded-2xl bg-rose-500/12 px-4 py-4 text-sm text-rose-100 ring-1 ring-rose-400/20">{error}</div>}
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          <section className="overflow-hidden rounded-[20px] bg-[radial-gradient(circle_at_top,#1f2560,#090c18_68%)] p-4 text-white shadow-[0_28px_80px_-32px_rgba(15,23,42,0.75)] sm:rounded-[28px] sm:p-6">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white sm:h-12 sm:w-12 sm:rounded-2xl"><CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" /></div>
+            <h2 className="mt-4 font-display text-xl font-extrabold tracking-tight sm:mt-6 sm:text-3xl">{result ? 'Result ready' : 'Processed output appears here'}</h2>
+            <p className="mt-2 text-xs leading-5 text-white/70 sm:mt-3 sm:text-sm sm:leading-6">{result?.output || 'Run the tool to populate the result panel.'}</p>
+            {error && <div className="mt-4 rounded-xl bg-rose-500/12 px-3 py-3 text-xs text-rose-100 ring-1 ring-rose-400/20 sm:mt-5 sm:rounded-2xl sm:px-4 sm:py-4 sm:text-sm">{error}</div>}
+            <div className="mt-4 grid gap-2 sm:mt-6 sm:gap-3 sm:grid-cols-2">
               {(result?.metrics || [{ label: 'Mode', value: tool.name }, { label: 'Status', value: 'Pending' }]).slice(0, 4).map(metric => (
-                <div key={metric.label} className="rounded-2xl bg-white/6 px-4 py-4 ring-1 ring-white/10">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">{metric.label}</p>
-                  <p className="mt-2 text-sm font-semibold text-white">{metric.value}</p>
+                <div key={metric.label} className="rounded-xl bg-white/6 px-3 py-2.5 ring-1 ring-white/10 sm:rounded-2xl sm:px-4 sm:py-4">
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-white/45 sm:text-[11px]">{metric.label}</p>
+                  <p className="mt-1.5 text-xs font-semibold text-white sm:mt-2 sm:text-sm">{metric.value}</p>
                 </div>
               ))}
             </div>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <button type="button" onClick={handleDownload} disabled={!result?.output} className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"><Download className="h-4 w-4" />Download result</button>
-              <button type="button" onClick={() => void navigator.clipboard.writeText(result?.output || '')} disabled={!result?.output} className="inline-flex items-center gap-2 rounded-full bg-white/8 px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/15 transition hover:bg-white/12 disabled:cursor-not-allowed disabled:opacity-50"><Copy className="h-4 w-4" />Copy output</button>
+            <div className="mt-4 flex flex-wrap gap-2 sm:mt-6 sm:gap-3">
+              <button type="button" onClick={handleDownload} disabled={!result?.output} className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[11px] font-semibold text-slate-950 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50 sm:px-5 sm:py-3 sm:text-sm"><Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" />Download result</button>
+              <button type="button" onClick={() => void navigator.clipboard.writeText(result?.output || '')} disabled={!result?.output} className="inline-flex items-center gap-2 rounded-full bg-white/8 px-4 py-2.5 text-[11px] font-semibold text-white ring-1 ring-white/15 transition hover:bg-white/12 disabled:cursor-not-allowed disabled:opacity-50 sm:px-5 sm:py-3 sm:text-sm"><Copy className="h-3.5 w-3.5 sm:h-4 sm:w-4" />Copy output</button>
             </div>
           </section>
         </div>
@@ -385,15 +385,15 @@ export default function DevStudio({ tool }: { tool: Tool }) {
 
       {tool.slug === 'html-previewer' && (
         <section className="premium-card overflow-hidden">
-          <div className="border-b border-slate-200/70 px-5 py-4 dark:border-slate-800/70">
-            <p className="premium-kicker">Live preview</p>
-            <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">Rendered HTML</h2>
+          <div className="border-b border-slate-200/70 px-4 py-3 dark:border-slate-800/70 sm:px-5 sm:py-4">
+            <p className="premium-kicker text-[10px] sm:text-xs">Live preview</p>
+            <h2 className="font-display text-base font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:text-xl">Rendered HTML</h2>
           </div>
-          <div className="p-5">
+          <div className="p-4 sm:p-5">
             {htmlPreview ? (
-              <iframe title="HTML preview" srcDoc={htmlPreview} className="min-h-[320px] w-full rounded-[24px] bg-white ring-1 ring-slate-200" />
+              <iframe title="HTML preview" srcDoc={htmlPreview} className="min-h-[240px] w-full rounded-[20px] bg-white ring-1 ring-slate-200 sm:min-h-[320px] sm:rounded-[24px]" />
             ) : (
-              <div className="flex min-h-[240px] items-center justify-center rounded-[24px] border border-dashed border-slate-200 text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
+              <div className="flex min-h-[200px] items-center justify-center rounded-[20px] border border-dashed border-slate-200 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400 sm:min-h-[240px] sm:rounded-[24px] sm:text-sm">
                 Rendered HTML preview appears here
               </div>
             )}
@@ -401,13 +401,13 @@ export default function DevStudio({ tool }: { tool: Tool }) {
         </section>
       )}
 
-      <div className="flex flex-wrap gap-3">
-        <button type="button" onClick={handleProcess} disabled={loading} className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#24389c,#465fd6)] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60">
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+      <div className="flex flex-wrap gap-2">
+        <button type="button" onClick={handleProcess} disabled={loading} className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#24389c,#465fd6)] px-3 py-2 text-[11px] font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 sm:py-2.5 sm:text-xs sm:px-6 sm:py-3 sm:text-sm">
+          {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin sm:h-4 sm:w-4" /> : <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
           {copy.actionLabel}
         </button>
-        <button type="button" onClick={resetAll} className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
-          <RefreshCw className="h-4 w-4" />
+        <button type="button" onClick={resetAll} className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 sm:px-4 sm:py-2.5 sm:text-xs sm:px-6 sm:py-3 sm:text-sm">
+          <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           Reset workspace
         </button>
       </div>

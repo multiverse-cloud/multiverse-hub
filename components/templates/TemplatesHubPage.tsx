@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { startTransition, useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { ChevronLeft, ChevronRight, Filter, Grid2X2, LayoutGrid, Search, SearchX, X } from 'lucide-react'
 import TemplateLivePreview from '@/components/templates/TemplateLivePreview'
-import Breadcrumbs from '@/components/layout/Breadcrumbs'
 import type { TemplateCategoryId, TemplateEntry, TemplatePlatformId } from '@/lib/template-library-data'
 import { cn } from '@/lib/utils'
 
@@ -365,17 +364,6 @@ export default function TemplatesHubPage({
 
         {/* ─── Main content ─── */}
         <div className="min-w-0 flex-1">
-          {/* Breadcrumbs */}
-          <Breadcrumbs
-            items={[
-              { label: 'Templates', href: '/templates' },
-              ...(category !== 'all'
-                ? [{ label: categories.find(c => c.id === category)?.title ?? category }]
-                : []),
-            ]}
-            className="mb-6"
-          />
-
           {/* Page heading */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50 md:text-4xl">

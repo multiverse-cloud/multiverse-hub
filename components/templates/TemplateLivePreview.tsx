@@ -267,7 +267,7 @@ export default function TemplateLivePreview({
               srcDoc={template.previewHtml}
               className="border-0 bg-white"
               loading="lazy"
-              sandbox="allow-scripts allow-same-origin"
+              sandbox="allow-scripts"
               scrolling="no"
               style={{
                 width: `${DESKTOP_WIDTH}px`,
@@ -302,7 +302,7 @@ export default function TemplateLivePreview({
               srcDoc={template.previewHtml}
               className="h-full w-full border-0 bg-white"
               loading="lazy"
-              sandbox="allow-scripts allow-same-origin"
+              sandbox="allow-scripts"
               scrolling="no"
             />
           </div>

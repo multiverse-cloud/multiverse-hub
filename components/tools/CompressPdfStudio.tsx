@@ -171,14 +171,14 @@ export default function CompressPdfStudio({ tool }: { tool: Tool }) {
   }
 
   return (
-    <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_324px] xl:items-start">
-      <div className="space-y-5">
-        <div className="max-w-3xl space-y-3">
-          <span className="premium-chip">Free PDF compressor</span>
-          <h1 className="font-display text-4xl font-extrabold tracking-tight text-slate-950 md:text-5xl">
+    <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_324px] xl:items-start sm:gap-5">
+      <div className="space-y-4 sm:space-y-5">
+        <div className="max-w-3xl space-y-2 sm:space-y-3">
+          <span className="premium-chip text-[10px] px-2 py-0.5 sm:text-xs sm:px-2.5 sm:py-1">Free PDF compressor</span>
+          <h1 className="font-display text-2xl font-extrabold tracking-tight text-slate-950 md:text-4xl sm:text-3xl md:text-5xl">
             Compress PDF
           </h1>
-          <p className="max-w-2xl text-lg leading-8 text-slate-600">
+          <p className="max-w-2xl text-sm leading-6 text-slate-600 sm:text-base sm:leading-8">
             Reduce PDF size without changing the page layout.
           </p>
         </div>
@@ -186,34 +186,34 @@ export default function CompressPdfStudio({ tool }: { tool: Tool }) {
         <div
           {...getRootProps()}
           className={cn(
-            'rounded-2xl border-2 border-dashed border-slate-200 bg-white px-6 py-10 text-center transition-all duration-300 sm:px-8 sm:py-12',
+            'rounded-xl border-2 border-dashed border-slate-200 bg-white px-4 py-8 text-center transition-all duration-300 sm:rounded-2xl sm:px-6 sm:py-10 sm:px-8 sm:py-12',
             isDragActive && 'border-indigo-400 bg-indigo-50/40',
             file && 'border-indigo-200'
           )}
         >
           <input {...getInputProps()} />
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600">
-            <FileUp className="h-7 w-7" />
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 sm:mb-5 sm:h-16 sm:w-16 sm:rounded-2xl">
+            <FileUp className="h-6 w-6 sm:h-7 sm:w-7" />
           </div>
-          <button type="button" onClick={open} className="btn-primary min-w-40 px-8 py-3">
+          <button type="button" onClick={open} className="btn-primary min-w-32 px-6 py-2.5 text-xs sm:min-w-40 sm:px-8 sm:py-3 sm:text-sm">
             Choose File
           </button>
-          <p className="mt-4 text-sm font-medium text-slate-600">or drop PDF here</p>
-          <p className="mt-5 text-xs text-slate-500">PDF only. Private processing.</p>
+          <p className="mt-3 text-xs font-medium text-slate-600 sm:mt-4 sm:text-sm">or drop PDF here</p>
+          <p className="mt-4 text-[10px] text-slate-500 sm:mt-5 sm:text-xs">PDF only. Private processing.</p>
           {file && (
-            <div className="mx-auto mt-6 flex max-w-xl items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left shadow-sm">
+            <div className="mx-auto mt-5 flex max-w-xl items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left shadow-sm sm:mt-6 sm:rounded-2xl sm:px-4 sm:py-3">
               <div className="min-w-0">
-                <p className="truncate font-display text-sm font-bold text-slate-950">{file.name}</p>
-                <p className="text-xs text-slate-500">{formatBytes(file.size)}</p>
+                <p className="truncate font-display text-xs font-bold text-slate-950 sm:text-sm">{file.name}</p>
+                <p className="text-[10px] text-slate-500 sm:text-xs">{formatBytes(file.size)}</p>
               </div>
-              <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-500" />
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500 sm:h-5 sm:w-5" />
             </div>
           )}
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start">
-          <div className="space-y-3">
-            <h3 className="font-display text-lg font-bold tracking-tight text-slate-950">Compression Presets</h3>
+        <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start sm:gap-4">
+          <div className="space-y-2 sm:space-y-3">
+            <h3 className="font-display text-base font-bold tracking-tight text-slate-950 sm:text-lg">Compression Presets</h3>
             {PROFILE_OPTIONS.map(option => {
               const Icon = option.icon
               const active = profile === option.id
@@ -224,60 +224,60 @@ export default function CompressPdfStudio({ tool }: { tool: Tool }) {
                   type="button"
                   onClick={() => setProfile(option.id)}
                   className={cn(
-                    'flex w-full items-center justify-between rounded-2xl border px-4 py-4 text-left transition-all',
+                    'flex w-full items-center justify-between rounded-xl border px-3 py-3 text-left transition-all sm:rounded-2xl sm:px-4 sm:py-4',
                     active
                       ? 'border-indigo-500 bg-white shadow-sm'
                       : 'border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-white'
                   )}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5 sm:gap-3">
                     <div
                       className={cn(
-                        'flex h-9 w-9 items-center justify-center rounded-full',
+                        'flex h-8 w-8 items-center justify-center rounded-full sm:h-9 sm:w-9',
                         active ? 'bg-indigo-100 text-indigo-600' : 'bg-white text-slate-500'
                       )}
                     >
-                      <Icon className="h-4 w-4" />
+                      <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </div>
                     <div>
-                      <p className="font-display text-sm font-bold tracking-tight text-slate-950">
+                      <p className="font-display text-xs font-bold tracking-tight text-slate-950 sm:text-sm">
                         {option.title}
                       </p>
-                      <p className="text-xs text-slate-500">{option.description}</p>
+                      <p className="text-[10px] text-slate-500 sm:text-xs">{option.description}</p>
                     </div>
                   </div>
                   <div
                     className={cn(
-                      'flex h-5 w-5 items-center justify-center rounded-full border-2',
+                      'flex h-4 w-4 items-center justify-center rounded-full border-2 sm:h-5 sm:w-5',
                       active ? 'border-indigo-600' : 'border-slate-300'
                     )}
                   >
-                    {active && <div className="h-2.5 w-2.5 rounded-full bg-indigo-600" />}
+                    {active && <div className="h-2 w-2 rounded-full bg-indigo-600 sm:h-2.5 sm:w-2.5" />}
                   </div>
                 </button>
               )
             })}
           </div>
 
-          <div className="rounded-2xl border border-indigo-100 bg-indigo-50/70 p-5">
-            <h3 className="font-display text-sm font-bold tracking-tight text-indigo-700">Optimization Stats</h3>
-            <div className="mt-5 space-y-5">
+          <div className="rounded-xl border border-indigo-100 bg-indigo-50/70 p-4 sm:rounded-2xl sm:p-5">
+            <h3 className="font-display text-xs font-bold tracking-tight text-indigo-700 sm:text-sm">Optimization Stats</h3>
+            <div className="mt-4 space-y-4 sm:mt-5 sm:space-y-5">
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-indigo-500/80">Current Size</p>
-                <p className="mt-2 font-display text-3xl font-extrabold tracking-tight text-slate-950">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-indigo-500/80 sm:text-[11px]">Current Size</p>
+                <p className="mt-1.5 font-display text-2xl font-extrabold tracking-tight text-slate-950 sm:mt-2 sm:text-3xl">
                   {file ? formatBytes(file.size) : '0 MB'}
                 </p>
               </div>
               <div className="h-px bg-indigo-200/70" />
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-indigo-600">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-indigo-600 sm:text-[11px]">
                   {compressedSize ? 'New Size' : 'Estimated Size'}
                 </p>
-                <p className="mt-2 font-display text-4xl font-extrabold tracking-tight text-indigo-700">
+                <p className="mt-1.5 font-display text-3xl font-extrabold tracking-tight text-indigo-700 sm:mt-2 sm:text-4xl">
                   {displayedSize ? formatBytes(displayedSize) : '0 MB'}
                 </p>
                 {displayedSavings !== null && (
-                  <span className="mt-3 inline-flex rounded-md bg-indigo-600 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">
+                  <span className="mt-2 inline-flex rounded-md bg-indigo-600 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white sm:mt-3 sm:py-1">
                     -{displayedSavings}%
                   </span>
                 )}
@@ -287,62 +287,62 @@ export default function CompressPdfStudio({ tool }: { tool: Tool }) {
         </div>
       </div>
 
-      <aside className="space-y-4 xl:sticky xl:top-24">
-        <div className="premium-card p-6 shadow-[0_16px_32px_-28px_rgba(37,99,235,0.35)]">
-          <div className="mb-5 flex items-center justify-between">
-            <h2 className="font-display text-base font-bold tracking-tight text-slate-950">Live Process</h2>
-            <span className="text-sm font-bold text-indigo-600">{Math.round(progress)}%</span>
+      <aside className="space-y-3 xl:sticky xl:top-24 sm:space-y-4">
+        <div className="premium-card p-4 shadow-[0_16px_32px_-28px_rgba(37,99,235,0.35)] sm:p-6">
+          <div className="mb-4 flex items-center justify-between sm:mb-5">
+            <h2 className="font-display text-sm font-bold tracking-tight text-slate-950 sm:text-base">Live Process</h2>
+            <span className="text-xs font-bold text-indigo-600 sm:text-sm">{Math.round(progress)}%</span>
           </div>
-          <div className="mb-5 h-2.5 overflow-hidden rounded-full bg-slate-100">
+          <div className="mb-4 h-2 overflow-hidden rounded-full bg-slate-100 sm:mb-5 sm:h-2.5">
             <div
               className="h-full rounded-full bg-indigo-600 transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <div className="flex gap-3">
-            <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+          <div className="flex gap-2.5 sm:gap-3">
+            <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 sm:h-10 sm:w-10 sm:rounded-2xl">
+              {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin sm:h-4 sm:w-4" /> : <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-950">{liveTitle}</p>
-              <p className="mt-1 text-xs leading-5 text-slate-500">{liveDescription}</p>
+              <p className="text-xs font-bold text-slate-950 sm:text-sm">{liveTitle}</p>
+              <p className="mt-0.5 text-[10px] leading-4 text-slate-500 sm:mt-1 sm:text-xs sm:leading-5">{liveDescription}</p>
             </div>
           </div>
         </div>
 
-        <div className="noise relative overflow-hidden rounded-2xl bg-slate-950 p-6 text-white">
+        <div className="noise relative overflow-hidden rounded-xl bg-slate-950 p-4 text-white sm:rounded-2xl sm:p-6">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(99,102,241,0.28),_transparent_42%),linear-gradient(135deg,_rgba(255,255,255,0.05),_transparent_42%)]" />
-          <div className="relative z-10 space-y-5">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600/90">
-              {outputBlob ? <CheckCircle2 className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
+          <div className="relative z-10 space-y-4 sm:space-y-5">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600/90 sm:h-12 sm:w-12 sm:rounded-2xl">
+              {outputBlob ? <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" /> : <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />}
             </div>
-            <div className="space-y-2">
-              <h2 className="font-display text-3xl font-extrabold tracking-tight">
+            <div className="space-y-1.5 sm:space-y-2">
+              <h2 className="font-display text-xl font-extrabold tracking-tight sm:text-3xl">
                 {outputBlob && displayedSavings !== null
                   ? `Your PDF is now ${displayedSavings}% smaller`
                   : 'Your compressed file will appear here'}
               </h2>
-              <p className="text-sm leading-6 text-slate-300">
+              <p className="text-xs leading-5 text-slate-300 sm:text-sm sm:leading-6">
                 {outputBlob ? 'Optimization complete. Ready to download.' : 'Choose a preset and run compression.'}
               </p>
             </div>
-            <div className="flex flex-col gap-3 pt-1">
+            <div className="flex flex-col gap-2 pt-1 sm:gap-3">
               {outputBlob ? (
                 <>
                   <button
                     type="button"
                     onClick={handleDownload}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 font-display text-sm font-bold tracking-tight text-slate-950 transition hover:bg-slate-100"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2.5 font-display text-xs font-bold tracking-tight text-slate-950 transition hover:bg-slate-100 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
                   >
-                    <Download className="h-4 w-4" />
+                    <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     Download Compressed PDF
                   </button>
                   <button
                     type="button"
                     onClick={handleShare}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3 font-display text-sm font-bold tracking-tight text-white transition hover:bg-white/10"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-2.5 font-display text-xs font-bold tracking-tight text-white transition hover:bg-white/10 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
                   >
-                    <Copy className="h-4 w-4" />
+                    <Copy className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     {shareCopied ? 'Link Copied' : 'Share Link'}
                   </button>
                 </>
@@ -351,9 +351,9 @@ export default function CompressPdfStudio({ tool }: { tool: Tool }) {
                   type="button"
                   onClick={handleCompress}
                   disabled={!file || loading}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 font-display text-sm font-bold tracking-tight text-slate-950 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:bg-white/70"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2.5 font-display text-xs font-bold tracking-tight text-slate-950 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:bg-white/70 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
                 >
-                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                  {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin sm:h-4 sm:w-4" /> : <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
                   Compress PDF
                 </button>
               )}
@@ -361,13 +361,13 @@ export default function CompressPdfStudio({ tool }: { tool: Tool }) {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">Pro Tip</p>
-          <p className="mt-2 text-sm leading-6 text-slate-600">Recommended works best for most PDFs.</p>
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 sm:rounded-2xl sm:p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 sm:text-[11px]">Pro Tip</p>
+          <p className="mt-1.5 text-xs leading-5 text-slate-600 sm:mt-2 sm:text-sm sm:leading-6">Recommended works best for most PDFs.</p>
         </div>
 
         {apiError && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">{apiError}</div>
+          <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-600 sm:rounded-2xl sm:p-4 sm:text-sm">{apiError}</div>
         )}
       </aside>
     </section>

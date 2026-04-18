@@ -284,7 +284,7 @@ export default function TemplateDetailPage({
                 iframeLoaded ? 'opacity-100' : 'opacity-0',
               )}
               onLoad={() => setIframeLoaded(true)}
-              sandbox="allow-scripts allow-same-origin"
+              sandbox="allow-scripts"
               style={{ minHeight: viewport === 'desktop' ? '100%' : '100dvh' }}
             />
           </div>

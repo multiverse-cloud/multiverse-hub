@@ -162,7 +162,7 @@ export default function SourceHubChrome() {
         }
 
         .source-hub-scope .source-hub-noise {
-          background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+          background-image: none;
         }
 
         .source-hub-scope .card-hover {

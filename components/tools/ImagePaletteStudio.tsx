@@ -162,7 +162,7 @@ export default function ImagePaletteStudio({ tool }: { tool: Tool }) {
                   <button
                     type="button"
                     onClick={open}
-                    className="mt-6 rounded-2xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
+                    className="mt-6 rounded-2xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-indigo-700 sm:px-6 sm:py-3 sm:text-sm"
                   >
                     Choose image
                   </button>
