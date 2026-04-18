@@ -61,6 +61,7 @@ function mapTemplateItem(template: TemplateEntry): LibraryHubItem {
       platformLabel: template.platformLabel,
       industry: template.industry,
     },
+    previewDocument: template.previewHtml,
   }
 }
 

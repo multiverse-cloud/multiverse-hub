@@ -11,7 +11,6 @@ import {
   Compass,
   Home,
   Layers3,
-  LayoutTemplate,
   Menu,
   Paintbrush,
   Search,
@@ -27,7 +26,6 @@ const MOBILE_NAV_LINKS = [
   { name: 'Dev', href: '/dev', icon: Code2 },
   { name: 'Discover', href: '/discover', icon: Compass },
   { name: 'Prompts', href: '/prompts', icon: Bot },
-  { name: 'Templates', href: '/templates', icon: LayoutTemplate },
   { name: 'Fixes', href: '/fixes', icon: ShieldAlert },
 ]
 

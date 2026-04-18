@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { startTransition, useDeferredValue, useMemo, useState } from 'react'
+import { startTransition, useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { ArrowUpRight, Boxes, Filter, Search, SearchX, X } from 'lucide-react'
 import SourceUiPreview from '@/components/ui-source/SourceUiPreview'
 import {
@@ -26,6 +26,7 @@ type CssEffectsLibraryClientProps = {
 type SortMode = 'featured' | 'newest' | 'name-asc' | 'name-desc'
 
 const INITIAL_VISIBLE_COUNT = 24
+const UI_STATE_KEY = 'multiverse:ui-universe-state:v2'
 
 function escapeHtml(value: string) {
   return value
@@ -54,6 +55,26 @@ function getCompactPreviewConfig(effect: UiCatalogItem) {
   }
 
   return { scale: 0.64, width: '520px', minHeight: '320px', canvasHeight: '100%', padding: '16px' }
+}
+
+function getCompactDocumentScale(effect: UiCatalogItem) {
+  if (['navbar', 'hero', 'feature', 'footer', 'table', 'dashboard', 'sidebar', 'ecommerce', 'layout'].includes(effect.category)) {
+    return 0.34
+  }
+
+  if (['form', 'auth', 'accordion', 'faq', 'search', 'filter', 'card', 'testimonial', 'pricing', 'stats'].includes(effect.category)) {
+    return 0.46
+  }
+
+  if (['checkbox', 'radio', 'button', 'notification', 'badge', 'hover', 'tooltip', 'toggle', 'separator', 'tabs'].includes(effect.category)) {
+    return 0.72
+  }
+
+  if (['shadow', 'shape', 'background', 'loading', 'text', 'border'].includes(effect.category)) {
+    return 0.58
+  }
+
+  return 0.5
 }
 
 function buildCompactPreviewDoc(effect: UiCatalogItem) {
@@ -133,12 +154,30 @@ function EffectPreview({
 }) {
   const previewDoc = useMemo(() => {
     if (effect.kind === 'source') return null
-    if (compact) return buildCompactPreviewDoc(effect)
+    if (compact) return effect.previewDocument || buildCompactPreviewDoc(effect)
     return buildPreviewDoc(effect)
   }, [compact, effect])
 
   return effect.kind === 'source' ? (
     <SourceUiPreview previewKey={effect.previewKey} compact={compact} />
+  ) : compact && effect.previewDocument ? (
+    <div className="flex h-full w-full items-start justify-center overflow-hidden bg-white">
+      <iframe
+        title={`${effect.title} preview`}
+        srcDoc={previewDoc || ''}
+        className="border-0 bg-white"
+        sandbox="allow-scripts allow-same-origin"
+        loading="lazy"
+        style={{
+          width: `${100 / getCompactDocumentScale(effect)}%`,
+          height: `${100 / getCompactDocumentScale(effect)}%`,
+          transform: `scale(${getCompactDocumentScale(effect)})`,
+          transformOrigin: 'top center',
+          pointerEvents: 'none',
+          background: '#ffffff',
+        }}
+      />
+    </div>
   ) : (
     <iframe
       title={`${effect.title} preview`}
@@ -247,6 +286,7 @@ export default function CssEffectsLibraryClient({
   const [sortMode, setSortMode] = useState<SortMode>('featured')
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const [hydrated, setHydrated] = useState(false)
 
   const deferredQuery = useDeferredValue(query)
   const deferredSection = useDeferredValue(section)
@@ -255,6 +295,57 @@ export default function CssEffectsLibraryClient({
 
   const sections = useMemo(() => getUiSections(), [])
   const collections = useMemo(() => getUiCollections(deferredSection), [deferredSection])
+
+  useEffect(() => {
+    try {
+      const rawState = window.sessionStorage.getItem(UI_STATE_KEY)
+      if (rawState) {
+        const state = JSON.parse(rawState) as {
+          query?: string
+          section?: UiSectionId
+          category?: string
+          sortMode?: SortMode
+          visibleCount?: number
+          scrollY?: number
+        }
+        if (typeof state.query === 'string') setQuery(state.query)
+        if (state.section) setSection(state.section)
+        if (typeof state.category === 'string') setCategory(state.category)
+        if (state.sortMode) setSortMode(state.sortMode)
+        if (typeof state.visibleCount === 'number') setVisibleCount(state.visibleCount)
+        window.requestAnimationFrame(() => {
+          window.scrollTo({ top: state.scrollY || 0, behavior: 'auto' })
+        })
+      }
+    } catch {}
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!hydrated) return
+
+    const persistState = (scrollY = window.scrollY) => {
+      window.sessionStorage.setItem(
+        UI_STATE_KEY,
+        JSON.stringify({
+          query,
+          section,
+          category,
+          sortMode,
+          visibleCount,
+          scrollY,
+        })
+      )
+    }
+
+    persistState()
+
+    const handleScroll = () => persistState(window.scrollY)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [category, hydrated, query, section, sortMode, visibleCount])
 
   const featuredItems = useMemo(
     () => pickDiverseItems(sortItems(uiEffects.filter(item => item.featured), 'featured'), 6),
@@ -441,7 +532,8 @@ export default function CssEffectsLibraryClient({
 
   return (
     <div className="bg-slate-50 dark:bg-slate-950">
-      <main className="mx-auto max-w-7xl px-4 pb-20 pt-28">
+      <main className="relative mx-auto max-w-7xl px-4 pb-20 pt-28">
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.14),transparent_55%)] dark:bg-[radial-gradient(circle_at_top,rgba(96,165,250,0.16),transparent_55%)]" />
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold text-slate-900 md:text-5xl dark:text-slate-50">Components Library</h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-500 dark:text-slate-400">
@@ -502,7 +594,7 @@ export default function CssEffectsLibraryClient({
               </div>
             </div>
 
-            {featuredItems.length > 0 && section === 'all' && category === 'all' && !query.trim() ? (
+            {hydrated && featuredItems.length > 0 && section === 'all' && category === 'all' && !query.trim() ? (
               <section className="mb-8">
                 <div className="mb-4">
                   <h2 className="text-xl font-bold text-slate-900 dark:text-slate-50">Featured</h2>
@@ -542,7 +634,7 @@ export default function CssEffectsLibraryClient({
               </div>
             </div>
 
-            {isFiltering ? (
+            {!hydrated || isFiltering ? (
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
                 {Array.from({ length: 9 }).map((_, index) => (
                   <SkeletonCard key={index} />

@@ -59,14 +59,15 @@ function LoaderMarkup() {
 
 export default function SourceHubChrome() {
   const pathname = usePathname()
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(true)
+  const [booted, setBooted] = useState(false)
 
   const hideLoader = useMemo(
-    () => () => {
+    () => (delay = 520) => {
       window.clearTimeout((window as Window & { __sourceHubLoaderTimer?: number }).__sourceHubLoaderTimer)
       ;(window as Window & { __sourceHubLoaderTimer?: number }).__sourceHubLoaderTimer = window.setTimeout(() => {
         setVisible(false)
-      }, 320)
+      }, delay)
     },
     []
   )
@@ -74,15 +75,36 @@ export default function SourceHubChrome() {
   const showLoader = useMemo(
     () => () => {
       setVisible(true)
-      hideLoader()
     },
-    [hideLoader]
+    []
   )
 
   useEffect(() => {
-    if (!visible) return
-    hideLoader()
-  }, [pathname, visible, hideLoader])
+    function finishBoot() {
+      setBooted(true)
+      hideLoader(1050)
+    }
+
+    if (document.readyState === 'complete') {
+      finishBoot()
+      return
+    }
+
+    const fallback = window.setTimeout(finishBoot, 2200)
+    window.addEventListener('load', finishBoot, { once: true })
+    window.addEventListener('pageshow', finishBoot, { once: true })
+
+    return () => {
+      window.clearTimeout(fallback)
+      window.removeEventListener('load', finishBoot)
+      window.removeEventListener('pageshow', finishBoot)
+    }
+  }, [hideLoader])
+
+  useEffect(() => {
+    if (!booted || !visible) return
+    hideLoader(900)
+  }, [pathname, booted, visible, hideLoader])
 
   useEffect(() => {
     function handleManualLoader() {
@@ -111,6 +133,7 @@ export default function SourceHubChrome() {
           const nextUrl = new URL(link.href, window.location.origin)
           if (nextUrl.origin !== window.location.origin) return
           if (nextUrl.pathname === window.location.pathname && nextUrl.search === window.location.search) return
+          if (link.closest('[data-no-loader="true"]')) return
           showLoader()
         } catch {}
     }

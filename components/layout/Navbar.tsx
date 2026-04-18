@@ -98,16 +98,6 @@ const NAV_LINKS: NavLink[] = [
     ],
   },
   {
-    name: 'Templates',
-    href: '/templates',
-    icon: LayoutTemplate,
-    megaItems: [
-      { name: 'UI Templates', href: '/templates', icon: LayoutTemplate, desc: 'Premium downloadable UI kits with live preview and code bundles' },
-      { name: 'Landing Pages', href: '/templates?category=landing', icon: Briefcase, desc: 'Launch-ready heroes, proof sections, and CTA flow' },
-      { name: 'Dashboards', href: '/templates?category=dashboard', icon: Code2, desc: 'Calm analytics, operations, and builder workspaces' },
-    ],
-  },
-  {
     name: 'Fixes',
     href: '/fixes',
     icon: ShieldAlert,

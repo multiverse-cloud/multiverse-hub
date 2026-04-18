@@ -46,7 +46,7 @@ export default function PromptPreviewImage({
         referrerPolicy={isRemoteUrl(currentSrc) ? 'no-referrer' : undefined}
         className={cn(
           'absolute inset-0 h-full w-full',
-          imageFit === 'contain' ? 'object-contain p-2.5' : 'object-cover',
+          imageFit === 'contain' ? 'object-contain' : 'object-cover',
           imgClassName
         )}
       />

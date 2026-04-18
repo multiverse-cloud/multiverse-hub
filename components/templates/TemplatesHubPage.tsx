@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { startTransition, useDeferredValue, useMemo, useState } from 'react'
+import { startTransition, useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { Filter, Search, SearchX, X } from 'lucide-react'
 import TemplateLivePreview from '@/components/templates/TemplateLivePreview'
 import type { TemplateCategoryId, TemplateEntry, TemplatePlatformId } from '@/lib/template-library-data'
@@ -37,6 +37,7 @@ type TemplatesHubPageProps = {
 type SortMode = 'newest' | 'name-asc' | 'name-desc'
 
 const INITIAL_VISIBLE_COUNT = 24
+const TEMPLATES_STATE_KEY = 'multiverse:templates-universe-state:v2'
 
 function sortTemplates(items: TemplateEntry[], mode: SortMode) {
   const next = [...items]
@@ -55,7 +56,7 @@ function sortTemplates(items: TemplateEntry[], mode: SortMode) {
 function TemplateCard({ template }: { template: TemplateEntry }) {
   return (
     <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/10 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-500/70">
-      <div className="h-52 overflow-hidden bg-white dark:bg-slate-950">
+      <div className="h-56 overflow-hidden bg-white dark:bg-slate-950">
         <TemplateLivePreview template={template} compact className="rounded-none border-0 bg-transparent" />
       </div>
       <Link href={`/templates/${template.slug}`} className="block border-t border-slate-100 px-4 py-4 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/70">
@@ -94,11 +95,63 @@ export default function TemplatesHubPage({
   const [sortMode, setSortMode] = useState<SortMode>('newest')
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const [hydrated, setHydrated] = useState(false)
 
   const deferredQuery = useDeferredValue(query)
   const deferredCategory = useDeferredValue(category)
   const deferredPlatform = useDeferredValue(platform)
   const deferredSortMode = useDeferredValue(sortMode)
+
+  useEffect(() => {
+    try {
+      const rawState = window.sessionStorage.getItem(TEMPLATES_STATE_KEY)
+      if (rawState) {
+        const state = JSON.parse(rawState) as {
+          query?: string
+          category?: 'all' | TemplateCategoryId
+          platform?: 'all' | TemplatePlatformId
+          sortMode?: SortMode
+          visibleCount?: number
+          scrollY?: number
+        }
+        if (typeof state.query === 'string') setQuery(state.query)
+        if (state.category) setCategory(state.category)
+        if (state.platform) setPlatform(state.platform)
+        if (state.sortMode) setSortMode(state.sortMode)
+        if (typeof state.visibleCount === 'number') setVisibleCount(state.visibleCount)
+        window.requestAnimationFrame(() => {
+          window.scrollTo({ top: state.scrollY || 0, behavior: 'auto' })
+        })
+      }
+    } catch {}
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!hydrated) return
+
+    const persistState = (scrollY = window.scrollY) => {
+      window.sessionStorage.setItem(
+        TEMPLATES_STATE_KEY,
+        JSON.stringify({
+          query,
+          category,
+          platform,
+          sortMode,
+          visibleCount,
+          scrollY,
+        })
+      )
+    }
+
+    persistState()
+
+    const handleScroll = () => persistState(window.scrollY)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [category, hydrated, platform, query, sortMode, visibleCount])
 
   const filteredTemplates = useMemo(() => {
     const normalizedQuery = deferredQuery.trim().toLowerCase()
@@ -361,7 +414,7 @@ export default function TemplatesHubPage({
             </div>
           </div>
 
-          {isFiltering ? (
+          {!hydrated || isFiltering ? (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
               {Array.from({ length: 8 }).map((_, index) => (
                 <SkeletonCard key={index} />

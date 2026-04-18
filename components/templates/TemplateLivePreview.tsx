@@ -2,6 +2,32 @@ import Image from 'next/image'
 import type { TemplateCategoryId, TemplateEntry } from '@/lib/template-library-data'
 import { cn } from '@/lib/utils'
 
+function getCompactPreviewScale(template: TemplateEntry) {
+  switch (template.category) {
+    case 'mobile':
+      return 0.58
+    case 'dashboard':
+    case 'saas':
+    case 'agency':
+    case 'education':
+    case 'healthcare':
+    case 'restaurant':
+    case 'real-estate':
+    case 'ecommerce':
+      return 0.34
+    case 'landing':
+    case 'auth':
+    case 'portfolio':
+    case 'pricing':
+    case 'onboarding':
+    case 'crypto':
+    case 'fitness':
+      return 0.42
+    default:
+      return 0.4
+  }
+}
+
 function escapeSvg(value: string) {
   return value
     .replace(/&/g, '&amp;')
@@ -222,25 +248,35 @@ export default function TemplateLivePreview({
 }) {
   const ratio = template.category === 'mobile' ? 'aspect-[10/16]' : compact ? 'aspect-[4/3]' : 'aspect-[16/10]'
 
-  if (compact) {
-    const src = toDataUrl(buildPosterPreviewSvg(template))
-    return (
-      <div className={cn('overflow-hidden rounded-xl border border-border bg-card', ratio, className)}>
-        <Image
-          src={src}
-          alt={`${template.title} poster preview`}
-          width={1600}
-          height={1000}
-          unoptimized
-          className="h-full w-full object-cover"
-        />
-      </div>
-    )
-  }
-
   if (template.previewHtml) {
     const viewportWidth =
       viewport === 'mobile' ? 'w-[390px] max-w-full' : viewport === 'tablet' ? 'w-[820px] max-w-full' : 'w-full'
+    const compactScale = getCompactPreviewScale(template)
+
+    if (compact) {
+      return (
+        <div className={cn('overflow-hidden rounded-xl border border-border bg-white', ratio, className)}>
+          <div className="flex h-full w-full items-start justify-center overflow-hidden bg-[#eef2f7]">
+            <iframe
+              key={`${template.slug}-compact-${reloadToken}`}
+              title={`${template.title} compact preview`}
+              srcDoc={template.previewHtml}
+              className="border-0 bg-white"
+              loading="lazy"
+              sandbox="allow-scripts allow-same-origin"
+              style={{
+                width: `${100 / compactScale}%`,
+                height: `${100 / compactScale}%`,
+                transform: `scale(${compactScale})`,
+                transformOrigin: 'top center',
+                pointerEvents: 'none',
+                background: '#ffffff',
+              }}
+            />
+          </div>
+        </div>
+      )
+    }
 
     return (
       <div className={cn('overflow-hidden rounded-xl border border-border bg-white', ratio, className)}>

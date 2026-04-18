@@ -97,7 +97,7 @@ function PromptShowcaseCard({ prompt }: { prompt: PromptEntry }) {
       prefetch={false}
       className="group overflow-hidden rounded-xl border border-border/80 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_16px_40px_-24px_rgba(15,23,42,0.16)] dark:hover:border-slate-700"
     >
-      <div className="relative aspect-[1.4/1] overflow-hidden bg-slate-100 dark:bg-slate-900">
+      <div className="relative aspect-[4/5] overflow-hidden bg-slate-100 dark:bg-slate-900">
         <PromptPreviewImage
           src={prompt.previewImage}
           alt={prompt.previewAlt}
@@ -176,7 +176,8 @@ export default function PromptHubPage({
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="border-b border-border bg-background">
+      <div className="relative overflow-hidden border-b border-border bg-background">
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-72 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.12),transparent_58%)] dark:bg-[radial-gradient(circle_at_top,rgba(96,165,250,0.14),transparent_58%)]" />
         <div className="page-content py-7 md:py-9">
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
