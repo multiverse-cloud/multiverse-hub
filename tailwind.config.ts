@@ -135,6 +135,14 @@ const config: Config = {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-3px)' },
         },
+        'gradient-x': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        'slide-in-right': {
+          from: { transform: 'translateX(100%)' },
+          to: { transform: 'translateX(0)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -150,6 +158,8 @@ const config: Config = {
         'scale-in': 'scale-in 0.3s ease-out',
         'gradient-shift': 'gradient-shift 4s ease-in-out infinite',
         'icon-bounce': 'icon-bounce 2s ease-in-out infinite',
+        'gradient-x': 'gradient-x 4s ease-in-out infinite',
+        'slide-in-right': 'slide-in-right 0.3s ease-out',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

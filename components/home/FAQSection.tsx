@@ -39,7 +39,10 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
-    <section className="subtle-surface py-16 md:py-20">
+    <section className="relative overflow-hidden py-16 md:py-20">
+      {/* Indigo-tinted FAQ background */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-white via-indigo-50/20 to-white dark:from-slate-950 dark:via-indigo-950/8 dark:to-slate-950" />
+      <div className="absolute inset-0 -z-10 opacity-[0.025] dark:opacity-[0.012]" style={{ backgroundImage: 'radial-gradient(circle, #6366f1 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
       <div className="mx-auto max-w-3xl px-4 lg:px-6">
         <div className="section-header">
           <p className="section-label">FAQ</p>

@@ -237,15 +237,23 @@ export default async function Navbar({ variant = 'default' }: { variant?: 'defau
           : 'border-slate-200/80 bg-white/88 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.35)] dark:border-slate-800/80 dark:bg-slate-950/88 dark:shadow-[0_12px_26px_-20px_rgba(2,6,23,0.55)]'
       )}
     >
-      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3.5 lg:px-6">
+      <div className="mx-auto flex max-w-7xl items-center gap-3 px-3 py-3 sm:gap-4 sm:px-4 lg:px-6 lg:py-3.5">
         <Link href="/" className="group flex shrink-0 items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-950 shadow-md shadow-slate-900/10 transition-shadow group-hover:shadow-slate-900/20 dark:bg-slate-100">
-            <Globe className="h-4 w-4 text-white dark:text-slate-950" />
+          <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-slate-950 shadow-md shadow-slate-900/10 transition-shadow group-hover:shadow-slate-900/20 dark:bg-slate-100">
+            <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white dark:text-slate-950" />
           </div>
-          <span className="hidden font-display text-lg font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:block">
+          <span className="hidden font-display text-base font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:text-lg sm:block">
             Multiverse
           </span>
         </Link>
+
+        <div className="flex-1 sm:hidden">
+          <SiteSearchInput
+            className="w-full"
+            placeholder="Search..."
+            variant="mobile"
+          />
+        </div>
 
         <SiteSearchInput
           className="mx-auto hidden max-w-xl flex-1 lg:block"

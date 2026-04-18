@@ -34,7 +34,10 @@ const BORDER_HOVER_TONES: Record<string, string> = {
 
 export default function UniversesSection() {
   return (
-    <section className="bg-background py-16 md:py-20">
+    <section className="relative overflow-hidden py-16 md:py-20">
+      {/* Indigo violet mesh background */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-white via-indigo-50/20 to-white dark:from-slate-950 dark:via-indigo-950/8 dark:to-slate-950" />
+      <div className="absolute left-1/2 top-0 -z-10 h-[300px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-100/40 blur-[80px] dark:bg-indigo-900/10" />
       <div className="mx-auto max-w-screen-2xl px-4 lg:px-6">
         <div className="mx-auto max-w-6xl">
           <div className="section-header">

@@ -47,7 +47,10 @@ const FEATURES = [
 
 export default function WhyMultiverse() {
   return (
-    <section className="bg-background py-16 md:py-20">
+    <section className="relative overflow-hidden py-16 md:py-20">
+      {/* Emerald-tinted feature cards background */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-slate-50/80 via-emerald-50/10 to-slate-50/80 dark:from-slate-950 dark:via-emerald-950/5 dark:to-slate-950" />
+      <div className="absolute right-0 top-0 -z-10 h-[500px] w-[500px] translate-x-1/4 -translate-y-1/4 rounded-full bg-emerald-100/30 blur-[100px] dark:bg-emerald-900/8" />
       <div className="mx-auto max-w-screen-2xl px-4 lg:px-6">
         <div className="section-header">
           <p className="section-label">Why Multiverse</p>

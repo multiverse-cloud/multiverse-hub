@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 import type { TemplateCategoryId, TemplateEntry } from '@/lib/template-library-data'
 import { cn } from '@/lib/utils'
@@ -254,9 +256,11 @@ export default function TemplateLivePreview({
     const compactScale = getCompactPreviewScale(template)
 
     if (compact) {
+      // Render a full-width desktop (1440px) preview scaled to fit the card
+      const DESKTOP_WIDTH = 1440
       return (
-        <div className={cn('overflow-hidden rounded-xl border border-border bg-white', ratio, className)}>
-          <div className="flex h-full w-full items-start justify-center overflow-hidden bg-[#eef2f7]">
+        <div className={cn('h-full w-full overflow-hidden bg-[#eef2f7]', className)}>
+          <div className="relative h-full w-full overflow-hidden">
             <iframe
               key={`${template.slug}-compact-${reloadToken}`}
               title={`${template.title} compact preview`}
@@ -264,13 +268,23 @@ export default function TemplateLivePreview({
               className="border-0 bg-white"
               loading="lazy"
               sandbox="allow-scripts allow-same-origin"
+              scrolling="no"
               style={{
-                width: `${100 / compactScale}%`,
-                height: `${100 / compactScale}%`,
-                transform: `scale(${compactScale})`,
-                transformOrigin: 'top center',
+                width: `${DESKTOP_WIDTH}px`,
+                height: `${DESKTOP_WIDTH * 0.7}px`,
+                transform: `scale(var(--preview-scale, 1))`,
+                transformOrigin: 'top left',
                 pointerEvents: 'none',
                 background: '#ffffff',
+                // scale set via container query fallback via inline var
+              }}
+              ref={(el) => {
+                if (!el) return
+                const parent = el.parentElement
+                if (!parent) return
+                const scale = parent.offsetWidth / DESKTOP_WIDTH
+                el.style.setProperty('--preview-scale', `${scale}`)
+                el.style.transform = `scale(${scale})`
               }}
             />
           </div>
@@ -289,6 +303,7 @@ export default function TemplateLivePreview({
               className="h-full w-full border-0 bg-white"
               loading="lazy"
               sandbox="allow-scripts allow-same-origin"
+              scrolling="no"
             />
           </div>
         </div>

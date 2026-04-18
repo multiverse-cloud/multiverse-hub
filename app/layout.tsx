@@ -129,7 +129,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: LOCALHOST_RECOVERY_SCRIPT }} />
       </head>
-      <body className="min-h-[100dvh] overflow-x-hidden bg-background font-sans text-foreground antialiased">
+      <body className="mobile-viewport-fix min-h-[100dvh] overflow-x-hidden bg-background font-sans text-foreground antialiased safe-area-top">
         <AuthProvider>
           <AppProviders>
             <SourceHubChrome />

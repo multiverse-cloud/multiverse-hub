@@ -19,7 +19,11 @@ export default async function TrendingToolsSection() {
   if (TRENDING_TOOLS.length === 0) return null
 
   return (
-    <section className="bg-slate-50/80 py-16 md:py-20 dark:bg-slate-950/40">
+    <section className="relative overflow-hidden py-16 md:py-20">
+      {/* Modern mesh gradient background */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-orange-50/60 via-amber-50/30 to-white dark:from-orange-950/10 dark:via-amber-950/5 dark:to-slate-950" />
+      <div className="absolute inset-0 -z-10 opacity-[0.035] dark:opacity-[0.015]" style={{ backgroundImage: 'radial-gradient(circle, #f97316 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+      <div className="absolute left-0 top-0 -z-10 h-px w-full bg-gradient-to-r from-transparent via-orange-200/50 to-transparent dark:via-orange-900/30" />
       <div className="mx-auto max-w-screen-2xl px-4 lg:px-6">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 flex items-center justify-between">

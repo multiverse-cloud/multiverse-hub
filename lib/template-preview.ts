@@ -24,9 +24,44 @@ function stripExternalFileTags(markup: string) {
     .replace(/<script[^>]+src=["'][^"']+\.js["'][^>]*><\/script>/gi, '')
 }
 
+function injectPreviewGuards(markup: string) {
+  const headGuard = `
+<base target="_self" />
+<style>
+  html, body { overscroll-behavior: none; }
+</style>`
+
+  const scriptGuard = `
+<script>
+  (function () {
+    document.addEventListener('click', function (event) {
+      var anchor = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+      if (!anchor) return;
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+
+    document.addEventListener('submit', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+
+    try {
+      window.open = function () { return null; };
+      history.pushState = function () {};
+      history.replaceState = function () {};
+    } catch (error) {}
+  })();
+</script>`
+
+  return markup
+    .replace('</head>', `${headGuard}</head>`)
+    .replace('</body>', `${scriptGuard}</body>`)
+}
+
 export function buildTemplatePreviewHtml(template: TemplateEntry) {
   if (template.previewHtml?.trim()) {
-    return template.previewHtml
+    return injectPreviewGuards(template.previewHtml)
   }
 
   const htmlFile = findIndexFile(template)
@@ -45,9 +80,11 @@ export function buildTemplatePreviewHtml(template: TemplateEntry) {
   const headInjection = `<meta name="robots" content="noindex" />${css ? `<style>${css}</style>` : ''}`
   const bodyInjection = `${js ? `<script>${js}</script>` : ''}`
 
-  return html
+  return injectPreviewGuards(
+    html
     .replace('</head>', `${headInjection}</head>`)
     .replace('</body>', `${bodyInjection}</body>`)
+  )
 }
 
 export function getTemplateDownloadFilename(template: TemplateEntry) {

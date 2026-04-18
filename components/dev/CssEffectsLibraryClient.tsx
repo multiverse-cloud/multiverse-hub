@@ -67,7 +67,7 @@ function getCompactDocumentScale(effect: UiCatalogItem) {
   }
 
   if (['checkbox', 'radio', 'button', 'notification', 'badge', 'hover', 'tooltip', 'toggle', 'separator', 'tabs'].includes(effect.category)) {
-    return 0.72
+    return effect.category === 'button' ? 0.92 : 0.78
   }
 
   if (['shadow', 'shape', 'background', 'loading', 'text', 'border'].includes(effect.category)) {
@@ -84,12 +84,15 @@ function buildCompactPreviewDoc(effect: UiCatalogItem) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base target="_self" />
     <style>
       * { box-sizing: border-box; }
       html, body {
         width: 100%;
         height: 100%;
         margin: 0;
+        overflow: hidden;
+        overscroll-behavior: none;
       }
       ${effect.cssCode || ''}
       body {
@@ -141,6 +144,21 @@ function buildCompactPreviewDoc(effect: UiCatalogItem) {
         ${effect.htmlCode}
       </div>
     </div>
+    <script>
+      (function () {
+        document.addEventListener('click', function (event) {
+          var anchor = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+          if (!anchor) return;
+          event.preventDefault();
+          event.stopPropagation();
+        }, true);
+
+        document.addEventListener('submit', function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }, true);
+      })();
+    </script>
   </body>
 </html>`
 }
@@ -192,7 +210,7 @@ function EffectPreview({
 function PreviewCard({ effect }: { effect: UiCatalogItem }) {
   return (
     <article className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700">
-      <div className="relative aspect-[4/3] overflow-hidden bg-white">
+      <div className="relative h-64 overflow-hidden bg-white">
         <EffectPreview effect={effect} compact />
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-slate-900/0 opacity-0 transition-all duration-300 group-hover:bg-slate-900/12 group-hover:opacity-100">
           <div className="rounded-full bg-white px-4 py-2 text-xs font-semibold text-slate-900 shadow-lg">

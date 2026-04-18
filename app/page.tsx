@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import FAQSection from '@/components/home/FAQSection'
 import HeroSection from '@/components/home/HeroSection'
 import HeroStatsSection from '@/components/home/HeroStatsSection'
@@ -99,8 +100,12 @@ export default function HomePage() {
       <HeroSection />
       <HeroStatsSection />
       <UniversesSection />
-      <TrendingToolsSection />
-      <NewToolsSection />
+      <Suspense fallback={<div className="py-16" />}>
+        <TrendingToolsSection />
+      </Suspense>
+      <Suspense fallback={<div className="py-16" />}>
+        <NewToolsSection />
+      </Suspense>
       <WhyMultiverse />
       <FAQSection />
     </PublicLayout>

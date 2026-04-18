@@ -308,9 +308,44 @@ export function getUiCollectionMeta(category: string) {
   }
 }
 
+function injectPreviewGuards(markup: string) {
+  const headGuard = `
+    <base target="_self" />
+    <style>
+      html, body { overscroll-behavior: none; }
+    </style>`
+
+  const bodyGuard = `
+    <script>
+      (function () {
+        document.addEventListener('click', function (event) {
+          var anchor = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+          if (!anchor) return;
+          event.preventDefault();
+          event.stopPropagation();
+        }, true);
+
+        document.addEventListener('submit', function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }, true);
+
+        try {
+          window.open = function () { return null; };
+          history.pushState = function () {};
+          history.replaceState = function () {};
+        } catch (error) {}
+      })();
+    </script>`
+
+  return markup
+    .replace('</head>', `${headGuard}</head>`)
+    .replace('</body>', `${bodyGuard}</body>`)
+}
+
 export function buildPreviewDoc(effect: UiCatalogItem) {
   if (effect.previewDocument) {
-    return effect.previewDocument
+    return injectPreviewGuards(effect.previewDocument)
   }
 
   const isCompactControl = ['checkbox', 'radio', 'shape'].includes(effect.category)
@@ -336,7 +371,7 @@ export function buildPreviewDoc(effect: UiCatalogItem) {
     'ecommerce',
   ].includes(effect.category)
 
-  return `<!doctype html>
+  return injectPreviewGuards(`<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -369,7 +404,7 @@ export function buildPreviewDoc(effect: UiCatalogItem) {
   <body>
     <div class="preview-root">${effect.htmlCode}</div>
   </body>
-</html>`
+</html>`)
 }
 
 function getComponentName(effect: UiCatalogItem): string {

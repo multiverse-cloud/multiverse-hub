@@ -20,7 +20,7 @@ const TYPE_META: Record<
 
 type SiteSearchInputProps = {
   placeholder: string
-  variant?: 'hero' | 'navbar'
+  variant?: 'hero' | 'navbar' | 'mobile'
   className?: string
 }
 
@@ -100,7 +100,8 @@ export default function SiteSearchInput({
   }
 
   const isHero = variant === 'hero'
-  const showDropdown = isFocused && results.length > 0
+  const isMobile = variant === 'mobile'
+  const showDropdown = isFocused && results.length > 0 && !isMobile
 
   return (
     <div ref={containerRef} className={cn('relative w-full', className)}>
@@ -109,7 +110,7 @@ export default function SiteSearchInput({
           <Search
             className={cn(
               'absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors',
-              isHero ? 'h-5 w-5 sm:left-4' : 'h-4 w-4',
+              isHero ? 'h-5 w-5 sm:left-4' : isMobile ? 'h-4 w-4 left-2.5' : 'h-4 w-4',
               isFocused && 'text-indigo-500'
             )}
           />
@@ -123,6 +124,8 @@ export default function SiteSearchInput({
               'w-full transition-all focus:outline-none',
               isHero
                 ? 'rounded-2xl border-2 border-slate-200/80 bg-white py-3.5 pl-10 pr-24 text-sm shadow-lg shadow-slate-900/[0.04] focus:border-indigo-400 focus:shadow-indigo-500/10 sm:py-4 sm:pl-12 sm:pr-36 sm:text-base dark:border-slate-800/80 dark:bg-slate-900/90 dark:shadow-none dark:focus:border-indigo-500'
+                : isMobile
+                ? 'rounded-lg border border-slate-200/60 bg-white/90 py-2 pl-8 pr-3 text-xs focus:border-indigo-400 focus:ring-1 focus:ring-indigo-500/20 dark:border-slate-700/60 dark:bg-slate-900/90 dark:text-slate-100'
                 : 'rounded-xl border border-slate-200 bg-white py-3 pl-9 pr-4 text-sm shadow-sm hover:border-indigo-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-700'
             )}
           />
@@ -133,6 +136,14 @@ export default function SiteSearchInput({
             >
               Search
               <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            </button>
+          ) : isMobile ? (
+            <button
+              type="submit"
+              className="absolute right-1.5 top-1/2 flex -translate-y-1/2 items-center rounded-lg bg-indigo-600 p-1.5 text-white transition-colors hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+              aria-label="Search"
+            >
+              <ArrowRight className="h-3 w-3" />
             </button>
           ) : null}
         </div>

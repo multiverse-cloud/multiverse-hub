@@ -19,7 +19,11 @@ export default async function NewToolsSection() {
   if (NEW_TOOLS.length === 0) return null
 
   return (
-    <section className="bg-background py-16 md:py-20">
+    <section className="relative overflow-hidden py-16 md:py-20">
+      {/* Violet-tinted background */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-white via-violet-50/25 to-white dark:from-slate-950 dark:via-violet-950/8 dark:to-slate-950" />
+      <div className="absolute inset-0 -z-10 opacity-[0.03] dark:opacity-[0.015]" style={{ backgroundImage: 'linear-gradient(rgba(139,92,246,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.15) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+      <div className="absolute left-0 top-0 -z-10 h-px w-full bg-gradient-to-r from-transparent via-violet-200/50 to-transparent dark:via-violet-900/30" />
       <div className="mx-auto max-w-screen-2xl px-4 lg:px-6">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 flex items-center justify-between">
