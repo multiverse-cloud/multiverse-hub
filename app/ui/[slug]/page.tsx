@@ -3,7 +3,6 @@ import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { notFound } from 'next/navigation'
 import EffectDetailClient from '@/components/effects/EffectDetailClient'
-import SourceHubChrome from '@/components/source-hub/SourceHubChrome'
 import {
   getEffectBySlug,
   getEffectSlug,
@@ -144,7 +143,6 @@ export default async function UiSlugPage({ params }: UiSlugPageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       ) : null}
-      <SourceHubChrome />
       <EffectDetailClient effect={effect} relatedEffects={relatedEffects} />
     </>
   )

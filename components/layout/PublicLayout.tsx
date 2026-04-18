@@ -1,6 +1,5 @@
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import SourceHubChrome from '@/components/source-hub/SourceHubChrome'
 
 export default function PublicLayout({
   children,
@@ -26,7 +25,6 @@ export default function PublicLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       ))}
-      {variant === 'source-hub' ? <SourceHubChrome /> : null}
       <div className="flex min-h-screen flex-col">
         <Navbar />
         <main className="flex-1">{children}</main>

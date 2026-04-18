@@ -1,6 +1,5 @@
 ﻿import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import SourceHubChrome from '@/components/source-hub/SourceHubChrome'
 import TemplateDetailPage from '@/components/templates/TemplateDetailPage'
 import { getRelatedTemplates, getTemplateBySlug } from '@/lib/template-db'
 
@@ -121,7 +120,6 @@ export default async function TemplateSlugPage({ params }: TemplateSlugPageProps
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       ) : null}
-      <SourceHubChrome />
       <TemplateDetailPage template={template} relatedTemplates={relatedTemplates} />
     </>
   )

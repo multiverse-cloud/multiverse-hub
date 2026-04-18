@@ -54,13 +54,13 @@ function sortTemplates(items: TemplateEntry[], mode: SortMode) {
 
 function TemplateCard({ template }: { template: TemplateEntry }) {
   return (
-    <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/10">
-      <div className="h-52 overflow-hidden bg-white">
+    <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/10 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-500/70">
+      <div className="h-52 overflow-hidden bg-white dark:bg-slate-950">
         <TemplateLivePreview template={template} compact className="rounded-none border-0 bg-transparent" />
       </div>
-      <Link href={`/templates/${template.slug}`} className="block border-t border-slate-100 px-4 py-4 transition-colors hover:bg-slate-50">
-        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">{template.industry}</p>
-        <h3 className="mt-2 truncate text-sm font-bold text-slate-900">{template.title}</h3>
+      <Link href={`/templates/${template.slug}`} className="block border-t border-slate-100 px-4 py-4 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/70">
+        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{template.industry}</p>
+        <h3 className="mt-2 truncate text-sm font-bold text-slate-900 dark:text-slate-100">{template.title}</h3>
       </Link>
     </article>
   )
@@ -138,7 +138,7 @@ export default function TemplatesHubPage({
             })
           }
           placeholder={`Search ${totalTemplates}+ templates...`}
-          className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm shadow-sm outline-none transition-all focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm shadow-sm outline-none transition-all focus:ring-2 focus:ring-blue-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
         />
       </div>
 
@@ -166,7 +166,7 @@ export default function TemplatesHubPage({
               <button
                 type="button"
                 onClick={() => setCategory('all')}
-                className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700"
+                className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
               >
                 {categories.find(item => item.id === category)?.title}
                 <X className="h-3 w-3" />
@@ -176,7 +176,7 @@ export default function TemplatesHubPage({
               <button
                 type="button"
                 onClick={() => setPlatform('all')}
-                className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700"
+                className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
               >
                 {platforms.find(item => item.id === platform)?.title}
                 <X className="h-3 w-3" />
@@ -186,7 +186,7 @@ export default function TemplatesHubPage({
               <button
                 type="button"
                 onClick={() => setQuery('')}
-                className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700"
+                className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
               >
                 {query.trim()}
                 <X className="h-3 w-3" />
@@ -281,25 +281,26 @@ export default function TemplatesHubPage({
   )
 
   return (
-    <div className="source-hub-scope bg-slate-50">
-      <main className="mx-auto flex max-w-7xl flex-col gap-10 px-4 pb-20 pt-32 lg:flex-row lg:items-start">
+    <div className="source-hub-scope bg-slate-50 dark:bg-slate-950">
+      <main className="relative mx-auto flex max-w-7xl flex-col gap-10 px-4 pb-20 pt-32 lg:flex-row lg:items-start">
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.16),transparent_55%)] dark:bg-[radial-gradient(circle_at_top,rgba(96,165,250,0.18),transparent_55%)]" />
         <aside className="hidden w-72 shrink-0 space-y-8 lg:sticky lg:top-24 lg:block">{filterPanel}</aside>
 
         <div className="w-full flex-1">
           <div className="mb-12 text-center">
-            <h1 className="text-4xl font-bold text-slate-900 md:text-5xl">Templates Library</h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-500">
+            <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-50 md:text-5xl">Templates Library</h1>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-500 dark:text-slate-400">
               Browse source-backed website templates with the imported hub layout, live preview flow, and cleaner code download.
             </p>
           </div>
 
-          <div className="sticky top-20 z-30 mb-8 bg-slate-50/90 pb-4 backdrop-blur-md md:py-2">
+          <div className="sticky top-20 z-30 mb-8 bg-slate-50/90 pb-4 backdrop-blur-md dark:bg-slate-950/90 md:py-2">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div className="flex w-full items-center gap-1 rounded-xl border border-slate-100 bg-white p-1.5 shadow-sm md:w-auto">
+              <div className="flex w-full items-center gap-1 rounded-xl border border-slate-100 bg-white p-1.5 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:w-auto">
                 <Link href="/templates" className="flex-1 rounded-lg bg-blue-600 px-6 py-2 text-center text-sm font-bold text-white md:flex-none">
                   Templates
                 </Link>
-                <Link href="/ui" className="flex-1 rounded-lg px-6 py-2 text-center text-sm font-bold text-slate-600 transition-colors hover:text-slate-900 md:flex-none">
+                <Link href="/ui" className="flex-1 rounded-lg px-6 py-2 text-center text-sm font-bold text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-50 md:flex-none">
                   Components
                 </Link>
               </div>
@@ -337,9 +338,9 @@ export default function TemplatesHubPage({
           </div>
 
           <div className="mb-6 flex items-center justify-between">
-            <div className="text-sm text-slate-500">
-              Showing <span className="font-bold text-slate-900">{totalResults || filteredTemplates.length}</span> results
-            </div>
+              <div className="text-sm text-slate-500 dark:text-slate-400">
+              Showing <span className="font-bold text-slate-900 dark:text-slate-100">{totalResults || filteredTemplates.length}</span> results
+              </div>
             <div className="flex items-center gap-2">
               <span className="hidden text-xs font-bold uppercase tracking-widest text-slate-400 sm:block">Sort by:</span>
               <select
@@ -351,7 +352,7 @@ export default function TemplatesHubPage({
                     setVisibleCount(INITIAL_VISIBLE_COUNT)
                   })
                 }}
-                className="cursor-pointer bg-transparent text-sm font-bold text-slate-900 outline-none"
+                className="cursor-pointer bg-transparent text-sm font-bold text-slate-900 outline-none dark:text-slate-100"
               >
                 <option value="newest">Newest First</option>
                 <option value="name-asc">A to Z</option>
@@ -367,12 +368,12 @@ export default function TemplatesHubPage({
               ))}
             </div>
           ) : filteredTemplates.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-slate-200 bg-white py-20 text-center">
-              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-50">
-                <SearchX className="h-10 w-10 text-slate-300" />
+            <div className="rounded-3xl border border-dashed border-slate-200 bg-white py-20 text-center dark:border-slate-800 dark:bg-slate-900">
+              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800">
+                <SearchX className="h-10 w-10 text-slate-300 dark:text-slate-600" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900">No results found</h3>
-              <p className="mx-auto mt-2 max-w-sm text-slate-500">
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">No results found</h3>
+              <p className="mx-auto mt-2 max-w-sm text-slate-500 dark:text-slate-400">
                 Try adjusting your keywords or filters to find what you are looking for.
               </p>
             </div>

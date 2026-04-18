@@ -9,7 +9,7 @@ function LoaderMarkup() {
       <div className="source-hub-loader-content">
         <div className="source-hub-loader-logo">
           <div className="source-hub-loader-logo-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className="source-hub-loader-mark" width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
                 stroke="#2563eb"
@@ -35,7 +35,7 @@ function LoaderMarkup() {
             </svg>
           </div>
           <span className="source-hub-loader-logo-text">
-            Multiverse<span>Hub</span>
+            Multiverse
           </span>
         </div>
 
@@ -83,6 +83,17 @@ export default function SourceHubChrome() {
     if (!visible) return
     hideLoader()
   }, [pathname, visible, hideLoader])
+
+  useEffect(() => {
+    function handleManualLoader() {
+      showLoader()
+    }
+
+    window.addEventListener('multiverse:show-loader', handleManualLoader)
+    return () => {
+      window.removeEventListener('multiverse:show-loader', handleManualLoader)
+    }
+  }, [showLoader])
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
@@ -207,14 +218,15 @@ export default function SourceHubChrome() {
           justify-content: center;
         }
 
+        .source-hub-loader-mark {
+          transform: rotate(180deg);
+          transform-origin: center;
+        }
+
         .source-hub-loader-logo-text {
           font-size: 1.75rem;
           font-weight: 800;
           color: #0f172a;
-        }
-
-        .source-hub-loader-logo-text span {
-          color: #2563eb;
         }
 
         .source-hub-loader-spinner {
@@ -273,6 +285,26 @@ export default function SourceHubChrome() {
           background: #2563eb;
           width: 40%;
           animation: source-hub-loader-progress 2s ease-in-out infinite;
+        }
+
+        .dark .source-hub-loader {
+          background: radial-gradient(circle at top, rgba(37, 99, 235, 0.18), transparent 35%), linear-gradient(135deg, #020617 0%, #0f172a 55%, #111827 100%);
+        }
+
+        .dark .source-hub-loader-logo-text {
+          color: #f8fafc;
+        }
+
+        .dark .source-hub-loader-text p:first-child {
+          color: #e2e8f0;
+        }
+
+        .dark .source-hub-loader-text p:last-child {
+          color: #94a3b8;
+        }
+
+        .dark .source-hub-loader-progress-bar {
+          background: rgba(148, 163, 184, 0.2);
         }
 
         @keyframes source-hub-skeleton-loading {

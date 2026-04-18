@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft, Check, Copy, FileCode, Monitor, RotateCw, Share2 } from 'lucide-react'
 import SourceUiPreview from '@/components/ui-source/SourceUiPreview'
@@ -95,6 +96,7 @@ function RelatedCard({ effect }: { effect: UiCatalogItem }) {
 }
 
 export default function EffectDetailClient({ effect, relatedEffects }: EffectDetailClientProps) {
+  const router = useRouter()
   const tabs = useMemo(() => getTabs(effect), [effect])
   const [activeTab, setActiveTab] = useState<CodeTab>(tabs[0]?.id || 'html')
   const [previewMode, setPreviewMode] = useState<PreviewMode>('split')
@@ -135,20 +137,33 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
     } catch {}
   }
 
+  function handleBack() {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('multiverse:show-loader'))
+      if (window.history.length > 1) {
+        router.back()
+        return
+      }
+    }
+
+    router.push('/ui')
+  }
+
   return (
     <div className="source-hub-scope bg-slate-950 text-slate-200">
       <main className="flex min-h-screen flex-col overflow-hidden bg-slate-950">
         <header className="z-20 flex h-16 shrink-0 items-center justify-between border-b border-slate-800 bg-slate-900 px-4 shadow-md md:px-6">
           <div className="flex items-center gap-4">
-            <Link
-              href="/ui"
+            <button
+              type="button"
+              onClick={handleBack}
               className="group flex items-center gap-2 text-slate-400 transition-colors hover:text-white"
             >
               <div className="rounded-md p-1.5 transition-colors group-hover:bg-slate-800">
                 <ArrowLeft className="h-5 w-5" />
               </div>
               <span className="hidden font-medium sm:inline">Back to Library</span>
-            </Link>
+            </button>
             <div className="hidden h-6 w-px bg-slate-800 sm:block" />
             <div className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded bg-blue-500/10 text-blue-500">

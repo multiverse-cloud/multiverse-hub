@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
+import SourceHubChrome from '@/components/source-hub/SourceHubChrome'
 import AuthProvider from '@/components/providers/AuthProvider'
 import AppProviders from '@/components/providers/AppProviders'
 import './globals.css'
@@ -130,7 +131,10 @@ export default function RootLayout({
       </head>
       <body className="min-h-[100dvh] overflow-x-hidden bg-background font-sans text-foreground antialiased">
         <AuthProvider>
-          <AppProviders>{children}</AppProviders>
+          <AppProviders>
+            <SourceHubChrome />
+            {children}
+          </AppProviders>
           <SpeedInsights />
         </AuthProvider>
       </body>
