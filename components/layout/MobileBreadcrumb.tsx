@@ -49,30 +49,30 @@ export default function MobileBreadcrumb() {
   })
 
   return (
-    <div className="lg:hidden border-b border-slate-200/80 bg-white/95 backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-950/95">
-      <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-2.5 overflow-x-auto">
+    <div className="lg:hidden border-b border-slate-200/60 bg-white/95 backdrop-blur-sm dark:border-slate-800/60 dark:bg-slate-950/95">
+      <div className="mx-auto flex max-w-7xl items-center gap-1.5 px-3 py-1.5">
         {breadcrumbs.map((item, index) => {
           const isLast = index === breadcrumbs.length - 1
           const isFirst = index === 0
 
           return (
-            <div key={`${item.label}-${index}`} className="flex items-center gap-2 shrink-0">
+            <div key={`${item.label}-${index}`} className="flex items-center gap-1 shrink-0">
               {item.href && !isLast ? (
                 <Link 
                   href={item.href} 
-                  className="flex items-center gap-1.5 text-xs font-medium text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                  className="flex items-center gap-1 text-[10px] font-medium text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
                 >
-                  {isFirst ? <Home className="h-3.5 w-3.5" /> : null}
+                  {isFirst ? <Home className="h-3 w-3" /> : null}
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">
+                <span className="text-[10px] font-semibold text-slate-900 dark:text-slate-100">
                   {item.label}
                 </span>
               )}
 
               {!isLast ? (
-                <ChevronRight className="h-3.5 w-3.5 text-slate-400" />
+                <ChevronRight className="h-2.5 w-2.5 text-slate-400" />
               ) : null}
             </div>
           )

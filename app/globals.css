@@ -215,7 +215,7 @@
 
   /* Button variants */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 font-display text-sm font-bold tracking-tight text-white transition-all duration-200 shadow-md shadow-indigo-500/20 hover:shadow-lg hover:shadow-indigo-500/30 active:scale-[0.97];
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-display text-xs font-bold tracking-tight text-white transition-all duration-200 shadow-md shadow-indigo-500/20 hover:shadow-lg hover:shadow-indigo-500/30 active:scale-[0.97] sm:px-5 sm:py-2.5 sm:text-sm;
     background: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #4338ca 100%);
     background-size: 200% 200%;
   }
@@ -223,7 +223,7 @@
     background-position: 100% 50%;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-5 py-2.5 font-display text-sm font-bold tracking-tight text-slate-900 transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-700 dark:hover:bg-slate-800;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 font-display text-xs font-bold tracking-tight text-slate-900 transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-700 dark:hover:bg-slate-800 sm:px-5 sm:py-2.5 sm:text-sm;
   }
 
   /* Tag/Badge */
@@ -419,6 +419,10 @@
 /* Global polish */
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 ::selection {

@@ -9,7 +9,6 @@ import {
   Bot,
   Code2,
   Compass,
-  Globe,
   Home,
   Layers3,
   Menu,
@@ -82,11 +81,12 @@ export default function MobileNav({
         {/* Header */}
         <div className="relative flex items-center justify-between border-b border-slate-200/80 p-4 dark:border-slate-800/80">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 shadow-lg dark:bg-white">
-              <Globe className="h-5 w-5 text-white dark:text-slate-900" />
-            </div>
+            <img src="/logo.svg" alt="M" className="h-10 w-10" style={{ transform: 'rotate(180deg)' }} />
             <div>
-              <span className="font-display text-lg font-extrabold tracking-tight text-slate-900 dark:text-slate-50">Menu</span>
+              <span className="font-display text-lg font-extrabold tracking-tight">
+                <span className="text-slate-900 dark:text-slate-50">Multi</span>
+                <span className="text-blue-600 dark:text-blue-400">verse</span>
+              </span>
               <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
                 <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
                 150+ tools

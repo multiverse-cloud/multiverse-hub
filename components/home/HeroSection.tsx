@@ -38,12 +38,12 @@ export default function HeroSection() {
         <div className="absolute left-1/2 top-10 h-40 w-40 rounded-full bg-cyan-500/[0.03] blur-3xl dark:bg-cyan-400/[0.04]" style={{ animationDelay: '3s', animationDuration: '5.5s' }} />
       </div>
 
-      <div className="relative mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-6">
-        <div className="mx-auto flex min-h-[calc(100svh-7.5rem)] max-w-4xl flex-col items-center justify-center py-6 sm:py-8 md:py-10">
+      <div className="relative mx-auto max-w-screen-2xl px-3 sm:px-4 lg:px-6">
+        <div className="mx-auto flex min-h-[calc(100svh-6rem)] max-w-4xl flex-col items-center justify-center py-4 sm:py-6 md:py-10">
 
           {/* Kicker badge */}
-          <div className="mb-4 sm:mb-5 flex justify-center animate-fade-in" style={{ animationFillMode: 'both' }}>
-            <div className="group relative inline-flex items-center gap-2 rounded-full border border-indigo-200/50 bg-white/80 px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm shadow-sm backdrop-blur-sm transition-all hover:border-indigo-300/60 hover:shadow-md dark:border-indigo-800/30 dark:bg-slate-900/80 dark:hover:border-indigo-700/40">
+          <div className="mb-3 sm:mb-4 flex justify-center animate-fade-in" style={{ animationFillMode: 'both' }}>
+            <div className="group relative inline-flex items-center gap-1.5 rounded-full border border-indigo-200/50 bg-white/80 px-2.5 py-1 text-[10px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-xs shadow-sm backdrop-blur-sm transition-all hover:border-indigo-300/60 hover:shadow-md dark:border-indigo-800/30 dark:bg-slate-900/80 dark:hover:border-indigo-700/40">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75 dark:bg-indigo-300" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-500 dark:bg-indigo-400" />
@@ -55,14 +55,14 @@ export default function HeroSection() {
           </div>
 
           {/* Heading */}
-          <div className="mb-5 sm:mb-6 w-full text-center animate-fade-in" style={{ animationDelay: '0.12s', animationFillMode: 'both' }}>
-            <h1 className="font-display text-3xl font-extrabold leading-[0.92] tracking-tight sm:text-4xl md:text-5xl lg:text-[3.5rem]">
+          <div className="mb-4 sm:mb-5 w-full text-center animate-fade-in" style={{ animationDelay: '0.12s', animationFillMode: 'both' }}>
+            <h1 className="font-display text-2xl font-extrabold leading-[0.92] tracking-tight sm:text-3xl md:text-4xl lg:text-[3.5rem]">
               <span className="block text-slate-950 dark:text-slate-50">Every tool you need.</span>
               <span className="mt-1 sm:mt-2 block bg-gradient-to-r from-indigo-600 via-violet-500 to-purple-600 bg-clip-text text-transparent dark:from-indigo-300 dark:via-violet-300 dark:to-purple-300">
                 One platform.
               </span>
             </h1>
-            <p className="mx-auto mt-4 sm:mt-5 max-w-lg text-sm leading-relaxed text-slate-600 dark:text-slate-400 sm:max-w-xl sm:text-base">
+            <p className="mx-auto mt-3 sm:mt-4 max-w-lg text-xs leading-relaxed text-slate-600 dark:text-slate-400 sm:max-w-xl sm:text-sm sm:text-base">
               Convert PDFs, compress images, download videos, and build faster&nbsp;—
               all free, all private, all instant.
             </p>
@@ -74,17 +74,17 @@ export default function HeroSection() {
           </div>
 
           {/* Suggestion chips */}
-          <div className="mb-5 sm:mb-7 flex flex-wrap justify-center gap-1.5 sm:gap-2 animate-fade-in" style={{ animationDelay: '0.36s', animationFillMode: 'both' }}>
+          <div className="mb-4 sm:mb-6 flex flex-wrap justify-center gap-1 sm:gap-1.5 sm:gap-2 animate-fade-in" style={{ animationDelay: '0.36s', animationFillMode: 'both' }}>
             {SUGGESTION_CHIPS.map((chip, index) => {
               const Icon = chip.icon
               return (
                 <Link
                   key={chip.label}
                   href={chip.href}
-                  className="group/chip flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-white/70 px-2.5 py-1.5 text-xs font-medium text-slate-500 shadow-sm backdrop-blur-sm transition-all hover:border-indigo-200 hover:bg-indigo-50/80 hover:text-indigo-700 hover:shadow-md dark:border-slate-800/60 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:border-indigo-800/50 dark:hover:bg-indigo-950/40 dark:hover:text-indigo-300 sm:px-3.5 sm:py-1.5 sm:text-sm"
+                  className="group/chip flex items-center gap-1 rounded-full border border-slate-200/80 bg-white/70 px-2 py-1 text-[10px] font-medium text-slate-500 shadow-sm backdrop-blur-sm transition-all hover:border-indigo-200 hover:bg-indigo-50/80 hover:text-indigo-700 hover:shadow-md dark:border-slate-800/60 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:border-indigo-800/50 dark:hover:bg-indigo-950/40 dark:hover:text-indigo-300 sm:gap-1.5 sm:px-2.5 sm:py-1.5 sm:text-xs sm:px-3.5 sm:text-sm"
                   style={{ animationDelay: `${0.36 + index * 0.05}s` }}
                 >
-                  <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5 transition-transform group-hover/chip:scale-110" />
+                  <Icon className="h-2.5 w-2.5 sm:h-3 sm:w-3 sm:h-3.5 sm:w-3.5 transition-transform group-hover/chip:scale-110" />
                   <span className="hidden sm:inline">{chip.label}</span>
                   <span className="sm:hidden">{chip.label.split(' ')[0]}</span>
                 </Link>
@@ -93,14 +93,14 @@ export default function HeroSection() {
           </div>
 
           {/* CTAs */}
-          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row animate-fade-in" style={{ animationDelay: '0.48s', animationFillMode: 'both' }}>
-            <Link href="/tools" className="group btn-primary flex items-center justify-center gap-2 px-6 py-3 text-sm shadow-xl shadow-indigo-500/20 transition-all hover:shadow-indigo-500/30 hover:scale-[1.02] w-full sm:w-auto sm:px-7 sm:text-base">
-              <Sparkles className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
+          <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 sm:flex-row animate-fade-in" style={{ animationDelay: '0.48s', animationFillMode: 'both' }}>
+            <Link href="/tools" className="group btn-primary flex items-center justify-center gap-2 px-5 py-2.5 text-xs shadow-xl shadow-indigo-500/20 transition-all hover:shadow-indigo-500/30 hover:scale-[1.02] w-full sm:w-auto sm:px-6 sm:py-3 sm:text-sm sm:px-7 sm:text-base">
+              <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 sm:h-4.5 sm:w-4.5" />
               Explore All Tools
-              <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-0.5" />
+              <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
-            <Link href="/tools/video/all-in-one-video-downloader" className="btn-secondary flex items-center justify-center gap-2 px-6 py-3 text-sm transition-all hover:scale-[1.02] w-full sm:w-auto sm:px-7 sm:text-base">
-              <Download className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
+            <Link href="/tools/video/all-in-one-video-downloader" className="btn-secondary flex items-center justify-center gap-2 px-5 py-2.5 text-xs transition-all hover:scale-[1.02] w-full sm:w-auto sm:px-6 sm:py-3 sm:text-sm sm:px-7 sm:text-base">
+              <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4 sm:h-4.5 sm:w-4.5" />
               <span className="hidden sm:inline">Try Video Downloader</span>
               <span className="sm:hidden">Video Downloader</span>
             </Link>

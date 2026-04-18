@@ -184,7 +184,7 @@ function EffectPreview({
         title={`${effect.title} preview`}
         srcDoc={previewDoc || ''}
         className="border-0 bg-white"
-        sandbox="allow-scripts allow-same-origin"
+        sandbox="allow-scripts"
         loading="lazy"
         style={{
           width: `${100 / getCompactDocumentScale(effect)}%`,
@@ -201,7 +201,7 @@ function EffectPreview({
       title={`${effect.title} preview`}
       srcDoc={previewDoc || ''}
       className="h-full w-full border-0 bg-white"
-      sandbox="allow-scripts allow-same-origin"
+      sandbox="allow-scripts"
       loading="lazy"
     />
   )

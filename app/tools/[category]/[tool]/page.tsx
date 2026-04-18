@@ -9,7 +9,6 @@ import PdfStudioPageFrame from '@/components/tools/PdfStudioPageFrame'
 import VideoStudioPageFrame from '@/components/tools/VideoStudioPageFrame'
 import WorkbenchStudioPageFrame from '@/components/tools/WorkbenchStudioPageFrame'
 import ToolCard from '@/components/tools/ToolCard'
-import ToolBreadcrumb from '@/components/tools/ToolBreadcrumb'
 import RecentTracker from '@/components/tools/RecentTracker'
 import SEOContent from '@/components/tools/SEOContent'
 import ToolActions from '@/components/tools/ToolActions'
@@ -497,15 +496,6 @@ export default async function ToolPage({ params }: Props) {
       <div className="premium-shell" data-tool-shell="true">
         <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-6 md:py-10">
           <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-            <ToolBreadcrumb
-              className="mb-0"
-              items={[
-                { label: 'All Tools', href: '/tools' },
-                { label: tool.category, href: `/tools/${tool.categorySlug}` },
-                { label: tool.name },
-              ]}
-            />
-
             <ToolActions slug={tool.slug} name={tool.name} className="mb-0 w-full justify-start lg:w-auto lg:justify-end" />
           </div>
 

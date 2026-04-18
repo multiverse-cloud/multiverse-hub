@@ -125,6 +125,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       className={`${plusJakarta.variable} ${inter.variable} ${jetbrains.variable}`}
+      data-scroll-behavior="smooth"
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: LOCALHOST_RECOVERY_SCRIPT }} />

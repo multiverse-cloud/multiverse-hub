@@ -77,7 +77,7 @@ function RelatedCard({ effect }: { effect: UiCatalogItem }) {
             title={`${effect.title} preview`}
             srcDoc={buildPreviewDoc(effect)}
             className="h-full w-full border-0 bg-white"
-            sandbox="allow-scripts allow-same-origin"
+            sandbox="allow-scripts"
           />
         )}
       </div>
@@ -210,7 +210,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
         <main className="relative flex flex-1 flex-col overflow-auto lg:flex-row lg:overflow-hidden">
           <div
             className={cn(
-              'relative flex min-h-[420px] flex-col overflow-hidden border-b border-slate-800 bg-slate-100 bg-[url("https://grainy-gradients.vercel.app/noise.svg")] group lg:min-h-0 lg:border-b-0',
+              'relative flex min-h-[420px] flex-col overflow-hidden border-b border-slate-800 bg-slate-100 group lg:min-h-0 lg:border-b-0',
               previewMode === 'full' ? 'flex-1' : 'flex-[1.2]'
             )}
           >
@@ -258,7 +258,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
                     title={`${effect.title} preview`}
                     srcDoc={previewDoc}
                     className="h-full w-full border-0 bg-white"
-                    sandbox="allow-scripts allow-same-origin"
+                    sandbox="allow-scripts"
                   />
                 )}
               </div>

@@ -271,7 +271,7 @@ export default function EffectPlayground({ effectId, title, htmlCode, cssCode }:
               title={`${title} playground preview`}
               srcDoc={previewDoc}
               className="h-[430px] w-full border-0"
-              sandbox="allow-scripts allow-same-origin"
+              sandbox="allow-scripts"
             />
           </div>
         </div>

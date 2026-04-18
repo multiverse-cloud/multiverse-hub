@@ -9,6 +9,8 @@ import {
   Clock,
   Code2,
   Copy,
+  Database,
+  FileCode,
   GitBranch,
   Globe,
   Hash,
@@ -19,6 +21,8 @@ import {
   RefreshCw,
   Shield,
   Sparkles,
+  Terminal,
+  Timer,
   Zap,
 } from 'lucide-react'
 import { cn, copyToClipboard } from '@/lib/utils'
@@ -39,17 +43,30 @@ const DEV_TOOLS = [
   { id: 'gitignore', icon: GitBranch, label: '.gitignore Generator', href: '/tools/dev/gitignore-generator', tone: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200', tag: 'new' },
   { id: 'api-tester', icon: Globe, label: 'API Tester', href: '/tools/dev/api-tester', tone: 'bg-sky-100 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300', tag: 'beta' },
   { id: 'css-effects-library', icon: Sparkles, label: 'UI Universe', href: '/ui', tone: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200', tag: 'new' },
+  { id: 'yaml-converter', icon: FileCode, label: 'YAML to JSON', href: '/tools/dev/yaml-to-json-converter', tone: 'bg-lime-100 text-lime-700 dark:bg-lime-950/40 dark:text-lime-300', tag: 'new' },
+  { id: 'xml-converter', icon: FileCode, label: 'XML to JSON', href: '/tools/dev/xml-to-json-converter', tone: 'bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-950/40 dark:text-fuchsia-300', tag: 'new' },
+  { id: 'timestamp-converter', icon: Timer, label: 'Timestamp Converter', href: '/tools/dev/timestamp-converter', tone: 'bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300', tag: 'new' },
+  { id: 'markdown-converter', icon: FileCode, label: 'Markdown to HTML', href: '/tools/dev/markdown-to-html', tone: 'bg-sky-100 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300', tag: 'new' },
+  { id: 'diff-checker', icon: GitBranch, label: 'Diff Checker', href: '/tools/dev/diff-checker', tone: 'bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300', tag: 'new' },
+  { id: 'sql-formatter', icon: Database, label: 'SQL Formatter', href: '/tools/dev/sql-formatter', tone: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300', tag: 'new' },
+  { id: 'qr-generator', icon: Hash, label: 'QR Code Generator', href: '/tools/dev/qr-code-generator', tone: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300', tag: 'new' },
+  { id: 'json-schema-validator', icon: Shield, label: 'JSON Schema Validator', href: '/tools/dev/json-schema-validator', tone: 'bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300', tag: 'new' },
+  { id: 'docker-compose-gen', icon: Terminal, label: 'Docker Compose Gen', href: '/tools/dev/docker-compose-generator', tone: 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300', tag: 'beta' },
+  { id: 'env-manager', icon: Key, label: 'Environment Manager', href: '/tools/dev/environment-manager', tone: 'bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300', tag: 'beta' },
 ]
 
 function JSONFormatter() {
   const [input, setInput] = useState('{"name":"Multiverse","version":"1.0","tools":150,"free":true}')
   const [output, setOutput] = useState('')
   const [error, setError] = useState('')
+  const [indentSize, setIndentSize] = useState(2)
+  const [sortKeys, setSortKeys] = useState(false)
 
   function format() {
     try {
       const parsed = JSON.parse(input)
-      setOutput(JSON.stringify(parsed, null, 2))
+      const result = JSON.stringify(parsed, sortKeys ? Object.keys(parsed).sort() : null, indentSize)
+      setOutput(result)
       setError('')
     } catch (errorValue) {
       setError((errorValue as Error).message)
@@ -68,17 +85,53 @@ function JSONFormatter() {
     }
   }
 
+  function removeNulls() {
+    try {
+      const parsed = JSON.parse(input)
+      const cleaned = JSON.parse(JSON.stringify(parsed, (key, value) => value === null ? undefined : value))
+      setOutput(JSON.stringify(cleaned, null, indentSize))
+      setError('')
+    } catch (errorValue) {
+      setError((errorValue as Error).message)
+      setOutput('')
+    }
+  }
+
   return (
     <div className="premium-card p-5">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="flex items-center gap-2 font-display text-base font-bold">
           <Braces className="h-4 w-4 text-amber-600 dark:text-amber-300" />
           JSON Formatter
         </h3>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button onClick={format} className="btn-primary px-3 py-2 text-xs">Beautify</button>
           <button onClick={minify} className="btn-secondary px-3 py-2 text-xs">Minify</button>
+          <button onClick={removeNulls} className="btn-secondary px-3 py-2 text-xs">Remove Nulls</button>
         </div>
+      </div>
+      <div className="mb-3 flex flex-wrap gap-4 text-xs">
+        <label className="flex items-center gap-2">
+          <span className="text-muted-foreground">Indent:</span>
+          <select 
+            value={indentSize} 
+            onChange={(e) => setIndentSize(Number(e.target.value))}
+            className="rounded-lg border border-border bg-background px-2 py-1"
+          >
+            <option value={2}>2 spaces</option>
+            <option value={4}>4 spaces</option>
+            <option value={8}>8 spaces</option>
+          </select>
+        </label>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input 
+            type="checkbox" 
+            checked={sortKeys}
+            onChange={(e) => setSortKeys(e.target.checked)}
+            className="rounded border-border"
+          />
+          <span className="text-muted-foreground">Sort Keys</span>
+        </label>
       </div>
       <textarea
         value={input}
@@ -110,37 +163,55 @@ function JSONFormatter() {
 function Base64Tool() {
   const [input, setInput] = useState('Hello, Multiverse!')
   const [mode, setMode] = useState<'encode' | 'decode'>('encode')
+  const [charset, setCharset] = useState<'utf-8' | 'ascii'>('utf-8')
 
   let output = ''
   try {
-    output =
-      mode === 'encode'
-        ? btoa(unescape(encodeURIComponent(input)))
-        : decodeURIComponent(escape(atob(input)))
+    if (charset === 'utf-8') {
+      output =
+        mode === 'encode'
+          ? btoa(unescape(encodeURIComponent(input)))
+          : decodeURIComponent(escape(atob(input)))
+    } else {
+      output =
+        mode === 'encode'
+          ? btoa(input)
+          : atob(input)
+    }
   } catch {
     output = 'Invalid input'
   }
 
   return (
     <div className="premium-card p-5">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="flex items-center gap-2 font-display text-base font-bold">
           <Binary className="h-4 w-4 text-blue-600 dark:text-blue-300" />
           Base64
         </h3>
-        <div className="flex gap-1 rounded-xl bg-slate-100 p-1 dark:bg-slate-800">
-          {(['encode', 'decode'] as const).map(item => (
-            <button
-              key={item}
-              onClick={() => setMode(item)}
-              className={cn(
-                'rounded-lg px-2.5 py-1 text-xs font-semibold capitalize transition-colors',
-                mode === item ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-100' : 'text-muted-foreground'
-              )}
-            >
-              {item}
-            </button>
-          ))}
+        <div className="flex flex-wrap gap-2">
+          <div className="flex gap-1 rounded-xl bg-slate-100 p-1 dark:bg-slate-800">
+            {(['encode', 'decode'] as const).map(item => (
+              <button
+                key={item}
+                onClick={() => setMode(item)}
+                className={cn(
+                  'rounded-lg px-2.5 py-1 text-xs font-semibold capitalize transition-colors',
+                  mode === item ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-100' : 'text-muted-foreground'
+                )}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+          <select 
+            value={charset}
+            onChange={(e) => setCharset(e.target.value as 'utf-8' | 'ascii')}
+            className="rounded-lg border border-border bg-background px-2 py-1 text-xs"
+          >
+            <option value="utf-8">UTF-8</option>
+            <option value="ascii">ASCII</option>
+          </select>
         </div>
       </div>
 
@@ -169,36 +240,76 @@ function Base64Tool() {
 
 function UUIDGenerator() {
   const [uuids, setUuids] = useState<string[]>([])
+  const [count, setCount] = useState(5)
+  const [version, setVersion] = useState<'v4' | 'v1'>('v4')
 
   function generate() {
-    const next = Array.from({ length: 5 }, () =>
-      'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, char => {
-        const random = (Math.random() * 16) | 0
-        return (char === 'x' ? random : (random & 0x3) | 0x8).toString(16)
-      })
-    )
+    const next = Array.from({ length: count }, () => {
+      if (version === 'v4') {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, char => {
+          const random = (Math.random() * 16) | 0
+          return (char === 'x' ? random : (random & 0x3) | 0x8).toString(16)
+        })
+      } else {
+        // v1 UUID (timestamp-based)
+        const timestamp = Date.now()
+        const timeHex = timestamp.toString(16).padStart(12, '0')
+        const clockSeq = Math.random().toString(16).substring(2, 6)
+        const node = Math.random().toString(16).substring(2, 14)
+        return `${timeHex.substring(0, 8)}-${timeHex.substring(8, 12)}-1${clockSeq.substring(0, 3)}-${clockSeq.substring(3)}-${node}`
+      }
+    })
     setUuids(next)
+  }
+
+  function copyAll() {
+    copyToClipboard(uuids.join('\n'))
+    toast.success('All copied')
   }
 
   return (
     <div className="premium-card p-5">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="flex items-center gap-2 font-display text-base font-bold">
           <Hash className="h-4 w-4 text-emerald-600 dark:text-emerald-300" />
           UUID Generator
         </h3>
-        <button onClick={generate} className="btn-primary gap-1.5 px-3 py-2 text-xs">
-          <RefreshCw className="h-3 w-3" />
-          Generate
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <select 
+            value={version}
+            onChange={(e) => setVersion(e.target.value as 'v4' | 'v1')}
+            className="rounded-lg border border-border bg-background px-2 py-1 text-xs"
+          >
+            <option value="v4">UUID v4</option>
+            <option value="v1">UUID v1</option>
+          </select>
+          <input 
+            type="number" 
+            min="1" 
+            max="50"
+            value={count}
+            onChange={(e) => setCount(Math.min(50, Math.max(1, Number(e.target.value))))}
+            className="w-16 rounded-lg border border-border bg-background px-2 py-1 text-xs"
+          />
+          <button onClick={generate} className="btn-primary gap-1.5 px-3 py-2 text-xs">
+            <RefreshCw className="h-3 w-3" />
+            Generate
+          </button>
+        </div>
       </div>
 
       {uuids.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center text-sm text-muted-foreground dark:border-slate-800 dark:bg-slate-950/60">
-          Generate a fresh set of UUID v4 values.
+          Generate a fresh set of UUID values.
         </div>
       ) : (
         <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>Generated {uuids.length} UUIDs</span>
+            <button onClick={copyAll} className="font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">
+              Copy All
+            </button>
+          </div>
           {uuids.map(uuid => (
             <div
               key={uuid}

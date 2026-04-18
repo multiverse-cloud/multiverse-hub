@@ -239,11 +239,10 @@ export default async function Navbar({ variant = 'default' }: { variant?: 'defau
     >
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-3 py-3 sm:gap-4 sm:px-4 lg:px-6 lg:py-3.5">
         <Link href="/" className="group flex shrink-0 items-center gap-2">
-          <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-slate-950 shadow-md shadow-slate-900/10 transition-shadow group-hover:shadow-slate-900/20 dark:bg-slate-100">
-            <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white dark:text-slate-950" />
-          </div>
-          <span className="hidden font-display text-base font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:text-lg sm:block">
-            Multiverse
+          <img src="/logo.svg" alt="M" className="h-8 w-8 sm:h-9 sm:w-9" style={{ transform: 'rotate(180deg)' }} />
+          <span className="hidden font-display text-base font-extrabold tracking-tight sm:text-lg sm:block">
+            <span className="text-slate-950 dark:text-slate-50">Multi</span>
+            <span className="text-blue-600 dark:text-blue-400">verse</span>
           </span>
         </Link>
 
