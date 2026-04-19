@@ -372,11 +372,16 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
             {tool.slug === 'youtube-thumbnail-downloader' ? (
               <>
                 <p className="premium-kicker">Source link</p>
-                <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">Paste URL</h2>
+                <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">Paste YouTube URL</h2>
                 <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-2 dark:border-slate-800 dark:bg-slate-900">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300"><Link2 className="h-4 w-4" /></div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300"><Link2 className="h-4 w-4" /></div>
                     <input value={urlInput} onChange={event => setUrlInput(event.target.value)} placeholder="https://www.youtube.com/watch?v=..." className="min-w-0 flex-1 bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-500" />
+                    <button type="button" onClick={async () => {
+                      const pasted = await navigator.clipboard.readText().catch(() => '')
+                      if (pasted) setUrlInput(pasted)
+                    }} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" title="Paste URL"><ClipboardPaste className="h-4 w-4" /></button>
+                    <button type="button" onClick={() => setUrlInput('')} disabled={!urlInput} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" title="Clear"><X className="h-4 w-4" /></button>
                     <button type="button" onClick={handleProcess} disabled={loading || !urlInput.trim()} className="btn-primary px-5 py-2.5 text-sm disabled:cursor-not-allowed disabled:opacity-60">{loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Fetch'}</button>
                   </div>
                 </div>
@@ -462,20 +467,29 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
 
             {tool.slug === 'youtube-thumbnail-downloader' ? (
               thumbnailVariants.length > 0 ? (
-                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                   {thumbnailVariants.map(variant => (
-                    <div key={variant.label} className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-                      <p className="font-display text-sm font-bold tracking-tight text-slate-950 dark:text-slate-50">{variant.label}</p>
-                      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{variant.size}</p>
-                      <div className="mt-4 flex gap-2">
-                        <button type="button" onClick={() => handleThumbnailDownload(variant)} className="btn-primary px-4 py-2 text-sm"><Download className="h-4 w-4" />Download</button>
-                        <a href={variant.url} target="_blank" rel="noreferrer" className="btn-secondary px-4 py-2 text-sm"><ExternalLink className="h-4 w-4" />Open</a>
+                    <div key={variant.label} className="group rounded-2xl border border-slate-200 bg-white overflow-hidden transition-all hover:shadow-lg hover:border-indigo-200 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-indigo-800">
+                      <div className="relative aspect-video bg-slate-100 dark:bg-slate-950">
+                        <Image src={variant.url} alt={variant.label} fill className="object-cover" unoptimized />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/10 transition-colors">
+                          <a href={variant.url} target="_blank" rel="noreferrer" className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-0 transition-all hover:scale-110 group-hover:opacity-100 dark:bg-slate-900/90 dark:text-slate-200">
+                            <ExternalLink className="h-5 w-5" />
+                          </a>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <p className="font-display text-sm font-bold tracking-tight text-slate-950 dark:text-slate-50">{variant.label}</p>
+                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{variant.size}</p>
+                        <div className="mt-4">
+                          <button type="button" onClick={() => handleThumbnailDownload(variant)} className="w-full btn-primary px-4 py-2.5 text-sm"><Download className="h-4 w-4" />Download</button>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-10 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950/30 dark:text-slate-400">Paste a URL and fetch the thumbnail set.</div>
+                <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-10 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950/30 dark:text-slate-400">Paste a YouTube URL and fetch the thumbnail set.</div>
               )
             ) : (
               <div className="space-y-4">

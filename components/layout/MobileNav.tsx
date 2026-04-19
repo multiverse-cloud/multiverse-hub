@@ -81,7 +81,7 @@ export default function MobileNav({
         {/* Header */}
         <div className="relative flex items-center justify-between border-b border-slate-200/80 p-4 dark:border-slate-800/80">
           <div className="flex items-center gap-3">
-            <img src="/logo.svg" alt="M" className="h-10 w-10" style={{ transform: 'rotate(180deg)' }} />
+            <img src="/SiteLogo.png" alt="M" className="h-10 w-10" />
             <div>
               <span className="font-display text-lg font-extrabold tracking-tight">
                 <span className="text-slate-900 dark:text-slate-50">Multi</span>

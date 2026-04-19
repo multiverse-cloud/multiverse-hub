@@ -51,6 +51,10 @@ export const metadata: Metadata = {
   creator: 'Multiverse',
   publisher: 'Multiverse Tools',
   metadataBase: new URL('https://multiverse-tools.vercel.app'),
+  icons: {
+    icon: '/SiteLogo.png',
+    apple: '/SiteLogo.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -129,6 +133,7 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: LOCALHOST_RECOVERY_SCRIPT }} />
+        <link rel="icon" href="/SiteLogo.png" type="image/png" />
       </head>
       <body className="mobile-viewport-fix min-h-[100dvh] overflow-x-hidden bg-background font-sans text-foreground antialiased safe-area-top">
         <AuthProvider>

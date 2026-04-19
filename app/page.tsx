@@ -10,7 +10,6 @@ import WhyMultiverse from '@/components/home/WhyMultiverse'
 import PublicLayout from '@/components/layout/PublicLayout'
 
 export const metadata: Metadata = {
-  title: 'Multiverse — 150+ Free Online Tools for PDF, Image, Video & More',
   description:
     'One platform, 150+ free tools. Compress PDFs, resize images, download videos, format JSON, and more — all free, private, and instant. No login required.',
   alternates: {

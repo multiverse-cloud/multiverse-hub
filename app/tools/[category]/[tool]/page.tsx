@@ -229,7 +229,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
-  const title = `${tool.name} - Free Online Tool | Multiverse`
+  const title = `${tool.name} — Free Online Tool`
   const description = `${tool.description} Free, fast, no login required. Use ${tool.name} online instantly.`
 
   return {
@@ -495,10 +495,6 @@ export default async function ToolPage({ params }: Props) {
     <PublicLayout>
       <div className="premium-shell" data-tool-shell="true">
         <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-6 md:py-10">
-          <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-            <ToolActions slug={tool.slug} name={tool.name} className="mb-0 w-full justify-start lg:w-auto lg:justify-end" />
-          </div>
-
           {/* Tool Hero */}
           <div className="tool-hero-glow mb-8">
             <div className="relative z-10 flex items-start gap-4">

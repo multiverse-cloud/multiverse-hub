@@ -239,7 +239,7 @@ export default async function Navbar({ variant = 'default' }: { variant?: 'defau
     >
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-3 py-3 sm:gap-4 sm:px-4 lg:px-6 lg:py-3.5">
         <Link href="/" className="group flex shrink-0 items-center gap-2">
-          <img src="/logo.svg" alt="M" className="h-8 w-8 sm:h-9 sm:w-9" style={{ transform: 'rotate(180deg)' }} />
+          <img src="/SiteLogo.png" alt="M" className="h-8 w-8 sm:h-9 sm:w-9" />
           <span className="hidden font-display text-base font-extrabold tracking-tight sm:text-lg sm:block">
             <span className="text-slate-950 dark:text-slate-50">Multi</span>
             <span className="text-blue-600 dark:text-blue-400">verse</span>

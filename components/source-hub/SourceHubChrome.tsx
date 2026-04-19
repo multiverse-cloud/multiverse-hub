@@ -9,30 +9,7 @@ function LoaderMarkup() {
       <div className="source-hub-loader-content">
         <div className="source-hub-loader-logo">
           <div className="source-hub-loader-logo-icon">
-            <svg className="source-hub-loader-mark" width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                stroke="#2563eb"
-                strokeWidth="0.5"
-                strokeDasharray="2 2"
-                opacity="0.3"
-              />
-              <path
-                d="M4 6L9 18L12 12L15 18L20 6"
-                stroke="#2563eb"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M9 18L12 12L15 18"
-                stroke="#2563eb"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                opacity="0.4"
-              />
-            </svg>
+            <img src="/SiteLogo.png" alt="M" className="w-full h-full" />
           </div>
           <span className="source-hub-loader-logo-text">
             Multiverse

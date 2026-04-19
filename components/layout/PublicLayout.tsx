@@ -2,7 +2,6 @@ import { Suspense } from 'react'
 import { Globe } from 'lucide-react'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import MobileBreadcrumb from '@/components/layout/MobileBreadcrumb'
 
 export default function PublicLayout({
   children,
@@ -34,7 +33,6 @@ export default function PublicLayout({
         }>
           <Navbar />
         </Suspense>
-        <MobileBreadcrumb />
         <main className="flex-1">{children}</main>
         <Footer />
       </div>

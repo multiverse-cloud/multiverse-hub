@@ -20,7 +20,7 @@ const SUGGESTION_CHIPS = [
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden border-b border-slate-200/50 bg-background dark:border-slate-800/60">
+    <section className="relative border-b border-slate-200/50 bg-background dark:border-slate-800/60">
       {/* Layered gradient background — unique depth effect */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(99,102,241,0.08),transparent)] dark:bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(99,102,241,0.12),transparent)]" />
@@ -55,10 +55,10 @@ export default function HeroSection() {
           </div>
 
           {/* Heading */}
-          <div className="mb-4 sm:mb-5 w-full text-center animate-fade-in" style={{ animationDelay: '0.12s', animationFillMode: 'both' }}>
-            <h1 className="font-display text-2xl font-extrabold leading-[0.92] tracking-tight sm:text-3xl md:text-4xl lg:text-[3.5rem]">
-              <span className="block text-slate-950 dark:text-slate-50">Every tool you need.</span>
-              <span className="mt-1 sm:mt-2 block bg-gradient-to-r from-indigo-600 via-violet-500 to-purple-600 bg-clip-text text-transparent dark:from-indigo-300 dark:via-violet-300 dark:to-purple-300">
+          <div className="mb-4 sm:mb-5 w-full text-center animate-fade-in px-2" style={{ animationDelay: '0.12s', animationFillMode: 'both' }}>
+            <h1 className="font-display text-2xl font-extrabold leading-[1.15] tracking-tight sm:text-3xl md:text-4xl lg:text-[3.5rem]">
+              <span className="block text-slate-950 dark:text-slate-50 pb-0 sm:pb-0.5 leading-[1.15]">Every tool you need.</span>
+              <span className="mt-0.5 sm:mt-1 block bg-gradient-to-r from-indigo-600 via-violet-500 to-purple-600 bg-clip-text text-transparent dark:from-indigo-300 dark:via-violet-300 dark:to-purple-300 leading-[1.2]" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 One platform.
               </span>
             </h1>

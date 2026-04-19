@@ -90,18 +90,10 @@ export default function Footer({ variant = 'default' }: { variant?: 'default' | 
           {/* Brand Column */}
           <div className="col-span-2 space-y-4 lg:col-span-2">
             <Link href="/" className="flex items-center gap-2">
-              <div
-                className={cn(
-                  'flex h-9 w-9 items-center justify-center rounded-2xl shadow-lg',
-                  templateVariant
-                    ? 'bg-[#e7e5e4] shadow-black/20'
-                    : 'bg-slate-950 shadow-slate-900/15 dark:bg-slate-100'
-                )}
-              >
-                <Globe className={cn('h-4 w-4', templateVariant ? 'text-[#0f1010]' : 'text-white dark:text-slate-950')} />
-              </div>
-              <span className={cn('font-display text-lg font-extrabold tracking-tight', templateVariant ? 'text-[#e7e5e4]' : 'text-slate-950 dark:text-slate-50')}>
-                Multiverse
+              <img src="/SiteLogo.png" alt="M" className="h-9 w-9" />
+              <span className={cn('font-display text-lg font-extrabold tracking-tight', templateVariant ? 'text-[#e7e5e4]' : '')}>
+                <span className={cn(templateVariant ? 'text-[#e7e5e4]' : 'text-slate-950 dark:text-slate-50')}>Multi</span>
+                <span className={cn(templateVariant ? 'text-blue-400' : 'text-blue-600 dark:text-blue-400')}>verse</span>
               </span>
             </Link>
 
