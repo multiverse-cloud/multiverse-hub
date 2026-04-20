@@ -7,6 +7,7 @@ import {
   ArrowDown,
   ArrowUp,
   CheckCircle2,
+  ClipboardPaste,
   Download,
   ExternalLink,
   Film,
@@ -19,6 +20,7 @@ import {
   Sparkles,
   Trash2,
   UploadCloud,
+  X,
 } from 'lucide-react'
 import type { Tool } from '@/lib/tools-data'
 import { cn, downloadBlob, formatBytes } from '@/lib/utils'
