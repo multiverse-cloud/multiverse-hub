@@ -1,202 +1,244 @@
-import dynamic from 'next/dynamic'
-import type { ComponentType } from 'react'
-import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { Wrench } from 'lucide-react'
-import PublicLayout from '@/components/layout/PublicLayout'
-import ImageStudioPageFrame from '@/components/tools/ImageStudioPageFrame'
-import PdfStudioPageFrame from '@/components/tools/PdfStudioPageFrame'
-import VideoStudioPageFrame from '@/components/tools/VideoStudioPageFrame'
-import WorkbenchStudioPageFrame from '@/components/tools/WorkbenchStudioPageFrame'
-import ToolCard from '@/components/tools/ToolCard'
-import RecentTracker from '@/components/tools/RecentTracker'
-import SEOContent from '@/components/tools/SEOContent'
-import ToolActions from '@/components/tools/ToolActions'
-import ToolRuntimeBanner from '@/components/tools/ToolRuntimeBanner'
-import { UsageHintBanner } from '@/components/auth/LoginGateModal'
-import { getLucideIcon } from '@/lib/icons'
-import { CALCULATOR_STUDIO_SLUGS } from '@/lib/calculator-studio'
-import { PDF_STUDIO_STATIC_CONTENT } from '@/lib/pdf-studio-content'
-import { getToolRuntimeStatus } from '@/lib/tool-runtime-status'
-import { ACTIVE_CATEGORIES, type Tool } from '@/lib/tools-data'
-import { getTools, getToolBySlug } from '@/lib/db'
+import dynamic from "next/dynamic";
+import type { ComponentType } from "react";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { Wrench } from "lucide-react";
+import PublicLayout from "@/components/layout/PublicLayout";
+import ImageStudioPageFrame from "@/components/tools/ImageStudioPageFrame";
+import PdfStudioPageFrame from "@/components/tools/PdfStudioPageFrame";
+import VideoStudioPageFrame from "@/components/tools/VideoStudioPageFrame";
+import WorkbenchStudioPageFrame from "@/components/tools/WorkbenchStudioPageFrame";
+import ToolCard from "@/components/tools/ToolCard";
+import RecentTracker from "@/components/tools/RecentTracker";
+import SEOContent from "@/components/tools/SEOContent";
+import ToolActions from "@/components/tools/ToolActions";
+import ToolRuntimeBanner from "@/components/tools/ToolRuntimeBanner";
+import { UsageHintBanner } from "@/components/auth/LoginGateModal";
+import { getLucideIcon } from "@/lib/icons";
+import { CALCULATOR_STUDIO_SLUGS } from "@/lib/calculator-studio";
+import { PDF_STUDIO_STATIC_CONTENT } from "@/lib/pdf-studio-content";
+import { getToolRuntimeStatus } from "@/lib/tool-runtime-status";
+import { ACTIVE_CATEGORIES, type Tool } from "@/lib/tools-data";
+import { getTools, getToolBySlug } from "@/lib/db";
 
-const ToolDetailClient = dynamic(() => import('@/components/tools/ToolDetailClient'))
-const VideoDownloaderClient = dynamic(() => import('@/components/tools/VideoDownloaderClient'))
-const VideoStudio = dynamic(() => import('@/components/tools/VideoStudio'))
-const AudioStudio = dynamic(() => import('@/components/tools/AudioStudio'))
-const TextStudio = dynamic(() => import('@/components/tools/TextStudio'))
-const DevStudio = dynamic(() => import('@/components/tools/DevStudio'))
-const SeoStudio = dynamic(() => import('@/components/tools/SeoStudio'))
-const CalculatorStudio = dynamic(() => import('@/components/tools/CalculatorStudio'))
-const FileViewerStudio = dynamic(() => import('@/components/tools/FileViewerStudio'))
-const CompressPdfStudio = dynamic(() => import('@/components/tools/CompressPdfStudio'))
-const PdfToWordStudio = dynamic(() => import('@/components/tools/PdfToWordStudio'))
-const MergePdfStudio = dynamic(() => import('@/components/tools/MergePdfStudio'))
-const SplitPdfStudio = dynamic(() => import('@/components/tools/SplitPdfStudio'))
-const PdfToExcelStudio = dynamic(() => import('@/components/tools/PdfToExcelStudio'))
-const WordToPdfStudio = dynamic(() => import('@/components/tools/WordToPdfStudio'))
-const JpgToPdfStudio = dynamic(() => import('@/components/tools/JpgToPdfStudio'))
-const PdfToJpgStudio = dynamic(() => import('@/components/tools/PdfToJpgStudio'))
-const PdfOcrStudio = dynamic(() => import('@/components/tools/PdfOcrStudio'))
-const UnlockPdfStudio = dynamic(() => import('@/components/tools/UnlockPdfStudio'))
-const PdfTranslatorStudio = dynamic(() => import('@/components/tools/PdfTranslatorStudio'))
-const PdfSummarizerStudio = dynamic(() => import('@/components/tools/PdfSummarizerStudio'))
-const ImagePaletteStudio = dynamic(() => import('@/components/tools/ImagePaletteStudio'))
-const ImageToPdfStudio = dynamic(() => import('@/components/tools/ImageToPdfStudio'))
-const ImageTransformStudio = dynamic(() => import('@/components/tools/ImageTransformStudio'))
-const QrCodeStudio = dynamic(() => import('@/components/tools/QrCodeStudio'))
+const ToolDetailClient = dynamic(
+  () => import("@/components/tools/ToolDetailClient"),
+);
+const VideoDownloaderClient = dynamic(
+  () => import("@/components/tools/VideoDownloaderClient"),
+);
+const VideoStudio = dynamic(() => import("@/components/tools/VideoStudio"));
+const AudioStudio = dynamic(() => import("@/components/tools/AudioStudio"));
+const TextStudio = dynamic(() => import("@/components/tools/TextStudio"));
+const DevStudio = dynamic(() => import("@/components/tools/DevStudio"));
+const SeoStudio = dynamic(() => import("@/components/tools/SeoStudio"));
+const CalculatorStudio = dynamic(
+  () => import("@/components/tools/CalculatorStudio"),
+);
+const FileViewerStudio = dynamic(
+  () => import("@/components/tools/FileViewerStudio"),
+);
+const CompressPdfStudio = dynamic(
+  () => import("@/components/tools/CompressPdfStudio"),
+);
+const PdfToWordStudio = dynamic(
+  () => import("@/components/tools/PdfToWordStudio"),
+);
+const MergePdfStudio = dynamic(
+  () => import("@/components/tools/MergePdfStudio"),
+);
+const SplitPdfStudio = dynamic(
+  () => import("@/components/tools/SplitPdfStudio"),
+);
+const PdfToExcelStudio = dynamic(
+  () => import("@/components/tools/PdfToExcelStudio"),
+);
+const WordToPdfStudio = dynamic(
+  () => import("@/components/tools/WordToPdfStudio"),
+);
+const JpgToPdfStudio = dynamic(
+  () => import("@/components/tools/JpgToPdfStudio"),
+);
+const PdfToJpgStudio = dynamic(
+  () => import("@/components/tools/PdfToJpgStudio"),
+);
+const PdfOcrStudio = dynamic(() => import("@/components/tools/PdfOcrStudio"));
+const UnlockPdfStudio = dynamic(
+  () => import("@/components/tools/UnlockPdfStudio"),
+);
+const PdfTranslatorStudio = dynamic(
+  () => import("@/components/tools/PdfTranslatorStudio"),
+);
+const PdfSummarizerStudio = dynamic(
+  () => import("@/components/tools/PdfSummarizerStudio"),
+);
+const ImagePaletteStudio = dynamic(
+  () => import("@/components/tools/ImagePaletteStudio"),
+);
+const ImageToPdfStudio = dynamic(
+  () => import("@/components/tools/ImageToPdfStudio"),
+);
+const ImageTransformStudio = dynamic(
+  () => import("@/components/tools/ImageTransformStudio"),
+);
+const QrCodeStudio = dynamic(() => import("@/components/tools/QrCodeStudio"));
 
 interface Props {
-  params: Promise<{ category: string; tool: string }>
+  params: Promise<{ category: string; tool: string }>;
 }
 
-export const revalidate = 3600
+export const revalidate = 3600;
 
 const STUDIO_COMPONENTS: Record<string, ComponentType<{ tool: Tool }>> = {
-  'compress-pdf': CompressPdfStudio,
-  'pdf-to-word': PdfToWordStudio,
-  'merge-pdf': MergePdfStudio,
-  'split-pdf': SplitPdfStudio,
-  'pdf-to-excel': PdfToExcelStudio,
-  'word-to-pdf': WordToPdfStudio,
-  'jpg-to-pdf': JpgToPdfStudio,
-  'pdf-to-jpg': PdfToJpgStudio,
-  'pdf-ocr': PdfOcrStudio,
-  'unlock-pdf': UnlockPdfStudio,
-  'pdf-translator': PdfTranslatorStudio,
-  'pdf-summarizer': PdfSummarizerStudio,
-}
+  "compress-pdf": CompressPdfStudio,
+  "pdf-to-word": PdfToWordStudio,
+  "merge-pdf": MergePdfStudio,
+  "split-pdf": SplitPdfStudio,
+  "pdf-to-excel": PdfToExcelStudio,
+  "word-to-pdf": WordToPdfStudio,
+  "jpg-to-pdf": JpgToPdfStudio,
+  "pdf-to-jpg": PdfToJpgStudio,
+  "pdf-ocr": PdfOcrStudio,
+  "unlock-pdf": UnlockPdfStudio,
+  "pdf-translator": PdfTranslatorStudio,
+  "pdf-summarizer": PdfSummarizerStudio,
+};
 
 const IMAGE_STUDIO_COMPONENTS: Record<string, ComponentType<{ tool: Tool }>> = {
-  'compress-image': ImageTransformStudio,
-  'resize-image': ImageTransformStudio,
-  'convert-image': ImageTransformStudio,
-  'crop-image': ImageTransformStudio,
-  'remove-background': ImageTransformStudio,
-  'blur-background': ImageTransformStudio,
-  'passport-photo-maker': ImageTransformStudio,
-  'image-to-text': ImageTransformStudio,
-  'image-upscaler': ImageTransformStudio,
-  'color-palette-generator': ImagePaletteStudio,
-  'qr-code-generator': QrCodeStudio,
-  'image-to-pdf': ImageToPdfStudio,
-  'favicon-generator': ImageTransformStudio,
-  'instagram-grid-maker': ImageTransformStudio,
-  'svg-to-png': ImageTransformStudio,
-  'meme-generator': ImageTransformStudio,
-}
+  "compress-image": ImageTransformStudio,
+  "resize-image": ImageTransformStudio,
+  "convert-image": ImageTransformStudio,
+  "crop-image": ImageTransformStudio,
+  "remove-background": ImageTransformStudio,
+  "blur-background": ImageTransformStudio,
+  "passport-photo-maker": ImageTransformStudio,
+  "image-to-text": ImageTransformStudio,
+  "image-upscaler": ImageTransformStudio,
+  "color-palette-generator": ImagePaletteStudio,
+  "qr-code-generator": QrCodeStudio,
+  "image-to-pdf": ImageToPdfStudio,
+  "favicon-generator": ImageTransformStudio,
+  "instagram-grid-maker": ImageTransformStudio,
+  "svg-to-png": ImageTransformStudio,
+  "meme-generator": ImageTransformStudio,
+};
 
 const FILE_STUDIO_SLUGS = new Set([
-  'csv-viewer',
-  'json-file-viewer',
-  'zip-extractor',
-])
+  "csv-viewer",
+  "json-file-viewer",
+  "zip-extractor",
+]);
 
 const VIDEO_STUDIO_SLUGS = new Set([
-  'compress-video',
-  'trim-video',
-  'merge-video',
-  'video-to-gif',
-  'video-to-mp3',
-  'change-video-speed',
-  'rotate-video',
-  'add-subtitles',
-  'screen-recorder',
-  'gif-maker',
-  'mute-video',
-])
+  "compress-video",
+  "trim-video",
+  "merge-video",
+  "video-to-gif",
+  "video-to-mp3",
+  "change-video-speed",
+  "rotate-video",
+  "add-subtitles",
+  "screen-recorder",
+  "gif-maker",
+  "mute-video",
+]);
 
 const AUDIO_STUDIO_SLUGS = new Set([
-  'compress-audio',
-  'convert-audio',
-  'trim-audio',
-  'audio-equalizer',
-  'audio-metadata-editor',
-  'speech-to-text',
-  'change-audio-speed',
-  'merge-audio',
-  'remove-vocals',
-  'audio-text-to-speech',
-  'trim-silence',
-  'volume-booster',
-])
+  "compress-audio",
+  "convert-audio",
+  "trim-audio",
+  "audio-equalizer",
+  "audio-metadata-editor",
+  "speech-to-text",
+  "change-audio-speed",
+  "merge-audio",
+  "remove-vocals",
+  "audio-text-to-speech",
+  "trim-silence",
+  "volume-booster",
+]);
 
 const TEXT_STUDIO_SLUGS = new Set([
-  'ai-text-generator',
-  'text-case-converter',
-  'remove-duplicate-lines',
-  'text-grammar-checker',
-  'paraphrasing-tool',
-  'plagiarism-checker',
-  'text-speech-to-text',
-  'text-diff-checker',
-  'text-summarizer',
-  'text-to-speech',
-  'text-url-encoder-decoder',
-  'word-counter',
-  'password-generator',
-  'lorem-ipsum-generator',
-  'emoji-copy-paste',
-  'fancy-text-generator',
-  'random-name-picker',
-])
+  "ai-text-generator",
+  "text-case-converter",
+  "remove-duplicate-lines",
+  "text-grammar-checker",
+  "paraphrasing-tool",
+  "plagiarism-checker",
+  "text-speech-to-text",
+  "text-diff-checker",
+  "text-summarizer",
+  "text-to-speech",
+  "text-url-encoder-decoder",
+  "word-counter",
+  "password-generator",
+  "lorem-ipsum-generator",
+  "emoji-copy-paste",
+  "fancy-text-generator",
+  "random-name-picker",
+]);
 
 const DEV_STUDIO_SLUGS = new Set([
-  'api-tester',
-  'base64-encoder-decoder',
-  'code-formatter',
-  'color-converter',
-  'css-minifier',
-  'hash-generator',
-  'html-previewer',
-  'json-formatter',
-  'jwt-decoder',
-  'regex-tester',
-  'sql-formatter',
-  'uuid-generator',
-  'css-gradient-generator',
-  'html-to-markdown',
-  'json-to-csv',
-  'cron-expression-generator',
-  'markdown-previewer',
-])
+  "api-tester",
+  "base64-encoder-decoder",
+  "code-formatter",
+  "color-converter",
+  "css-minifier",
+  "hash-generator",
+  "html-previewer",
+  "json-formatter",
+  "jwt-decoder",
+  "regex-tester",
+  "sql-formatter",
+  "uuid-generator",
+  "css-gradient-generator",
+  "html-to-markdown",
+  "json-to-csv",
+  "cron-expression-generator",
+  "markdown-previewer",
+]);
 
 const SEO_STUDIO_SLUGS = new Set([
-  'backlink-checker',
-  'broken-link-checker',
-  'domain-authority-checker',
-  'image-seo-checker',
-  'keyword-generator',
-  'meta-tag-generator',
-  'page-speed-checker',
-  'robots-txt-generator',
-  'seo-analyzer',
-  'serp-preview',
-  'sitemap-generator',
-  'url-slug-generator',
-  'og-image-generator',
-  'schema-markup-generator',
-  'redirect-checker',
-])
+  "backlink-checker",
+  "broken-link-checker",
+  "domain-authority-checker",
+  "image-seo-checker",
+  "keyword-generator",
+  "meta-tag-generator",
+  "page-speed-checker",
+  "robots-txt-generator",
+  "seo-analyzer",
+  "serp-preview",
+  "sitemap-generator",
+  "url-slug-generator",
+  "og-image-generator",
+  "schema-markup-generator",
+  "redirect-checker",
+]);
 
-const CALCULATOR_STUDIO_SLUGS_SET = new Set(CALCULATOR_STUDIO_SLUGS)
+const CALCULATOR_STUDIO_SLUGS_SET = new Set(CALCULATOR_STUDIO_SLUGS);
 
 function getRelatedToolsByCategory(
   tools: Tool[],
   categorySlug: string,
   currentSlug: string,
-  limit: number
+  limit: number,
 ) {
-  return tools.filter(item => item.categorySlug === categorySlug && item.slug !== currentSlug).slice(0, limit)
+  return tools
+    .filter(
+      (item) => item.categorySlug === categorySlug && item.slug !== currentSlug,
+    )
+    .slice(0, limit);
 }
 
 export async function generateStaticParams() {
-  const TOOLS = await getTools()
-  const trendingSlugs = TOOLS.filter(tool => tool.popular || tool.tags.includes('trending')).map(tool => tool.slug)
-  
+  const TOOLS = await getTools();
+  const trendingSlugs = TOOLS.filter(
+    (tool) => tool.popular || tool.tags.includes("trending"),
+  ).map((tool) => tool.slug);
+
   const PRE_RENDERED_TOOL_SLUGS = new Set([
-    'all-in-one-video-downloader',
+    "all-in-one-video-downloader",
     ...Object.keys(STUDIO_COMPONENTS),
     ...Object.keys(IMAGE_STUDIO_COMPONENTS),
     ...VIDEO_STUDIO_SLUGS,
@@ -207,30 +249,38 @@ export async function generateStaticParams() {
     ...CALCULATOR_STUDIO_SLUGS,
     ...FILE_STUDIO_SLUGS,
     ...trendingSlugs,
-  ])
+  ]);
 
-  return TOOLS.filter(tool => PRE_RENDERED_TOOL_SLUGS.has(tool.slug)).map(tool => ({
-    category: tool.categorySlug,
-    tool: tool.slug,
-  }))
+  return TOOLS.filter((tool) => PRE_RENDERED_TOOL_SLUGS.has(tool.slug)).map(
+    (tool) => ({
+      category: tool.categorySlug,
+      tool: tool.slug,
+    }),
+  );
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { tool: toolSlug } = await params
-  const tool = await getToolBySlug(toolSlug)
-  if (!tool) return {}
+  const { tool: toolSlug } = await params;
+  const tool = await getToolBySlug(toolSlug);
+  if (!tool) return {};
 
-  if (tool.slug === 'all-in-one-video-downloader') {
+  if (tool.slug === "all-in-one-video-downloader") {
     return {
-      title: 'Video Downloader - MP4, WEBM, MP3, M4A and HD Thumbnail',
+      title: "Video Downloader - MP4, WEBM, MP3, M4A and HD Thumbnail",
       description:
-        'Download MP4, WEBM, MP3, M4A and HD thumbnails from YouTube, TikTok, Instagram, Twitter/X, Vimeo and more.',
-      keywords: ['video downloader', 'youtube downloader', 'mp4 download', 'mp3 converter', 'tiktok downloader'],
-    }
+        "Download MP4, WEBM, MP3, M4A and HD thumbnails from YouTube, TikTok, Instagram, Twitter/X, Vimeo and more.",
+      keywords: [
+        "video downloader",
+        "youtube downloader",
+        "mp4 download",
+        "mp3 converter",
+        "tiktok downloader",
+      ],
+    };
   }
 
-  const title = `${tool.name} — Free Online Tool`
-  const description = `${tool.description} Free, fast, no login required. Use ${tool.name} online instantly.`
+  const title = `${tool.name} - Free Online ${tool.category} | Multiverse`;
+  const description = `${tool.description} Free, fast, no login required. Use ${tool.name} online instantly.`;
 
   return {
     title,
@@ -242,106 +292,128 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `${tool.category.toLowerCase()} tool`,
       ...tool.tags,
     ],
-    openGraph: {
-      title,
-      description,
-      type: 'website',
-      url: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`,
+    alternates: {
+      canonical: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`,
     },
-  }
+    openGraph: {
+      title: `${tool.name} - Free Online ${tool.category}`,
+      description: tool.description,
+      type: "website",
+      url: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`,
+      images: [
+        {
+          url: `https://multiverse-tools.vercel.app/og-tool.png`,
+          width: 1200,
+          height: 630,
+          alt: tool.name,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${tool.name} - Free Online ${tool.category}`,
+      description: tool.description,
+      images: ["https://multiverse-tools.vercel.app/og-tool.png"],
+    },
+  };
 }
 
 export default async function ToolPage({ params }: Props) {
-  const { category, tool: toolSlug } = await params
-  const tools = await getTools()
-  const tool = tools.find(item => item.slug === toolSlug) || null
+  const { category, tool: toolSlug } = await params;
+  const tools = await getTools();
+  const tool = tools.find((item) => item.slug === toolSlug) || null;
 
   if (!tool || tool.categorySlug !== category || tool.enabled === false) {
-    notFound()
+    notFound();
   }
 
-  const runtimeStatus = getToolRuntimeStatus(tool)
+  const runtimeStatus = getToolRuntimeStatus(tool);
 
   const schemaMarkup = {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
     name: tool.name,
     description: tool.description,
-    applicationCategory: 'BrowserApplication',
-    operatingSystem: 'All',
+    applicationCategory: "BrowserApplication",
+    operatingSystem: "All",
     offers: {
-      '@type': 'Offer',
-      price: '0.00',
-      priceCurrency: 'USD',
+      "@type": "Offer",
+      price: "0.00",
+      priceCurrency: "USD",
     },
     url: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`,
-  }
+  };
 
   const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    'itemListElement': [
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
       {
-        '@type': 'ListItem',
-        'position': 1,
-        'name': 'Home',
-        'item': 'https://multiverse-tools.vercel.app/'
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://multiverse-tools.vercel.app/",
       },
       {
-        '@type': 'ListItem',
-        'position': 2,
-        'name': 'Tools',
-        'item': 'https://multiverse-tools.vercel.app/tools'
+        "@type": "ListItem",
+        position: 2,
+        name: "Tools",
+        item: "https://multiverse-tools.vercel.app/tools",
       },
       {
-        '@type': 'ListItem',
-        'position': 3,
-        'name': tool.category,
-        'item': `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}`
+        "@type": "ListItem",
+        position: 3,
+        name: tool.category,
+        item: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}`,
       },
       {
-        '@type': 'ListItem',
-        'position': 4,
-        'name': tool.name,
-        'item': `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`
-      }
-    ]
-  }
+        "@type": "ListItem",
+        position: 4,
+        name: tool.name,
+        item: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`,
+      },
+    ],
+  };
 
   const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    'mainEntity': [
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
       {
-        '@type': 'Question',
-        'name': `How do I use ${tool.name}?`,
-        'acceptedAnswer': {
-          '@type': 'Answer',
-          'text': `Simply upload your input, adjust settings if needed, and click the process button. Our tool handles everything in-browser for maximum speed and privacy.`
-        }
+        "@type": "Question",
+        name: `How do I use ${tool.name}?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `Simply upload your input, adjust settings if needed, and click the process button. Our tool handles everything in-browser for maximum speed and privacy.`,
+        },
       },
       {
-        '@type': 'Question',
-        'name': `Is this ${tool.name} tool free?`,
-        'acceptedAnswer': {
-          '@type': 'Answer',
-          'text': `Yes, all tools on Multiverse are 100% free to use. No registration or credit card is required to access our professional utility features.`
-        }
+        "@type": "Question",
+        name: `Is this ${tool.name} tool free?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `Yes, all tools on Multiverse are 100% free to use. No registration or credit card is required to access our professional utility features.`,
+        },
       },
       {
-        '@type': 'Question',
-        'name': `Is my data secure while using ${tool.name}?`,
-        'acceptedAnswer': {
-          '@type': 'Answer',
-          'text': `Absolutely. We use WASM-based client-side processing, meaning your files never leave your computer. Processing happens locally on your device for total privacy.`
-        }
-      }
-    ]
-  }
+        "@type": "Question",
+        name: `Is my data secure while using ${tool.name}?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `Absolutely. We use WASM-based client-side processing, meaning your files never leave your computer. Processing happens locally on your device for total privacy.`,
+        },
+      },
+    ],
+  };
 
-  const combinedSchema = [schemaMarkup, breadcrumbSchema, faqSchema]
+  const combinedSchema = [schemaMarkup, breadcrumbSchema, faqSchema];
 
-  const DOWNLOADER_SLUGS = new Set(['all-in-one-video-downloader', 'tiktok-downloader', 'instagram-reels-downloader', 'youtube-shorts-downloader'])
+  const DOWNLOADER_SLUGS = new Set([
+    "all-in-one-video-downloader",
+    "tiktok-downloader",
+    "instagram-reels-downloader",
+    "youtube-shorts-downloader",
+  ]);
 
   if (DOWNLOADER_SLUGS.has(tool.slug)) {
     return (
@@ -354,16 +426,19 @@ export default async function ToolPage({ params }: Props) {
         </div>
         <VideoDownloaderClient tool={tool} />
       </PublicLayout>
-    )
+    );
   }
 
-  const StudioComponent = STUDIO_COMPONENTS[tool.slug]
-  const content = PDF_STUDIO_STATIC_CONTENT[tool.slug as keyof typeof PDF_STUDIO_STATIC_CONTENT]
+  const StudioComponent = STUDIO_COMPONENTS[tool.slug];
+  const content =
+    PDF_STUDIO_STATIC_CONTENT[
+      tool.slug as keyof typeof PDF_STUDIO_STATIC_CONTENT
+    ];
 
   if (StudioComponent && content) {
     const relatedTools = content.relatedSlugs
-      .map(slug => tools.find(item => item.slug === slug) || null)
-      .filter((item): item is Tool => Boolean(item))
+      .map((slug) => tools.find((item) => item.slug === slug) || null)
+      .filter((item): item is Tool => Boolean(item));
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
@@ -379,117 +454,179 @@ export default async function ToolPage({ params }: Props) {
           <StudioComponent tool={tool} />
         </PdfStudioPageFrame>
       </PublicLayout>
-    )
+    );
   }
 
-  const ImageStudioComponent = IMAGE_STUDIO_COMPONENTS[tool.slug]
+  const ImageStudioComponent = IMAGE_STUDIO_COMPONENTS[tool.slug];
   if (ImageStudioComponent) {
-    const relatedTools = getRelatedToolsByCategory(tools, 'image', tool.slug, 4)
+    const relatedTools = getRelatedToolsByCategory(
+      tools,
+      "image",
+      tool.slug,
+      4,
+    );
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <ImageStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
+        <ImageStudioPageFrame
+          tool={tool}
+          relatedTools={relatedTools}
+          runtimeStatus={runtimeStatus}
+        >
           <ImageStudioComponent tool={tool} />
         </ImageStudioPageFrame>
       </PublicLayout>
-    )
+    );
   }
 
   if (VIDEO_STUDIO_SLUGS.has(tool.slug)) {
-    const relatedTools = getRelatedToolsByCategory(tools, 'video', tool.slug, 4)
+    const relatedTools = getRelatedToolsByCategory(
+      tools,
+      "video",
+      tool.slug,
+      4,
+    );
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <VideoStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
+        <VideoStudioPageFrame
+          tool={tool}
+          relatedTools={relatedTools}
+          runtimeStatus={runtimeStatus}
+        >
           <VideoStudio tool={tool} />
         </VideoStudioPageFrame>
       </PublicLayout>
-    )
+    );
   }
 
   if (AUDIO_STUDIO_SLUGS.has(tool.slug)) {
-    const relatedTools = getRelatedToolsByCategory(tools, 'audio', tool.slug, 4)
+    const relatedTools = getRelatedToolsByCategory(
+      tools,
+      "audio",
+      tool.slug,
+      4,
+    );
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
+        <WorkbenchStudioPageFrame
+          tool={tool}
+          relatedTools={relatedTools}
+          runtimeStatus={runtimeStatus}
+        >
           <AudioStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
-    )
+    );
   }
 
   if (TEXT_STUDIO_SLUGS.has(tool.slug)) {
-    const relatedTools = getRelatedToolsByCategory(tools, 'text', tool.slug, 4)
+    const relatedTools = getRelatedToolsByCategory(tools, "text", tool.slug, 4);
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
+        <WorkbenchStudioPageFrame
+          tool={tool}
+          relatedTools={relatedTools}
+          runtimeStatus={runtimeStatus}
+        >
           <TextStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
-    )
+    );
   }
 
   if (DEV_STUDIO_SLUGS.has(tool.slug)) {
-    const relatedTools = getRelatedToolsByCategory(tools, 'dev', tool.slug, 4)
+    const relatedTools = getRelatedToolsByCategory(tools, "dev", tool.slug, 4);
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
+        <WorkbenchStudioPageFrame
+          tool={tool}
+          relatedTools={relatedTools}
+          runtimeStatus={runtimeStatus}
+        >
           <DevStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
-    )
+    );
   }
 
   if (SEO_STUDIO_SLUGS.has(tool.slug)) {
-    const relatedTools = getRelatedToolsByCategory(tools, 'seo', tool.slug, 4)
+    const relatedTools = getRelatedToolsByCategory(tools, "seo", tool.slug, 4);
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
+        <WorkbenchStudioPageFrame
+          tool={tool}
+          relatedTools={relatedTools}
+          runtimeStatus={runtimeStatus}
+        >
           <SeoStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
-    )
+    );
   }
 
-  if (CALCULATOR_STUDIO_SLUGS_SET.has(tool.slug as (typeof CALCULATOR_STUDIO_SLUGS)[number])) {
-    const relatedTools = getRelatedToolsByCategory(tools, 'calculator', tool.slug, 4)
+  if (
+    CALCULATOR_STUDIO_SLUGS_SET.has(
+      tool.slug as (typeof CALCULATOR_STUDIO_SLUGS)[number],
+    )
+  ) {
+    const relatedTools = getRelatedToolsByCategory(
+      tools,
+      "calculator",
+      tool.slug,
+      4,
+    );
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
+        <WorkbenchStudioPageFrame
+          tool={tool}
+          relatedTools={relatedTools}
+          runtimeStatus={runtimeStatus}
+        >
           <CalculatorStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
-    )
+    );
   }
 
   if (FILE_STUDIO_SLUGS.has(tool.slug)) {
-    const relatedTools = getRelatedToolsByCategory(tools, 'file', tool.slug, 4)
+    const relatedTools = getRelatedToolsByCategory(tools, "file", tool.slug, 4);
 
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <WorkbenchStudioPageFrame tool={tool} relatedTools={relatedTools} runtimeStatus={runtimeStatus}>
+        <WorkbenchStudioPageFrame
+          tool={tool}
+          relatedTools={relatedTools}
+          runtimeStatus={runtimeStatus}
+        >
           <FileViewerStudio tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
-    )
+    );
   }
 
-  const categoryInfo = ACTIVE_CATEGORIES.find(item => item.slug === tool.categorySlug)
-  const related = tools.filter(item => item.categorySlug === tool.categorySlug && item.id !== tool.id).slice(0, 6)
-  const CategoryIcon = getLucideIcon(categoryInfo?.icon, Wrench)
+  const categoryInfo = ACTIVE_CATEGORIES.find(
+    (item) => item.slug === tool.categorySlug,
+  );
+  const related = tools
+    .filter(
+      (item) => item.categorySlug === tool.categorySlug && item.id !== tool.id,
+    )
+    .slice(0, 6);
+  const CategoryIcon = getLucideIcon(categoryInfo?.icon, Wrench);
 
   return (
     <PublicLayout>
@@ -503,10 +640,16 @@ export default async function ToolPage({ params }: Props) {
               </div>
               <div>
                 <div className="mb-1 flex items-center gap-2.5">
-                  <h1 className="font-display text-2xl font-extrabold tracking-tight md:text-3xl">{tool.name}</h1>
-                  {tool.tags.includes('beta') && <span className="tag-beta">Beta</span>}
+                  <h1 className="font-display text-2xl font-extrabold tracking-tight md:text-3xl">
+                    {tool.name}
+                  </h1>
+                  {tool.tags.includes("beta") && (
+                    <span className="tag-beta">Beta</span>
+                  )}
                 </div>
-                <p className="text-muted-foreground leading-relaxed line-clamp-2 sm:line-clamp-none">{tool.description}</p>
+                <p className="text-muted-foreground leading-relaxed line-clamp-2 sm:line-clamp-none">
+                  {tool.description}
+                </p>
               </div>
             </div>
           </div>
@@ -529,46 +672,56 @@ export default async function ToolPage({ params }: Props) {
                 {/* Connecting line */}
                 <div className="absolute left-[15px] top-[2rem] bottom-[1rem] w-px border-l-2 border-dashed border-indigo-100 dark:border-indigo-900/30" />
 
-                {tool.inputType === 'file' && (
+                {tool.inputType === "file" && (
                   <li className="relative flex items-start gap-3.5">
                     <span className="step-indicator">1</span>
                     <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">
-                      Upload your {tool.acceptedFormats?.join(', ') || 'file'}
+                      Upload your {tool.acceptedFormats?.join(", ") || "file"}
                     </span>
                   </li>
                 )}
-                {tool.inputType === 'text' && (
-                  <li className="relative flex items-start gap-3.5">
-                    <span className="step-indicator">1</span>
-                    <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">Enter or paste your text input</span>
-                  </li>
-                )}
-                {tool.inputType === 'url' && (
-                  <li className="relative flex items-start gap-3.5">
-                    <span className="step-indicator">1</span>
-                    <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">Paste the source URL you want to process</span>
-                  </li>
-                )}
-                {tool.inputType === 'both' && (
+                {tool.inputType === "text" && (
                   <li className="relative flex items-start gap-3.5">
                     <span className="step-indicator">1</span>
                     <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">
-                      Upload a supported file or enter a prompt to generate your result
+                      Enter or paste your text input
+                    </span>
+                  </li>
+                )}
+                {tool.inputType === "url" && (
+                  <li className="relative flex items-start gap-3.5">
+                    <span className="step-indicator">1</span>
+                    <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">
+                      Paste the source URL you want to process
+                    </span>
+                  </li>
+                )}
+                {tool.inputType === "both" && (
+                  <li className="relative flex items-start gap-3.5">
+                    <span className="step-indicator">1</span>
+                    <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">
+                      Upload a supported file or enter a prompt to generate your
+                      result
                     </span>
                   </li>
                 )}
                 <li className="relative flex items-start gap-3.5">
                   <span className="step-indicator">2</span>
-                  <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">Configure options if needed</span>
+                  <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">
+                    Configure options if needed
+                  </span>
                 </li>
                 <li className="relative flex items-start gap-3.5">
                   <span className="step-indicator">3</span>
-                  <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">Click process and wait a few seconds</span>
+                  <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">
+                    Click process and wait a few seconds
+                  </span>
                 </li>
                 <li className="relative flex items-start gap-3.5">
                   <span className="step-indicator">4</span>
                   <span className="text-sm text-muted-foreground pt-1.5 leading-relaxed">
-                    Download or copy your {tool.outputType === 'file' ? 'file' : 'result'}
+                    Download or copy your{" "}
+                    {tool.outputType === "file" ? "file" : "result"}
                   </span>
                 </li>
               </ol>
@@ -582,40 +735,112 @@ export default async function ToolPage({ params }: Props) {
               <ul className="space-y-3.5">
                 <li className="flex items-center gap-3 text-sm text-muted-foreground">
                   <span className="feature-check">
-                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    <svg
+                      className="h-3 w-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
                   </span>
                   100% free, no account required
                 </li>
                 <li className="flex items-center gap-3 text-sm text-muted-foreground">
                   <span className="feature-check">
-                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    <svg
+                      className="h-3 w-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
                   </span>
                   Fast processing, results in seconds
                 </li>
                 <li className="flex items-center gap-3 text-sm text-muted-foreground">
                   <span className="feature-check">
-                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    <svg
+                      className="h-3 w-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
                   </span>
                   Your files are never stored
                 </li>
-                {(tool.inputType === 'file' || tool.inputType === 'both') && (
+                {(tool.inputType === "file" || tool.inputType === "both") && (
                   <li className="flex items-center gap-3 text-sm text-muted-foreground">
                     <span className="feature-check">
-                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      <svg
+                        className="h-3 w-3"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
                     </span>
                     Drag and drop support
                   </li>
                 )}
                 <li className="flex items-center gap-3 text-sm text-muted-foreground">
                   <span className="feature-check">
-                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    <svg
+                      className="h-3 w-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
                   </span>
                   Works on desktop and mobile
                 </li>
-                {tool.outputType === 'file' && (
+                {tool.outputType === "file" && (
                   <li className="flex items-center gap-3 text-sm text-muted-foreground">
                     <span className="feature-check">
-                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      <svg
+                        className="h-3 w-3"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
                     </span>
                     Instant download after processing
                   </li>
@@ -629,16 +854,19 @@ export default async function ToolPage({ params }: Props) {
           {related.length > 0 && (
             <section className="mt-2">
               <div className="mb-5">
-                <p className="premium-kicker">More {tool.category.toLowerCase()} workflows</p>
+                <p className="premium-kicker">
+                  More {tool.category.toLowerCase()} workflows
+                </p>
                 <h2 className="font-display text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
                   Related tools
                 </h2>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
-                  Continue with more {tool.category.toLowerCase()} tools built in the same premium workspace.
+                  Continue with more {tool.category.toLowerCase()} tools built
+                  in the same premium workspace.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-                {related.map(item => (
+                {related.map((item) => (
                   <ToolCard key={item.id} tool={item} />
                 ))}
               </div>
@@ -647,5 +875,5 @@ export default async function ToolPage({ params }: Props) {
         </div>
       </div>
     </PublicLayout>
-  )
+  );
 }

@@ -1,83 +1,156 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { ChevronRight, Home } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ChevronRight, Home } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type BreadcrumbItem = {
-  label: string
-  href?: string
+  label: string;
+  href?: string;
+};
+
+const ROUTE_LABELS: Record<string, string> = {
+  tools: "Tools",
+  templates: "Templates",
+  library: "Library",
+  ui: "UI Components",
+  design: "Design",
+  dev: "Developer",
+  discover: "Discover",
+  prompts: "Prompt Hub",
+  fixes: "Fixes",
+  daily: "Daily Tools",
+  news: "News",
+  learn: "Learn",
+  search: "Search",
+  marketplace: "Marketplace",
+  ai: "AI",
+  pdf: "PDF",
+  image: "Image",
+  video: "Video",
+  audio: "Audio",
+  text: "Text",
+  seo: "SEO",
+  entertainment: "Entertainment",
+  effects: "Effects",
+};
+
+function formatSegment(segment: string): string {
+  if (ROUTE_LABELS[segment]) return ROUTE_LABELS[segment];
+  return segment
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
-export default function MobileBreadcrumb() {
-  const pathname = usePathname()
-  
-  if (!pathname) return null
-  
-  // Only show on mobile devices
-  if (typeof window !== 'undefined' && window.innerWidth >= 768) {
-    return null
+export default function MobileBreadcrumb({
+  className,
+}: {
+  className?: string;
+}) {
+  const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !pathname) return null;
+
+  const segments = pathname.split("/").filter(Boolean);
+
+  // Don't render on homepage or single-segment paths
+  if (segments.length < 2) return null;
+
+  // Build full crumb list: Home + each segment
+  const allCrumbs: BreadcrumbItem[] = [{ label: "Home", href: "/" }];
+
+  let accumulated = "";
+  segments.forEach((seg, i) => {
+    accumulated += `/${seg}`;
+    const isLast = i === segments.length - 1;
+    allCrumbs.push({
+      label: formatSegment(decodeURIComponent(seg)),
+      href: isLast ? undefined : accumulated,
+    });
+  });
+
+  // Collapse to max 3 visible items: Home > ... > Current
+  // If allCrumbs.length > 3, collapse middle items
+  let visibleCrumbs: (
+    | BreadcrumbItem
+    | { label: "..."; href?: undefined; ellipsis: true }
+  )[];
+
+  if (allCrumbs.length <= 3) {
+    visibleCrumbs = allCrumbs;
+  } else {
+    visibleCrumbs = [
+      allCrumbs[0],
+      { label: "...", ellipsis: true as const },
+      allCrumbs[allCrumbs.length - 1],
+    ];
   }
-
-  // Generate breadcrumbs from pathname
-  const pathSegments = pathname.split('/').filter(Boolean)
-  
-  if (pathSegments.length === 0) {
-    return null
-  }
-
-  const breadcrumbs: BreadcrumbItem[] = [
-    { label: 'Home', href: '/' }
-  ]
-
-  let currentPath = ''
-  pathSegments.forEach((segment, index) => {
-    currentPath += `/${segment}`
-    const isLast = index === pathSegments.length - 1
-    
-    // Format the label (capitalize first letter, replace hyphens with spaces)
-    const label = segment
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
-    
-    breadcrumbs.push({
-      label,
-      href: isLast ? undefined : currentPath
-    })
-  })
 
   return (
-    <div className="lg:hidden border-b border-slate-200/60 bg-white/95 backdrop-blur-sm dark:border-slate-800/60 dark:bg-slate-950/95">
-      <div className="mx-auto flex max-w-7xl items-center gap-1.5 px-3 py-1.5">
-        {breadcrumbs.map((item, index) => {
-          const isLast = index === breadcrumbs.length - 1
-          const isFirst = index === 0
+    <nav
+      aria-label="Breadcrumb"
+      className={cn(
+        "block md:hidden border-b border-slate-200/60 bg-white/95 backdrop-blur-sm dark:border-slate-800/60 dark:bg-slate-950/95",
+        className,
+      )}
+    >
+      <ol className="mx-auto flex max-w-7xl items-center gap-0.5 px-3 py-1.5 overflow-x-auto scrollbar-none">
+        {visibleCrumbs.map((crumb, index) => {
+          const isLast = index === visibleCrumbs.length - 1;
+          const isFirst = index === 0;
+          const isEllipsis = "ellipsis" in crumb && crumb.ellipsis;
 
           return (
-            <div key={`${item.label}-${index}`} className="flex items-center gap-1 shrink-0">
-              {item.href && !isLast ? (
-                <Link 
-                  href={item.href} 
-                  className="flex items-center gap-1 text-[10px] font-medium text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
-                >
-                  {isFirst ? <Home className="h-3 w-3" /> : null}
-                  {item.label}
-                </Link>
-              ) : (
-                <span className="text-[10px] font-semibold text-slate-900 dark:text-slate-100">
-                  {item.label}
-                </span>
+            <li key={index} className="flex items-center gap-0.5 shrink-0">
+              {index > 0 && (
+                <ChevronRight className="h-2.5 w-2.5 text-muted-foreground/40 shrink-0" />
               )}
 
-              {!isLast ? (
-                <ChevronRight className="h-2.5 w-2.5 text-slate-400" />
-              ) : null}
-            </div>
-          )
+              {isEllipsis ? (
+                <span
+                  className="text-[11px] text-muted-foreground/60 px-0.5"
+                  aria-hidden="true"
+                >
+                  &hellip;
+                </span>
+              ) : isLast ? (
+                <span
+                  aria-current="page"
+                  className="text-[11px] font-semibold text-foreground truncate max-w-[120px]"
+                >
+                  {crumb.label}
+                </span>
+              ) : crumb.href ? (
+                <Link
+                  href={crumb.href}
+                  className="flex items-center gap-0.5 text-[11px] text-muted-foreground transition-colors hover:text-foreground rounded px-0.5 py-0.5"
+                >
+                  {isFirst ? (
+                    <>
+                      <Home className="h-3 w-3 shrink-0" aria-hidden="true" />
+                      <span className="sr-only">Home</span>
+                    </>
+                  ) : (
+                    <span className="truncate max-w-[80px]">{crumb.label}</span>
+                  )}
+                </Link>
+              ) : (
+                <span className="text-[11px] text-muted-foreground truncate max-w-[80px]">
+                  {crumb.label}
+                </span>
+              )}
+            </li>
+          );
         })}
-      </div>
-    </div>
-  )
+      </ol>
+    </nav>
+  );
 }

@@ -1,7 +1,8 @@
-'use client'
+"use client";
 
-import { usePathname } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 function LoaderMarkup() {
   return (
@@ -9,11 +10,15 @@ function LoaderMarkup() {
       <div className="source-hub-loader-content">
         <div className="source-hub-loader-logo">
           <div className="source-hub-loader-logo-icon">
-            <img src="/SiteLogo.png" alt="M" className="w-full h-full" />
+            <Image
+              src="/SiteLogo.png"
+              alt="Multiverse"
+              width={56}
+              height={56}
+              className="w-full h-full"
+            />
           </div>
-          <span className="source-hub-loader-logo-text">
-            Multiverse
-          </span>
+          <span className="source-hub-loader-logo-text">Multiverse</span>
         </div>
 
         <div className="source-hub-loader-spinner">
@@ -31,103 +36,114 @@ function LoaderMarkup() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default function SourceHubChrome() {
-  const pathname = usePathname()
-  const [visible, setVisible] = useState(true)
-  const [booted, setBooted] = useState(false)
+  const pathname = usePathname();
+  const [visible, setVisible] = useState(true);
+  const [booted, setBooted] = useState(false);
 
   const hideLoader = useMemo(
-    () => (delay = 520) => {
-      window.clearTimeout((window as Window & { __sourceHubLoaderTimer?: number }).__sourceHubLoaderTimer)
-      ;(window as Window & { __sourceHubLoaderTimer?: number }).__sourceHubLoaderTimer = window.setTimeout(() => {
-        setVisible(false)
-      }, delay)
-    },
-    []
-  )
+    () =>
+      (delay = 520) => {
+        window.clearTimeout(
+          (window as Window & { __sourceHubLoaderTimer?: number })
+            .__sourceHubLoaderTimer,
+        );
+        (
+          window as Window & { __sourceHubLoaderTimer?: number }
+        ).__sourceHubLoaderTimer = window.setTimeout(() => {
+          setVisible(false);
+        }, delay);
+      },
+    [],
+  );
 
   const showLoader = useMemo(
     () => () => {
-      setVisible(true)
+      setVisible(true);
     },
-    []
-  )
+    [],
+  );
 
   useEffect(() => {
     function finishBoot() {
-      setBooted(true)
-      hideLoader(1050)
+      setBooted(true);
+      hideLoader(1050);
     }
 
-    if (document.readyState === 'complete') {
-      finishBoot()
-      return
+    if (document.readyState === "complete") {
+      finishBoot();
+      return;
     }
 
-    const fallback = window.setTimeout(finishBoot, 2200)
-    window.addEventListener('load', finishBoot, { once: true })
-    window.addEventListener('pageshow', finishBoot, { once: true })
+    const fallback = window.setTimeout(finishBoot, 2200);
+    window.addEventListener("load", finishBoot, { once: true });
+    window.addEventListener("pageshow", finishBoot, { once: true });
 
     return () => {
-      window.clearTimeout(fallback)
-      window.removeEventListener('load', finishBoot)
-      window.removeEventListener('pageshow', finishBoot)
-    }
-  }, [hideLoader])
+      window.clearTimeout(fallback);
+      window.removeEventListener("load", finishBoot);
+      window.removeEventListener("pageshow", finishBoot);
+    };
+  }, [hideLoader]);
 
   useEffect(() => {
-    if (!booted || !visible) return
-    hideLoader(900)
-  }, [pathname, booted, visible, hideLoader])
+    if (!booted || !visible) return;
+    hideLoader(900);
+  }, [pathname, booted, visible, hideLoader]);
 
   useEffect(() => {
     function handleManualLoader() {
-      showLoader()
+      showLoader();
     }
 
-    window.addEventListener('multiverse:show-loader', handleManualLoader)
+    window.addEventListener("multiverse:show-loader", handleManualLoader);
     return () => {
-      window.removeEventListener('multiverse:show-loader', handleManualLoader)
-    }
-  }, [showLoader])
+      window.removeEventListener("multiverse:show-loader", handleManualLoader);
+    };
+  }, [showLoader]);
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
-      const target = event.target as HTMLElement | null
-      const link = target?.closest('a[href]') as HTMLAnchorElement | null
+      const target = event.target as HTMLElement | null;
+      const link = target?.closest("a[href]") as HTMLAnchorElement | null;
 
-      if (!link) return
-      if (link.target && link.target !== '_self') return
-      if (link.hasAttribute('download')) return
+      if (!link) return;
+      if (link.target && link.target !== "_self") return;
+      if (link.hasAttribute("download")) return;
 
-      const href = link.getAttribute('href')
-        if (!href || href.startsWith('#') || href.startsWith('javascript:')) return
+      const href = link.getAttribute("href");
+      if (!href || href.startsWith("#") || href.startsWith("javascript:"))
+        return;
 
-        try {
-          const nextUrl = new URL(link.href, window.location.origin)
-          if (nextUrl.origin !== window.location.origin) return
-          if (nextUrl.pathname === window.location.pathname && nextUrl.search === window.location.search) return
-          if (link.closest('[data-no-loader="true"]')) return
-          showLoader()
-        } catch {}
+      try {
+        const nextUrl = new URL(link.href, window.location.origin);
+        if (nextUrl.origin !== window.location.origin) return;
+        if (
+          nextUrl.pathname === window.location.pathname &&
+          nextUrl.search === window.location.search
+        )
+          return;
+        if (link.closest('[data-no-loader="true"]')) return;
+        showLoader();
+      } catch {}
     }
 
-    document.addEventListener('click', handleClick, true)
+    document.addEventListener("click", handleClick, true);
     return () => {
-      document.removeEventListener('click', handleClick, true)
-    }
-  }, [showLoader])
+      document.removeEventListener("click", handleClick, true);
+    };
+  }, [showLoader]);
 
   return (
     <>
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap");
 
         .source-hub-scope {
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: "Plus Jakarta Sans", sans-serif;
           overflow-x: hidden;
         }
 
@@ -148,11 +164,18 @@ export default function SourceHubChrome() {
 
         .source-hub-scope .card-hover:hover {
           transform: translateY(-8px);
-          box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+          box-shadow:
+            0 20px 25px -5px rgb(0 0 0 / 0.1),
+            0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
 
         .source-hub-scope .skeleton {
-          background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+          background: linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+          );
           background-size: 200% 100%;
           animation: source-hub-skeleton-loading 1.5s infinite;
         }
@@ -163,7 +186,8 @@ export default function SourceHubChrome() {
         }
 
         .source-hub-scope .animate-pulse-slow {
-          animation: source-hub-pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          animation: source-hub-pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1)
+            infinite;
         }
 
         .source-hub-scope .animate-slide-in-right {
@@ -185,8 +209,15 @@ export default function SourceHubChrome() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #eff6ff 100%);
-          transition: opacity 0.25s ease-out, visibility 0.25s ease-out;
+          background: linear-gradient(
+            135deg,
+            #f8fafc 0%,
+            #ffffff 50%,
+            #eff6ff 100%
+          );
+          transition:
+            opacity 0.25s ease-out,
+            visibility 0.25s ease-out;
           pointer-events: auto;
         }
 
@@ -288,7 +319,13 @@ export default function SourceHubChrome() {
         }
 
         .dark .source-hub-loader {
-          background: radial-gradient(circle at top, rgba(37, 99, 235, 0.18), transparent 35%), linear-gradient(135deg, #020617 0%, #0f172a 55%, #111827 100%);
+          background:
+            radial-gradient(
+              circle at top,
+              rgba(37, 99, 235, 0.18),
+              transparent 35%
+            ),
+            linear-gradient(135deg, #020617 0%, #0f172a 55%, #111827 100%);
         }
 
         .dark .source-hub-loader-logo-text {
@@ -379,9 +416,9 @@ export default function SourceHubChrome() {
           }
         }
       `}</style>
-      <div className={visible ? '' : 'source-hub-loader-hidden'}>
+      <div className={visible ? "" : "source-hub-loader-hidden"}>
         <LoaderMarkup />
       </div>
     </>
-  )
+  );
 }

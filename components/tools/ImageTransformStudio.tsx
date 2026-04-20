@@ -1,8 +1,9 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useDropzone } from 'react-dropzone'
+import Image from "next/image";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import toast from "react-hot-toast";
 import {
   BadgeCheck,
   Download,
@@ -12,227 +13,271 @@ import {
   SlidersHorizontal,
   Sparkles,
   UploadCloud,
-} from 'lucide-react'
-import type { Tool } from '@/lib/tools-data'
-import { cn, downloadBlob, formatBytes } from '@/lib/utils'
-import { buildDropzoneAccept, formatAcceptedFormats } from './file-accept'
-import { handleImageTool } from './processors/file-image'
-import type { FileProcessResult } from './processors/types'
+} from "lucide-react";
+import type { Tool } from "@/lib/tools-data";
+import { cn, downloadBlob, formatBytes } from "@/lib/utils";
+import { buildDropzoneAccept, formatAcceptedFormats } from "./file-accept";
+import { handleImageTool } from "./processors/file-image";
+import type { FileProcessResult } from "./processors/types";
 
 const TRANSFORM_COPY = {
-  'compress-image': {
-    eyebrow: 'Editorial image delivery',
-    title: 'Compress Image',
-    summary: 'Reduce file size without making the preview feel cheap or soft.',
-    badges: ['Faster uploads', 'Balanced quality', 'Instant export'],
-    actionLabel: 'Compress image',
-    emptyTitle: 'Compression preview appears here',
+  "compress-image": {
+    eyebrow: "Editorial image delivery",
+    title: "Compress Image",
+    summary: "Reduce file size without making the preview feel cheap or soft.",
+    badges: ["Faster uploads", "Balanced quality", "Instant export"],
+    actionLabel: "Compress image",
+    emptyTitle: "Compression preview appears here",
   },
-  'resize-image': {
-    eyebrow: 'Architectural sizing studio',
-    title: 'Resize Image',
-    summary: 'Resize visuals with cleaner dimensions, better framing, and web-ready output.',
-    badges: ['Custom dimensions', 'Smart fit', 'Output preview'],
-    actionLabel: 'Resize image',
-    emptyTitle: 'Resized result appears here',
+  "resize-image": {
+    eyebrow: "Architectural sizing studio",
+    title: "Resize Image",
+    summary:
+      "Resize visuals with cleaner dimensions, better framing, and web-ready output.",
+    badges: ["Custom dimensions", "Smart fit", "Output preview"],
+    actionLabel: "Resize image",
+    emptyTitle: "Resized result appears here",
   },
-  'convert-image': {
-    eyebrow: 'Format conversion queue',
-    title: 'Convert Image',
-    summary: 'Switch formats cleanly for web, product, or document workflows.',
-    badges: ['WEBP / JPG / PNG / AVIF', 'Batch-ready look', 'Sharper exports'],
-    actionLabel: 'Convert image',
-    emptyTitle: 'Converted asset appears here',
+  "convert-image": {
+    eyebrow: "Format conversion queue",
+    title: "Convert Image",
+    summary: "Switch formats cleanly for web, product, or document workflows.",
+    badges: ["WEBP / JPG / PNG / AVIF", "Batch-ready look", "Sharper exports"],
+    actionLabel: "Convert image",
+    emptyTitle: "Converted asset appears here",
   },
-  'crop-image': {
-    eyebrow: 'Precision crop workflow',
-    title: 'Crop Image',
-    summary: 'Trim the frame around the subject with studio-style aspect presets.',
-    badges: ['Centered crop', 'Preset ratios', 'Live canvas'],
-    actionLabel: 'Crop image',
-    emptyTitle: 'Cropped preview appears here',
+  "crop-image": {
+    eyebrow: "Precision crop workflow",
+    title: "Crop Image",
+    summary:
+      "Trim the frame around the subject with studio-style aspect presets.",
+    badges: ["Centered crop", "Preset ratios", "Live canvas"],
+    actionLabel: "Crop image",
+    emptyTitle: "Cropped preview appears here",
   },
-  'remove-background': {
-    eyebrow: 'Cutout editor',
-    title: 'Remove Background',
-    summary: 'Create clean transparent cutouts for products, profiles, and creative comps.',
-    badges: ['Transparent PNG', 'Portrait-ready', 'Quick turnaround'],
-    actionLabel: 'Remove background',
-    emptyTitle: 'Transparent cutout appears here',
+  "remove-background": {
+    eyebrow: "Cutout editor",
+    title: "Remove Background",
+    summary:
+      "Create clean transparent cutouts for products, profiles, and creative comps.",
+    badges: ["Transparent PNG", "Portrait-ready", "Quick turnaround"],
+    actionLabel: "Remove background",
+    emptyTitle: "Transparent cutout appears here",
   },
-  'blur-background': {
-    eyebrow: 'Portrait focus studio',
-    title: 'Blur Background',
-    summary: 'Keep the subject sharp and build a softer premium portrait backdrop.',
-    badges: ['Portrait style', 'Blur depth', 'Tint control'],
-    actionLabel: 'Blur background',
-    emptyTitle: 'Portrait preview appears here',
+  "blur-background": {
+    eyebrow: "Portrait focus studio",
+    title: "Blur Background",
+    summary:
+      "Keep the subject sharp and build a softer premium portrait backdrop.",
+    badges: ["Portrait style", "Blur depth", "Tint control"],
+    actionLabel: "Blur background",
+    emptyTitle: "Portrait preview appears here",
   },
-  'passport-photo-maker': {
-    eyebrow: 'Official photo layout',
-    title: 'Passport Photo Maker',
-    summary: 'Generate a clean white-background passport layout for print-ready use.',
-    badges: ['White background', 'Centered framing', 'Clean export'],
-    actionLabel: 'Create passport photo',
-    emptyTitle: 'Passport sheet preview appears here',
+  "passport-photo-maker": {
+    eyebrow: "Official photo layout",
+    title: "Passport Photo Maker",
+    summary:
+      "Generate a clean white-background passport layout for print-ready use.",
+    badges: ["White background", "Centered framing", "Clean export"],
+    actionLabel: "Create passport photo",
+    emptyTitle: "Passport sheet preview appears here",
   },
-  'image-to-text': {
-    eyebrow: 'OCR extraction studio',
-    title: 'Image to Text',
-    summary: 'Extract readable text from screenshots, scans, receipts, and design mockups.',
-    badges: ['OCR language switch', 'Readable output', 'Quick copy'],
-    actionLabel: 'Extract text',
-    emptyTitle: 'Recognized text appears here',
+  "image-to-text": {
+    eyebrow: "OCR extraction studio",
+    title: "Image to Text",
+    summary:
+      "Extract readable text from screenshots, scans, receipts, and design mockups.",
+    badges: ["OCR language switch", "Readable output", "Quick copy"],
+    actionLabel: "Extract text",
+    emptyTitle: "Recognized text appears here",
   },
-  'image-upscaler': {
-    eyebrow: 'Resolution recovery',
-    title: 'Image Upscaler',
-    summary: 'Upscale image resolution with cleaner edges and more presentation-ready detail.',
-    badges: ['2x and 4x', 'Sharper output', 'Compare quickly'],
-    actionLabel: 'Upscale image',
-    emptyTitle: 'Upscaled result appears here',
+  "image-upscaler": {
+    eyebrow: "Resolution recovery",
+    title: "Image Upscaler",
+    summary:
+      "Upscale image resolution with cleaner edges and more presentation-ready detail.",
+    badges: ["2x and 4x", "Sharper output", "Compare quickly"],
+    actionLabel: "Upscale image",
+    emptyTitle: "Upscaled result appears here",
   },
-  'favicon-generator': {
-    eyebrow: 'Web branding',
-    title: 'Favicon Generator',
-    summary: 'Upload an image and generate a multi-size favicon package for your website.',
-    badges: ['ICO format', 'Multiple sizes', 'Web ready'],
-    actionLabel: 'Generate favicon',
-    emptyTitle: 'Favicon package appears here',
+  "favicon-generator": {
+    eyebrow: "Web branding",
+    title: "Favicon Generator",
+    summary:
+      "Upload an image and generate a multi-size favicon package for your website.",
+    badges: ["ICO format", "Multiple sizes", "Web ready"],
+    actionLabel: "Generate favicon",
+    emptyTitle: "Favicon package appears here",
   },
-  'instagram-grid-maker': {
-    eyebrow: 'Social layout',
-    title: 'Instagram Grid Maker',
-    summary: 'Split your image into a perfect 3×3 grid for a stunning Instagram profile layout.',
-    badges: ['3×3 grid', 'Perfect split', 'Download all'],
-    actionLabel: 'Split into grid',
-    emptyTitle: 'Grid tiles appear here',
+  "instagram-grid-maker": {
+    eyebrow: "Social layout",
+    title: "Instagram Grid Maker",
+    summary:
+      "Split your image into a perfect 3×3 grid for a stunning Instagram profile layout.",
+    badges: ["3×3 grid", "Perfect split", "Download all"],
+    actionLabel: "Split into grid",
+    emptyTitle: "Grid tiles appear here",
   },
-  'svg-to-png': {
-    eyebrow: 'Vector converter',
-    title: 'SVG to PNG Converter',
-    summary: 'Convert SVG vector files into high-resolution PNG images for any use case.',
-    badges: ['Vector input', 'Hi-res PNG', 'Custom size'],
-    actionLabel: 'Convert to PNG',
-    emptyTitle: 'PNG result appears here',
+  "svg-to-png": {
+    eyebrow: "Vector converter",
+    title: "SVG to PNG Converter",
+    summary:
+      "Convert SVG vector files into high-resolution PNG images for any use case.",
+    badges: ["Vector input", "Hi-res PNG", "Custom size"],
+    actionLabel: "Convert to PNG",
+    emptyTitle: "PNG result appears here",
   },
-  'meme-generator': {
-    eyebrow: 'Creative editor',
-    title: 'Meme Generator',
-    summary: 'Upload an image and add bold top/bottom text to create shareable memes instantly.',
-    badges: ['Custom text', 'Impact font', 'Quick share'],
-    actionLabel: 'Create meme',
-    emptyTitle: 'Meme preview appears here',
+  "meme-generator": {
+    eyebrow: "Creative editor",
+    title: "Meme Generator",
+    summary:
+      "Upload an image and add bold top/bottom text to create shareable memes instantly.",
+    badges: ["Custom text", "Impact font", "Quick share"],
+    actionLabel: "Create meme",
+    emptyTitle: "Meme preview appears here",
   },
-} as const
+} as const;
 
 const OCR_LANGUAGES = [
-  ['eng', 'English'],
-  ['hin', 'Hindi'],
-  ['tam', 'Tamil'],
-  ['spa', 'Spanish'],
-  ['fra', 'French'],
-] as const
+  ["eng", "English"],
+  ["hin", "Hindi"],
+  ["tam", "Tamil"],
+  ["spa", "Spanish"],
+  ["fra", "French"],
+] as const;
 
 function metricValue(result: FileProcessResult | null, label: string) {
-  return result?.metrics?.find(item => item.label === label)?.value || 'Pending'
+  return (
+    result?.metrics?.find((item) => item.label === label)?.value || "Pending"
+  );
 }
 
 function makeTextBlob(text: string, filename: string) {
-  return downloadBlob(new Blob([text], { type: 'text/plain;charset=utf-8' }), filename)
+  return downloadBlob(
+    new Blob([text], { type: "text/plain;charset=utf-8" }),
+    filename,
+  );
 }
 
 export default function ImageTransformStudio({ tool }: { tool: Tool }) {
-  const copy = TRANSFORM_COPY[tool.slug as keyof typeof TRANSFORM_COPY]
+  const copy = TRANSFORM_COPY[tool.slug as keyof typeof TRANSFORM_COPY] ?? {
+    eyebrow: "Tool setup",
+    title: tool.name,
+    summary: "This image workflow is being set up. Check back soon.",
+    badges: ["Coming soon", "Image workflow", "Multiverse"],
+    actionLabel: "Process image",
+    emptyTitle: "Result appears here",
+  };
+
   const acceptedFormats = useMemo(
-    () => (tool.acceptedFormats?.length ? tool.acceptedFormats : ['.jpg', '.jpeg', '.png', '.webp']),
-    [tool.acceptedFormats]
-  )
-  const accept = useMemo(() => buildDropzoneAccept(acceptedFormats), [acceptedFormats])
-  const acceptLabel = useMemo(() => formatAcceptedFormats(acceptedFormats), [acceptedFormats])
+    () =>
+      tool.acceptedFormats?.length
+        ? tool.acceptedFormats
+        : [".jpg", ".jpeg", ".png", ".webp"],
+    [tool.acceptedFormats],
+  );
+  const accept = useMemo(
+    () => buildDropzoneAccept(acceptedFormats),
+    [acceptedFormats],
+  );
+  const acceptLabel = useMemo(
+    () => formatAcceptedFormats(acceptedFormats),
+    [acceptedFormats],
+  );
 
-  const sourcePreviewRef = useRef<string | null>(null)
-  const resultPreviewRef = useRef<string | null>(null)
+  const sourcePreviewRef = useRef<string | null>(null);
+  const resultPreviewRef = useRef<string | null>(null);
 
-  const [file, setFile] = useState<File | null>(null)
-  const [sourcePreview, setSourcePreview] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [result, setResult] = useState<FileProcessResult | null>(null)
-  const [imgQuality, setImgQuality] = useState('82')
-  const [convertTo, setConvertTo] = useState('webp')
-  const [resizeWidth, setResizeWidth] = useState('1600')
-  const [resizeHeight, setResizeHeight] = useState('')
-  const [resizeFit, setResizeFit] = useState('inside')
-  const [cropAspect, setCropAspect] = useState('square')
-  const [blurStrength, setBlurStrength] = useState('22')
-  const [blurTint, setBlurTint] = useState('#E8EEFF')
-  const [ocrLang, setOcrLang] = useState('eng')
-  const [upscaleFactor, setUpscaleFactor] = useState('2')
+  const [file, setFile] = useState<File | null>(null);
+  const [sourcePreview, setSourcePreview] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [result, setResult] = useState<FileProcessResult | null>(null);
+  const [imgQuality, setImgQuality] = useState("82");
+  const [convertTo, setConvertTo] = useState("webp");
+  const [resizeWidth, setResizeWidth] = useState("1600");
+  const [resizeHeight, setResizeHeight] = useState("");
+  const [resizeFit, setResizeFit] = useState("inside");
+  const [cropAspect, setCropAspect] = useState("square");
+  const [blurStrength, setBlurStrength] = useState("22");
+  const [blurTint, setBlurTint] = useState("#E8EEFF");
+  const [ocrLang, setOcrLang] = useState("eng");
+  const [upscaleFactor, setUpscaleFactor] = useState("2");
 
   function clearSourcePreview() {
     if (sourcePreviewRef.current) {
-      URL.revokeObjectURL(sourcePreviewRef.current)
-      sourcePreviewRef.current = null
+      URL.revokeObjectURL(sourcePreviewRef.current);
+      sourcePreviewRef.current = null;
     }
   }
 
   function clearResultPreview() {
     if (resultPreviewRef.current) {
-      URL.revokeObjectURL(resultPreviewRef.current)
-      resultPreviewRef.current = null
+      URL.revokeObjectURL(resultPreviewRef.current);
+      resultPreviewRef.current = null;
     }
   }
 
-  useEffect(() => () => {
-    clearSourcePreview()
-    clearResultPreview()
-  }, [])
+  useEffect(
+    () => () => {
+      clearSourcePreview();
+      clearResultPreview();
+    },
+    [],
+  );
 
   function resetResultState() {
-    setResult(current => {
+    setResult((current) => {
       if (current?.previewIsObjectUrl && current.previewUrl) {
-        URL.revokeObjectURL(current.previewUrl)
+        URL.revokeObjectURL(current.previewUrl);
       }
-      return null
-    })
-    clearResultPreview()
-    setError('')
+      return null;
+    });
+    clearResultPreview();
+    setError("");
   }
 
   function updateFile(nextFile: File | null) {
-    clearSourcePreview()
-    resetResultState()
-    setFile(nextFile)
+    clearSourcePreview();
+    resetResultState();
+    setFile(nextFile);
 
     if (!nextFile) {
-      setSourcePreview('')
-      return
+      setSourcePreview("");
+      return;
     }
 
-    const nextPreview = URL.createObjectURL(nextFile)
-    sourcePreviewRef.current = nextPreview
-    setSourcePreview(nextPreview)
+    const nextPreview = URL.createObjectURL(nextFile);
+    sourcePreviewRef.current = nextPreview;
+    setSourcePreview(nextPreview);
   }
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     accept,
     multiple: false,
     noClick: true,
-    onDropAccepted: files => updateFile(files[0] || null),
-  })
+    maxSize: 20 * 1024 * 1024,
+    onDropAccepted: (files) => updateFile(files[0] || null),
+    onDropRejected: (rejectedFiles) => {
+      const tooBig = rejectedFiles.some((f) =>
+        f.errors.some((e) => e.code === "file-too-large"),
+      );
+      if (tooBig) toast.error("File too large. Maximum size is 20 MB.");
+      else toast.error("Invalid file type. Please upload a supported image.");
+    },
+  });
 
   async function handleProcess() {
-    if (!file || loading) return
+    if (!file || loading) return;
 
-    setLoading(true)
-    resetResultState()
+    setLoading(true);
+    resetResultState();
 
     try {
       const processed = await handleImageTool({
         slug: tool.slug,
         file,
-        textInput: tool.slug === 'crop-image' ? cropAspect : '',
+        textInput: tool.slug === "crop-image" ? cropAspect : "",
         ocrLang,
         imgQuality,
         imgConvertTo: convertTo,
@@ -242,70 +287,72 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
         blurStrength,
         blurTint,
         upscaleFactor,
-      })
+      });
 
       if (processed.apiError) {
-        setError(processed.apiError)
-        return
+        setError(processed.apiError);
+        return;
       }
 
       if (processed.previewIsObjectUrl && processed.previewUrl) {
-        resultPreviewRef.current = processed.previewUrl
+        resultPreviewRef.current = processed.previewUrl;
       }
 
-      setResult(processed)
+      setResult(processed);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   function handleReset() {
-    updateFile(null)
-    setImgQuality('82')
-    setConvertTo('webp')
-    setResizeWidth('1600')
-    setResizeHeight('')
-    setResizeFit('inside')
-    setCropAspect('square')
-    setBlurStrength('22')
-    setBlurTint('#E8EEFF')
-    setOcrLang('eng')
-    setUpscaleFactor('2')
-    setError('')
+    updateFile(null);
+    setImgQuality("82");
+    setConvertTo("webp");
+    setResizeWidth("1600");
+    setResizeHeight("");
+    setResizeFit("inside");
+    setCropAspect("square");
+    setBlurStrength("22");
+    setBlurTint("#E8EEFF");
+    setOcrLang("eng");
+    setUpscaleFactor("2");
+    setError("");
   }
 
   function handleDownload() {
     if (result?.outputBlob && result.outputFilename) {
-      downloadBlob(result.outputBlob, result.outputFilename)
-      return
+      downloadBlob(result.outputBlob, result.outputFilename);
+      return;
     }
 
     if (result?.output) {
-      makeTextBlob(result.output, `${tool.slug}.txt`)
+      makeTextBlob(result.output, `${tool.slug}.txt`);
     }
   }
 
   function renderOptions() {
-    if (tool.slug === 'compress-image') {
+    if (tool.slug === "compress-image") {
       return (
         <div className="space-y-5">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Preset</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+              Preset
+            </p>
             <div className="mt-3 grid gap-2 sm:grid-cols-3">
               {[
-                ['55', 'Smallest'],
-                ['82', 'Balanced'],
-                ['94', 'Maximum'],
+                ["55", "Smallest"],
+                ["82", "Balanced"],
+                ["94", "Maximum"],
               ].map(([value, label]) => (
                 <button
                   key={value}
                   type="button"
                   onClick={() => setImgQuality(value)}
                   className={cn(
-                    'rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors',
+                    "rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors",
                     imgQuality === value
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-white text-slate-700 hover:bg-slate-100'
+                      ? "bg-indigo-600 text-white"
+                      : "bg-white text-slate-700 hover:bg-slate-100",
                   )}
                 >
                   {label}
@@ -324,15 +371,15 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
               min="30"
               max="100"
               value={imgQuality}
-              onChange={event => setImgQuality(event.target.value)}
+              onChange={(event) => setImgQuality(event.target.value)}
               className="w-full accent-indigo-600"
             />
           </div>
         </div>
-      )
+      );
     }
 
-    if (tool.slug === 'resize-image') {
+    if (tool.slug === "resize-image") {
       return (
         <div className="space-y-5">
           <div className="grid gap-3 sm:grid-cols-2">
@@ -340,7 +387,9 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
               <span>Width</span>
               <input
                 value={resizeWidth}
-                onChange={event => setResizeWidth(event.target.value.replace(/[^\d]/g, ''))}
+                onChange={(event) =>
+                  setResizeWidth(event.target.value.replace(/[^\d]/g, ""))
+                }
                 className="w-full rounded-2xl bg-white px-4 py-3 text-sm text-slate-900 outline-none"
               />
             </label>
@@ -348,7 +397,9 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
               <span>Height</span>
               <input
                 value={resizeHeight}
-                onChange={event => setResizeHeight(event.target.value.replace(/[^\d]/g, ''))}
+                onChange={(event) =>
+                  setResizeHeight(event.target.value.replace(/[^\d]/g, ""))
+                }
                 placeholder="Auto"
                 className="w-full rounded-2xl bg-white px-4 py-3 text-sm text-slate-900 outline-none"
               />
@@ -356,22 +407,24 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Fit mode</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+              Fit mode
+            </p>
             <div className="mt-3 grid gap-2 sm:grid-cols-3">
               {[
-                ['inside', 'Inside'],
-                ['cover', 'Cover'],
-                ['contain', 'Contain'],
+                ["inside", "Inside"],
+                ["cover", "Cover"],
+                ["contain", "Contain"],
               ].map(([value, label]) => (
                 <button
                   key={value}
                   type="button"
                   onClick={() => setResizeFit(value)}
                   className={cn(
-                    'rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors',
+                    "rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors",
                     resizeFit === value
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-white text-slate-700 hover:bg-slate-100'
+                      ? "bg-indigo-600 text-white"
+                      : "bg-white text-slate-700 hover:bg-slate-100",
                   )}
                 >
                   {label}
@@ -380,25 +433,27 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
             </div>
           </div>
         </div>
-      )
+      );
     }
 
-    if (tool.slug === 'convert-image') {
+    if (tool.slug === "convert-image") {
       return (
         <div className="space-y-5">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Output format</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+              Output format
+            </p>
             <div className="mt-3 grid gap-2 sm:grid-cols-4">
-              {['webp', 'jpeg', 'png', 'avif'].map(format => (
+              {["webp", "jpeg", "png", "avif"].map((format) => (
                 <button
                   key={format}
                   type="button"
                   onClick={() => setConvertTo(format)}
                   className={cn(
-                    'rounded-2xl px-4 py-3 text-center text-sm font-semibold uppercase transition-colors',
+                    "rounded-2xl px-4 py-3 text-center text-sm font-semibold uppercase transition-colors",
                     convertTo === format
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-white text-slate-700 hover:bg-slate-100'
+                      ? "bg-indigo-600 text-white"
+                      : "bg-white text-slate-700 hover:bg-slate-100",
                   )}
                 >
                   {format}
@@ -417,35 +472,37 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
               min="45"
               max="100"
               value={imgQuality}
-              onChange={event => setImgQuality(event.target.value)}
+              onChange={(event) => setImgQuality(event.target.value)}
               className="w-full accent-indigo-600"
             />
           </div>
         </div>
-      )
+      );
     }
 
-    if (tool.slug === 'crop-image') {
+    if (tool.slug === "crop-image") {
       return (
         <div className="space-y-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Aspect ratio</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+            Aspect ratio
+          </p>
           <div className="grid gap-2 sm:grid-cols-2">
             {[
-              ['square', 'Square'],
-              ['portrait', '4:5 Portrait'],
-              ['story', '9:16 Story'],
-              ['landscape', '16:9 Wide'],
-              ['original', 'Original'],
+              ["square", "Square"],
+              ["portrait", "4:5 Portrait"],
+              ["story", "9:16 Story"],
+              ["landscape", "16:9 Wide"],
+              ["original", "Original"],
             ].map(([value, label]) => (
               <button
                 key={value}
                 type="button"
                 onClick={() => setCropAspect(value)}
                 className={cn(
-                  'rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors',
+                  "rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors",
                   cropAspect === value
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                    ? "bg-indigo-600 text-white"
+                    : "bg-white text-slate-700 hover:bg-slate-100",
                 )}
               >
                 {label}
@@ -453,10 +510,10 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
             ))}
           </div>
         </div>
-      )
+      );
     }
 
-    if (tool.slug === 'blur-background') {
+    if (tool.slug === "blur-background") {
       return (
         <div className="space-y-5">
           <div>
@@ -469,7 +526,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
               min="8"
               max="48"
               value={blurStrength}
-              onChange={event => setBlurStrength(event.target.value)}
+              onChange={(event) => setBlurStrength(event.target.value)}
               className="w-full accent-indigo-600"
             />
           </div>
@@ -479,20 +536,24 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
               <input
                 type="color"
                 value={blurTint}
-                onChange={event => setBlurTint(event.target.value)}
+                onChange={(event) => setBlurTint(event.target.value)}
                 className="h-10 w-12 rounded-xl border-0 bg-transparent"
               />
-              <span className="font-mono text-sm text-slate-600">{blurTint}</span>
+              <span className="font-mono text-sm text-slate-600">
+                {blurTint}
+              </span>
             </div>
           </label>
         </div>
-      )
+      );
     }
 
-    if (tool.slug === 'image-to-text') {
+    if (tool.slug === "image-to-text") {
       return (
         <div className="space-y-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">OCR language</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+            OCR language
+          </p>
           <div className="grid gap-2 sm:grid-cols-2">
             {OCR_LANGUAGES.map(([value, label]) => (
               <button
@@ -500,10 +561,10 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                 type="button"
                 onClick={() => setOcrLang(value)}
                 className={cn(
-                  'rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors',
+                  "rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors",
                   ocrLang === value
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                    ? "bg-indigo-600 text-white"
+                    : "bg-white text-slate-700 hover:bg-slate-100",
                 )}
               >
                 {label}
@@ -511,27 +572,29 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
             ))}
           </div>
         </div>
-      )
+      );
     }
 
-    if (tool.slug === 'image-upscaler') {
+    if (tool.slug === "image-upscaler") {
       return (
         <div className="space-y-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Upscale factor</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+            Upscale factor
+          </p>
           <div className="grid gap-2 sm:grid-cols-2">
             {[
-              ['2', '2x Upscale'],
-              ['4', '4x Upscale'],
+              ["2", "2x Upscale"],
+              ["4", "4x Upscale"],
             ].map(([value, label]) => (
               <button
                 key={value}
                 type="button"
                 onClick={() => setUpscaleFactor(value)}
                 className={cn(
-                  'rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors',
+                  "rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors",
                   upscaleFactor === value
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                    ? "bg-indigo-600 text-white"
+                    : "bg-white text-slate-700 hover:bg-slate-100",
                 )}
               >
                 {label}
@@ -539,14 +602,15 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
             ))}
           </div>
         </div>
-      )
+      );
     }
 
     return (
       <div className="rounded-2xl bg-white px-4 py-3 text-sm text-slate-600">
-        This workflow is tuned automatically. Upload the image and run the action.
+        This workflow is tuned automatically. Upload the image and run the
+        action.
       </div>
-    )
+    );
   }
 
   return (
@@ -555,7 +619,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
         <div className="space-y-4 sm:space-y-6">
           <div className="space-y-3 sm:space-y-4">
             <div className="flex flex-wrap gap-1.5">
-              {copy.badges.map(badge => (
+              {copy.badges.map((badge) => (
                 <span
                   key={badge}
                   className="rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold text-slate-700 shadow-sm sm:px-4 sm:py-1.5 sm:text-sm"
@@ -571,7 +635,9 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
               <h1 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-slate-950 sm:mt-3 sm:text-4xl md:text-5xl">
                 {copy.title}
               </h1>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 sm:mt-4 sm:text-base sm:leading-8">{copy.summary}</p>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 sm:mt-4 sm:text-base sm:leading-8">
+                {copy.summary}
+              </p>
             </div>
           </div>
 
@@ -579,8 +645,10 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
             <div
               {...getRootProps()}
               className={cn(
-                'rounded-[1.25rem] border-2 border-dashed px-4 py-6 transition-colors sm:rounded-[1.75rem] sm:px-6 sm:py-8',
-                isDragActive ? 'border-indigo-500 bg-indigo-50/60' : 'border-slate-200 bg-slate-50/70'
+                "rounded-[1.25rem] border-2 border-dashed px-4 py-6 transition-colors sm:rounded-[1.75rem] sm:px-6 sm:py-8",
+                isDragActive
+                  ? "border-indigo-500 bg-indigo-50/60"
+                  : "border-slate-200 bg-slate-50/70",
               )}
             >
               <input {...getInputProps()} />
@@ -593,7 +661,9 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                     Drop your image here
                   </h2>
                   <p className="mt-2 max-w-md text-xs leading-5 text-slate-500 sm:mt-3 sm:text-sm sm:leading-6">
-                    {acceptLabel ? `Supports ${acceptLabel}.` : 'Upload a supported image file.'}
+                    {acceptLabel
+                      ? `Supports ${acceptLabel}.`
+                      : "Upload a supported image file."}
                   </p>
                   <button
                     type="button"
@@ -620,7 +690,9 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                       <p className="truncate font-display text-sm font-bold tracking-tight text-slate-950 sm:text-base">
                         {file.name}
                       </p>
-                      <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">{formatBytes(file.size)}</p>
+                      <p className="mt-0.5 text-xs text-slate-500 sm:mt-1 sm:text-sm">
+                        {formatBytes(file.size)}
+                      </p>
                     </div>
                     <button
                       type="button"
@@ -674,7 +746,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                     Source size
                   </p>
                   <p className="mt-1.5 font-display text-base font-bold tracking-tight text-slate-950 sm:mt-2 sm:text-xl">
-                    {file ? formatBytes(file.size) : 'No file'}
+                    {file ? formatBytes(file.size) : "No file"}
                   </p>
                 </div>
                 <div className="rounded-xl bg-white p-3 sm:rounded-2xl sm:p-4">
@@ -682,7 +754,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                     Result size
                   </p>
                   <p className="mt-1.5 font-display text-base font-bold tracking-tight text-slate-950 sm:mt-2 sm:text-xl">
-                    {metricValue(result, 'Size')}
+                    {metricValue(result, "Size")}
                   </p>
                 </div>
                 <div className="rounded-xl bg-white p-3 sm:rounded-2xl sm:p-4">
@@ -690,7 +762,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                     Format
                   </p>
                   <p className="mt-1.5 font-display text-base font-bold tracking-tight text-slate-950 sm:mt-2 sm:text-xl">
-                    {metricValue(result, 'Format')}
+                    {metricValue(result, "Format")}
                   </p>
                 </div>
                 <div className="rounded-xl bg-white p-3 sm:rounded-2xl sm:p-4">
@@ -698,7 +770,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                     Dimensions
                   </p>
                   <p className="mt-1.5 font-display text-base font-bold tracking-tight text-slate-950 sm:mt-2 sm:text-xl">
-                    {metricValue(result, 'Dimensions')}
+                    {metricValue(result, "Dimensions")}
                   </p>
                 </div>
               </div>
@@ -713,25 +785,29 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                 Live Process
               </h2>
               <span className="text-xs font-semibold text-indigo-600 sm:text-sm">
-                {loading ? 'Running' : result ? 'Ready' : 'Idle'}
+                {loading ? "Running" : result ? "Ready" : "Idle"}
               </span>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-slate-100 sm:h-3">
               <div
                 className="h-full rounded-full bg-indigo-600 transition-all duration-500"
-                style={{ width: loading ? '76%' : result ? '100%' : '18%' }}
+                style={{ width: loading ? "76%" : result ? "100%" : "18%" }}
               />
             </div>
             <div className="mt-3 rounded-xl bg-slate-50 p-3 sm:mt-4 sm:rounded-2xl sm:p-4">
               <p className="font-display text-sm font-bold tracking-tight text-slate-950 sm:text-base">
-                {loading ? 'Processing image...' : result ? 'Output ready' : 'Waiting for source'}
+                {loading
+                  ? "Processing image..."
+                  : result
+                    ? "Output ready"
+                    : "Waiting for source"}
               </p>
               <p className="mt-1 text-xs leading-5 text-slate-600 sm:mt-1 sm:text-sm sm:leading-6">
                 {loading
-                  ? 'Analyzing the source and preparing the next export.'
+                  ? "Analyzing the source and preparing the next export."
                   : result
-                    ? 'Preview, compare, and download the final export.'
-                    : 'Upload an image and tune the settings to start the workflow.'}
+                    ? "Preview, compare, and download the final export."
+                    : "Upload an image and tune the settings to start the workflow."}
               </p>
             </div>
           </section>
@@ -739,7 +815,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
           <section className="rounded-[1.5rem] bg-slate-950 p-4 text-white sm:rounded-[2rem] sm:p-6">
             <div className="mb-3 flex items-center gap-2.5 sm:mb-4 sm:gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-300 sm:h-12 sm:w-12 sm:rounded-2xl">
-                {tool.slug === 'image-to-text' ? (
+                {tool.slug === "image-to-text" ? (
                   <ScanSearch className="h-4 w-4 sm:h-5 sm:w-5" />
                 ) : (
                   <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -750,13 +826,15 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                   Result
                 </p>
                 <h2 className="font-display text-lg font-extrabold tracking-tight sm:text-2xl">
-                  {result ? 'Your export is ready' : copy.emptyTitle}
+                  {result ? "Your export is ready" : copy.emptyTitle}
                 </h2>
               </div>
             </div>
 
             {error ? (
-              <div className="rounded-xl bg-rose-500/12 p-3 text-xs leading-5 text-rose-200 sm:rounded-2xl sm:p-4 sm:text-sm sm:leading-6">{error}</div>
+              <div className="rounded-xl bg-rose-500/12 p-3 text-xs leading-5 text-rose-200 sm:rounded-2xl sm:p-4 sm:text-sm sm:leading-6">
+                {error}
+              </div>
             ) : result?.previewUrl ? (
               <div className="space-y-3 sm:space-y-4">
                 <div className="relative h-[240px] overflow-hidden rounded-[1.25rem] bg-white sm:h-[320px] sm:rounded-[1.7rem]">
@@ -770,12 +848,17 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                   />
                 </div>
                 <div className="grid gap-2 sm:gap-2 sm:grid-cols-2">
-                  {result.metrics?.map(metric => (
-                    <div key={metric.label} className="rounded-xl bg-white/8 px-3 py-2.5 sm:rounded-2xl sm:px-4 sm:py-3">
+                  {result.metrics?.map((metric) => (
+                    <div
+                      key={metric.label}
+                      className="rounded-xl bg-white/8 px-3 py-2.5 sm:rounded-2xl sm:px-4 sm:py-3"
+                    >
                       <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-400 sm:text-[11px]">
                         {metric.label}
                       </p>
-                      <p className="mt-1 text-xs font-semibold text-white sm:mt-1 sm:text-sm">{metric.value}</p>
+                      <p className="mt-1 text-xs font-semibold text-white sm:mt-1 sm:text-sm">
+                        {metric.value}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -789,7 +872,8 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
             ) : (
               <div className="rounded-[1.25rem] bg-white/6 p-4 sm:rounded-[1.7rem] sm:p-6">
                 <p className="text-xs leading-5 text-slate-300 sm:text-sm sm:leading-6">
-                  Upload the source file, tune the settings, and run the workflow to see the final export here.
+                  Upload the source file, tune the settings, and run the
+                  workflow to see the final export here.
                 </p>
               </div>
             )}
@@ -801,7 +885,11 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                 disabled={!file || loading}
                 className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-[11px] font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 sm:rounded-2xl sm:px-5 sm:py-3 sm:text-sm"
               >
-                {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin sm:h-4 sm:w-4" /> : <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
+                {loading ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin sm:h-4 sm:w-4" />
+                ) : (
+                  <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                )}
                 {copy.actionLabel}
               </button>
               {(result?.outputBlob || result?.output) && (
@@ -828,5 +916,5 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

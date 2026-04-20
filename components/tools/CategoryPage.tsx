@@ -1,12 +1,18 @@
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { getLucideIcon } from '@/lib/icons'
-import type { Category, Tool } from '@/lib/tools-data'
-import ToolBreadcrumb from './ToolBreadcrumb'
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { getLucideIcon } from "@/lib/icons";
+import type { Category, Tool } from "@/lib/tools-data";
+import ToolBreadcrumb from "./ToolBreadcrumb";
 
-export default function CategoryPage({ category, tools }: { category: Category; tools: Tool[] }) {
-  const Icon = getLucideIcon(category.icon)
+export default function CategoryPage({
+  category,
+  tools,
+}: {
+  category: Category;
+  tools: Tool[];
+}) {
+  const Icon = getLucideIcon(category.icon);
 
   return (
     <div>
@@ -17,17 +23,28 @@ export default function CategoryPage({ category, tools }: { category: Category; 
           <div className="absolute inset-0 grid-bg opacity-[0.08] dark:opacity-[0.04]" />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-12 lg:px-6">
-          <ToolBreadcrumb items={[{ label: 'All Tools', href: '/tools' }, { label: category.name }]} />
+        <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10 md:py-12 lg:px-6">
+          <ToolBreadcrumb
+            items={[
+              { label: "All Tools", href: "/tools" },
+              { label: category.name },
+            ]}
+          />
 
-          <div className="mt-6 flex items-start gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 transition-colors dark:bg-indigo-950/30">
-              <Icon className="h-7 w-7 text-indigo-600 dark:text-indigo-300" />
+          <div className="mt-4 sm:mt-6 flex items-start gap-3 sm:gap-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 transition-colors sm:h-14 sm:w-14 sm:rounded-2xl dark:bg-indigo-950/30">
+              <Icon className="h-5 w-5 text-indigo-600 sm:h-7 sm:w-7 dark:text-indigo-300" />
             </div>
-            <div>
-              <h1 className="font-display text-3xl font-extrabold text-slate-950 dark:text-slate-50">{category.name}</h1>
-              <p className="mt-1 max-w-xl text-muted-foreground">{category.description}</p>
-              <p className="mt-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400">{tools.length} tools available</p>
+            <div className="min-w-0">
+              <h1 className="font-display text-2xl font-extrabold text-slate-950 sm:text-3xl dark:text-slate-50">
+                {category.name}
+              </h1>
+              <p className="mt-1 max-w-xl text-sm text-muted-foreground sm:text-base">
+                {category.description}
+              </p>
+              <p className="mt-1.5 text-sm font-semibold text-indigo-600 sm:mt-2 dark:text-indigo-400">
+                {tools.length} tools available
+              </p>
             </div>
           </div>
         </div>
@@ -35,45 +52,53 @@ export default function CategoryPage({ category, tools }: { category: Category; 
 
       {/* Tools Grid */}
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-12 lg:px-6">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 sm:gap-4">
           {tools.map((tool, index) => {
-            const TIcon = getLucideIcon(tool.icon)
-            const visibleTag = tool.tags.find(tag => tag !== 'new' && tag !== 'trending')
+            const TIcon = getLucideIcon(tool.icon);
+            const visibleTag = tool.tags.find(
+              (tag) => tag !== "new" && tag !== "trending",
+            );
 
             return (
               <Link
                 key={tool.id}
                 href={`/tools/${tool.categorySlug}/${tool.slug}`}
-                className="group rounded-xl border border-slate-200/70 bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-500/[0.06] dark:border-slate-800/70 dark:bg-slate-900/80 dark:hover:border-indigo-800 animate-fade-in"
-                style={{ animationDelay: `${index * 0.03}s`, animationFillMode: 'both' }}
+                className="group rounded-xl border border-slate-200/70 bg-white p-3 transition-all duration-200 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-500/[0.06] sm:p-5 dark:border-slate-800/70 dark:bg-slate-900/80 dark:hover:border-indigo-800 animate-fade-in"
+                style={{
+                  animationDelay: `${index * 0.03}s`,
+                  animationFillMode: "both",
+                }}
               >
-                <div className="mb-3 flex items-start justify-between">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 transition-all duration-200 group-hover:bg-indigo-600 group-hover:scale-105 dark:bg-slate-800 dark:group-hover:bg-indigo-500">
-                    <TIcon className="h-5 w-5 text-slate-700 transition-colors group-hover:text-white dark:text-slate-100 dark:group-hover:text-white" />
+                <div className="mb-2 flex items-start justify-between sm:mb-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 transition-all duration-200 group-hover:bg-indigo-600 group-hover:scale-105 sm:h-11 sm:w-11 sm:rounded-xl dark:bg-slate-800 dark:group-hover:bg-indigo-500">
+                    <TIcon className="h-4 w-4 text-slate-700 transition-colors group-hover:text-white sm:h-5 sm:w-5 dark:text-slate-100 dark:group-hover:text-white" />
                   </div>
                   {visibleTag && (
                     <span
                       className={cn(
-                        'rounded-full px-2 py-0.5 text-xs font-semibold',
-                        visibleTag === 'hot' ? 'tag-hot' : 'tag-beta'
+                        "rounded-full px-1.5 py-0.5 text-[10px] font-semibold sm:px-2 sm:text-xs",
+                        visibleTag === "hot" ? "tag-hot" : "tag-beta",
                       )}
                     >
                       {visibleTag}
                     </span>
                   )}
                 </div>
-                <h3 className="mb-1.5 font-display font-bold transition-colors group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                <h3 className="mb-1 font-display text-sm font-bold transition-colors group-hover:text-indigo-600 sm:mb-1.5 sm:text-base dark:group-hover:text-indigo-400">
                   {tool.name}
                 </h3>
-                <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">{tool.description}</p>
-                <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-                  Use Tool <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+                <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                  {tool.description}
+                </p>
+                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-indigo-600 sm:mt-4 dark:text-indigo-400">
+                  Use Tool{" "}
+                  <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
                 </div>
               </Link>
-            )
+            );
           })}
         </div>
       </section>
     </div>
-  )
+  );
 }

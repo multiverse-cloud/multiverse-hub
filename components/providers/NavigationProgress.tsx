@@ -1,0 +1,104 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+
+export default function NavigationProgress() {
+  const pathname = usePathname();
+  const [progress, setProgress] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const [completing, setCompleting] = useState(false);
+  const prevPathname = useRef(pathname);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const clearTimers = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+  }, []);
+
+  const complete = useCallback(() => {
+    clearTimers();
+    setCompleting(true);
+    setProgress(100);
+    timerRef.current = setTimeout(() => {
+      setVisible(false);
+      setProgress(0);
+      setCompleting(false);
+    }, 400);
+  }, [clearTimers]);
+
+  const start = useCallback(() => {
+    clearTimers();
+    setVisible(true);
+    setCompleting(false);
+    setProgress(15);
+
+    let current = 15;
+    intervalRef.current = setInterval(() => {
+      const increment =
+        current < 40 ? 8 : current < 65 ? 4 : current < 80 ? 1.5 : 0.5;
+      current = Math.min(current + increment, 85);
+      setProgress(current);
+      if (current >= 85) {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+      }
+    }, 100);
+  }, [clearTimers]);
+
+  // Detect route change completion
+  useEffect(() => {
+    if (pathname !== prevPathname.current) {
+      prevPathname.current = pathname;
+      complete();
+    }
+  }, [pathname, complete]);
+
+  // Listen for navigation start via link clicks
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      const target = (e.target as HTMLElement).closest("a");
+      if (!target) return;
+      const href = target.getAttribute("href");
+      if (!href) return;
+      // Only trigger for internal navigation links
+      if (href.startsWith("/") || href.startsWith(window.location.origin)) {
+        const targetPath = href.startsWith("/")
+          ? href.split("?")[0]
+          : new URL(href).pathname;
+        if (targetPath !== pathname) {
+          start();
+        }
+      }
+    }
+
+    document.addEventListener("click", handleClick, { capture: true });
+    return () =>
+      document.removeEventListener("click", handleClick, { capture: true });
+  }, [pathname, start]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => clearTimers();
+  }, [clearTimers]);
+
+  if (!visible) return null;
+
+  return (
+    <div
+      className="fixed inset-x-0 top-0 z-[9999] h-[3px] overflow-hidden"
+      aria-hidden="true"
+    >
+      <div
+        className="h-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 shadow-[0_0_8px_rgba(99,102,241,0.6)]"
+        style={{
+          width: `${progress}%`,
+          transition: completing
+            ? "width 0.2s ease-out"
+            : "width 0.1s ease-out",
+          transformOrigin: "left center",
+        }}
+      />
+    </div>
+  );
+}

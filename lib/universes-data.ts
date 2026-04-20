@@ -23,17 +23,6 @@ export const UNIVERSES: Universe[] = [
     color: 'blue',
   },
   {
-    id: 'ai',
-    name: 'AI Hub',
-    description: 'Chat, create and generate with AI',
-    icon: 'Bot',
-    href: '/ai',
-    gradient: 'from-violet-500 to-purple-600',
-    bgGradient: 'from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20',
-    count: '15+ AI Tools',
-    color: 'violet',
-  },
-  {
     id: 'design',
     name: 'Design AI',
     description: 'Generate UI, logos and design assets',

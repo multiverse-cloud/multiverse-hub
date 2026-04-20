@@ -1,22 +1,22 @@
-import { Suspense } from 'react'
-import { Globe } from 'lucide-react'
-import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
+import { Suspense } from "react";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import MobileBreadcrumb from "@/components/layout/MobileBreadcrumb";
 
 export default function PublicLayout({
   children,
   schemaMarkup,
-  variant = 'default',
+  variant = "default",
 }: {
-  children: React.ReactNode
-  schemaMarkup?: Record<string, any> | Record<string, any>[]
-  variant?: 'default' | 'template' | 'source-hub'
+  children: React.ReactNode;
+  schemaMarkup?: Record<string, any> | Record<string, any>[];
+  variant?: "default" | "template" | "source-hub";
 }) {
   const schemas = schemaMarkup
     ? Array.isArray(schemaMarkup)
       ? schemaMarkup
       : [schemaMarkup]
-    : []
+    : [];
 
   return (
     <>
@@ -28,14 +28,22 @@ export default function PublicLayout({
         />
       ))}
       <div className="flex min-h-screen flex-col">
-        <Suspense fallback={
-          <div className="sticky top-0 z-50 h-16 border-b border-slate-200/80 bg-white/88 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/88" />
-        }>
+        <Suspense
+          fallback={
+            <div className="sticky top-0 z-50 h-16 border-b border-slate-200/80 bg-white/88 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/88" />
+          }
+        >
           <Navbar />
         </Suspense>
-        <main className="flex-1">{children}</main>
+
+        {/* Breadcrumb trail — renders itself only on depth ≥ 2 paths, mobile only */}
+        <MobileBreadcrumb />
+
+        {/* pb-20 gives the fixed MobileBottomNav (h-16 + safe-area) room on mobile */}
+        <main className="flex-1 pb-20 md:pb-0">{children}</main>
+
         <Footer />
       </div>
     </>
-  )
+  );
 }

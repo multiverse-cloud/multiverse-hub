@@ -27,28 +27,20 @@ export default function DownloaderInputBar({
   return (
     <div
       className={cn(
-        'rounded-[18px] border p-1.5 shadow-[0_20px_40px_-30px_rgba(15,23,42,0.18)]',
-        isInverse
-          ? 'border-white/20 bg-white/10 backdrop-blur-xl'
-          : 'border-slate-200 bg-white',
+        'rounded-2xl border-2 border-slate-200 bg-white p-2 shadow-[0_25px_50px_-20px_rgba(15,23,42,0.15)] dark:border-slate-800 dark:bg-slate-900',
         className
       )}
     >
-      <div className="flex flex-col gap-2 md:flex-row md:items-center">
-        <div className="flex min-h-[58px] flex-1 items-center gap-3 rounded-[14px] px-4">
-          <Link2 className={cn('h-5 w-5 shrink-0', isInverse ? 'text-white/60' : 'text-slate-400')} />
+      <div className="flex flex-col gap-3 md:flex-row md:items-center">
+        <div className="flex min-h-[64px] flex-1 items-center gap-4 rounded-xl px-5 bg-slate-50 dark:bg-slate-950">
+          <Link2 className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
           <input
             type="url"
             value={url}
             onChange={event => onUrlChange(event.target.value)}
             onKeyDown={event => event.key === 'Enter' && onAnalyze()}
             placeholder={placeholder}
-            className={cn(
-              'w-full border-none bg-transparent py-2.5 text-sm font-medium outline-none',
-              isInverse
-                ? 'text-white placeholder:text-white/50'
-                : 'text-slate-900 placeholder:text-slate-400'
-            )}
+            className="w-full border-none bg-transparent py-3 text-base font-medium outline-none text-slate-900 placeholder:text-slate-400 dark:text-slate-50 dark:placeholder:text-slate-500"
           />
         </div>
 
@@ -61,14 +53,9 @@ export default function DownloaderInputBar({
             }}
             aria-label="Paste URL"
             title="Paste URL"
-            className={cn(
-              'inline-flex h-11 w-11 items-center justify-center rounded-2xl text-sm font-semibold transition-colors',
-              isInverse
-                ? 'border border-white/20 text-white hover:bg-white/10'
-                : 'border border-slate-200 text-slate-700 hover:bg-slate-50'
-            )}
+            className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 font-semibold transition-colors hover:bg-slate-50 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
           >
-            <ClipboardPaste className="h-4 w-4" />
+            <ClipboardPaste className="h-5 w-5" />
           </button>
 
           <button
@@ -77,28 +64,18 @@ export default function DownloaderInputBar({
             aria-label="Clear URL"
             title="Clear URL"
             disabled={!url}
-            className={cn(
-              'inline-flex h-11 w-11 items-center justify-center rounded-2xl text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50',
-              isInverse
-                ? 'border border-white/20 text-white hover:bg-white/10'
-                : 'border border-slate-200 text-slate-700 hover:bg-slate-50'
-            )}
+            className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-50 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </button>
 
           <button
             type="button"
             onClick={onAnalyze}
             disabled={!url.trim() || loading}
-            className={cn(
-              'inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-2.5 text-sm font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-60',
-              isInverse
-                ? 'bg-white text-indigo-700 hover:bg-white/90'
-                : 'bg-indigo-600 text-white hover:bg-indigo-700'
-            )}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-8 py-3.5 text-base font-semibold text-white transition-all hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/35"
           >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
+            {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Zap className="h-5 w-5" />}
             {buttonLabel}
           </button>
         </div>
