@@ -113,7 +113,7 @@ export default async function AdminDashboard() {
       status: "Local JSON",
       healthy: true,
       detail:
-        "Firebase and Firestore sync have been removed. Tools now run from local data only.",
+        "External database sync is disabled. Tools now run from local source data only.",
     },
     {
       name: "AI tools",

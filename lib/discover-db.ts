@@ -105,7 +105,7 @@ async function getAllDiscoverLists() {
 function assertWritableLocalDiscoverStore() {
   if (process.env.VERCEL) {
     throw new Error(
-      'Discover is currently in local-only mode. This deployment is read-only, so import/save works only in local development until Firestore is enabled again.'
+      'Discover is currently in local-only mode. This deployment is read-only, so import/save works only in local development until a database is added.'
     )
   }
 }

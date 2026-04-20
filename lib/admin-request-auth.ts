@@ -4,8 +4,6 @@ import { cookies } from 'next/headers'
 import type { NextRequest } from 'next/server'
 import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from '@/lib/admin-auth'
 
-export const clerkEnabled = false
-
 export type AdminAuthResult = {
   authorized: boolean
   email: string | null

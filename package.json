@@ -10,7 +10,6 @@
     "smoke:test": "node scripts/smoke-test.mjs"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.0.0",
     "@ffmpeg/ffmpeg": "^0.12.15",
     "@ffmpeg/util": "^0.12.2",
     "@imgly/background-removal-node": "^1.4.5",

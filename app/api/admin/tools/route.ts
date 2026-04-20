@@ -22,7 +22,7 @@ export async function PATCH(request: NextRequest) {
     if (success) {
       return NextResponse.json({ success: true })
     } else {
-      return NextResponse.json({ error: 'Failed to update tool in Firestore' }, { status: 500 })
+      return NextResponse.json({ error: 'Tools are local-only in this deployment. Edit source data locally, then redeploy.' }, { status: 409 })
     }
   } catch (error) {
     console.error('Admin tools PATCH failed:', error)

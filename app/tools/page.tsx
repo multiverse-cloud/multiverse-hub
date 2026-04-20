@@ -3,7 +3,7 @@ import PublicLayout from "@/components/layout/PublicLayout";
 import ToolsListing from "@/components/tools/ToolsListing";
 import { TOOLS } from "@/lib/tools-data";
 
-export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Tools – 150+ Free Online Tools | Multiverse",

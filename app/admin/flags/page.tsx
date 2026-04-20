@@ -51,7 +51,7 @@ const DEFAULT_FLAGS = [
     id: "admin_panel",
     group: "System",
     label: "Admin Panel",
-    desc: "Enable /admin access (Clerk protected)",
+    desc: "Enable protected /admin access with the internal admin session",
     enabled: true,
   },
   {
@@ -79,7 +79,7 @@ const DEFAULT_FLAGS = [
     id: "tool_save",
     group: "Tools",
     label: "Tool Save/Bookmark",
-    desc: "Allow users to save favorite tools",
+    desc: "Disabled while the public site runs without accounts or favorites",
     enabled: false,
   },
   {

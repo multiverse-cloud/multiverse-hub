@@ -4,7 +4,7 @@ import { TOOLS, type Tool, type ToolTag } from './tools-data'
 
 const VALID_TOOL_TAGS = new Set<ToolTag>(['new', 'trending', 'beta', 'hot', 'free'])
 
-export function isFirebaseAdminConfigured() {
+export function isExternalToolStoreConfigured() {
   return false
 }
 
@@ -94,10 +94,10 @@ export async function updateTool(_id: string, _updates: Partial<Tool>) {
   return false
 }
 
-export async function seedFirestoreWithLocalTools() {
+export async function seedExternalStoreWithLocalTools() {
   return {
     success: false,
     count: 0,
-    message: 'Firebase and Firestore sync have been removed. Tools are now local-only.',
+    message: 'External database sync is disabled. Tools are now local-only.',
   }
 }
