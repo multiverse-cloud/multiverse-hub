@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://multiverse-tools.vercel.app/privacy' },
 }
 
+const LAST_UPDATED = 'April 20, 2026'
+
 export default function PrivacyPage() {
   const sections = [
     {
@@ -15,7 +17,7 @@ export default function PrivacyPage() {
     },
     {
       title: 'Local Storage',
-      content: 'We use your browser\'s localStorage to save your theme preference (light/dark mode) and recently viewed tools. This data never leaves your device and is not transmitted to any server.',
+      content: 'We use your browser localStorage only for essential interface preferences such as light or dark theme. This data never leaves your device and is not transmitted to any server.',
     },
     {
       title: 'Analytics',
@@ -50,7 +52,7 @@ export default function PrivacyPage() {
             Privacy Policy
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
-            Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            Last updated: {LAST_UPDATED}
           </p>
           <p className="mt-4 text-base leading-7 text-muted-foreground">
             Your privacy matters. Multiverse Tools is built to process your files locally whenever possible — we believe your data should stay yours.

@@ -46,7 +46,6 @@ const nextConfig = {
             value: "max-age=63072000; includeSubDomains; preload",
           },
           { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
       {
@@ -57,6 +56,12 @@ const nextConfig = {
       },
       {
         source: "/static/(.*)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
+        source: "/_next/static/(.*)",
         headers: [
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],

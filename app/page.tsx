@@ -10,12 +10,12 @@ import WhyMultiverse from "@/components/home/WhyMultiverse";
 import PublicLayout from "@/components/layout/PublicLayout";
 import { getTools } from "@/lib/db";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Multiverse — 150+ Free Online Tools for PDF, Image, Video & More",
+  title: "Multiverse - Free Tools, UI Components, Templates, Prompts & Fixes",
   description:
-    "One platform, 150+ free tools. Compress PDFs, resize images, download videos, format JSON, and more — all free, private, and instant. No login required.",
+    "Use free tools, UI components, website templates, AI prompts, discover guides, and troubleshooting fixes in one fast public platform. No public login required.",
   alternates: {
     canonical: "https://multiverse-tools.vercel.app",
   },
@@ -27,7 +27,7 @@ const WEB_SITE_SCHEMA = {
   name: "Multiverse Tools",
   url: "https://multiverse-tools.vercel.app",
   description:
-    "One platform with 150+ free online tools for PDF, image, video, text, developer, and daily workflows.",
+    "A public platform for free online tools, UI components, website templates, AI prompts, discover guides, and troubleshooting fixes.",
   potentialAction: {
     "@type": "SearchAction",
     target: {
@@ -65,7 +65,7 @@ const FAQ_SCHEMA = {
       name: "Do I need to create an account?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Not for most tools. You can use any tool instantly without signing up. Creating an account unlocks extras like saving favourites.",
+        text: "No. Public tools, templates, prompts, discover pages, and fix guides are open to visitors without sign-up. Only the private admin area requires authentication.",
       },
     },
     {
@@ -94,10 +94,10 @@ const FAQ_SCHEMA = {
     },
     {
       "@type": "Question",
-      name: "Can I save my favourite tools?",
+      name: "What can I use on Multiverse?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. Sign in to save favourites and access them from your personal library across devices.",
+        text: "You can use online tools, browse UI components, copy templates, explore AI prompts, read discover guides, and follow practical fix guides.",
       },
     },
     {

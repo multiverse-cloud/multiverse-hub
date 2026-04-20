@@ -12,7 +12,7 @@ const FAQS = [
   },
   {
     q: "Do I need to create an account?",
-    a: "Not for most tools. You can use any tool instantly without signing up. Creating an account unlocks extras like saving favourites and syncing preferences across devices.",
+    a: "No. Public tools, templates, prompts, discover pages, and fix guides are open without sign-up. Only the private admin area requires authentication.",
   },
   {
     q: "Are my files stored on your servers?",
@@ -23,8 +23,8 @@ const FAQS = [
     a: "Over 150 tools across ten categories: PDF, image, video, audio, text, developer, SEO, calculators, file utilities, and more. New tools are added every week.",
   },
   {
-    q: "Can I save my favourite tools?",
-    a: "Yes. Sign in to save favourites and access them from your personal library. Your preferences sync across all your devices.",
+    q: "What can I use on Multiverse?",
+    a: "You can use online tools, browse UI components, copy templates, explore AI prompts, read discover guides, and follow practical fix guides.",
   },
   {
     q: "Does Multiverse work on mobile?",
@@ -134,7 +134,7 @@ export default function FAQSection() {
               Browse all tools
             </Link>
             <Link
-              href="/universes"
+              href="/library"
               className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:border-indigo-200 hover:text-indigo-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-indigo-800 dark:hover:text-indigo-300"
             >
               Explore universes

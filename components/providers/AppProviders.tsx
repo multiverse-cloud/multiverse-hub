@@ -1,8 +1,5 @@
 'use client'
 
-import { LoginGateModal } from '@/components/auth/LoginGateModal'
-import { FavoritesProvider } from '@/components/providers/FavoritesContext'
-import { UsageGateProvider } from '@/components/providers/UsageGateContext'
 import ClientShell from '@/components/providers/ClientShell'
 import ThemeProvider from '@/components/providers/ThemeProvider'
 
@@ -13,13 +10,8 @@ export default function AppProviders({
 }) {
   return (
     <ThemeProvider>
-      <FavoritesProvider>
-        <UsageGateProvider>
-          {children}
-          <LoginGateModal />
-          <ClientShell />
-        </UsageGateProvider>
-      </FavoritesProvider>
+      {children}
+      <ClientShell />
     </ThemeProvider>
   )
 }

@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
 import SourceHubChrome from '@/components/source-hub/SourceHubChrome'
-import AuthProvider from '@/components/providers/AuthProvider'
 import AppProviders from '@/components/providers/AppProviders'
 import './globals.css'
 
@@ -26,11 +25,11 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Multiverse — 150+ Free Online Tools',
-    template: '%s | Multiverse Tools',
+    default: 'Multiverse - Free Tools, UI, Templates, Prompts & Fix Guides',
+    template: '%s | Multiverse',
   },
   description:
-    'One platform, 150+ free tools. Compress PDFs, resize images, download videos, format JSON, and more — all free, private, and instant.',
+    'Use free online tools, UI components, website templates, AI prompts, discover guides, and troubleshooting fixes in one fast public platform. No public account required.',
   keywords: [
     'free online tools',
     'PDF tools',
@@ -46,6 +45,10 @@ export const metadata: Metadata = {
     'SEO tools',
     'file converter',
     'multiverse tools',
+    'UI components',
+    'website templates',
+    'AI prompts',
+    'fix guides',
   ],
   authors: [{ name: 'Multiverse Team' }],
   creator: 'Multiverse',
@@ -59,14 +62,14 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://multiverse-tools.vercel.app',
-    title: 'Multiverse — 150+ Free Online Tools',
-    description: 'Compress PDFs, resize images, download videos, and more — 150+ free tools in one platform.',
+    title: 'Multiverse - Free Tools, UI, Templates, Prompts & Fix Guides',
+    description: 'Free tools, UI components, templates, AI prompts, discover guides, and fixes in one fast public platform.',
     siteName: 'Multiverse Tools',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Multiverse — 150+ Free Online Tools',
-    description: '150+ free tools for PDF, image, video, text, and developer workflows. No login required.',
+    title: 'Multiverse - Free Tools, UI, Templates, Prompts & Fix Guides',
+    description: 'Use tools, components, templates, prompts, and fix guides instantly. No public login required.',
   },
   robots: {
     index: true,
@@ -136,15 +139,12 @@ export default function RootLayout({
         <link rel="icon" href="/SiteLogo.png" type="image/png" />
       </head>
       <body className="mobile-viewport-fix min-h-[100dvh] overflow-x-hidden bg-background font-sans text-foreground antialiased safe-area-top">
-        <AuthProvider>
-          <AppProviders>
-            <SourceHubChrome />
-            {children}
-          </AppProviders>
-          <SpeedInsights />
-        </AuthProvider>
+        <AppProviders>
+          <SourceHubChrome />
+          {children}
+        </AppProviders>
+        <SpeedInsights />
       </body>
     </html>
   )
 }
-

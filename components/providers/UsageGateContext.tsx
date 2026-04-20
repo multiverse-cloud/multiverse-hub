@@ -15,6 +15,15 @@ interface UsageGateContextType {
 
 const UsageGateContext = createContext<UsageGateContextType | undefined>(undefined)
 
+const PUBLIC_USAGE_GATE_DISABLED: UsageGateContextType = {
+  usageCount: 0,
+  shouldGate: false,
+  shouldHint: false,
+  recordUsage: () => {},
+  dismissHint: () => {},
+  clearGate: () => {},
+}
+
 export function UsageGateProvider({ children }: { children: React.ReactNode }) {
   const [usageCount, setUsageCount] = useState(0)
 
@@ -72,6 +81,5 @@ export function UsageGateProvider({ children }: { children: React.ReactNode }) {
 
 export function useUsageGate() {
   const ctx = useContext(UsageGateContext)
-  if (!ctx) throw new Error('useUsageGate must be used within UsageGateProvider')
-  return ctx
+  return ctx || PUBLIC_USAGE_GATE_DISABLED
 }

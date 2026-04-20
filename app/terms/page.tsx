@@ -3,9 +3,11 @@ import PublicLayout from '@/components/layout/PublicLayout'
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
-  description: 'Read the Multiverse Tools Terms of Service. Free to use, no account required for most tools. Fair, plain-English terms.',
+  description: 'Read the Multiverse Tools Terms of Service. Public tools, templates, prompts, and guides are free to use without a public account.',
   alternates: { canonical: 'https://multiverse-tools.vercel.app/terms' },
 }
+
+const LAST_UPDATED = 'April 20, 2026'
 
 export default function TermsPage() {
   const sections = [
@@ -54,7 +56,7 @@ export default function TermsPage() {
             Terms of Service
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
-            Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            Last updated: {LAST_UPDATED}
           </p>
           <p className="mt-4 text-base leading-7 text-muted-foreground">
             Plain English, no legalese. These terms govern your use of Multiverse Tools. They are designed to be fair and transparent.
