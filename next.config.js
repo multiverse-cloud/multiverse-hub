@@ -29,6 +29,35 @@ const nextConfig = {
   },
   compress: true,
   generateEtags: true,
+  async redirects() {
+    return [
+      {
+        source: "/sign-in",
+        destination: "/admin-login",
+        permanent: false,
+      },
+      {
+        source: "/sign-up",
+        destination: "/admin-login",
+        permanent: false,
+      },
+      {
+        source: "/forgot-password",
+        destination: "/admin-login",
+        permanent: false,
+      },
+      {
+        source: "/sso-callback",
+        destination: "/admin-login",
+        permanent: false,
+      },
+      {
+        source: "/dashboard",
+        destination: "/tools",
+        permanent: false,
+      },
+    ];
+  },
   async headers() {
     return [
       {

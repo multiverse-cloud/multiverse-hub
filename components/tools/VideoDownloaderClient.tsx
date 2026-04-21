@@ -11,7 +11,6 @@ import DownloaderHowToSection from '@/components/tools/downloader/DownloaderHowT
 import DownloaderWorkspaceSection from '@/components/tools/downloader/DownloaderWorkspaceSection'
 import ToolBreadcrumb from '@/components/tools/ToolBreadcrumb'
 import ToolActions from '@/components/tools/ToolActions'
-import { UsageHintBanner } from '@/components/auth/LoginGateModal'
 import type { Tool } from '@/lib/tools-data'
 import type { DownloadState, VideoInfo } from '@/components/tools/downloader/types'
 
@@ -229,7 +228,6 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
           />
           {tool ? <ToolActions slug={tool.slug} name={tool.name} className="mb-0 w-full justify-start lg:w-auto lg:justify-end" /> : null}
         </div>
-        <UsageHintBanner />
       </div>
 
       <DownloaderHero

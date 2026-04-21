@@ -1,4 +1,4 @@
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { ADMIN_SESSION_COOKIE } from '@/lib/admin-auth'
 
 function buildSignInUrl(request: NextRequest) {
@@ -30,7 +30,7 @@ async function handleRequest(request: NextRequest, userId: string | null) {
   return NextResponse.next()
 }
 
-export default async function middleware(request: NextRequest, event: NextFetchEvent) {
+export default async function middleware(request: NextRequest) {
   return handleRequest(request, null)
 }
 

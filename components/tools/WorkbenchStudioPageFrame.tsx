@@ -5,7 +5,6 @@ import ToolActions from "./ToolActions";
 import ToolCard from "./ToolCard";
 import SEOContent from "./SEOContent";
 import ToolRuntimeBanner from "./ToolRuntimeBanner";
-import { UsageHintBanner } from "@/components/auth/LoginGateModal";
 import type { ToolRuntimeStatus } from "@/lib/tool-runtime-status";
 
 const CATEGORY_COPY: Record<string, { kicker: string; description: string }> = {
@@ -73,7 +72,6 @@ export default function WorkbenchStudioPageFrame({
           />
         </div>
 
-        <UsageHintBanner />
         <ToolRuntimeBanner status={runtimeStatus || null} />
 
         {/* Main workbench content — children are responsible for their own panel layout,

@@ -5,7 +5,6 @@ import ToolActions from './ToolActions'
 import ToolCard from './ToolCard'
 import SEOContent from './SEOContent'
 import ToolRuntimeBanner from './ToolRuntimeBanner'
-import { UsageHintBanner } from '@/components/auth/LoginGateModal'
 import type { ToolRuntimeStatus } from '@/lib/tool-runtime-status'
 
 export default function VideoStudioPageFrame({
@@ -34,7 +33,6 @@ export default function VideoStudioPageFrame({
 
           <ToolActions slug={tool.slug} name={tool.name} className="mb-0 w-full justify-start lg:w-auto lg:justify-end" />
         </div>
-        <UsageHintBanner />
         <ToolRuntimeBanner status={runtimeStatus || null} />
 
         {children}

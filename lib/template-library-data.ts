@@ -321,7 +321,7 @@ const TEMPLATE_SEEDS: TemplateSeed[] = [
           </div>
         </section>
         <section class="quote-block">
-          <p class="quote">â€œThe difference is not more AI output. It is finally having a workspace that makes the work feel controlled.â€</p>
+          <p class="quote">"The difference is not more AI output. It is finally having a workspace that makes the work feel controlled."</p>
           <p class="quote-meta">Maya Shah, Head of Growth at Signal Foundry</p>
         </section>
         <section class="cta-panel" id="cta">

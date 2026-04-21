@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://multiverse-tools.vercel.app/terms' },
 }
 
-const LAST_UPDATED = 'April 20, 2026'
+const LAST_UPDATED = 'April 21, 2026'
 
 export default function TermsPage() {
   const sections = [
@@ -29,7 +29,7 @@ export default function TermsPage() {
     },
     {
       title: 'Limitation of Liability',
-      content: 'To the fullest extent permitted by law, Multiverse Tools and its creators shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of or inability to use the Service — including data loss, file corruption, or loss of business. Your sole remedy for dissatisfaction with the Service is to stop using it.',
+      content: 'To the fullest extent permitted by law, Multiverse Tools and its creators shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of or inability to use the Service, including data loss, file corruption, or loss of business. Your sole remedy for dissatisfaction with the Service is to stop using it.',
     },
     {
       title: 'Prohibited Uses',

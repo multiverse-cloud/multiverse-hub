@@ -84,6 +84,33 @@ export const metadata: Metadata = {
   },
 }
 
+const GLOBAL_SITE_SCHEMA = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Multiverse Tools',
+    url: 'https://multiverse-tools.vercel.app',
+    description:
+      'A public platform for free online tools, UI components, website templates, AI prompts, discover guides, and troubleshooting fixes.',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://multiverse-tools.vercel.app/search?q={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Multiverse Tools',
+    url: 'https://multiverse-tools.vercel.app',
+    logo: 'https://multiverse-tools.vercel.app/SiteLogo.png',
+    sameAs: ['https://multiverse-tools.vercel.app'],
+  },
+]
+
 const LOCALHOST_RECOVERY_SCRIPT = `
 (() => {
   if (typeof window === 'undefined') return;
@@ -136,6 +163,10 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: LOCALHOST_RECOVERY_SCRIPT }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(GLOBAL_SITE_SCHEMA) }}
+        />
         <link rel="icon" href="/SiteLogo.png" type="image/png" />
       </head>
       <body className="mobile-viewport-fix min-h-[100dvh] overflow-x-hidden bg-background font-sans text-foreground antialiased safe-area-top">

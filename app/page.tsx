@@ -21,33 +21,6 @@ export const metadata: Metadata = {
   },
 };
 
-const WEB_SITE_SCHEMA = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "Multiverse Tools",
-  url: "https://multiverse-tools.vercel.app",
-  description:
-    "A public platform for free online tools, UI components, website templates, AI prompts, discover guides, and troubleshooting fixes.",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate:
-        "https://multiverse-tools.vercel.app/tools?q={search_term_string}",
-    },
-    "query-input": "required name=search_term_string",
-  },
-};
-
-const ORGANIZATION_SCHEMA = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Multiverse Tools",
-  url: "https://multiverse-tools.vercel.app",
-  logo: "https://multiverse-tools.vercel.app/icon.png",
-  sameAs: ["https://multiverse-tools.vercel.app"],
-};
-
 const FAQ_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -57,7 +30,7 @@ const FAQ_SCHEMA = {
       name: "Is Multiverse completely free to use?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. Every tool in the library is free to use — no premium paywalls, no credit card required.",
+        text: "Yes. Every tool in the library is free to use with no premium paywalls and no credit card required.",
       },
     },
     {
@@ -105,13 +78,11 @@ const FAQ_SCHEMA = {
       name: "What kind of tools are included?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Everything from PDF merging and image compression to video downloading, JSON formatting, QR code generation, BMI calculators, and more — 150+ tools across 10 categories.",
+        text: "Everything from PDF merging and image compression to video downloading, JSON formatting, QR code generation, BMI calculators, and more across 10 categories.",
       },
     },
   ],
 };
-
-const HOMEPAGE_SCHEMA = [WEB_SITE_SCHEMA, ORGANIZATION_SCHEMA, FAQ_SCHEMA];
 
 function ToolGridSkeleton() {
   return (
@@ -146,7 +117,7 @@ export default async function HomePage() {
 
   return (
     <PublicLayout
-      schemaMarkup={HOMEPAGE_SCHEMA as unknown as Record<string, any>}
+      schemaMarkup={FAQ_SCHEMA as unknown as Record<string, any>}
     >
       <HeroSection />
       <HeroStatsSection />

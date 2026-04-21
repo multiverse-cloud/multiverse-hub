@@ -3,17 +3,17 @@ import PublicLayout from '@/components/layout/PublicLayout'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'Learn how Multiverse Tools handles your data. We process files locally in your browser — nothing is stored on our servers.',
+  description: 'Learn how Multiverse Tools handles your data. We process files locally in your browser whenever possible and avoid public tracking cookies.',
   alternates: { canonical: 'https://multiverse-tools.vercel.app/privacy' },
 }
 
-const LAST_UPDATED = 'April 20, 2026'
+const LAST_UPDATED = 'April 21, 2026'
 
 export default function PrivacyPage() {
   const sections = [
     {
       title: 'Data We Collect',
-      content: 'Multiverse Tools is designed with privacy as a core principle. Most tools process files entirely in your browser using client-side JavaScript — no data is sent to our servers. For tools that require server processing (such as PDF compression, image processing, and video downloading), files are processed and immediately discarded. We do not store, log, or retain uploaded files.',
+      content: 'Multiverse Tools is designed with privacy as a core principle. Most tools process files entirely in your browser using client-side JavaScript. For tools that require server processing, files are processed for the requested task and are not intentionally stored as user records.',
     },
     {
       title: 'Local Storage',
@@ -21,11 +21,11 @@ export default function PrivacyPage() {
     },
     {
       title: 'Analytics',
-      content: 'We use Vercel Speed Insights for anonymous performance monitoring. This collects aggregated, anonymized metrics (page load times, Core Web Vitals) with no personally identifiable information.',
+      content: 'We use Vercel Speed Insights for privacy-conscious performance monitoring. It helps us understand Core Web Vitals and speed issues without adding advertising cookies or public user accounts.',
     },
     {
       title: 'Cookies',
-      content: 'We use minimal session cookies only where technically necessary (such as for admin authentication). We do not use tracking cookies, advertising cookies, or third-party analytics cookies.',
+      content: 'Public visitors do not need an account. We use a secure session cookie only for the protected admin panel and do not use tracking cookies, advertising cookies, public favorites cookies, or public history cookies.',
     },
     {
       title: 'Third-Party Services',
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
             Last updated: {LAST_UPDATED}
           </p>
           <p className="mt-4 text-base leading-7 text-muted-foreground">
-            Your privacy matters. Multiverse Tools is built to process your files locally whenever possible — we believe your data should stay yours.
+            Your privacy matters. Multiverse Tools is built to process your files locally whenever possible because your data should stay yours.
           </p>
         </div>
 

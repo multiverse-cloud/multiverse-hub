@@ -7,7 +7,6 @@ import ToolActions from "./ToolActions";
 import ToolBreadcrumb from "./ToolBreadcrumb";
 import SEOContent from "./SEOContent";
 import ToolRuntimeBanner from "./ToolRuntimeBanner";
-import { UsageHintBanner } from "@/components/auth/LoginGateModal";
 import type { ToolRuntimeStatus } from "@/lib/tool-runtime-status";
 
 export type PdfStudioContent = {
@@ -59,7 +58,6 @@ export default function PdfStudioPageFrame({
           />
         </div>
 
-        <UsageHintBanner />
         <ToolRuntimeBanner status={runtimeStatus || null} />
 
         {/* Main tool UI (upload zone + result panel injected here) */}

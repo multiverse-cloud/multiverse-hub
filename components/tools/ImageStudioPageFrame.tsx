@@ -5,7 +5,6 @@ import ToolActions from "./ToolActions";
 import ToolCard from "./ToolCard";
 import SEOContent from "./SEOContent";
 import ToolRuntimeBanner from "./ToolRuntimeBanner";
-import { UsageHintBanner } from "@/components/auth/LoginGateModal";
 import type { ToolRuntimeStatus } from "@/lib/tool-runtime-status";
 
 export default function ImageStudioPageFrame({
@@ -40,7 +39,6 @@ export default function ImageStudioPageFrame({
           />
         </div>
 
-        <UsageHintBanner />
         <ToolRuntimeBanner status={runtimeStatus || null} />
 
         {/* Main tool UI — children are responsible for their own layout.

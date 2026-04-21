@@ -17,7 +17,6 @@ import {
 import type { Tool } from '@/lib/tools-data'
 import { cn, downloadBlob, formatBytes } from '@/lib/utils'
 import { getMaxFileSize } from '@/lib/file-limits'
-import { useUsageGate } from '@/components/providers/UsageGateContext'
 
 const FILE_COPY = {
   'csv-viewer': {
@@ -75,7 +74,6 @@ type ZipResult = {
 export default function FileViewerStudio({ tool }: { tool: Tool }) {
   const copy = FILE_COPY[tool.slug as keyof typeof FILE_COPY]
   const maxSize = getMaxFileSize('file')
-  const { recordUsage, shouldGate } = useUsageGate()
   const [file, setFile] = useState<File | null>(null)
   const [textInput, setTextInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -128,7 +126,6 @@ export default function FileViewerStudio({ tool }: { tool: Tool }) {
   }, [zipResult])
 
   async function handleProcess() {
-    if (shouldGate) return
     setError('')
     setResult(null)
     setZipResult(null)
@@ -171,7 +168,6 @@ export default function FileViewerStudio({ tool }: { tool: Tool }) {
             truncated: rows.length > 100,
           },
         })
-        recordUsage()
       }
 
       // ── JSON ──
@@ -207,7 +203,6 @@ export default function FileViewerStudio({ tool }: { tool: Tool }) {
               { label: 'Size', value: formatBytes(pretty.length) },
             ],
           })
-          recordUsage()
         } catch {
           setError('Invalid JSON. Check for syntax errors.')
         }
@@ -271,7 +266,6 @@ export default function FileViewerStudio({ tool }: { tool: Tool }) {
             ],
             zipInstance: zip,
           })
-          recordUsage()
         } catch (parseError) {
           const msg = (parseError as Error).message || ''
           if (msg.toLowerCase().includes('password') || msg.toLowerCase().includes('encrypted')) {
@@ -643,7 +637,7 @@ export default function FileViewerStudio({ tool }: { tool: Tool }) {
         <button
           type="button"
           onClick={handleProcess}
-          disabled={loading || (!file && !textInput.trim()) || shouldGate}
+          disabled={loading || (!file && !textInput.trim())}
           className="inline-flex items-center gap-2 rounded-lg bg-[linear-gradient(135deg,#24389c,#465fd6)] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
