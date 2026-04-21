@@ -193,7 +193,7 @@ const DEV_STUDIO_SLUGS = new Set([
   "uuid-generator",
   "css-gradient-generator",
   "html-to-markdown",
-  "json-to-csv",
+  "json-to-csv-converter",
   "cron-expression-generator",
   "markdown-previewer",
 ]);
