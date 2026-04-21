@@ -60,7 +60,7 @@ export const UNIVERSES: Universe[] = [
     name: 'Daily Tools',
     description: 'Calculators, converters and everyday utils',
     icon: 'Sun',
-    href: '/daily',
+    href: '/tools/calculator',
     gradient: 'from-amber-500 to-yellow-500',
     bgGradient: 'from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20',
     count: '15+ Daily Utils',
@@ -111,4 +111,3 @@ export const UNIVERSES: Universe[] = [
     color: 'orange',
   },
 ]
-

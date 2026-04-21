@@ -136,7 +136,7 @@ const NAV_LINKS: NavLink[] = [
       },
       {
         name: "Daily Tools",
-        href: "/daily",
+        href: "/tools/calculator",
         icon: Calculator,
         desc: "Useful calculators and daily helpers",
       },

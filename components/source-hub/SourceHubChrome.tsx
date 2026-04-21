@@ -41,6 +41,7 @@ function LoaderMarkup() {
 
 export default function SourceHubChrome() {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
   const hideTimerRef = useRef<number | null>(null);
   const fallbackTimerRef = useRef<number | null>(null);
@@ -68,6 +69,10 @@ export default function SourceHubChrome() {
     setVisible(true);
     fallbackTimerRef.current = window.setTimeout(() => hideLoader(0), 5000);
   }, [clearTimer, hideLoader]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     function finishNavigation() {
@@ -404,9 +409,7 @@ export default function SourceHubChrome() {
           }
         }
       `}</style>
-      <div className={visible ? "" : "source-hub-loader-hidden"}>
-        <LoaderMarkup />
-      </div>
+      {mounted && visible ? <LoaderMarkup /> : null}
     </>
   );
 }

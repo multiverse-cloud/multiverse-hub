@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import {
   AlertTriangle,
-  ArrowLeft,
   ArrowRight,
   CheckCircle2,
   ShieldAlert,
@@ -19,14 +18,6 @@ export default function FixGuidePage({
     <div className="min-h-screen premium-shell">
       <div className="page-hero border-b border-border bg-slate-50/70 dark:bg-slate-950">
         <div className="page-hero-inner py-8 md:py-10">
-          <Link
-            href="/fixes"
-            className="mb-5 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Fixes
-          </Link>
-
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-muted px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               {guide.clusterTitle}

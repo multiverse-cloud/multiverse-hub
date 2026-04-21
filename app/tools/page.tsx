@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PublicLayout from "@/components/layout/PublicLayout";
+import UniverseTopBar from "@/components/public/UniverseTopBar";
 import ToolsListing from "@/components/tools/ToolsListing";
 import { TOOLS } from "@/lib/tools-data";
 
@@ -42,6 +43,11 @@ export default async function ToolsPage({ searchParams }: ToolsPageProps) {
 
   return (
     <PublicLayout>
+      <UniverseTopBar
+        items={[{ label: "Home", href: "/" }, { label: "Tools" }]}
+        actionName="Tools"
+        actionSlug="tools"
+      />
       <ToolsListing filters={filters} />
     </PublicLayout>
   );

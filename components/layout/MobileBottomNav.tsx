@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Home, Wrench, Bot, Compass, Calculator } from "lucide-react";
+import { Home, Wrench, Layers3, Bot, ShieldAlert } from "lucide-react";
 
 const BOTTOM_NAV_ITEMS = [
   { name: "Home", href: "/", icon: Home },
   { name: "Tools", href: "/tools", icon: Wrench },
-  { name: "AI", href: "/ai", icon: Bot },
-  { name: "Discover", href: "/discover", icon: Compass },
-  { name: "Daily", href: "/daily", icon: Calculator },
+  { name: "Library", href: "/library", icon: Layers3 },
+  { name: "Prompts", href: "/prompts", icon: Bot },
+  { name: "Fixes", href: "/fixes", icon: ShieldAlert },
 ] as const;
 
 export default function MobileBottomNav() {

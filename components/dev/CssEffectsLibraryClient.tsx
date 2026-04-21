@@ -175,7 +175,7 @@ function EffectPreview({
   effect: UiCatalogItem
   compact?: boolean
 }) {
-  const [loaded, setLoaded] = useState(effect.kind === 'source')
+  const [loaded, setLoaded] = useState(false)
   const previewDoc = useMemo(() => {
     if (effect.kind === 'source') return null
     if (compact) return effect.previewDocument || buildCompactPreviewDoc(effect)
@@ -183,14 +183,21 @@ function EffectPreview({
   }, [compact, effect])
 
   useEffect(() => {
-    setLoaded(effect.kind === 'source')
+    setLoaded(false)
+    if (effect.kind === 'source') {
+      const timer = window.setTimeout(() => setLoaded(true), 220)
+      return () => window.clearTimeout(timer)
+    }
   }, [effect.id, effect.kind, previewDoc])
 
   return effect.kind === 'source' ? (
-    <SourceUiPreview previewKey={effect.previewKey} compact={compact} />
+    <div className="relative h-full w-full bg-white">
+      {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
+      <SourceUiPreview previewKey={effect.previewKey} compact={compact} />
+    </div>
   ) : compact && effect.previewDocument ? (
     <div className="relative flex h-full w-full items-start justify-center overflow-hidden bg-white">
-      {!loaded ? <div className="absolute inset-0 animate-pulse bg-slate-100" /> : null}
+      {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
       <iframe
         title={`${effect.title} preview`}
         srcDoc={previewDoc || ''}
@@ -210,7 +217,7 @@ function EffectPreview({
     </div>
   ) : (
     <div className="relative h-full w-full bg-white">
-      {!loaded ? <div className="absolute inset-0 animate-pulse bg-slate-100" /> : null}
+      {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
       <iframe
         title={`${effect.title} preview`}
         srcDoc={previewDoc || ''}

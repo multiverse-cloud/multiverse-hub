@@ -33,14 +33,14 @@ const FOOTER_LINKS = {
     { name: "Discover", href: "/discover" },
     { name: "Prompt Hub", href: "/prompts" },
     { name: "Templates", href: "/templates" },
-    { name: "Daily Tools", href: "/daily" },
+    { name: "Daily Tools", href: "/tools/calculator" },
     { name: "Fixes", href: "/fixes" },
   ],
   Resources: [
     { name: "Search", href: "/search" },
     { name: "UI Universe", href: "/ui" },
     { name: "Template Library", href: "/templates" },
-    { name: "News", href: "/news" },
+    { name: "Discover", href: "/discover" },
   ],
 };
 

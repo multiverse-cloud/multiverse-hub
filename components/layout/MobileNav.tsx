@@ -20,9 +20,7 @@ import {
   ChevronRight,
   Zap,
   Wrench,
-  Calculator,
   Globe,
-  Newspaper,
 } from "lucide-react";
 
 const MOBILE_NAV_LINKS = [
@@ -39,12 +37,6 @@ const MOBILE_NAV_LINKS = [
     subtitle: "150+ free tools",
   },
   {
-    name: "News",
-    href: "/news",
-    icon: Newspaper,
-    subtitle: "Latest updates",
-  },
-  {
     name: "Design",
     href: "/design",
     icon: Paintbrush,
@@ -57,6 +49,12 @@ const MOBILE_NAV_LINKS = [
     subtitle: "Developer utilities",
   },
   {
+    name: "Library",
+    href: "/library",
+    icon: Layers3,
+    subtitle: "UI and templates",
+  },
+  {
     name: "Discover",
     href: "/discover",
     icon: Compass,
@@ -67,12 +65,6 @@ const MOBILE_NAV_LINKS = [
     href: "/prompts",
     icon: Layers3,
     subtitle: "AI prompt library",
-  },
-  {
-    name: "Daily",
-    href: "/daily",
-    icon: Calculator,
-    subtitle: "Tools of the day",
   },
   {
     name: "Fixes",
@@ -90,7 +82,7 @@ const QUICK_LINKS_LEFT = [
 
 const QUICK_LINKS_RIGHT = [
   { name: "All Tools", href: "/tools" },
-  { name: "Discover", href: "/discover" },
+  { name: "Library", href: "/library" },
   { name: "Sitemap", href: "/sitemap.xml" },
 ];
 

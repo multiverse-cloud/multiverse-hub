@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import {
-  ArrowLeft,
   ArrowUpRight,
   CheckCircle2,
   ChevronRight,
@@ -261,14 +260,6 @@ export default function DiscoverDetailPage({
     <div className="min-h-screen">
       <div className="page-hero">
         <div className="page-hero-inner">
-          <Link
-            href="/discover"
-            className="mb-5 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Discover
-          </Link>
-
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="tag-beta text-[10px]">{list.category}</span>
             <span className="rounded-full bg-muted px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">

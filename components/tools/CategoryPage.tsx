@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { getLucideIcon } from "@/lib/icons";
 import { ACTIVE_CATEGORIES, type Category, type Tool } from "@/lib/tools-data";
 import ToolBreadcrumb from "./ToolBreadcrumb";
+import ToolActions from "./ToolActions";
 
 export default function CategoryPage({
   category,
@@ -28,12 +29,20 @@ export default function CategoryPage({
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10 md:py-12 lg:px-6">
-          <ToolBreadcrumb
-            items={[
-              { label: "All Tools", href: "/tools" },
-              { label: category.name },
-            ]}
-          />
+          <div className="flex items-start justify-between gap-3">
+            <ToolBreadcrumb
+              className="mb-0 flex-1"
+              items={[
+                { label: "All Tools", href: "/tools" },
+                { label: category.name },
+              ]}
+            />
+            <ToolActions
+              slug={category.slug}
+              name={category.name}
+              className="mb-0 w-auto shrink-0 justify-end"
+            />
+          </div>
 
           <div className="mt-4 sm:mt-6 flex items-start gap-3 sm:gap-4">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 transition-colors sm:h-14 sm:w-14 sm:rounded-2xl dark:bg-indigo-950/30">

@@ -324,14 +324,16 @@ export default function TemplateLivePreview({
   const src = toDataUrl(buildPreviewSvg(template))
 
   return (
-    <div className={cn('overflow-hidden rounded-xl border border-border bg-card', ratio, className)}>
+    <div className={cn('relative overflow-hidden rounded-xl border border-border bg-card', ratio, className)}>
+      {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
       <Image
         src={src}
         alt={`${template.title} preview image`}
         width={1600}
         height={1000}
         unoptimized
-        className="h-full w-full object-cover"
+        onLoad={() => setLoaded(true)}
+        className={cn('h-full w-full object-cover transition-opacity duration-200', loaded ? 'opacity-100' : 'opacity-0')}
       />
     </div>
   )
