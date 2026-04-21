@@ -1,5 +1,6 @@
 ﻿import { NextRequest, NextResponse } from 'next/server'
 import { authorizeAdminRequest } from '@/lib/admin-request-auth'
+import { guardAdminWriteRequest } from '@/lib/admin-api-guard'
 import { getAdminTemplates, saveTemplate, saveTemplates } from '@/lib/template-db'
 import { parseTemplateImportPayload, type TemplateImportSummary } from '@/lib/template-import'
 import type { TemplateEntry } from '@/lib/template-library-data'
@@ -61,11 +62,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const isAuthorized = await isAuthorizedRequest(request)
+    const blocked = await guardAdminWriteRequest(request, {
+      key: 'templates',
+      maxBytes: 8 * 1024 * 1024,
+    })
 
-    if (!isAuthorized) {
-      return jsonError('Admin session expired. Sign in again to continue.', 401, 'unauthorized')
-    }
+    if (blocked) return blocked
 
     const body = await request.json()
 

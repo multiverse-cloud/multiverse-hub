@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getLucideIcon } from "@/lib/icons";
-import type { Category, Tool } from "@/lib/tools-data";
+import { ACTIVE_CATEGORIES, type Category, type Tool } from "@/lib/tools-data";
 import ToolBreadcrumb from "./ToolBreadcrumb";
 
 export default function CategoryPage({
@@ -13,6 +13,10 @@ export default function CategoryPage({
   tools: Tool[];
 }) {
   const Icon = getLucideIcon(category.icon);
+  const featuredTools = tools.slice(0, 4);
+  const relatedCategories = ACTIVE_CATEGORIES.filter(
+    (item) => item.slug !== category.slug,
+  ).slice(0, 4);
 
   return (
     <div>
@@ -97,6 +101,60 @@ export default function CategoryPage({
               </Link>
             );
           })}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 md:pb-16 lg:px-6">
+        <div className="grid gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900/50 md:grid-cols-[1.15fr_0.85fr] md:p-7">
+          <div>
+            <p className="section-label">Category guide</p>
+            <h2 className="mt-2 font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
+              What you can do with {category.name.toLowerCase()}
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
+              {category.description} These tools are built for quick browser-based
+              workflows, so you can finish common tasks without installing extra
+              software or creating a public account.
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1">
+            {featuredTools.length > 0 ? (
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+                  Popular in this category
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {featuredTools.map((tool) => (
+                    <Link
+                      key={tool.id}
+                      href={`/tools/${tool.categorySlug}/${tool.slug}`}
+                      className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"
+                    >
+                      {tool.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+                Explore next
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {relatedCategories.map((item) => (
+                  <Link
+                    key={item.slug}
+                    href={`/tools/${item.slug}`}
+                    className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>

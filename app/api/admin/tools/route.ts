@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { authorizeAdminRequest } from '@/lib/admin-request-auth'
+import { guardAdminWriteRequest } from '@/lib/admin-api-guard'
 import { updateTool } from '@/lib/db'
 
 export async function PATCH(request: NextRequest) {
   try {
-    const isAuthorized = (await authorizeAdminRequest(request)).authorized
+    const blocked = await guardAdminWriteRequest(request, {
+      key: 'tools',
+      maxBytes: 512 * 1024,
+    })
 
-    if (!isAuthorized) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    if (blocked) return blocked
 
     const body = await request.json()
     const { id, updates } = body

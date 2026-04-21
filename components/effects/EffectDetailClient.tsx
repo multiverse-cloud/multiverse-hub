@@ -1,10 +1,10 @@
 'use client'
 
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft, Check, Copy, FileCode, Monitor, RotateCw, Share2 } from 'lucide-react'
-import SourceUiPreview from '@/components/ui-source/SourceUiPreview'
 import {
   buildPlaygroundSnippet,
   buildPreviewDoc,
@@ -23,6 +23,11 @@ type EffectDetailClientProps = {
 
 type PreviewMode = 'split' | 'full'
 type CodeTab = 'html' | 'css' | 'react' | 'tailwind' | 'source' | 'usage' | 'playground'
+
+const SourceUiPreview = dynamic(() => import('@/components/ui-source/SourceUiPreview'), {
+  ssr: false,
+  loading: () => <div className="h-full w-full animate-pulse bg-slate-100" />,
+})
 
 function getPreviewViewportClass(effect: UiCatalogItem) {
   if (effect.kind === 'source') return 'w-full max-w-[720px] min-h-[280px]'

@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { startTransition, useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { ArrowUpRight, Boxes, Filter, Search, SearchX, X } from 'lucide-react'
-import SourceUiPreview from '@/components/ui-source/SourceUiPreview'
 import {
   buildPreviewDoc,
   getEffectSlug,
@@ -27,6 +27,11 @@ type SortMode = 'featured' | 'newest' | 'name-asc' | 'name-desc'
 
 const INITIAL_VISIBLE_COUNT = 24
 const UI_STATE_KEY = 'multiverse:ui-universe-state:v2'
+
+const SourceUiPreview = dynamic(() => import('@/components/ui-source/SourceUiPreview'), {
+  ssr: false,
+  loading: () => <div className="h-full w-full animate-pulse bg-slate-100 dark:bg-slate-900" />,
+})
 
 function escapeHtml(value: string) {
   return value

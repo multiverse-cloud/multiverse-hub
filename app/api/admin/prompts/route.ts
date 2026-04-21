@@ -1,5 +1,6 @@
 ﻿import { NextRequest, NextResponse } from 'next/server'
 import { authorizeAdminRequest } from '@/lib/admin-request-auth'
+import { guardAdminWriteRequest } from '@/lib/admin-api-guard'
 import { getAdminPrompts, savePrompt, savePrompts } from '@/lib/prompt-db'
 import { parsePromptImportPayload, type PromptImportSummary } from '@/lib/prompt-import'
 import type { PromptEntry } from '@/lib/prompt-library-data'
@@ -61,11 +62,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const isAuthorized = await isAuthorizedRequest(request)
+    const blocked = await guardAdminWriteRequest(request, {
+      key: 'prompts',
+      maxBytes: 5 * 1024 * 1024,
+    })
 
-    if (!isAuthorized) {
-      return jsonError('Admin session expired. Sign in again to continue.', 401, 'unauthorized')
-    }
+    if (blocked) return blocked
 
     const body = await request.json()
 

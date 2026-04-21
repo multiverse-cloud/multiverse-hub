@@ -1,5 +1,3 @@
-import dynamic from "next/dynamic";
-import type { ComponentType } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Wrench } from "lucide-react";
@@ -13,6 +11,7 @@ import RecentTracker from "@/components/tools/RecentTracker";
 import SEOContent from "@/components/tools/SEOContent";
 import ToolActions from "@/components/tools/ToolActions";
 import ToolRuntimeBanner from "@/components/tools/ToolRuntimeBanner";
+import ToolStudioSlot from "@/components/tools/ToolStudioSlot";
 import { getLucideIcon } from "@/lib/icons";
 import { CALCULATOR_STUDIO_SLUGS } from "@/lib/calculator-studio";
 import { PDF_STUDIO_STATIC_CONTENT } from "@/lib/pdf-studio-content";
@@ -20,107 +19,32 @@ import { getToolRuntimeStatus } from "@/lib/tool-runtime-status";
 import { ACTIVE_CATEGORIES, type Tool } from "@/lib/tools-data";
 import { getTools, getToolBySlug } from "@/lib/db";
 
-const ToolDetailClientSelector = dynamic(
-  () => import("@/components/tools/ToolDetailClientSelector"),
-);
-const VideoDownloaderClient = dynamic(
-  () => import("@/components/tools/VideoDownloaderClient"),
-);
-const VideoStudio = dynamic(() => import("@/components/tools/VideoStudio"));
-const AudioStudio = dynamic(() => import("@/components/tools/AudioStudio"));
-const TextStudio = dynamic(() => import("@/components/tools/TextStudio"));
-const DevStudio = dynamic(() => import("@/components/tools/DevStudio"));
-const SeoStudio = dynamic(() => import("@/components/tools/SeoStudio"));
-const CalculatorStudio = dynamic(
-  () => import("@/components/tools/CalculatorStudio"),
-);
-const FileViewerStudio = dynamic(
-  () => import("@/components/tools/FileViewerStudio"),
-);
-const CompressPdfStudio = dynamic(
-  () => import("@/components/tools/CompressPdfStudio"),
-);
-const PdfToWordStudio = dynamic(
-  () => import("@/components/tools/PdfToWordStudio"),
-);
-const MergePdfStudio = dynamic(
-  () => import("@/components/tools/MergePdfStudio"),
-);
-const SplitPdfStudio = dynamic(
-  () => import("@/components/tools/SplitPdfStudio"),
-);
-const PdfToExcelStudio = dynamic(
-  () => import("@/components/tools/PdfToExcelStudio"),
-);
-const WordToPdfStudio = dynamic(
-  () => import("@/components/tools/WordToPdfStudio"),
-);
-const JpgToPdfStudio = dynamic(
-  () => import("@/components/tools/JpgToPdfStudio"),
-);
-const PdfToJpgStudio = dynamic(
-  () => import("@/components/tools/PdfToJpgStudio"),
-);
-const PdfOcrStudio = dynamic(() => import("@/components/tools/PdfOcrStudio"));
-const UnlockPdfStudio = dynamic(
-  () => import("@/components/tools/UnlockPdfStudio"),
-);
-const PdfTranslatorStudio = dynamic(
-  () => import("@/components/tools/PdfTranslatorStudio"),
-);
-const PdfSummarizerStudio = dynamic(
-  () => import("@/components/tools/PdfSummarizerStudio"),
-);
-const ImagePaletteStudio = dynamic(
-  () => import("@/components/tools/ImagePaletteStudio"),
-);
-const ImageToPdfStudio = dynamic(
-  () => import("@/components/tools/ImageToPdfStudio"),
-);
-const ImageTransformStudio = dynamic(
-  () => import("@/components/tools/ImageTransformStudio"),
-);
-const QrCodeStudio = dynamic(() => import("@/components/tools/QrCodeStudio"));
-
 interface Props {
   params: Promise<{ category: string; tool: string }>;
 }
 
 export const revalidate = 3600;
 
-const STUDIO_COMPONENTS: Record<string, ComponentType<{ tool: Tool }>> = {
-  "compress-pdf": CompressPdfStudio,
-  "pdf-to-word": PdfToWordStudio,
-  "merge-pdf": MergePdfStudio,
-  "split-pdf": SplitPdfStudio,
-  "pdf-to-excel": PdfToExcelStudio,
-  "word-to-pdf": WordToPdfStudio,
-  "jpg-to-pdf": JpgToPdfStudio,
-  "pdf-to-jpg": PdfToJpgStudio,
-  "pdf-ocr": PdfOcrStudio,
-  "unlock-pdf": UnlockPdfStudio,
-  "pdf-translator": PdfTranslatorStudio,
-  "pdf-summarizer": PdfSummarizerStudio,
-};
+const PDF_STUDIO_SLUGS = new Set(Object.keys(PDF_STUDIO_STATIC_CONTENT));
 
-const IMAGE_STUDIO_COMPONENTS: Record<string, ComponentType<{ tool: Tool }>> = {
-  "compress-image": ImageTransformStudio,
-  "resize-image": ImageTransformStudio,
-  "convert-image": ImageTransformStudio,
-  "crop-image": ImageTransformStudio,
-  "remove-background": ImageTransformStudio,
-  "blur-background": ImageTransformStudio,
-  "passport-photo-maker": ImageTransformStudio,
-  "image-to-text": ImageTransformStudio,
-  "image-upscaler": ImageTransformStudio,
-  "color-palette-generator": ImagePaletteStudio,
-  "qr-code-generator": QrCodeStudio,
-  "image-to-pdf": ImageToPdfStudio,
-  "favicon-generator": ImageTransformStudio,
-  "instagram-grid-maker": ImageTransformStudio,
-  "svg-to-png": ImageTransformStudio,
-  "meme-generator": ImageTransformStudio,
-};
+const IMAGE_STUDIO_SLUGS = new Set([
+  "compress-image",
+  "resize-image",
+  "convert-image",
+  "crop-image",
+  "remove-background",
+  "blur-background",
+  "passport-photo-maker",
+  "image-to-text",
+  "image-upscaler",
+  "color-palette-generator",
+  "qr-code-generator",
+  "image-to-pdf",
+  "favicon-generator",
+  "instagram-grid-maker",
+  "svg-to-png",
+  "meme-generator",
+]);
 
 const FILE_STUDIO_SLUGS = new Set([
   "csv-viewer",
@@ -238,8 +162,8 @@ export async function generateStaticParams() {
 
   const PRE_RENDERED_TOOL_SLUGS = new Set([
     "all-in-one-video-downloader",
-    ...Object.keys(STUDIO_COMPONENTS),
-    ...Object.keys(IMAGE_STUDIO_COMPONENTS),
+    ...PDF_STUDIO_SLUGS,
+    ...IMAGE_STUDIO_SLUGS,
     ...VIDEO_STUDIO_SLUGS,
     ...AUDIO_STUDIO_SLUGS,
     ...TEXT_STUDIO_SLUGS,
@@ -423,18 +347,18 @@ export default async function ToolPage({ params }: Props) {
             <ToolRuntimeBanner status={runtimeStatus} />
           </div>
         </div>
-        <VideoDownloaderClient tool={tool} />
+        <ToolStudioSlot tool={tool} />
       </PublicLayout>
     );
   }
 
-  const StudioComponent = STUDIO_COMPONENTS[tool.slug];
+  const hasPdfStudio = PDF_STUDIO_SLUGS.has(tool.slug);
   const content =
     PDF_STUDIO_STATIC_CONTENT[
       tool.slug as keyof typeof PDF_STUDIO_STATIC_CONTENT
     ];
 
-  if (StudioComponent && content) {
+  if (hasPdfStudio && content) {
     const relatedTools = content.relatedSlugs
       .map((slug) => tools.find((item) => item.slug === slug) || null)
       .filter((item): item is Tool => Boolean(item));
@@ -450,14 +374,13 @@ export default async function ToolPage({ params }: Props) {
             relatedTools,
           }}
         >
-          <StudioComponent tool={tool} />
+          <ToolStudioSlot tool={tool} />
         </PdfStudioPageFrame>
       </PublicLayout>
     );
   }
 
-  const ImageStudioComponent = IMAGE_STUDIO_COMPONENTS[tool.slug];
-  if (ImageStudioComponent) {
+  if (IMAGE_STUDIO_SLUGS.has(tool.slug)) {
     const relatedTools = getRelatedToolsByCategory(
       tools,
       "image",
@@ -473,7 +396,7 @@ export default async function ToolPage({ params }: Props) {
           relatedTools={relatedTools}
           runtimeStatus={runtimeStatus}
         >
-          <ImageStudioComponent tool={tool} />
+          <ToolStudioSlot tool={tool} />
         </ImageStudioPageFrame>
       </PublicLayout>
     );
@@ -495,7 +418,7 @@ export default async function ToolPage({ params }: Props) {
           relatedTools={relatedTools}
           runtimeStatus={runtimeStatus}
         >
-          <VideoStudio tool={tool} />
+          <ToolStudioSlot tool={tool} />
         </VideoStudioPageFrame>
       </PublicLayout>
     );
@@ -517,7 +440,7 @@ export default async function ToolPage({ params }: Props) {
           relatedTools={relatedTools}
           runtimeStatus={runtimeStatus}
         >
-          <AudioStudio tool={tool} />
+          <ToolStudioSlot tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
     );
@@ -534,7 +457,7 @@ export default async function ToolPage({ params }: Props) {
           relatedTools={relatedTools}
           runtimeStatus={runtimeStatus}
         >
-          <TextStudio tool={tool} />
+          <ToolStudioSlot tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
     );
@@ -551,7 +474,7 @@ export default async function ToolPage({ params }: Props) {
           relatedTools={relatedTools}
           runtimeStatus={runtimeStatus}
         >
-          <DevStudio tool={tool} />
+          <ToolStudioSlot tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
     );
@@ -568,7 +491,7 @@ export default async function ToolPage({ params }: Props) {
           relatedTools={relatedTools}
           runtimeStatus={runtimeStatus}
         >
-          <SeoStudio tool={tool} />
+          <ToolStudioSlot tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
     );
@@ -594,7 +517,7 @@ export default async function ToolPage({ params }: Props) {
           relatedTools={relatedTools}
           runtimeStatus={runtimeStatus}
         >
-          <CalculatorStudio tool={tool} />
+          <ToolStudioSlot tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
     );
@@ -611,7 +534,7 @@ export default async function ToolPage({ params }: Props) {
           relatedTools={relatedTools}
           runtimeStatus={runtimeStatus}
         >
-          <FileViewerStudio tool={tool} />
+          <ToolStudioSlot tool={tool} />
         </WorkbenchStudioPageFrame>
       </PublicLayout>
     );
@@ -656,7 +579,7 @@ export default async function ToolPage({ params }: Props) {
           <ToolRuntimeBanner status={runtimeStatus} />
 
           <div className="premium-panel mb-8 overflow-hidden">
-            <ToolDetailClientSelector tool={tool} />
+            <ToolStudioSlot tool={tool} />
           </div>
 
           {/* How it works + Features */}

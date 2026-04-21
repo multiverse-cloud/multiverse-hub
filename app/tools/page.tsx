@@ -6,13 +6,13 @@ import { TOOLS } from "@/lib/tools-data";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Tools – 150+ Free Online Tools | Multiverse",
-  description: `Explore ${TOOLS.length}+ free online tools for PDF, image, video, audio, text, and developer workflows. No sign-up, no watermarks, no limits — just fast, private tools that run in your browser.`,
+  title: "Tools - Free Online Utilities | Multiverse",
+  description: `Explore ${TOOLS.length}+ free online tools for PDF, image, video, audio, text, and developer workflows. No sign-up, no watermarks, no limits. Fast, private tools that run in your browser.`,
   alternates: {
     canonical: "https://multiverse-tools.vercel.app/tools",
   },
   openGraph: {
-    title: "Tools – 150+ Free Online Tools | Multiverse",
+    title: "Tools - Free Online Utilities | Multiverse",
     description: `Explore ${TOOLS.length}+ free online tools for PDF, image, video, audio, text, and developer workflows. No sign-up, no watermarks, no limits.`,
     url: "https://multiverse-tools.vercel.app/tools",
   },

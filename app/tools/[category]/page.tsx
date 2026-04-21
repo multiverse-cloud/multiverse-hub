@@ -26,7 +26,7 @@ export async function generateMetadata({
   const countLabel = toolCount > 0 ? `${toolCount}+ ` : "";
 
   return {
-    title: `${cat.name} – ${countLabel}Free Online ${cat.name} | Multiverse`,
+    title: `${cat.name} - ${countLabel}Free Online ${cat.name} | Multiverse`,
     description: `${cat.description} Use our free ${cat.name.toLowerCase()} with no sign-up required. Fast, private, and browser-based.`,
     alternates: {
       canonical: `https://multiverse-tools.vercel.app/tools/${category}`,

@@ -28,6 +28,7 @@ export const metadata: Metadata = {
   title: "Search - Multiverse",
   description:
     "Search across tools, discover pages, fixes, prompts, and UI templates in one place.",
+  alternates: { canonical: "https://multiverse-tools.vercel.app/search" },
 };
 
 interface SearchPageProps {

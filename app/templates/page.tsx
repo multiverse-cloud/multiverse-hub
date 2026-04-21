@@ -35,6 +35,7 @@ export const metadata: Metadata = {
     description:
       'Browse free premium UI templates for React, Next.js, dashboards, landing pages, auth screens, ecommerce, and modern product launches.',
   },
+  alternates: { canonical: 'https://multiverse-tools.vercel.app/templates' },
 }
 
 interface TemplatesPageProps {

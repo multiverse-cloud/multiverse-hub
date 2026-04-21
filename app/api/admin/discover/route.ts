@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { authorizeAdminRequest } from '@/lib/admin-request-auth'
+import { guardAdminWriteRequest } from '@/lib/admin-api-guard'
 import {
   getAdminDiscoverLists,
   saveDiscoverLists,
@@ -90,11 +91,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const isAuthorized = await isAuthorizedRequest(request)
+    const blocked = await guardAdminWriteRequest(request, {
+      key: 'discover',
+      maxBytes: 5 * 1024 * 1024,
+    })
 
-    if (!isAuthorized) {
-      return jsonError('Admin session expired. Sign in again to continue.', 401, 'unauthorized')
-    }
+    if (blocked) return blocked
 
     const body = await request.json()
 
@@ -191,11 +193,12 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const isAuthorized = await isAuthorizedRequest(request)
+    const blocked = await guardAdminWriteRequest(request, {
+      key: 'discover',
+      maxBytes: 5 * 1024 * 1024,
+    })
 
-    if (!isAuthorized) {
-      return jsonError('Admin session expired. Sign in again to continue.', 401, 'unauthorized')
-    }
+    if (blocked) return blocked
 
     const body = await request.json()
     const list = body?.list as DiscoverList | undefined

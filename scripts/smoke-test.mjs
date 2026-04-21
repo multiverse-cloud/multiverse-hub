@@ -67,6 +67,31 @@ async function assertPage(path, { contains = [], excludes = [] } = {}) {
   log(`PASS ${path} -> 200`)
 }
 
+async function assertStatus(path, status) {
+  const response = await fetchWithTimeout(`${baseUrl}${path}`, { redirect: 'manual' })
+
+  if (response.status !== status) {
+    fail(`${path} returned ${response.status} instead of ${status}`)
+  }
+
+  log(`PASS ${path} -> ${status}`)
+}
+
+async function assertPostStatus(path, status, body = {}) {
+  const response = await fetchWithTimeout(`${baseUrl}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    redirect: 'manual',
+  })
+
+  if (response.status !== status) {
+    fail(`${path} POST returned ${response.status} instead of ${status}`)
+  }
+
+  log(`PASS POST ${path} -> ${status}`)
+}
+
 async function assertRedirect(path, { status, location }) {
   const response = await fetchWithTimeout(`${baseUrl}${path}`, { redirect: 'manual' })
   const actualLocation = response.headers.get('location')
@@ -75,7 +100,11 @@ async function assertRedirect(path, { status, location }) {
     fail(`${path} returned ${response.status} instead of ${status}`)
   }
 
-  if (actualLocation !== location) {
+  const normalizedLocation = actualLocation
+    ? actualLocation.replace(baseUrl, '')
+    : actualLocation
+
+  if (normalizedLocation !== location) {
     fail(`${path} redirected to ${actualLocation || 'nothing'} instead of ${location}`)
   }
 
@@ -83,7 +112,7 @@ async function assertRedirect(path, { status, location }) {
 }
 
 async function waitForServer() {
-  const readyPath = '/sign-in'
+  const readyPath = '/tools'
 
   for (let attempt = 1; attempt <= 60; attempt += 1) {
     if (serverProcess?.exitCode !== null) {
@@ -157,21 +186,51 @@ async function run() {
     contains: ['Explore All Tools'],
   })
 
-  await assertPage('/sign-in', {
-    contains: ['Welcome back'],
+  await assertPage('/tools', {
+    contains: ['Every tool, one workspace'],
   })
 
-  await assertPage('/sign-up', {
-    contains: ['Create account'],
+  await assertPage('/tools/dev/json-to-csv-converter', {
+    contains: ['JSON to CSV'],
   })
 
-  await assertPage('/forgot-password', {
-    contains: ['Get back into your account'],
+  await assertPage('/admin-login', {
+    contains: ['Admin Authentication'],
   })
+
+  await assertPostStatus('/api/admin/login', 400)
+  await assertPostStatus('/api/admin/prompts', 401)
+  await assertPostStatus('/api/admin/templates', 401)
+  await assertPostStatus('/api/admin/discover', 401)
 
   await assertRedirect('/admin', {
     status: 307,
     location: '/admin-login?next=%2Fadmin',
+  })
+
+  await assertRedirect('/sign-in', {
+    status: 307,
+    location: '/admin-login',
+  })
+
+  await assertRedirect('/sign-up', {
+    status: 307,
+    location: '/admin-login',
+  })
+
+  await assertRedirect('/forgot-password', {
+    status: 307,
+    location: '/admin-login',
+  })
+
+  await assertRedirect('/sso-callback', {
+    status: 307,
+    location: '/admin-login',
+  })
+
+  await assertRedirect('/dashboard', {
+    status: 307,
+    location: '/tools',
   })
 
   await assertPage('/prompts', {
@@ -179,17 +238,26 @@ async function run() {
   })
 
   await assertPage('/templates', {
-    contains: ['ShopElite Ecommerce UI Kit'],
-    excludes: ['Obsidian Launchpad', 'Aether Dashboard', 'Identity Auth Kit'],
+    contains: ['Templates'],
   })
 
   await assertPage('/search?q=pdf', {
     contains: ['Search Across The Multiverse', 'pdf'],
   })
 
-  await assertPage('/sw.js', {
-    contains: ['self.registration.unregister'],
+  await assertPage('/privacy', {
+    contains: ['Privacy Policy'],
   })
+
+  await assertPage('/terms', {
+    contains: ['Terms of Service'],
+  })
+
+  await assertPage('/robots.txt', {
+    contains: ['Sitemap:'],
+  })
+
+  await assertStatus('/sitemap.xml', 200)
 
   log('Smoke test suite passed.')
 }

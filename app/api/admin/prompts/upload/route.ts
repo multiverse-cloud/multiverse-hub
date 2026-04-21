@@ -1,6 +1,6 @@
 import { createHash } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
-import { authorizeAdminRequest } from '@/lib/admin-request-auth'
+import { guardAdminWriteRequest } from '@/lib/admin-api-guard'
 import {
   buildCloudinaryImageUrl,
   buildCloudinaryPromptPreviewPublicId,
@@ -21,10 +21,6 @@ function jsonError(error: string, status: number, code?: string, details?: strin
     },
     { status }
   )
-}
-
-async function isAuthorizedRequest(request: NextRequest) {
-  return (await authorizeAdminRequest(request)).authorized
 }
 
 function createCloudinarySignature(params: Record<string, string>, apiSecret: string) {
@@ -103,11 +99,13 @@ async function uploadImageToCloudinary(file: File, slug: string) {
 
 export async function POST(request: NextRequest) {
   try {
-    const isAuthorized = await isAuthorizedRequest(request)
+    const blocked = await guardAdminWriteRequest(request, {
+      key: 'prompt-upload',
+      maxRequests: 20,
+      maxBytes: 12 * 1024 * 1024,
+    })
 
-    if (!isAuthorized) {
-      return jsonError('Admin session expired. Sign in again to continue.', 401, 'unauthorized')
-    }
+    if (blocked) return blocked
 
     if (!isCloudinaryConfigured()) {
       return jsonError(
@@ -128,6 +126,10 @@ export async function POST(request: NextRequest) {
 
     if (!file.type.startsWith('image/')) {
       return jsonError('Only image uploads are supported for prompt previews.', 400, 'invalid_image_type')
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      return jsonError('Image is too large. Upload a preview under 10 MB.', 413, 'image_too_large')
     }
 
     const upload = await uploadImageToCloudinary(file, slug)
