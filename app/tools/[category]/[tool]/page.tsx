@@ -13,7 +13,6 @@ import RecentTracker from "@/components/tools/RecentTracker";
 import SEOContent from "@/components/tools/SEOContent";
 import ToolActions from "@/components/tools/ToolActions";
 import ToolRuntimeBanner from "@/components/tools/ToolRuntimeBanner";
-import { UsageHintBanner } from "@/components/auth/LoginGateModal";
 import { getLucideIcon } from "@/lib/icons";
 import { CALCULATOR_STUDIO_SLUGS } from "@/lib/calculator-studio";
 import { PDF_STUDIO_STATIC_CONTENT } from "@/lib/pdf-studio-content";
@@ -21,8 +20,8 @@ import { getToolRuntimeStatus } from "@/lib/tool-runtime-status";
 import { ACTIVE_CATEGORIES, type Tool } from "@/lib/tools-data";
 import { getTools, getToolBySlug } from "@/lib/db";
 
-const ToolDetailClient = dynamic(
-  () => import("@/components/tools/ToolDetailClient"),
+const ToolDetailClientSelector = dynamic(
+  () => import("@/components/tools/ToolDetailClientSelector"),
 );
 const VideoDownloaderClient = dynamic(
   () => import("@/components/tools/VideoDownloaderClient"),
@@ -654,11 +653,10 @@ export default async function ToolPage({ params }: Props) {
             </div>
           </div>
 
-          <UsageHintBanner />
           <ToolRuntimeBanner status={runtimeStatus} />
 
           <div className="premium-panel mb-8 overflow-hidden">
-            <ToolDetailClient tool={tool} runtimeStatus={runtimeStatus} />
+            <ToolDetailClientSelector tool={tool} />
           </div>
 
           {/* How it works + Features */}
