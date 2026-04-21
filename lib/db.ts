@@ -1,6 +1,6 @@
 import 'server-only'
 import { unstable_cache, revalidateTag } from 'next/cache'
-import { TOOLS, type Tool, type ToolTag } from './tools-data'
+import { resolveToolSlug, TOOLS, type Tool, type ToolTag } from './tools-data'
 
 const VALID_TOOL_TAGS = new Set<ToolTag>(['new', 'trending', 'beta', 'hot', 'free'])
 
@@ -75,8 +75,9 @@ export const getTools = unstable_cache(
 
 export const getToolBySlug = unstable_cache(
   async (slug: string): Promise<Tool | null> => {
+    const normalizedSlug = resolveToolSlug(slug)
     const tools = await getTools()
-    return tools.find(tool => tool.slug === slug) || null
+    return tools.find(tool => tool.slug === normalizedSlug) || null
   },
   ['tool-by-slug-cache-v2', TOOL_CACHE_VERSION],
   { revalidate: 3600, tags: ['tools'] }

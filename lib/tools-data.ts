@@ -2546,6 +2546,30 @@ export const VIDEO_DOWNLOADER_TOOL_SLUGS = new Set([
   'dailymotion-video-downloader',
 ])
 
+export const TOOL_SLUG_ALIASES: Record<string, string> = {
+  'video-downloader': 'all-in-one-video-downloader',
+  'online-video-downloader': 'all-in-one-video-downloader',
+  'instagram-downloader': 'instagram-video-downloader',
+  'instagram-stories-downloader': 'instagram-story-downloader',
+  'instagram-highlights-downloader': 'instagram-story-downloader',
+  'instagram-highlight-downloader': 'instagram-story-downloader',
+  'reels-downloader': 'instagram-reels-downloader',
+  'instagram-reel-downloader': 'instagram-reels-downloader',
+  'youtube-downloader': 'youtube-video-downloader',
+  'youtube-shorts': 'youtube-shorts-downloader',
+  'facebook-downloader': 'facebook-video-downloader',
+  'fb-video-downloader': 'facebook-video-downloader',
+  'twitter-downloader': 'twitter-video-downloader',
+  'twitter-x-video-downloader': 'twitter-video-downloader',
+  'x-video-downloader': 'twitter-video-downloader',
+  'vimeo-downloader': 'vimeo-video-downloader',
+  'dailymotion-downloader': 'dailymotion-video-downloader',
+}
+
+export function resolveToolSlug(slug: string): string {
+  return TOOL_SLUG_ALIASES[slug] || slug
+}
+
 export const TOOLS: Tool[] = ALL_TOOLS.filter(tool => ACTIVE_TOOL_SLUGS.has(tool.slug) && isAllowedCategoryTool(tool))
 export const ACTIVE_CATEGORIES = CATEGORIES.filter(category => TOOLS.some(tool => tool.categorySlug === category.slug))
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Wrench } from "lucide-react";
 import PublicLayout from "@/components/layout/PublicLayout";
 import ImageStudioPageFrame from "@/components/tools/ImageStudioPageFrame";
@@ -16,7 +16,7 @@ import { getLucideIcon } from "@/lib/icons";
 import { CALCULATOR_STUDIO_SLUGS } from "@/lib/calculator-studio";
 import { PDF_STUDIO_STATIC_CONTENT } from "@/lib/pdf-studio-content";
 import { getToolRuntimeStatus } from "@/lib/tool-runtime-status";
-import { ACTIVE_CATEGORIES, VIDEO_DOWNLOADER_TOOL_SLUGS, type Tool } from "@/lib/tools-data";
+import { ACTIVE_CATEGORIES, resolveToolSlug, VIDEO_DOWNLOADER_TOOL_SLUGS, type Tool } from "@/lib/tools-data";
 import { getTools, getToolBySlug } from "@/lib/db";
 
 interface Props {
@@ -249,11 +249,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ToolPage({ params }: Props) {
   const { category, tool: toolSlug } = await params;
+  const resolvedToolSlug = resolveToolSlug(toolSlug);
   const tools = await getTools();
-  const tool = tools.find((item) => item.slug === toolSlug) || null;
+  const tool = tools.find((item) => item.slug === resolvedToolSlug) || null;
 
   if (!tool || tool.categorySlug !== category || tool.enabled === false) {
     notFound();
+  }
+
+  if (tool.slug !== toolSlug) {
+    redirect(`/tools/${tool.categorySlug}/${tool.slug}`);
   }
 
   const runtimeStatus = getToolRuntimeStatus(tool);
