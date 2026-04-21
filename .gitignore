@@ -36,3 +36,6 @@ multiverse-ex-firebase-adminsdk-*.json
 next-env.d.ts
 
 .vercel
+template-repo-export/
+public/template-previews/
+data/template-preview-capture-report.json

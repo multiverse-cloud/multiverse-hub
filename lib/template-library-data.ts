@@ -69,6 +69,8 @@ export type TemplateEntry = {
   bestFor: string[]
   files: TemplateSourceFile[]
   previewHtml?: string
+  previewImage?: string
+  previewCapturedAt?: string
   liveUrl?: string
   downloadUrl?: string
   featured?: boolean

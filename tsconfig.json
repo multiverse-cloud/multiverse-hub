@@ -43,6 +43,7 @@
     "components/public/PublicSignInClient.tsx",
     "components/admin/AdminSignInClient.tsx",
     "lib/admin-auth.ts",
-    "projects/**/*"
+    "projects/**/*",
+    "template-repo-export/**/*"
   ]
 }

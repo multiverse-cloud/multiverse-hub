@@ -43,7 +43,7 @@ export default function TemplateDetailPage({
     [reloadToken, template.slug, viewport],
   )
 
-  const downloadHref = template.downloadUrl || `/templates/${template.slug}/download`
+  const downloadHref = `/templates/${template.slug}/download`
 
   async function handleShare() {
     const url = typeof window !== 'undefined' ? window.location.href : ''
@@ -213,9 +213,6 @@ export default function TemplateDetailPage({
           {/* Download */}
           <a
             href={downloadHref}
-            target={template.downloadUrl ? '_blank' : undefined}
-            rel={template.downloadUrl ? 'noreferrer' : undefined}
-            download={!template.downloadUrl}
             className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 py-2 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition-all hover:bg-blue-500 hover:shadow-blue-600/40 active:scale-95"
           >
             <Download className="h-3.5 w-3.5" />
@@ -367,9 +364,6 @@ export default function TemplateDetailPage({
           <div className="border-t border-white/8 p-5">
             <a
               href={downloadHref}
-              target={template.downloadUrl ? '_blank' : undefined}
-              rel={template.downloadUrl ? 'noreferrer' : undefined}
-              download={!template.downloadUrl}
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition-all hover:bg-blue-500"
             >
               <Download className="h-4 w-4" />

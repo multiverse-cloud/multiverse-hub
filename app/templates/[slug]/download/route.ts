@@ -1,35 +1,56 @@
 import { NextResponse } from 'next/server'
+import JSZip from 'jszip'
 import { getTemplateBySlug } from '@/lib/template-db'
 import { fileResponse } from '@/lib/server-utils'
 
-function getMimeType(language: string) {
-  switch (language) {
-    case 'css':
-      return 'text/css; charset=utf-8'
-    case 'js':
-      return 'application/javascript; charset=utf-8'
-    case 'json':
-      return 'application/json; charset=utf-8'
-    case 'md':
-      return 'text/markdown; charset=utf-8'
-    case 'ts':
-    case 'tsx':
-      return 'text/plain; charset=utf-8'
-    default:
-      return 'text/html; charset=utf-8'
+function buildMetadata(template: NonNullable<Awaited<ReturnType<typeof getTemplateBySlug>>>) {
+  return {
+    slug: template.slug,
+    title: template.title,
+    summary: template.summary,
+    description: template.description,
+    category: template.category,
+    categoryTitle: template.categoryTitle,
+    platform: template.platform,
+    platformLabel: template.platformLabel,
+    framework: template.framework,
+    frameworkLabel: template.frameworkLabel,
+    templateType: template.templateType,
+    industry: template.industry,
+    tags: template.tags,
+    techStack: template.techStack,
+    sections: template.sections,
+    bestFor: template.bestFor,
+    liveUrl: template.liveUrl || null,
+    previewImage: template.previewImage || null,
+    updatedAt: template.updatedAt,
+    license: template.license,
+    priceLabel: template.priceLabel,
   }
 }
 
-function buildBundle(templateTitle: string, files: Array<{ path: string; content: string }>) {
-  const parts = [`# ${templateTitle}`, '']
+function buildReadme(template: NonNullable<Awaited<ReturnType<typeof getTemplateBySlug>>>) {
+  const primaryFile = template.files.find(file => file.primary) || template.files[0] || null
 
-  for (const file of files) {
-    parts.push(`--- FILE: ${file.path} ---`)
-    parts.push(file.content)
-    parts.push('')
-  }
-
-  return parts.join('\n')
+  return [
+    `# ${template.title}`,
+    '',
+    template.summary,
+    '',
+    '## Quick start',
+    '',
+    primaryFile ? `- Start with \`${primaryFile.path}\`` : null,
+    `- Framework: ${template.frameworkLabel}`,
+    `- Platform: ${template.platformLabel}`,
+    template.liveUrl ? `- Live preview: ${template.liveUrl}` : null,
+    '',
+    '## Included files',
+    '',
+    ...template.files.map(file => `- \`${file.path}\` - ${file.summary}`),
+    '',
+  ]
+    .filter(Boolean)
+    .join('\n')
 }
 
 type RouteContext = {
@@ -50,11 +71,29 @@ export async function GET(_request: Request, context: RouteContext) {
     return NextResponse.json({ error: 'Template source is unavailable.' }, { status: 404 })
   }
 
-  if (template.files.length === 1) {
-    const filename = primaryFile.path.split('/').pop() || `${template.slug}.html`
-    return fileResponse(Buffer.from(primaryFile.content, 'utf8'), filename, getMimeType(primaryFile.language))
+  const zip = new JSZip()
+  const root = zip.folder(template.slug)
+
+  if (!root) {
+    return NextResponse.json({ error: 'Failed to prepare template archive.' }, { status: 500 })
   }
 
-  const bundle = buildBundle(template.title, template.files.map(file => ({ path: file.path, content: file.content })))
-  return fileResponse(Buffer.from(bundle, 'utf8'), `${template.slug}-code-bundle.txt`, 'text/plain; charset=utf-8')
+  root.file('metadata.json', `${JSON.stringify(buildMetadata(template), null, 2)}\n`)
+  root.file('README.md', `${buildReadme(template)}\n`)
+
+  for (const file of template.files) {
+    root.file(file.path, file.content)
+  }
+
+  if (template.previewHtml) {
+    root.file('preview.html', template.previewHtml)
+  }
+
+  const archive = await zip.generateAsync({
+    type: 'nodebuffer',
+    compression: 'DEFLATE',
+    compressionOptions: { level: 9 },
+  })
+
+  return fileResponse(archive, `${template.slug}.zip`, 'application/zip')
 }

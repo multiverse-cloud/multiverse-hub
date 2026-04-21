@@ -4,6 +4,7 @@ export type CloudinaryConfig = {
   apiSecret?: string
   uploadPreset?: string
   promptPreviewFolder: string
+  templatePreviewFolder: string
 }
 
 function readEnv(value?: string) {
@@ -17,6 +18,7 @@ export function getCloudinaryConfig(): CloudinaryConfig {
     apiSecret: readEnv(process.env.CLOUDINARY_API_SECRET) || undefined,
     uploadPreset: readEnv(process.env.CLOUDINARY_UPLOAD_PRESET) || undefined,
     promptPreviewFolder: readEnv(process.env.CLOUDINARY_PROMPT_PREVIEW_FOLDER) || 'multiverse/prompt-previews',
+    templatePreviewFolder: readEnv(process.env.CLOUDINARY_TEMPLATE_PREVIEW_FOLDER) || 'multiverse/template-previews',
   }
 }
 
@@ -31,6 +33,14 @@ export function getCloudinaryPromptPreviewFolder() {
 
 export function buildCloudinaryPromptPreviewPublicId(slug: string) {
   return `${getCloudinaryPromptPreviewFolder()}/${slug}`
+}
+
+export function getCloudinaryTemplatePreviewFolder() {
+  return getCloudinaryConfig().templatePreviewFolder
+}
+
+export function buildCloudinaryTemplatePreviewPublicId(slug: string) {
+  return `${getCloudinaryTemplatePreviewFolder()}/${slug}`
 }
 
 export function buildCloudinaryImageUrl(

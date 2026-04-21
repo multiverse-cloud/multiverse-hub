@@ -163,6 +163,8 @@ function normalizeTemplateEntry(template: TemplateEntry): TemplateEntry {
     bestFor: asStringArray(template.bestFor),
     files: normalizeFiles(template.files),
     previewHtml: asString(template.previewHtml) || undefined,
+    previewImage: asString((template as TemplateEntry & { previewImage?: unknown }).previewImage) || undefined,
+    previewCapturedAt: asString((template as TemplateEntry & { previewCapturedAt?: unknown }).previewCapturedAt) || undefined,
     liveUrl: asString((template as TemplateEntry & { liveUrl?: unknown }).liveUrl) || undefined,
     downloadUrl: asString((template as TemplateEntry & { downloadUrl?: unknown }).downloadUrl) || undefined,
     featured: Boolean(template.featured),

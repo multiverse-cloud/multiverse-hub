@@ -92,11 +92,22 @@ export async function generateMetadata({ params }: TemplateSlugPageProps): Promi
       description: seoDescription,
       url: `/templates/${template.slug}`,
       type: 'website',
+      images: template.previewImage
+        ? [
+            {
+              url: template.previewImage,
+              width: 1600,
+              height: 1000,
+              alt: `${template.title} preview image`,
+            },
+          ]
+        : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title: seoTitle,
       description: seoDescription,
+      images: template.previewImage ? [template.previewImage] : undefined,
     },
   }
 }

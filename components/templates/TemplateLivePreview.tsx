@@ -254,7 +254,26 @@ export default function TemplateLivePreview({
 
   useEffect(() => {
     setLoaded(false)
-  }, [reloadToken, template.slug, viewport])
+  }, [reloadToken, template.previewImage, template.slug, viewport])
+
+  if (compact && template.previewImage) {
+    return (
+      <div className={cn('relative overflow-hidden bg-card', ratio, className)}>
+        {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
+        <Image
+          src={template.previewImage}
+          alt={`${template.title} preview image`}
+          fill
+          sizes="(min-width: 1536px) 25vw, (min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+          onLoad={() => setLoaded(true)}
+          className={cn(
+            'object-cover object-top transition-opacity duration-200',
+            loaded ? 'opacity-100' : 'opacity-0'
+          )}
+        />
+      </div>
+    )
+  }
 
   if (template.previewHtml) {
     const viewportWidth =
@@ -317,6 +336,25 @@ export default function TemplateLivePreview({
             />
           </div>
         </div>
+      </div>
+    )
+  }
+
+  if (template.previewImage) {
+    return (
+      <div className={cn('relative overflow-hidden rounded-xl border border-border bg-card', ratio, className)}>
+        {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
+        <Image
+          src={template.previewImage}
+          alt={`${template.title} preview image`}
+          fill
+          sizes={compact ? '(min-width: 1536px) 25vw, (min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw' : '100vw'}
+          onLoad={() => setLoaded(true)}
+          className={cn(
+            'object-cover object-top transition-opacity duration-200',
+            loaded ? 'opacity-100' : 'opacity-0'
+          )}
+        />
       </div>
     )
   }
