@@ -43,8 +43,8 @@ export default function SEOContent({ tool }: { tool: Tool }) {
       a: `Absolutely. We use WASM-based client-side processing, meaning your files never leave your computer. Processing happens locally on your device for total privacy.`
     },
     {
-      q: `Does it work for WhatsApp or Email?`,
-      a: `Yes! You can use the ${tool.name} to optimize your files for platforms like WhatsApp, Gmail, Discord, and more by ensuring they meet size and format requirements.`
+      q: `Does it work for email and chat apps?`,
+      a: `Yes! You can use the ${tool.name} to optimize files for email, Discord, team chat, and other platforms by matching size and format requirements.`
     }
   ]
 

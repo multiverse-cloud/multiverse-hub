@@ -111,7 +111,7 @@ export async function GET(req: NextRequest) {
 
   if (!videoUrl) return err('Missing ?url= parameter')
   if (!isSupportedVideoUrl(videoUrl)) {
-    return err('URL not supported. Try YouTube, TikTok, Instagram, Twitter/X, Vimeo, Facebook or Dailymotion.')
+    return err('URL not supported. Try a public YouTube, Instagram, TikTok, Facebook, X, Pinterest, Reddit, Vimeo, Dailymotion, Twitch, Telegram, or similar supported media link.')
   }
   if (format !== 'thumbnail' && !isCommandAvailable(YTDLP_PATH)) {
     return err('Video downloads are unavailable on this server because yt-dlp is not installed.', 503)
@@ -195,14 +195,14 @@ export async function GET(req: NextRequest) {
     if (message.includes('ffmpeg') && message.includes('not found')) {
       return err('ffmpeg is required for video downloads with audio. Install ffmpeg on the server.', 503)
     }
-    if (message.includes('Private video') || message.includes('members-only')) {
-      return err('This video is private or members-only.')
+    if (message.includes('Private video') || message.includes('members-only') || message.includes('login')) {
+      return err('This content is private, protected, or unsupported.', 422)
     }
     if (message.includes('not available')) {
-      return err('Video not available in your region or has been removed.')
+      return err('This content is private, protected, or unsupported.', 422)
     }
 
     cleanupFilesByPrefix(id)
-    return err(`Download failed: ${message}`, getErrorStatus(error, 500))
+    return err('This content is private, protected, or unsupported.', getErrorStatus(error, 500))
   }
 }

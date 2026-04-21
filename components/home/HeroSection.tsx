@@ -16,7 +16,7 @@ const SUGGESTION_CHIPS = [
     href: "/tools/video/all-in-one-video-downloader",
     icon: Download,
   },
-  { label: "TikTok Saver", href: "/tools/video/tiktok-downloader", icon: Zap },
+  { label: "TikTok Saver", href: "/tools/video/tiktok-video-downloader", icon: Zap },
   { label: "Merge PDF", href: "/tools/pdf/merge-pdf", icon: FileText },
   { label: "Compress Image", href: "/tools/image/compress-image", icon: Image },
   { label: "JSON Formatter", href: "/tools/dev/json-formatter", icon: Code2 },

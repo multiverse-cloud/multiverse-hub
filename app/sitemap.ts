@@ -2,7 +2,8 @@ import { MetadataRoute } from "next";
 import { FIX_GUIDES } from "@/lib/fixes-data";
 import { getPublishedPrompts } from "@/lib/prompt-db";
 import { getPublishedTemplates } from "@/lib/template-db";
-import { ACTIVE_CATEGORIES, TOOLS } from "@/lib/tools-data";
+import { DOWNLOADER_ROUTES } from "@/lib/downloader-route-data";
+import { ACTIVE_CATEGORIES, TOOLS, VIDEO_DOWNLOADER_TOOL_SLUGS } from "@/lib/tools-data";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://multiverse-tools.vercel.app";
@@ -93,13 +94,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   const toolRoutes: MetadataRoute.Sitemap = TOOLS.filter(
-    (t) => t.implemented && t.enabled !== false,
+    (t) =>
+      t.implemented &&
+      t.enabled !== false &&
+      !VIDEO_DOWNLOADER_TOOL_SLUGS.has(t.slug),
   ).map((tool) => ({
     url: `${baseUrl}/tools/${tool.categorySlug}/${tool.slug}`,
     lastModified: staticDate,
     changeFrequency: "monthly",
     priority: tool.tags.includes("trending") || tool.popular ? 0.8 : 0.6,
   }));
+
+  const downloaderRoutes: MetadataRoute.Sitemap = DOWNLOADER_ROUTES.map(
+    (route) => ({
+      url: `${baseUrl}/${route.routeSlug}`,
+      lastModified: staticDate,
+      changeFrequency: "weekly",
+      priority: route.routeSlug === "downloader" ? 0.9 : 0.82,
+    }),
+  );
 
   const fixRoutes: MetadataRoute.Sitemap = FIX_GUIDES.map((guide) => ({
     url: `${baseUrl}/fixes/${guide.slug}`,
@@ -126,6 +139,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticRoutes,
     ...categoryRoutes,
     ...toolRoutes,
+    ...downloaderRoutes,
     ...fixRoutes,
     ...promptRoutes,
     ...templateRoutes,

@@ -42,11 +42,6 @@ export default function ToolActions({ name, className }: Props) {
     setShareOpen(false)
   }
 
-  function shareWhatsApp() {
-    window.open(`https://wa.me/?text=${encodeURIComponent(`${name}: ${window.location.href}`)}`, '_blank', 'noopener')
-    setShareOpen(false)
-  }
-
   function shareTwitter() {
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out ${name} on Multiverse`)}&url=${encodeURIComponent(window.location.href)}`, '_blank', 'noopener')
     setShareOpen(false)
@@ -69,10 +64,6 @@ export default function ToolActions({ name, className }: Props) {
             <button onClick={copyLink} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800">
               {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
               {copied ? 'Copied!' : 'Copy link'}
-            </button>
-            <button onClick={shareWhatsApp} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800">
-              <ExternalLink className="h-3.5 w-3.5" />
-              WhatsApp
             </button>
             <button onClick={shareTwitter} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800">
               <ExternalLink className="h-3.5 w-3.5" />

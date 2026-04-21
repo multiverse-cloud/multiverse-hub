@@ -11,7 +11,22 @@ import {
   Zap,
 } from 'lucide-react'
 
-export const SUPPORTED_SITES = ['YouTube', 'TikTok', 'Instagram', 'Twitter/X', 'Vimeo', 'Facebook', 'Dailymotion']
+export const SUPPORTED_SITES = [
+  'YouTube',
+  'TikTok',
+  'Instagram',
+  'Facebook',
+  'Twitter/X',
+  'Pinterest',
+  'Reddit',
+  'Vimeo',
+  'Dailymotion',
+  'Snapchat',
+  'LinkedIn',
+  'Telegram',
+  'Twitch',
+  'Bilibili',
+]
 
 export const FORMAT_BADGES = ['MP4 360p', 'MP4 480p', 'MP4 720p', 'MP4 1080p', 'WEBM 2K', 'WEBM 4K', 'MP3', 'M4A', 'HD Thumbnail']
 
@@ -78,7 +93,7 @@ export const FEATURE_ITEMS: Array<{
 export const FAQ_ITEMS = [
   {
     question: 'Which platforms are supported?',
-    answer: 'YouTube, TikTok, Instagram, Twitter/X, Vimeo, Facebook and Dailymotion are supported.',
+    answer: 'Public links from YouTube, TikTok, Instagram, Facebook, Twitter/X, Pinterest, Reddit, Vimeo, Dailymotion, Snapchat, LinkedIn, Telegram, Twitch, Bilibili and similar supported sites can be analyzed.',
   },
   {
     question: 'Which formats are available?',

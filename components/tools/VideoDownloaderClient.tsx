@@ -24,13 +24,25 @@ type DownloaderPageConfig = {
 }
 
 const SUPPORTED_VIDEO_PATTERNS = [
-  /(?:youtube\.com\/(?:watch|shorts)|youtu\.be\/)/i,
+  /(?:youtube\.com\/(?:watch|shorts|playlist|live)|youtu\.be\/)/i,
   /(?:tiktok\.com|vm\.tiktok\.com)\//i,
-  /instagram\.com\/(?:reel|p|tv|stories)\//i,
+  /instagram\.com\/(?:reel|p|tv|stories|stories\/highlights)\//i,
   /(?:twitter\.com|x\.com)\/.+\/status\//i,
   /vimeo\.com\//i,
   /(?:facebook\.com|fb\.watch)\//i,
   /dailymotion\.com\/video/i,
+  /(?:pinterest\.[a-z.]+\/pin\/|pin\.it\/)/i,
+  /(?:reddit\.com\/r\/.+\/comments\/|redd\.it\/)/i,
+  /snapchat\.com\/(?:spotlight|discover|story|add)\//i,
+  /linkedin\.com\/(?:posts|feed\/update|video)\//i,
+  /t\.me\/[a-z0-9_/-]+/i,
+  /(?:twitch\.tv\/(?:videos|clips)|clips\.twitch\.tv)\//i,
+  /(?:bilibili\.com\/video|b23\.tv\/)/i,
+  /(?:likee\.video|likee\.com)\//i,
+  /mxtakatak\.com\//i,
+  /(?:sharechat\.com|mojapp\.in)\//i,
+  /roposo\.com\//i,
+  /triller\.co\//i,
 ]
 
 function isSupportedVideoUrl(videoUrl: string) {
@@ -79,6 +91,15 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         platforms: ['Instagram'],
         categoryLabel: 'Instagram Tools',
       }
+    case 'instagram-post-downloader':
+      return {
+        title: 'Instagram Post Downloader',
+        subtitle: 'Save public Instagram posts, videos, carousel media, and image pins with a simple paste-first workflow.',
+        placeholder: 'Paste Instagram post URL',
+        buttonLabel: 'Fetch Post',
+        platforms: ['Instagram'],
+        categoryLabel: 'Instagram Tools',
+      }
     case 'instagram-reels-downloader':
       return {
         title: 'Instagram Reels Downloader',
@@ -88,9 +109,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         platforms: ['Instagram'],
         categoryLabel: 'Instagram Tools',
       }
-    case 'tiktok-downloader':
+    case 'tiktok-video-downloader':
       return {
-        title: 'TikTok Downloader',
+        title: 'TikTok Video Downloader',
         subtitle: 'Paste a TikTok link and save video, audio, or thumbnail downloads in one place.',
         placeholder: 'Paste TikTok video URL',
         buttonLabel: 'Fetch TikTok',
@@ -103,6 +124,15 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         subtitle: 'Fast shorts downloads with MP4, MP3, and thumbnail options that work well on mobile.',
         placeholder: 'Paste YouTube Shorts URL',
         buttonLabel: 'Fetch Short',
+        platforms: ['YouTube'],
+        categoryLabel: 'YouTube Tools',
+      }
+    case 'youtube-playlist-downloader':
+      return {
+        title: 'YouTube Playlist Downloader',
+        subtitle: 'Analyze public playlist links and fetch available media when the source supports it.',
+        placeholder: 'Paste YouTube playlist URL',
+        buttonLabel: 'Fetch Playlist',
         platforms: ['YouTube'],
         categoryLabel: 'YouTube Tools',
       }
@@ -124,6 +154,15 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         platforms: ['Facebook'],
         categoryLabel: 'Facebook Tools',
       }
+    case 'facebook-reels-downloader':
+      return {
+        title: 'Facebook Reels Downloader',
+        subtitle: 'Download public Facebook reels and accessible short-form video links with a compact save flow.',
+        placeholder: 'Paste Facebook reel URL',
+        buttonLabel: 'Fetch Reel',
+        platforms: ['Facebook'],
+        categoryLabel: 'Facebook Tools',
+      }
     case 'twitter-video-downloader':
       return {
         title: 'Twitter Video Downloader',
@@ -132,6 +171,24 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         buttonLabel: 'Fetch Tweet',
         platforms: ['Twitter / X'],
         categoryLabel: 'Twitter Tools',
+      }
+    case 'pinterest-video-downloader':
+      return {
+        title: 'Pinterest Video Downloader',
+        subtitle: 'Save public video pins, idea pins, and image pins without a busy downloader layout.',
+        placeholder: 'Paste Pinterest pin URL',
+        buttonLabel: 'Fetch Pin',
+        platforms: ['Pinterest'],
+        categoryLabel: 'Pinterest Tools',
+      }
+    case 'reddit-video-downloader':
+      return {
+        title: 'Reddit Video Downloader',
+        subtitle: 'Download public Reddit hosted videos, GIF posts, and supported embedded media.',
+        placeholder: 'Paste Reddit post URL',
+        buttonLabel: 'Fetch Reddit',
+        platforms: ['Reddit'],
+        categoryLabel: 'Reddit Tools',
       }
     case 'vimeo-video-downloader':
       return {
@@ -148,17 +205,107 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         subtitle: 'A neat downloader for Dailymotion links with quick format choices and clean mobile spacing.',
         placeholder: 'Paste Dailymotion video URL',
         buttonLabel: 'Fetch Video',
-        platforms: ['+ 1000 More'],
+        platforms: ['Dailymotion'],
         categoryLabel: 'Dailymotion Tools',
+      }
+    case 'snapchat-downloader':
+      return {
+        title: 'Snapchat Downloader',
+        subtitle: 'Fetch public Spotlight and story media when the content is accessible without login.',
+        placeholder: 'Paste Snapchat public URL',
+        buttonLabel: 'Fetch Snap',
+        platforms: ['Snapchat'],
+        categoryLabel: 'Snapchat Tools',
+      }
+    case 'linkedin-video-downloader':
+      return {
+        title: 'LinkedIn Video Downloader',
+        subtitle: 'Save public LinkedIn video posts and accessible recordings with a developer-clean workflow.',
+        placeholder: 'Paste LinkedIn video post URL',
+        buttonLabel: 'Fetch LinkedIn',
+        platforms: ['LinkedIn'],
+        categoryLabel: 'LinkedIn Tools',
+      }
+    case 'telegram-video-downloader':
+      return {
+        title: 'Telegram Video Downloader',
+        subtitle: 'Download public channel videos and media posts when the link is openly accessible.',
+        placeholder: 'Paste Telegram public post URL',
+        buttonLabel: 'Fetch Telegram',
+        platforms: ['Telegram'],
+        categoryLabel: 'Telegram Tools',
+      }
+    case 'twitch-clip-downloader':
+      return {
+        title: 'Twitch Clip Downloader',
+        subtitle: 'Fetch public Twitch clips, VOD links, and accessible stream media from one compact page.',
+        placeholder: 'Paste Twitch clip or VOD URL',
+        buttonLabel: 'Fetch Twitch',
+        platforms: ['Twitch'],
+        categoryLabel: 'Twitch Tools',
+      }
+    case 'bilibili-downloader':
+      return {
+        title: 'Bilibili Downloader',
+        subtitle: 'Download public Bilibili videos and supported stream media with quick format choices.',
+        placeholder: 'Paste Bilibili video URL',
+        buttonLabel: 'Fetch Bilibili',
+        platforms: ['Bilibili'],
+        categoryLabel: 'Bilibili Tools',
+      }
+    case 'likee-video-downloader':
+      return {
+        title: 'Likee Video Downloader',
+        subtitle: 'Save public Likee short videos with automatic URL detection and clean direct actions.',
+        placeholder: 'Paste Likee video URL',
+        buttonLabel: 'Fetch Likee',
+        platforms: ['Likee'],
+        categoryLabel: 'Likee Tools',
+      }
+    case 'mxtakatak-downloader':
+      return {
+        title: 'MX TakaTak Downloader',
+        subtitle: 'Download public MX TakaTak short videos when source media is available.',
+        placeholder: 'Paste MX TakaTak video URL',
+        buttonLabel: 'Fetch MX TakaTak',
+        platforms: ['MX TakaTak'],
+        categoryLabel: 'MX TakaTak Tools',
+      }
+    case 'sharechat-video-downloader':
+      return {
+        title: 'ShareChat Video Downloader',
+        subtitle: 'Save public ShareChat and Moj short videos in a lightweight mobile-first downloader.',
+        placeholder: 'Paste ShareChat or Moj video URL',
+        buttonLabel: 'Fetch Media',
+        platforms: ['ShareChat'],
+        categoryLabel: 'ShareChat Tools',
+      }
+    case 'roposo-video-downloader':
+      return {
+        title: 'Roposo Video Downloader',
+        subtitle: 'Download public Roposo short videos with a simple paste, preview, and save flow.',
+        placeholder: 'Paste Roposo video URL',
+        buttonLabel: 'Fetch Roposo',
+        platforms: ['Roposo'],
+        categoryLabel: 'Roposo Tools',
+      }
+    case 'triller-video-downloader':
+      return {
+        title: 'Triller Video Downloader',
+        subtitle: 'Save public Triller short videos using a clean stateless downloader workspace.',
+        placeholder: 'Paste Triller video URL',
+        buttonLabel: 'Fetch Triller',
+        platforms: ['Triller'],
+        categoryLabel: 'Triller Tools',
       }
     case 'all-in-one-video-downloader':
     default:
       return {
         title: 'All-in-One Video Downloader',
-        subtitle: 'Download videos from YouTube, TikTok, Instagram, X, Facebook, Vimeo, and more in one common downloader.',
+        subtitle: 'Download public videos from YouTube, TikTok, Instagram, X, Facebook, Pinterest, Reddit, Vimeo, and more in one common downloader.',
         placeholder: 'Paste any supported video URL',
         buttonLabel: 'Fetch Video',
-        platforms: ['YouTube', 'TikTok', 'Instagram', 'Twitter / X', 'Facebook', 'Vimeo', '+ 1000 More'],
+        platforms: ['YouTube', 'TikTok', 'Instagram', 'Twitter / X', 'Facebook', 'Pinterest', 'Reddit'],
         categoryLabel: 'Video Tools',
       }
   }

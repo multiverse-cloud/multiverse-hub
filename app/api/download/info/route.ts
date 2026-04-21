@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 
   if (!videoUrl) return err('Missing ?url= parameter')
   if (!isSupportedVideoUrl(videoUrl)) {
-    return err('URL not supported. Try YouTube, TikTok, Instagram, Twitter/X, Vimeo, Facebook or Dailymotion.')
+    return err('URL not supported. Try a public YouTube, Instagram, TikTok, Facebook, X, Pinterest, Reddit, Vimeo, Dailymotion, Twitch, Telegram, or similar supported media link.')
   }
 
   const ytDlpAvailable = isCommandAvailable(YTDLP_PATH)
@@ -60,6 +60,6 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    return err(`Could not fetch video info: ${(error as Error).message}`, 500)
+    return err('This content is private, protected, or unsupported.', 422)
   }
 }

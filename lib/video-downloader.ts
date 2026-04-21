@@ -88,13 +88,25 @@ interface VideoProfile {
 }
 
 const SUPPORTED_VIDEO_PATTERNS = [
-  /(?:youtube\.com\/(?:watch|shorts)|youtu\.be\/)/i,
+  /(?:youtube\.com\/(?:watch|shorts|playlist|live)|youtu\.be\/)/i,
   /(?:tiktok\.com|vm\.tiktok\.com)\//i,
-  /instagram\.com\/(?:reel|p|tv|stories)\//i,
+  /instagram\.com\/(?:reel|p|tv|stories|stories\/highlights)\//i,
   /(?:twitter\.com|x\.com)\/.+\/status\//i,
   /vimeo\.com\//i,
   /(?:facebook\.com|fb\.watch)\//i,
   /dailymotion\.com\/video/i,
+  /(?:pinterest\.[a-z.]+\/pin\/|pin\.it\/)/i,
+  /(?:reddit\.com\/r\/.+\/comments\/|redd\.it\/)/i,
+  /snapchat\.com\/(?:spotlight|discover|story|add)\//i,
+  /linkedin\.com\/(?:posts|feed\/update|video)\//i,
+  /t\.me\/[a-z0-9_/-]+/i,
+  /(?:twitch\.tv\/(?:videos|clips)|clips\.twitch\.tv)\//i,
+  /(?:bilibili\.com\/video|b23\.tv\/)/i,
+  /(?:likee\.video|likee\.com)\//i,
+  /mxtakatak\.com\//i,
+  /(?:sharechat\.com|mojapp\.in)\//i,
+  /roposo\.com\//i,
+  /triller\.co\//i,
 ]
 
 const DIRECT_PROTOCOL_BLOCKLIST = ['m3u8', 'dash', 'ism', 'f4m']
@@ -150,6 +162,18 @@ export function detectVideoPlatform(videoUrl: string, extractorKey?: string): st
   if (value.includes('facebook') || value.includes('fb.watch')) return 'Facebook'
   if (value.includes('vimeo')) return 'Vimeo'
   if (value.includes('dailymotion')) return 'Dailymotion'
+  if (value.includes('pinterest') || value.includes('pin.it')) return 'Pinterest'
+  if (value.includes('reddit') || value.includes('redd.it')) return 'Reddit'
+  if (value.includes('snapchat')) return 'Snapchat'
+  if (value.includes('linkedin')) return 'LinkedIn'
+  if (value.includes('t.me') || value.includes('telegram')) return 'Telegram'
+  if (value.includes('twitch')) return 'Twitch'
+  if (value.includes('bilibili') || value.includes('b23.tv')) return 'Bilibili'
+  if (value.includes('likee')) return 'Likee'
+  if (value.includes('mxtakatak')) return 'MX TakaTak'
+  if (value.includes('sharechat') || value.includes('mojapp')) return 'ShareChat'
+  if (value.includes('roposo')) return 'Roposo'
+  if (value.includes('triller')) return 'Triller'
 
   return 'Video'
 }

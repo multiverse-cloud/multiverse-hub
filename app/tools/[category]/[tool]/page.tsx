@@ -16,6 +16,7 @@ import { getLucideIcon } from "@/lib/icons";
 import { CALCULATOR_STUDIO_SLUGS } from "@/lib/calculator-studio";
 import { PDF_STUDIO_STATIC_CONTENT } from "@/lib/pdf-studio-content";
 import { getToolRuntimeStatus } from "@/lib/tool-runtime-status";
+import { getDownloaderRouteByToolSlug } from "@/lib/downloader-route-data";
 import { ACTIVE_CATEGORIES, resolveToolSlug, VIDEO_DOWNLOADER_TOOL_SLUGS, type Tool } from "@/lib/tools-data";
 import { getTools, getToolBySlug } from "@/lib/db";
 
@@ -193,6 +194,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!tool) return {};
 
   if (VIDEO_DOWNLOADER_TOOL_SLUGS.has(tool.slug)) {
+    const downloaderRoute = getDownloaderRouteByToolSlug(tool.slug);
+    const url = downloaderRoute
+      ? `https://multiverse-tools.vercel.app/${downloaderRoute.routeSlug}`
+      : `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`;
     return {
       title: `${tool.name} - Fast MP4, MP3 and HD downloads`,
       description:
@@ -205,6 +210,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         "instagram downloader",
         "tiktok downloader",
       ],
+      alternates: {
+        canonical: url,
+      },
+      openGraph: {
+        title: `${tool.name} - Fast public media downloader`,
+        description: tool.description,
+        type: "website",
+        url,
+        images: [
+          {
+            url: "https://multiverse-tools.vercel.app/og-tool.png",
+            width: 1200,
+            height: 630,
+            alt: tool.name,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${tool.name} - Fast public media downloader`,
+        description: tool.description,
+        images: ["https://multiverse-tools.vercel.app/og-tool.png"],
+      },
     };
   }
 
