@@ -1,6 +1,7 @@
 import 'server-only'
 
 import type { Tool } from '@/lib/tools-data'
+import { VIDEO_DOWNLOADER_TOOL_SLUGS } from '@/lib/tools-data'
 import { isCommandAvailable, YTDLP_PATH } from '@/lib/server-utils'
 
 export type ToolRuntimeStatus = {
@@ -26,13 +27,6 @@ const OPENROUTER_REQUIRED_SLUGS = new Set([
 const OPENAI_REQUIRED_SLUGS = new Set([
   'speech-to-text',
   'audio-text-to-speech',
-])
-
-const YTDLP_REQUIRED_SLUGS = new Set([
-  'all-in-one-video-downloader',
-  'tiktok-downloader',
-  'instagram-reels-downloader',
-  'youtube-shorts-downloader',
 ])
 
 function createStatus(
@@ -97,7 +91,7 @@ export function getToolRuntimeStatus(tool: Pick<Tool, 'slug' | 'categorySlug' | 
     )
   }
 
-  if (YTDLP_REQUIRED_SLUGS.has(tool.slug)) {
+  if (VIDEO_DOWNLOADER_TOOL_SLUGS.has(tool.slug)) {
     if (isCommandAvailable(YTDLP_PATH)) {
       return null
     }

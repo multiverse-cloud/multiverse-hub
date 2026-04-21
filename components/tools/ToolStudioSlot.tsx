@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import type { ComponentType } from 'react'
-import type { Tool } from '@/lib/tools-data'
+import { VIDEO_DOWNLOADER_TOOL_SLUGS, type Tool } from '@/lib/tools-data'
 import { CALCULATOR_STUDIO_SLUGS } from '@/lib/calculator-studio'
 
 type StudioComponent = ComponentType<{ tool: Tool }>
@@ -180,7 +180,7 @@ const FILE_STUDIO_SLUGS = new Set(['csv-viewer', 'json-file-viewer', 'zip-extrac
 const CALCULATOR_STUDIO_SLUGS_SET = new Set<string>(CALCULATOR_STUDIO_SLUGS)
 
 export default function ToolStudioSlot({ tool }: { tool: Tool }) {
-  if (tool.slug === 'all-in-one-video-downloader') return <VideoDownloaderClient tool={tool} />
+  if (VIDEO_DOWNLOADER_TOOL_SLUGS.has(tool.slug)) return <VideoDownloaderClient tool={tool} />
   if (PDF_STUDIO_COMPONENTS[tool.slug]) {
     const Studio = PDF_STUDIO_COMPONENTS[tool.slug]
     return <Studio tool={tool} />

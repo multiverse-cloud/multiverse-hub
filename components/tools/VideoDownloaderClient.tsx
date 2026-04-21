@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import type { DownloadOption } from '@/lib/video-downloader'
 import { PremiumPage } from '@/components/platform/premium/Surface'
@@ -13,6 +13,29 @@ import ToolBreadcrumb from '@/components/tools/ToolBreadcrumb'
 import ToolActions from '@/components/tools/ToolActions'
 import type { Tool } from '@/lib/tools-data'
 import type { DownloadState, VideoInfo } from '@/components/tools/downloader/types'
+
+type DownloaderPageConfig = {
+  title: string
+  subtitle: string
+  placeholder: string
+  buttonLabel: string
+  platforms: string[]
+  categoryLabel: string
+}
+
+const SUPPORTED_VIDEO_PATTERNS = [
+  /(?:youtube\.com\/(?:watch|shorts)|youtu\.be\/)/i,
+  /(?:tiktok\.com|vm\.tiktok\.com)\//i,
+  /instagram\.com\/(?:reel|p|tv|stories)\//i,
+  /(?:twitter\.com|x\.com)\/.+\/status\//i,
+  /vimeo\.com\//i,
+  /(?:facebook\.com|fb\.watch)\//i,
+  /dailymotion\.com\/video/i,
+]
+
+function isSupportedVideoUrl(videoUrl: string) {
+  return SUPPORTED_VIDEO_PATTERNS.some(pattern => pattern.test(videoUrl))
+}
 
 function getFilenameFromDisposition(disposition: string | null, fallback: string): string {
   if (!disposition) return fallback
@@ -31,17 +54,126 @@ function downloadBlob(blob: Blob, filename: string) {
   const anchor = document.createElement('a')
   anchor.href = blobUrl
   anchor.download = filename
+  anchor.rel = 'noopener'
   anchor.click()
   window.setTimeout(() => URL.revokeObjectURL(blobUrl), 1000)
 }
 
+function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
+  switch (tool?.slug) {
+    case 'instagram-video-downloader':
+      return {
+        title: 'Instagram Video Downloader',
+        subtitle: 'Paste an Instagram reel, post, story, or highlight link and download it in a compact mobile-friendly flow.',
+        placeholder: 'Paste Instagram reel, story, post, or highlight URL',
+        buttonLabel: 'Fetch Instagram',
+        platforms: ['Instagram'],
+        categoryLabel: 'Instagram Tools',
+      }
+    case 'instagram-story-downloader':
+      return {
+        title: 'Instagram Story Downloader',
+        subtitle: 'Quick story and highlight downloads with simple paste-and-save UX.',
+        placeholder: 'Paste Instagram story or highlight URL',
+        buttonLabel: 'Fetch Story',
+        platforms: ['Instagram'],
+        categoryLabel: 'Instagram Tools',
+      }
+    case 'instagram-reels-downloader':
+      return {
+        title: 'Instagram Reels Downloader',
+        subtitle: 'Download Instagram reels, posts, and short video links without a cluttered workflow.',
+        placeholder: 'Paste Instagram reel URL',
+        buttonLabel: 'Fetch Reel',
+        platforms: ['Instagram'],
+        categoryLabel: 'Instagram Tools',
+      }
+    case 'tiktok-downloader':
+      return {
+        title: 'TikTok Downloader',
+        subtitle: 'Paste a TikTok link and save video, audio, or thumbnail downloads in one place.',
+        placeholder: 'Paste TikTok video URL',
+        buttonLabel: 'Fetch TikTok',
+        platforms: ['TikTok'],
+        categoryLabel: 'TikTok Tools',
+      }
+    case 'youtube-shorts-downloader':
+      return {
+        title: 'YouTube Shorts Downloader',
+        subtitle: 'Fast shorts downloads with MP4, MP3, and thumbnail options that work well on mobile.',
+        placeholder: 'Paste YouTube Shorts URL',
+        buttonLabel: 'Fetch Short',
+        platforms: ['YouTube'],
+        categoryLabel: 'YouTube Tools',
+      }
+    case 'youtube-video-downloader':
+      return {
+        title: 'YouTube Video Downloader',
+        subtitle: 'Use one paste bar to grab YouTube video, audio, and thumbnail files with direct downloads.',
+        placeholder: 'Paste YouTube video URL',
+        buttonLabel: 'Fetch YouTube',
+        platforms: ['YouTube'],
+        categoryLabel: 'YouTube Tools',
+      }
+    case 'facebook-video-downloader':
+      return {
+        title: 'Facebook Video Downloader',
+        subtitle: 'Download Facebook videos and reels with a cleaner compact layout and attachment downloads.',
+        placeholder: 'Paste Facebook video or reel URL',
+        buttonLabel: 'Fetch Facebook',
+        platforms: ['Facebook'],
+        categoryLabel: 'Facebook Tools',
+      }
+    case 'twitter-video-downloader':
+      return {
+        title: 'Twitter Video Downloader',
+        subtitle: 'Save Twitter and X videos with a simple paste, fetch, and download flow.',
+        placeholder: 'Paste Twitter or X post URL',
+        buttonLabel: 'Fetch Tweet',
+        platforms: ['Twitter / X'],
+        categoryLabel: 'Twitter Tools',
+      }
+    case 'vimeo-video-downloader':
+      return {
+        title: 'Vimeo Video Downloader',
+        subtitle: 'Download Vimeo video, audio, and thumbnail files with a compact professional UI.',
+        placeholder: 'Paste Vimeo video URL',
+        buttonLabel: 'Fetch Vimeo',
+        platforms: ['Vimeo'],
+        categoryLabel: 'Vimeo Tools',
+      }
+    case 'dailymotion-video-downloader':
+      return {
+        title: 'Dailymotion Video Downloader',
+        subtitle: 'A neat downloader for Dailymotion links with quick format choices and clean mobile spacing.',
+        placeholder: 'Paste Dailymotion video URL',
+        buttonLabel: 'Fetch Video',
+        platforms: ['+ 1000 More'],
+        categoryLabel: 'Dailymotion Tools',
+      }
+    case 'all-in-one-video-downloader':
+    default:
+      return {
+        title: 'All-in-One Video Downloader',
+        subtitle: 'Download videos from YouTube, TikTok, Instagram, X, Facebook, Vimeo, and more in one common downloader.',
+        placeholder: 'Paste any supported video URL',
+        buttonLabel: 'Fetch Video',
+        platforms: ['YouTube', 'TikTok', 'Instagram', 'Twitter / X', 'Facebook', 'Vimeo', '+ 1000 More'],
+        categoryLabel: 'Video Tools',
+      }
+  }
+}
+
 export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
+  const config = useMemo(() => getDownloaderPageConfig(tool), [tool])
   const [url, setUrl] = useState('')
   const [info, setInfo] = useState<VideoInfo | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [downloadState, setDownloadState] = useState<DownloadState | null>(null)
-  const abortControllerRef = useRef<AbortController | null>(null)
+  const downloadAbortControllerRef = useRef<AbortController | null>(null)
+  const infoAbortControllerRef = useRef<AbortController | null>(null)
+  const lastAutoRequestedUrlRef = useRef('')
 
   const mp4Options = useMemo(
     () => info?.videoFormats.filter(option => option.ext === 'mp4') || [],
@@ -54,19 +186,28 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
 
   useEffect(() => {
     return () => {
-      abortControllerRef.current?.abort()
+      downloadAbortControllerRef.current?.abort()
+      infoAbortControllerRef.current?.abort()
     }
   }, [])
 
-  async function fetchInfo() {
-    if (!url.trim()) return
+  const fetchInfo = useCallback(async (nextUrl?: string) => {
+    const targetUrl = (nextUrl ?? url).trim()
+    if (!targetUrl) return
+
+    infoAbortControllerRef.current?.abort()
+    const controller = new AbortController()
+    infoAbortControllerRef.current = controller
 
     setLoading(true)
     setError('')
     setInfo(null)
+    lastAutoRequestedUrlRef.current = targetUrl
 
     try {
-      const res = await fetch(`/api/download/info?url=${encodeURIComponent(url)}`)
+      const res = await fetch(`/api/download/info?url=${encodeURIComponent(targetUrl)}`, {
+        signal: controller.signal,
+      })
       const data = await res.json()
 
       if (!res.ok) {
@@ -79,23 +220,40 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
         toast.error((data as VideoInfo).error as string)
       }
     } catch (requestError) {
+      if ((requestError as Error).name === 'AbortError') return
       setError(`Failed: ${(requestError as Error).message}`)
     } finally {
       setLoading(false)
     }
-  }
+  }, [url])
+
+  useEffect(() => {
+    const trimmedUrl = url.trim()
+
+    if (!trimmedUrl) {
+      setInfo(null)
+      setError('')
+      lastAutoRequestedUrlRef.current = ''
+      return
+    }
+
+    if (!isSupportedVideoUrl(trimmedUrl)) {
+      lastAutoRequestedUrlRef.current = ''
+      return
+    }
+
+    if (loading || trimmedUrl === lastAutoRequestedUrlRef.current) return
+
+    const timer = window.setTimeout(() => {
+      void fetchInfo(trimmedUrl)
+    }, 420)
+
+    return () => window.clearTimeout(timer)
+  }, [fetchInfo, loading, url])
 
   function clearDownloadState() {
-    abortControllerRef.current = null
+    downloadAbortControllerRef.current = null
     setDownloadState(null)
-  }
-
-  function triggerLink(href: string, direct = false) {
-    if (direct) {
-      const opened = window.open(href, '_blank', 'noopener,noreferrer')
-      if (opened) return
-    }
-    window.location.assign(href)
   }
 
   function getServerDownloadUrl(option: DownloadOption): string {
@@ -111,7 +269,7 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
 
   async function downloadFromServer(option: DownloadOption) {
     const controller = new AbortController()
-    abortControllerRef.current = controller
+    downloadAbortControllerRef.current = controller
 
     setDownloadState({ id: option.id, phase: 'preparing', progress: null })
 
@@ -173,18 +331,6 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
     setError('')
 
     try {
-      if (option.delivery === 'direct') {
-        if (!option.cdnUrl) {
-          setError('Download link unavailable. Refresh the result and try again.')
-          return
-        }
-
-        setDownloadState({ id: option.id, phase: 'opening', progress: null })
-        triggerLink(option.cdnUrl, true)
-        window.setTimeout(clearDownloadState, 1000)
-        return
-      }
-
       await downloadFromServer(option)
       setDownloadState({ id: option.id, phase: 'downloading', progress: 100 })
       toast.success('Download ready')
@@ -216,14 +362,14 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
 
   return (
     <PremiumPage>
-      <div className="mx-auto w-full max-w-7xl px-4 pt-8 sm:px-6 lg:px-6 md:pt-10">
-        <div className="mb-6 flex items-start justify-between gap-3">
+      <div className="mx-auto w-full max-w-7xl px-4 pt-6 sm:px-6 lg:px-6 md:pt-8">
+        <div className="mb-4 flex items-start justify-between gap-3">
           <ToolBreadcrumb
             className="mb-0 flex-1"
             items={[
               { label: 'All Tools', href: '/tools' },
-              { label: 'Video Tools', href: '/tools/video' },
-              { label: tool?.name || 'Video Downloader' },
+              { label: config.categoryLabel, href: '/tools/video' },
+              { label: tool?.name || config.title },
             ]}
           />
           {tool ? <ToolActions slug={tool.slug} name={tool.name} className="mb-0 shrink-0" /> : null}
@@ -234,12 +380,17 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
         url={url}
         loading={loading}
         hasResult={Boolean(info)}
+        title={config.title}
+        subtitle={config.subtitle}
+        platforms={config.platforms}
+        placeholder={config.placeholder}
+        buttonLabel={config.buttonLabel}
         onUrlChange={setUrl}
-        onAnalyze={fetchInfo}
+        onAnalyze={() => void fetchInfo()}
       />
 
       {error ? (
-        <div className="mx-auto -mt-4 max-w-5xl px-4 lg:px-6">
+        <div className="mx-auto -mt-2 max-w-5xl px-4 lg:px-6">
           <div className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700 shadow-sm">
             {error}
           </div>
@@ -259,9 +410,9 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
         />
       ) : null}
 
-      <DownloaderHowToSection />
-      <DownloaderFeaturesSection />
-      <DownloaderFaqSection />
+      <DownloaderHowToSection compact />
+      <DownloaderFeaturesSection compact />
+      <DownloaderFaqSection compact />
     </PremiumPage>
   )
 }

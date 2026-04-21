@@ -90,7 +90,7 @@ interface VideoProfile {
 const SUPPORTED_VIDEO_PATTERNS = [
   /(?:youtube\.com\/(?:watch|shorts)|youtu\.be\/)/i,
   /(?:tiktok\.com|vm\.tiktok\.com)\//i,
-  /instagram\.com\/(?:reel|p|tv)\//i,
+  /instagram\.com\/(?:reel|p|tv|stories)\//i,
   /(?:twitter\.com|x\.com)\/.+\/status\//i,
   /vimeo\.com\//i,
   /(?:facebook\.com|fb\.watch)\//i,

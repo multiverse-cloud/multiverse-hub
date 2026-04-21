@@ -11,13 +11,18 @@ import {
 import { cn } from "@/lib/utils";
 import { FAQ_ITEMS } from "./content";
 
-export default function DownloaderFaqSection() {
+export default function DownloaderFaqSection({
+  compact = false,
+}: {
+  compact?: boolean;
+}) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const items = FAQ_ITEMS.slice(0, compact ? 4 : FAQ_ITEMS.length);
 
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: FAQ_ITEMS.map((item) => ({
+    mainEntity: items.map((item) => ({
       "@type": "Question",
       name: item.question,
       acceptedAnswer: {
@@ -28,7 +33,7 @@ export default function DownloaderFaqSection() {
   };
 
   return (
-    <PremiumSection id="faq" className="py-20">
+    <PremiumSection id="faq" className={compact ? "py-10" : "py-20"}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
@@ -38,12 +43,12 @@ export default function DownloaderFaqSection() {
         <PremiumSectionHeader
           align="center"
           title="Frequently Asked Questions"
-          description="Common questions about downloading videos, audio, and thumbnails from YouTube, TikTok, Instagram, and more."
-          className="mb-12"
+          description="Common questions about downloading videos, audio, and thumbnails from supported platforms."
+          className={compact ? "mb-6" : "mb-12"}
         />
 
         <div className="space-y-3">
-          {FAQ_ITEMS.map((item, i) => {
+          {items.map((item, i) => {
             const isOpen = openIndex === i;
 
             return (
@@ -58,7 +63,7 @@ export default function DownloaderFaqSection() {
               >
                 <button
                   id={`faq-btn-${i}`}
-                  className="flex w-full items-center justify-between px-6 py-5 text-left text-sm font-semibold text-slate-950 transition-colors hover:text-indigo-600 dark:text-slate-50 dark:hover:text-indigo-400"
+                  className={compact ? "flex w-full items-center justify-between px-5 py-4 text-left text-sm font-semibold text-slate-950 transition-colors hover:text-indigo-600 dark:text-slate-50 dark:hover:text-indigo-400" : "flex w-full items-center justify-between px-6 py-5 text-left text-sm font-semibold text-slate-950 transition-colors hover:text-indigo-600 dark:text-slate-50 dark:hover:text-indigo-400"}
                   onClick={() => setOpenIndex(isOpen ? null : i)}
                   aria-expanded={isOpen}
                   aria-controls={`faq-answer-${i}`}
@@ -84,7 +89,7 @@ export default function DownloaderFaqSection() {
                   )}
                 >
                   <div className="overflow-hidden">
-                    <p className="border-t border-slate-100 px-6 pb-5 pt-4 text-sm leading-7 text-slate-500 dark:border-slate-800 dark:text-slate-400">
+                    <p className={compact ? "border-t border-slate-100 px-5 pb-4 pt-3 text-sm leading-6 text-slate-500 dark:border-slate-800 dark:text-slate-400" : "border-t border-slate-100 px-6 pb-5 pt-4 text-sm leading-7 text-slate-500 dark:border-slate-800 dark:text-slate-400"}>
                       {item.answer}
                     </p>
                   </div>

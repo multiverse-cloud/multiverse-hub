@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { startTransition, useDeferredValue, useEffect, useMemo, useState } from 'react'
-import { ChevronLeft, ChevronRight, Filter, Grid2X2, LayoutGrid, Search, SearchX, X } from 'lucide-react'
+import { ChevronDown, ChevronLeft, ChevronRight, Filter, Grid2X2, LayoutGrid, Search, SearchX, X } from 'lucide-react'
 import TemplateLivePreview from '@/components/templates/TemplateLivePreview'
 import type { TemplateCategoryId, TemplateEntry, TemplatePlatformId } from '@/lib/template-library-data'
 import { cn } from '@/lib/utils'
@@ -62,7 +62,7 @@ function TemplateCard({ template, large = false }: { template: TemplateEntry; la
       {/* Full-width desktop preview — scaled iframe */}
       <div className={cn(
         'relative overflow-hidden bg-[#eef2f7] dark:bg-slate-950',
-        large ? 'h-72' : 'h-52',
+        large ? 'h-80' : 'h-56',
       )}>
         <TemplateLivePreview template={template} compact className="rounded-none border-0 bg-transparent" />
         {/* Hover reveal overlay */}
@@ -71,7 +71,7 @@ function TemplateCard({ template, large = false }: { template: TemplateEntry; la
             href={`/templates/${template.slug}`}
             className="m-3 flex w-full items-center justify-center gap-2 rounded-xl bg-white/95 py-2.5 text-sm font-bold text-slate-900 shadow-lg backdrop-blur-sm transition-transform duration-300 group-hover:translate-y-0 translate-y-2"
           >
-            Preview Template →
+            Preview Template
           </Link>
         </div>
       </div>
@@ -101,6 +101,31 @@ function SkeletonCard() {
         <div className="h-4 w-2/3 rounded-full bg-slate-100 dark:bg-slate-800" />
         <div className="h-3 w-1/2 rounded-full bg-slate-100 dark:bg-slate-800" />
       </div>
+    </div>
+  )
+}
+
+function SortSelect({
+  value,
+  onChange,
+  className,
+}: {
+  value: SortMode
+  onChange: (value: SortMode) => void
+  className?: string
+}) {
+  return (
+    <div className={cn('relative', className)}>
+      <select
+        value={value}
+        onChange={event => onChange(event.target.value as SortMode)}
+        className="h-10 appearance-none rounded-xl border border-slate-200 bg-white px-3 pr-9 text-sm font-semibold text-slate-900 shadow-sm outline-none transition-colors hover:border-slate-300 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-slate-600"
+      >
+        <option value="newest">Newest First</option>
+        <option value="name-asc">A to Z</option>
+        <option value="name-desc">Z to A</option>
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
     </div>
   )
 }
@@ -356,7 +381,7 @@ export default function TemplatesHubPage({
 
       <main className="relative mx-auto flex max-w-[1600px] flex-col gap-8 px-4 pb-20 pt-8 lg:flex-row lg:items-start lg:px-6">
         {/* ─── Sidebar ─── */}
-        <aside className="hidden w-64 shrink-0 lg:sticky lg:top-24 lg:block xl:w-72">
+        <aside className="hidden w-64 shrink-0 self-start lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto xl:w-72">
           <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             {filterPanel}
           </div>
@@ -445,15 +470,11 @@ export default function TemplatesHubPage({
                 </div>
 
                 {/* Sort */}
-                <select
+                <SortSelect
                   value={sortMode}
-                  onChange={event => startTransition(() => { setSortMode(event.target.value as SortMode); setCurrentPage(1) })}
-                  className="hidden cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 sm:block"
-                >
-                  <option value="newest">Newest First</option>
-                  <option value="name-asc">A → Z</option>
-                  <option value="name-desc">Z → A</option>
-                </select>
+                  onChange={nextMode => startTransition(() => { setSortMode(nextMode); setCurrentPage(1) })}
+                  className="hidden sm:block"
+                />
               </div>
             </div>
           </div>
@@ -467,15 +488,11 @@ export default function TemplatesHubPage({
               )}
             </p>
             {/* Mobile sort */}
-            <select
+            <SortSelect
               value={sortMode}
-              onChange={event => startTransition(() => { setSortMode(event.target.value as SortMode); setCurrentPage(1) })}
-              className="cursor-pointer bg-transparent text-sm font-bold text-slate-900 outline-none dark:text-slate-100 sm:hidden"
-            >
-              <option value="newest">Newest</option>
-              <option value="name-asc">A–Z</option>
-              <option value="name-desc">Z–A</option>
-            </select>
+              onChange={nextMode => startTransition(() => { setSortMode(nextMode); setCurrentPage(1) })}
+              className="sm:hidden"
+            />
           </div>
 
           {/* ─── Grid ─── */}

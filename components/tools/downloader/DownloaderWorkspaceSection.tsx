@@ -200,11 +200,11 @@ export default function DownloaderWorkspaceSection({
   const thumbnailTone: GroupTone = "indigo";
 
   return (
-    <section className="bg-gradient-to-b from-slate-50 to-white pb-14 pt-3 dark:from-slate-900 dark:to-slate-950 md:pb-16 md:pt-4">
+    <section className="bg-gradient-to-b from-slate-50 to-white pb-10 pt-2 dark:from-slate-900 dark:to-slate-950 md:pb-12 md:pt-3">
       <PremiumContainer className="max-w-7xl px-4 sm:px-6">
         <div className="grid gap-4 lg:grid-cols-[1fr_1fr] lg:gap-5">
           {/* ── LEFT: Video Preview Card ── */}
-          <div className="flex flex-col rounded-[22px] border border-slate-200/70 bg-white p-3 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.18)] dark:border-slate-800 dark:bg-slate-900/95 dark:shadow-none sm:p-4 lg:p-5">
+          <div className="flex flex-col rounded-[22px] border border-slate-200/70 bg-white p-3 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.18)] dark:border-slate-800 dark:bg-slate-900/95 dark:shadow-none sm:p-4 lg:p-4">
             {/* Thumbnail */}
             <div className="relative aspect-video w-full overflow-hidden rounded-[14px] bg-slate-100 dark:bg-slate-950 sm:rounded-[18px]">
               <Image
@@ -212,7 +212,7 @@ export default function DownloaderWorkspaceSection({
                 alt={info.title}
                 fill
                 sizes="(max-width: 1023px) 100vw, 50vw"
-                className="object-cover"
+                className="object-cover object-center"
                 unoptimized
               />
               {/* Gradient overlay + play button */}
@@ -259,7 +259,7 @@ export default function DownloaderWorkspaceSection({
               </div>
 
               {/* Action buttons */}
-              <div className="mt-3.5 flex flex-wrap items-center gap-2 sm:mt-4 sm:gap-2.5">
+              <div className="mt-3 flex flex-wrap items-center gap-2 sm:mt-3.5 sm:gap-2.5">
                 {/* Copy link — prominent */}
                 <button
                   type="button"
@@ -285,7 +285,7 @@ export default function DownloaderWorkspaceSection({
           </div>
 
           {/* ── RIGHT: Download Options Card ── */}
-          <div className="rounded-[22px] border border-slate-200/70 bg-white p-3 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.16)] dark:border-slate-800 dark:bg-slate-900/95 dark:shadow-none sm:p-4 lg:p-5">
+          <div className="rounded-[22px] border border-slate-200/70 bg-white p-3 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.16)] dark:border-slate-800 dark:bg-slate-900/95 dark:shadow-none sm:p-4 lg:p-4">
             {/* Card header */}
             <div className="mb-3 sm:mb-4">
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500 sm:text-[11px]">

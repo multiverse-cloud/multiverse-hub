@@ -18,9 +18,18 @@ export default function MobileBottomNav() {
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const hideOnRoute =
+    !!pathname &&
+    (/^\/templates\/[^/]+$/.test(pathname) ||
+      /^\/ui\/[^/]+$/.test(pathname) ||
+      /^\/tools\/[^/]+\/[^/]+$/.test(pathname) ||
+      /^\/prompts\/[^/]+$/.test(pathname) ||
+      /^\/fixes\/[^/]+$/.test(pathname) ||
+      /^\/discover\/[^/]+$/.test(pathname));
 
   // Hide on scroll-down, show on scroll-up
   useEffect(() => {
+    if (hideOnRoute) return;
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       if (currentScrollY < 60) {
@@ -33,7 +42,9 @@ export default function MobileBottomNav() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, [hideOnRoute, lastScrollY]);
+
+  if (hideOnRoute) return null;
 
   return (
     <div
@@ -41,8 +52,8 @@ export default function MobileBottomNav() {
         // layout
         "fixed bottom-0 left-0 right-0 z-40 md:hidden",
         // background + border
-        "border-t border-slate-200/80 dark:border-slate-800/80",
-        "bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl",
+        "border-t border-slate-200/70 dark:border-slate-800/70",
+        "bg-white/92 dark:bg-slate-950/92 backdrop-blur-2xl",
         // show / hide animation
         "transition-transform duration-300 ease-in-out",
         isVisible ? "translate-y-0" : "translate-y-full",
@@ -50,7 +61,7 @@ export default function MobileBottomNav() {
       // iPhone notch / home-indicator safe area via inline style
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="flex items-stretch justify-around">
+      <div className="mx-auto flex max-w-xl items-stretch justify-around px-1.5">
         {BOTTOM_NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -63,7 +74,7 @@ export default function MobileBottomNav() {
               key={item.name}
               href={item.href}
               className={cn(
-                "relative flex flex-1 flex-col items-center justify-center gap-1 py-2 min-w-0",
+                "relative flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-2xl py-2.5",
                 "transition-colors duration-150 select-none",
                 isActive
                   ? "text-indigo-600 dark:text-indigo-400"
@@ -74,7 +85,7 @@ export default function MobileBottomNav() {
               <span
                 className={cn(
                   "absolute inset-x-3 top-0 h-[3px] rounded-b-full",
-                  "bg-gradient-to-r from-indigo-500 to-purple-500",
+                  "bg-indigo-500",
                   "transition-opacity duration-150",
                   isActive ? "opacity-100" : "opacity-0",
                 )}

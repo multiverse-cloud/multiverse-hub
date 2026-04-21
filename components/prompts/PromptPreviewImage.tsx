@@ -53,7 +53,7 @@ export default function PromptPreviewImage({
         referrerPolicy={isRemoteUrl(currentSrc) ? 'no-referrer' : undefined}
         className={cn(
           'absolute inset-0 h-full w-full',
-          imageFit === 'contain' ? 'object-contain' : 'object-cover',
+          imageFit === 'contain' ? 'object-contain object-center p-2' : 'object-cover object-center',
           loaded ? 'opacity-100' : 'opacity-0',
           'transition-opacity duration-200',
           imgClassName

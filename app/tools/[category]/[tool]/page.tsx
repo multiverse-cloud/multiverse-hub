@@ -16,7 +16,7 @@ import { getLucideIcon } from "@/lib/icons";
 import { CALCULATOR_STUDIO_SLUGS } from "@/lib/calculator-studio";
 import { PDF_STUDIO_STATIC_CONTENT } from "@/lib/pdf-studio-content";
 import { getToolRuntimeStatus } from "@/lib/tool-runtime-status";
-import { ACTIVE_CATEGORIES, type Tool } from "@/lib/tools-data";
+import { ACTIVE_CATEGORIES, VIDEO_DOWNLOADER_TOOL_SLUGS, type Tool } from "@/lib/tools-data";
 import { getTools, getToolBySlug } from "@/lib/db";
 
 interface Props {
@@ -192,16 +192,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tool = await getToolBySlug(toolSlug);
   if (!tool) return {};
 
-  if (tool.slug === "all-in-one-video-downloader") {
+  if (VIDEO_DOWNLOADER_TOOL_SLUGS.has(tool.slug)) {
     return {
-      title: "Video Downloader - MP4, WEBM, MP3, M4A and HD Thumbnail",
+      title: `${tool.name} - Fast MP4, MP3 and HD downloads`,
       description:
-        "Download MP4, WEBM, MP3, M4A and HD thumbnails from YouTube, TikTok, Instagram, Twitter/X, Vimeo and more.",
+        tool.description,
       keywords: [
         "video downloader",
-        "youtube downloader",
+        tool.name.toLowerCase(),
         "mp4 download",
         "mp3 converter",
+        "instagram downloader",
         "tiktok downloader",
       ],
     };
@@ -336,14 +337,7 @@ export default async function ToolPage({ params }: Props) {
 
   const combinedSchema = [schemaMarkup, breadcrumbSchema, faqSchema];
 
-  const DOWNLOADER_SLUGS = new Set([
-    "all-in-one-video-downloader",
-    "tiktok-downloader",
-    "instagram-reels-downloader",
-    "youtube-shorts-downloader",
-  ]);
-
-  if (DOWNLOADER_SLUGS.has(tool.slug)) {
+  if (VIDEO_DOWNLOADER_TOOL_SLUGS.has(tool.slug)) {
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />

@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { startTransition, useDeferredValue, useEffect, useMemo, useState } from 'react'
-import { ArrowUpRight, Boxes, Filter, Search, SearchX, X } from 'lucide-react'
+import { ArrowUpRight, Boxes, ChevronDown, Filter, Search, SearchX, X } from 'lucide-react'
 import {
   buildPreviewDoc,
   getEffectSlug,
@@ -267,6 +267,30 @@ function SkeletonCard() {
         <div className="h-3 w-20 animate-pulse rounded bg-slate-100 dark:bg-slate-900" />
         <div className="h-4 w-2/3 animate-pulse rounded bg-slate-100 dark:bg-slate-900" />
       </div>
+    </div>
+  )
+}
+
+function SortSelect({
+  value,
+  onChange,
+}: {
+  value: SortMode
+  onChange: (value: SortMode) => void
+}) {
+  return (
+    <div className="relative">
+      <select
+        value={value}
+        onChange={event => onChange(event.target.value as SortMode)}
+        className="h-10 appearance-none rounded-xl border border-slate-200 bg-white px-3 pr-9 text-sm font-semibold text-slate-900 shadow-sm outline-none transition-colors hover:border-slate-300 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-700"
+      >
+        <option value="featured">Featured First</option>
+        <option value="newest">Newest First</option>
+        <option value="name-asc">A to Z</option>
+        <option value="name-desc">Z to A</option>
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
     </div>
   )
 }
@@ -583,7 +607,7 @@ export default function CssEffectsLibraryClient({
         </div>
 
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
-          <aside className="hidden w-72 shrink-0 lg:sticky lg:top-24 lg:block">
+          <aside className="hidden w-72 shrink-0 self-start lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
             {FilterPanel}
           </aside>
 
@@ -656,22 +680,15 @@ export default function CssEffectsLibraryClient({
                 <span className="hidden text-xs font-bold uppercase tracking-widest text-slate-400 sm:block">
                   Sort by:
                 </span>
-                <select
+                <SortSelect
                   value={sortMode}
-                  onChange={event => {
-                    const nextMode = event.target.value as SortMode
+                  onChange={nextMode =>
                     startTransition(() => {
                       setSortMode(nextMode)
                       setVisibleCount(INITIAL_VISIBLE_COUNT)
                     })
-                  }}
-                  className="cursor-pointer bg-transparent text-sm font-bold text-slate-900 outline-none dark:text-slate-100"
-                >
-                  <option value="featured">Featured First</option>
-                  <option value="newest">Newest First</option>
-                  <option value="name-asc">A to Z</option>
-                  <option value="name-desc">Z to A</option>
-                </select>
+                  }
+                />
               </div>
             </div>
 
