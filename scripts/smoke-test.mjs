@@ -194,6 +194,22 @@ async function run() {
     contains: ['JSON to CSV'],
   })
 
+  await assertPage('/dev', {
+    contains: ['Developer Tools'],
+  })
+
+  await assertPage('/tools/dev/url-encoder-decoder', {
+    contains: ['URL Encoder'],
+  })
+
+  await assertPage('/tools/dev/js-minifier', {
+    contains: ['JS Minifier'],
+  })
+
+  await assertPage('/tools/dev/gitignore-generator', {
+    contains: ['.gitignore Generator'],
+  })
+
   await assertPage('/admin-login', {
     contains: ['Admin Authentication'],
   })

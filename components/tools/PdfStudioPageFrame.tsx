@@ -41,9 +41,9 @@ export default function PdfStudioPageFrame({
     <div className="premium-shell" data-tool-shell="true">
       <div className="mx-auto w-full max-w-7xl px-3 py-6 sm:px-6 sm:py-8 lg:px-6 lg:py-10">
         {/* Header row: breadcrumb + actions */}
-        <div className="mb-4 flex flex-col gap-2 sm:mb-6 sm:gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div className="mb-4 flex items-start justify-between gap-3 sm:mb-6">
           <ToolBreadcrumb
-            className="mb-0"
+            className="mb-0 flex-1"
             items={[
               { label: "All Tools", href: "/tools" },
               { label: tool.category, href: `/tools/${tool.categorySlug}` },
@@ -54,7 +54,7 @@ export default function PdfStudioPageFrame({
           <ToolActions
             slug={tool.slug}
             name={tool.name}
-            className="mb-0 w-full justify-start lg:w-auto lg:justify-end"
+            className="mb-0 shrink-0"
           />
         </div>
 

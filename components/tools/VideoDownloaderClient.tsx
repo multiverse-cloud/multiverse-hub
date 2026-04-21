@@ -217,16 +217,16 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
   return (
     <PremiumPage>
       <div className="mx-auto w-full max-w-7xl px-4 pt-8 sm:px-6 lg:px-6 md:pt-10">
-        <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div className="mb-6 flex items-start justify-between gap-3">
           <ToolBreadcrumb
-            className="mb-0"
+            className="mb-0 flex-1"
             items={[
               { label: 'All Tools', href: '/tools' },
               { label: 'Video Tools', href: '/tools/video' },
               { label: tool?.name || 'Video Downloader' },
             ]}
           />
-          {tool ? <ToolActions slug={tool.slug} name={tool.name} className="mb-0 w-full justify-start lg:w-auto lg:justify-end" /> : null}
+          {tool ? <ToolActions slug={tool.slug} name={tool.name} className="mb-0 shrink-0" /> : null}
         </div>
       </div>
 

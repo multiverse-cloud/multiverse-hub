@@ -29,11 +29,11 @@ export default function ToolBreadcrumb({
       aria-label="Breadcrumb"
       title={fullPathTitle}
       className={cn(
-        "flex items-center gap-0.5 sm:gap-1 text-xs sm:text-sm",
+        "flex min-w-0 max-w-full items-center gap-0.5 overflow-hidden text-xs sm:gap-1 sm:text-sm",
         className,
       )}
     >
-      <ol className="flex items-center gap-0.5 sm:gap-1 min-w-0">
+      <ol className="flex min-w-0 items-center gap-0.5 sm:gap-1">
         {/* ── First item ── */}
         <li className="flex items-center gap-0.5 sm:gap-1 min-w-0 shrink-0">
           {first.href ? (
@@ -114,7 +114,7 @@ export default function ToolBreadcrumb({
             />
             <span
               aria-current="page"
-              className="text-foreground font-medium truncate max-w-[140px] sm:max-w-none px-0.5"
+              className="truncate max-w-[min(42vw,180px)] px-0.5 font-medium text-foreground sm:max-w-none"
             >
               {last.label}
             </span>

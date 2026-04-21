@@ -23,13 +23,18 @@ const DEV_COPY = {
   'base64-encoder-decoder': { eyebrow: 'Encoding utility', title: 'Base64 Tool', summary: 'Encode plain text or decode Base64 instantly inside the same focused workspace.', badges: ['Encode', 'Decode', 'Instant output'], actionLabel: 'Process Base64' },
   'code-formatter': { eyebrow: 'Code cleanup', title: 'Code Formatter', summary: 'Reflow raw code into a cleaner readable block for quick review and copy.', badges: ['Readable output', 'Quick cleanup', 'Copy ready'], actionLabel: 'Format code' },
   'color-converter': { eyebrow: 'Color system', title: 'Color Converter', summary: 'Convert a single color between HEX, RGB, HSL, and quick CSS output.', badges: ['HEX, RGB, HSL', 'CSS ready', 'Fast convert'], actionLabel: 'Convert color' },
+  'cron-generator': { eyebrow: 'Schedule utility', title: 'Cron Generator', summary: 'Build and explain cron expressions for common scheduled jobs.', badges: ['Cron syntax', 'Next runs', 'Copy ready'], actionLabel: 'Generate cron' },
   'css-minifier': { eyebrow: 'Asset optimization', title: 'CSS Minifier', summary: 'Reduce stylesheet size and keep the compressed output ready for production use.', badges: ['Minify CSS', 'Savings stats', 'Production ready'], actionLabel: 'Minify CSS' },
+  'gradient-generator': { eyebrow: 'Design utility', title: 'Gradient Generator', summary: 'Create a polished CSS gradient snippet with ready-to-copy output.', badges: ['CSS gradient', 'Palette ready', 'Copy CSS'], actionLabel: 'Generate gradient' },
+  'gitignore-generator': { eyebrow: 'Repo setup', title: '.gitignore Generator', summary: 'Generate a clean .gitignore for common development stacks.', badges: ['Stack presets', 'Repo ready', 'Copy file'], actionLabel: 'Generate .gitignore' },
   'hash-generator': { eyebrow: 'Integrity utility', title: 'Hash Generator', summary: 'Generate common hashes quickly when you need verification or signing helpers.', badges: ['MD5 to SHA-512', 'Fast output', 'Copy ready'], actionLabel: 'Generate hashes' },
   'html-previewer': { eyebrow: 'Live render', title: 'HTML Previewer', summary: 'Preview markup in a clean render panel while keeping the raw source easy to edit.', badges: ['Live preview', 'Raw HTML', 'Quick checks'], actionLabel: 'Render preview' },
+  'js-minifier': { eyebrow: 'Asset optimization', title: 'JS Minifier', summary: 'Compress JavaScript into a smaller production-ready output.', badges: ['Minify JS', 'Smaller output', 'Copy ready'], actionLabel: 'Minify JS' },
   'json-formatter': { eyebrow: 'Structured data', title: 'JSON Formatter', summary: 'Beautify, validate, and review JSON with cleaner output and structure stats.', badges: ['Validate JSON', 'Beautify output', 'Minified copy'], actionLabel: 'Format JSON' },
   'jwt-decoder': { eyebrow: 'Token inspector', title: 'JWT Decoder', summary: 'Inspect header and payload data quickly without leaving the current workspace.', badges: ['Payload view', 'Header view', 'Expiry insight'], actionLabel: 'Decode token' },
   'regex-tester': { eyebrow: 'Pattern debugger', title: 'Regex Tester', summary: 'Test your expression, review matches, and inspect highlight output in one place.', badges: ['Pattern + flags', 'Match list', 'Debug output'], actionLabel: 'Test regex' },
   'sql-formatter': { eyebrow: 'Query cleanup', title: 'SQL Formatter', summary: 'Reformat long SQL queries into cleaner blocks that are easier to scan and share.', badges: ['Readable query', 'Keyword formatting', 'Copy ready'], actionLabel: 'Format SQL' },
+  'url-encoder-decoder': { eyebrow: 'URL utility', title: 'URL Encoder/Decoder', summary: 'Encode or decode URLs and components for safer links and API requests.', badges: ['Encode', 'Decode', 'URL safe'], actionLabel: 'Process URL' },
   'uuid-generator': { eyebrow: 'ID generator', title: 'UUID Generator', summary: 'Generate fresh UUID values in a compact utility flow with quick copy support.', badges: ['Multiple UUIDs', 'Instant output', 'Copy ready'], actionLabel: 'Generate UUIDs' },
   'css-gradient-generator': { eyebrow: 'Design utility', title: 'CSS Gradient Generator', summary: 'Create and preview beautiful CSS gradients with a live visual editor and copy-ready code.', badges: ['Linear & radial', 'Live preview', 'Copy CSS'], actionLabel: 'Generate gradient' },
   'html-to-markdown': { eyebrow: 'Format converter', title: 'HTML to Markdown', summary: 'Convert HTML markup into clean, readable Markdown for docs, README files, and notes.', badges: ['Clean output', 'Tags to Markdown', 'Copy ready'], actionLabel: 'Convert to Markdown' },
@@ -39,6 +44,15 @@ const DEV_COPY = {
 } as const
 
 type StudioResult = FileProcessResult
+
+const OPTIONAL_INPUT_DEV_SLUGS = new Set([
+  'uuid-generator',
+  'gradient-generator',
+  'gitignore-generator',
+  'cron-generator',
+  'css-gradient-generator',
+  'cron-expression-generator',
+])
 
 function formatCodeBlock(input: string) {
   const trimmed = input.trim()
@@ -66,8 +80,21 @@ function formatSql(input: string) {
   return output.replace(/\n{2,}/g, '\n').trim()
 }
 
+function getDevInputValue(slug: string, input: string) {
+  if (input.trim()) return input
+  if (slug === 'cron-generator') return '0 9 * * 1-5'
+  if (slug === 'gitignore-generator') return 'node next env macos'
+  return input
+}
+
 export default function DevStudio({ tool }: { tool: Tool }) {
-  const copy = DEV_COPY[tool.slug as keyof typeof DEV_COPY]
+  const copy = DEV_COPY[tool.slug as keyof typeof DEV_COPY] || {
+    eyebrow: 'Developer utility',
+    title: tool.name,
+    summary: tool.description,
+    badges: ['Fast output', 'Copy ready', 'No login'],
+    actionLabel: 'Process',
+  }
   const [inputText, setInputText] = useState(tool.slug === 'api-tester' ? 'https://api.example.com/health' : '')
   const [result, setResult] = useState<StudioResult | null>(null)
   const [error, setError] = useState('')
@@ -115,7 +142,7 @@ export default function DevStudio({ tool }: { tool: Tool }) {
     setError('')
     setResult(null)
     setHtmlPreview('')
-    if (tool.slug !== 'uuid-generator' && !inputText.trim()) {
+    if (!OPTIONAL_INPUT_DEV_SLUGS.has(tool.slug) && !inputText.trim()) {
       setError('Enter your input before processing.')
       return
     }
@@ -233,7 +260,7 @@ export default function DevStudio({ tool }: { tool: Tool }) {
         return
       }
 
-      const next = await handleDevTool(tool.slug, inputText, {
+      const next = await handleDevTool(tool.slug, getDevInputValue(tool.slug, inputText), {
         ...(tool.slug === 'regex-tester' ? { pattern: regexPattern, flags: regexFlags } : {}),
         ...(tool.slug === 'api-tester' ? { method: apiMethod, headers: apiHeaders.split('\n').filter(Boolean).reduce<Record<string, string>>((acc, line) => {
           const separator = line.indexOf(':')

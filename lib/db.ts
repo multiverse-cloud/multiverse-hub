@@ -63,11 +63,13 @@ function getNormalizedLocalTools() {
   return TOOLS.map(tool => normalizeTool(tool, tool.id)).filter((tool): tool is Tool => Boolean(tool))
 }
 
+const TOOL_CACHE_VERSION = `${TOOLS.length}:${TOOLS.map(tool => tool.slug).join('|')}`
+
 export const getTools = unstable_cache(
   async (): Promise<Tool[]> => {
     return getNormalizedLocalTools()
   },
-  ['all-tools-cache'],
+  ['all-tools-cache-v2', TOOL_CACHE_VERSION],
   { revalidate: 3600, tags: ['tools'] }
 )
 
@@ -76,7 +78,7 @@ export const getToolBySlug = unstable_cache(
     const tools = await getTools()
     return tools.find(tool => tool.slug === slug) || null
   },
-  ['tool-by-slug-cache'],
+  ['tool-by-slug-cache-v2', TOOL_CACHE_VERSION],
   { revalidate: 3600, tags: ['tools'] }
 )
 
@@ -85,7 +87,7 @@ export const getToolsByCategory = unstable_cache(
     const tools = await getTools()
     return tools.filter(tool => tool.categorySlug === categorySlug)
   },
-  ['tools-by-category-cache'],
+  ['tools-by-category-cache-v2', TOOL_CACHE_VERSION],
   { revalidate: 3600, tags: ['tools'] }
 )
 

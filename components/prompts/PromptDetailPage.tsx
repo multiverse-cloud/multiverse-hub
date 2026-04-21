@@ -51,11 +51,12 @@ export default function PromptDetailPage({
 
             <div className="min-w-0 xl:sticky xl:top-24">
               <div className="overflow-hidden rounded-xl border border-border bg-card">
-                <div className="relative aspect-[4/3] bg-slate-100 dark:bg-slate-900">
+                <div className="relative aspect-[16/10] bg-white dark:bg-slate-950">
                   <PromptPreviewImage
                     src={prompt.previewImage}
                     alt={prompt.previewAlt}
                     category={prompt.category}
+                    imageFit="contain"
                   />
                 </div>
                 <div className="flex flex-wrap items-center gap-3 px-4 py-4">
@@ -168,11 +169,12 @@ export default function PromptDetailPage({
                   href={`/prompts/${related.slug}`}
                   className="overflow-hidden rounded-xl border border-border bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_16px_40px_-24px_rgba(15,23,42,0.16)] dark:hover:border-slate-700"
                 >
-                  <div className="relative aspect-[16/10] bg-slate-100 dark:bg-slate-900">
+                  <div className="relative aspect-[16/10] bg-white dark:bg-slate-950">
                     <PromptPreviewImage
                       src={related.previewImage}
                       alt={related.previewAlt}
                       category={related.category}
+                      imageFit="contain"
                     />
                   </div>
                   <div className="space-y-2 px-4 py-3">

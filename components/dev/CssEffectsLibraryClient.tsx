@@ -175,22 +175,29 @@ function EffectPreview({
   effect: UiCatalogItem
   compact?: boolean
 }) {
+  const [loaded, setLoaded] = useState(effect.kind === 'source')
   const previewDoc = useMemo(() => {
     if (effect.kind === 'source') return null
     if (compact) return effect.previewDocument || buildCompactPreviewDoc(effect)
     return buildPreviewDoc(effect)
   }, [compact, effect])
 
+  useEffect(() => {
+    setLoaded(effect.kind === 'source')
+  }, [effect.id, effect.kind, previewDoc])
+
   return effect.kind === 'source' ? (
     <SourceUiPreview previewKey={effect.previewKey} compact={compact} />
   ) : compact && effect.previewDocument ? (
-    <div className="flex h-full w-full items-start justify-center overflow-hidden bg-white">
+    <div className="relative flex h-full w-full items-start justify-center overflow-hidden bg-white">
+      {!loaded ? <div className="absolute inset-0 animate-pulse bg-slate-100" /> : null}
       <iframe
         title={`${effect.title} preview`}
         srcDoc={previewDoc || ''}
         className="border-0 bg-white"
         sandbox="allow-scripts"
         loading="lazy"
+        onLoad={() => setLoaded(true)}
         style={{
           width: `${100 / getCompactDocumentScale(effect)}%`,
           height: `${100 / getCompactDocumentScale(effect)}%`,
@@ -202,13 +209,17 @@ function EffectPreview({
       />
     </div>
   ) : (
-    <iframe
-      title={`${effect.title} preview`}
-      srcDoc={previewDoc || ''}
-      className="h-full w-full border-0 bg-white"
-      sandbox="allow-scripts"
-      loading="lazy"
-    />
+    <div className="relative h-full w-full bg-white">
+      {!loaded ? <div className="absolute inset-0 animate-pulse bg-slate-100" /> : null}
+      <iframe
+        title={`${effect.title} preview`}
+        srcDoc={previewDoc || ''}
+        className="h-full w-full border-0 bg-white"
+        sandbox="allow-scripts"
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+      />
+    </div>
   )
 }
 

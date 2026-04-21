@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import type { TemplateCategoryId, TemplateEntry } from '@/lib/template-library-data'
 import { cn } from '@/lib/utils'
 
@@ -249,6 +250,11 @@ export default function TemplateLivePreview({
   reloadToken?: number
 }) {
   const ratio = template.category === 'mobile' ? 'aspect-[10/16]' : compact ? 'aspect-[4/3]' : 'aspect-[16/10]'
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    setLoaded(false)
+  }, [reloadToken, template.slug, viewport])
 
   if (template.previewHtml) {
     const viewportWidth =
@@ -261,6 +267,7 @@ export default function TemplateLivePreview({
       return (
         <div className={cn('h-full w-full overflow-hidden bg-[#eef2f7]', className)}>
           <div className="relative h-full w-full overflow-hidden">
+            {!loaded ? <div className="absolute inset-0 animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
             <iframe
               key={`${template.slug}-compact-${reloadToken}`}
               title={`${template.title} compact preview`}
@@ -269,6 +276,7 @@ export default function TemplateLivePreview({
               loading="lazy"
               sandbox="allow-scripts"
               scrolling="no"
+              onLoad={() => setLoaded(true)}
               style={{
                 width: `${DESKTOP_WIDTH}px`,
                 height: `${DESKTOP_WIDTH * 0.7}px`,
@@ -295,7 +303,8 @@ export default function TemplateLivePreview({
     return (
       <div className={cn('overflow-hidden rounded-xl border border-border bg-white', ratio, className)}>
         <div className="flex h-full w-full items-start justify-center bg-[#eef2f7] p-3">
-          <div className={cn('h-full overflow-hidden rounded-lg bg-white shadow-[0_20px_40px_-28px_rgba(15,23,42,0.28)]', viewportWidth)}>
+          <div className={cn('relative h-full overflow-hidden rounded-lg bg-white shadow-[0_20px_40px_-28px_rgba(15,23,42,0.28)]', viewportWidth)}>
+            {!loaded ? <div className="absolute inset-0 animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
             <iframe
               key={`${template.slug}-${viewport}-${reloadToken}`}
               title={`${template.title} live preview`}
@@ -304,6 +313,7 @@ export default function TemplateLivePreview({
               loading="lazy"
               sandbox="allow-scripts"
               scrolling="no"
+              onLoad={() => setLoaded(true)}
             />
           </div>
         </div>

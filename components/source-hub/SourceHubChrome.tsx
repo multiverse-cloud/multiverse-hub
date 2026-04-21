@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 function LoaderMarkup() {
   return (
@@ -41,58 +41,52 @@ function LoaderMarkup() {
 
 export default function SourceHubChrome() {
   const pathname = usePathname();
-  const [visible, setVisible] = useState(true);
-  const [booted, setBooted] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const hideTimerRef = useRef<number | null>(null);
+  const fallbackTimerRef = useRef<number | null>(null);
+  const navigationPendingRef = useRef(false);
 
-  const hideLoader = useMemo(
-    () =>
-      (delay = 520) => {
-        window.clearTimeout(
-          (window as Window & { __sourceHubLoaderTimer?: number })
-            .__sourceHubLoaderTimer,
-        );
-        (
-          window as Window & { __sourceHubLoaderTimer?: number }
-        ).__sourceHubLoaderTimer = window.setTimeout(() => {
-          setVisible(false);
-        }, delay);
-      },
-    [],
-  );
+  const clearTimer = useCallback((timer: number | null) => {
+    if (timer !== null) window.clearTimeout(timer);
+  }, []);
 
-  const showLoader = useMemo(
-    () => () => {
-      setVisible(true);
+  const hideLoader = useCallback(
+    (delay = 420) => {
+      clearTimer(hideTimerRef.current);
+      hideTimerRef.current = window.setTimeout(() => {
+        navigationPendingRef.current = false;
+        setVisible(false);
+      }, delay);
     },
-    [],
+    [clearTimer],
   );
+
+  const showLoader = useCallback(() => {
+    clearTimer(hideTimerRef.current);
+    clearTimer(fallbackTimerRef.current);
+    navigationPendingRef.current = true;
+    setVisible(true);
+    fallbackTimerRef.current = window.setTimeout(() => hideLoader(0), 5000);
+  }, [clearTimer, hideLoader]);
 
   useEffect(() => {
-    function finishBoot() {
-      setBooted(true);
-      hideLoader(1050);
+    function finishNavigation() {
+      hideLoader(120);
     }
 
-    if (document.readyState === "complete") {
-      finishBoot();
-      return;
-    }
-
-    const fallback = window.setTimeout(finishBoot, 2200);
-    window.addEventListener("load", finishBoot, { once: true });
-    window.addEventListener("pageshow", finishBoot, { once: true });
+    window.addEventListener("pageshow", finishNavigation);
 
     return () => {
-      window.clearTimeout(fallback);
-      window.removeEventListener("load", finishBoot);
-      window.removeEventListener("pageshow", finishBoot);
+      clearTimer(hideTimerRef.current);
+      clearTimer(fallbackTimerRef.current);
+      window.removeEventListener("pageshow", finishNavigation);
     };
-  }, [hideLoader]);
+  }, [clearTimer, hideLoader]);
 
   useEffect(() => {
-    if (!booted || !visible) return;
-    hideLoader(900);
-  }, [pathname, booted, visible, hideLoader]);
+    if (!navigationPendingRef.current) return;
+    hideLoader(360);
+  }, [pathname, hideLoader]);
 
   useEffect(() => {
     function handleManualLoader() {
@@ -121,12 +115,8 @@ export default function SourceHubChrome() {
       try {
         const nextUrl = new URL(link.href, window.location.origin);
         if (nextUrl.origin !== window.location.origin) return;
-        if (
-          nextUrl.pathname === window.location.pathname &&
-          nextUrl.search === window.location.search
-        )
-          return;
         if (link.closest('[data-no-loader="true"]')) return;
+        if (nextUrl.pathname === window.location.pathname) return;
         showLoader();
       } catch {}
     }

@@ -64,6 +64,9 @@ export default function MobileBreadcrumb({
   // Don't render on homepage or single-segment paths
   if (segments.length < 2) return null;
 
+  // Tool pages render their own compact breadcrumb next to the share action.
+  if (segments[0] === "tools") return null;
+
   // Build full crumb list: Home + each segment
   const allCrumbs: BreadcrumbItem[] = [{ label: "Home", href: "/" }];
 

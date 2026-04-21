@@ -21,9 +21,9 @@ export default function VideoStudioPageFrame({
   return (
     <div className="premium-shell" data-tool-shell="true">
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-6 md:py-10">
-        <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div className="mb-6 flex items-start justify-between gap-3">
           <ToolBreadcrumb
-            className="mb-0"
+            className="mb-0 flex-1"
             items={[
               { label: 'All Tools', href: '/tools' },
               { label: tool.category, href: `/tools/${tool.categorySlug}` },
@@ -31,7 +31,7 @@ export default function VideoStudioPageFrame({
             ]}
           />
 
-          <ToolActions slug={tool.slug} name={tool.name} className="mb-0 w-full justify-start lg:w-auto lg:justify-end" />
+          <ToolActions slug={tool.slug} name={tool.name} className="mb-0 shrink-0" />
         </div>
         <ToolRuntimeBanner status={runtimeStatus || null} />
 
