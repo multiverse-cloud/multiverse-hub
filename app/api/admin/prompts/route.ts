@@ -16,6 +16,14 @@ type AdminPromptsResponse = {
   summary?: PromptImportSummary
 }
 
+type AdminPromptsRequestBody = {
+  action?: string
+  payload?: unknown
+  rawJson?: string
+  replaceExisting?: boolean
+  prompt?: PromptEntry
+}
+
 function jsonError(error: string, status: number, code?: string, details?: string) {
   return NextResponse.json(
     {
@@ -69,7 +77,7 @@ export async function POST(request: NextRequest) {
 
     if (blocked) return blocked
 
-    const body = await request.json()
+    const body = (await request.json()) as AdminPromptsRequestBody
 
     if (body?.action === 'import-json') {
       let payload = body?.payload as unknown

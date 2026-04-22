@@ -19,12 +19,38 @@ function absolutizeUrl(value: string, base: URL): string {
 export const runtime = 'nodejs'
 export const maxDuration = 30
 
+type SeoToolOptions = {
+  [key: string]: unknown
+  title?: string
+  description?: string
+  keywords?: string
+  url?: string
+  author?: string
+  type?: string
+  sitemapUrl?: string
+  disallowed?: string[]
+  crawlDelay?: string | number
+  baseUrl?: string
+  paths?: string[] | string
+  name?: string
+  brand?: string
+  price?: string | number
+  currency?: string
+  date?: string
+  publisher?: string
+}
+
+type SeoToolRequestBody = {
+  input?: string
+  options?: SeoToolOptions
+}
+
 export async function POST(req: NextRequest) {
   const url = new URL(req.url)
   const action = url.searchParams.get('action') || 'meta-tags'
 
   try {
-    const body = await req.json()
+    const body = (await req.json()) as SeoToolRequestBody
     const { input = '', options = {} } = body
 
     // ── Meta tag generator ──────────────────────────────────

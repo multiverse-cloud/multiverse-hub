@@ -10,6 +10,15 @@ import {
 import { parseDiscoverImportPayload } from '@/lib/discover-import'
 import type { DiscoverList } from '@/lib/discover-data'
 
+type AdminDiscoverRequestBody = {
+  action?: string
+  payload?: unknown
+  rawJson?: string
+  publishImported?: boolean
+  replaceExisting?: boolean
+  list?: DiscoverList
+}
+
 function normalizeTopic(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
 }
@@ -98,7 +107,7 @@ export async function POST(request: NextRequest) {
 
     if (blocked) return blocked
 
-    const body = await request.json()
+    const body = (await request.json()) as AdminDiscoverRequestBody
 
     if (body?.action === 'seed') {
       const result = await seedLocalDiscoverLists()
@@ -200,7 +209,7 @@ export async function PATCH(request: NextRequest) {
 
     if (blocked) return blocked
 
-    const body = await request.json()
+    const body = (await request.json()) as AdminDiscoverRequestBody
     const list = body?.list as DiscoverList | undefined
 
     if (!list) {

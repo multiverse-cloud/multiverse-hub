@@ -15,6 +15,14 @@ export type UiCatalogItem = {
   previewKey?: string
   publishedAt?: string
   featured?: boolean
+  provider?: string
+  frameworkLabel?: string
+  collection?: string
+  collectionLabel?: string
+  variantLabel?: string
+  darkVariant?: boolean
+  plugins?: string[]
+  license?: string
 }
 
 const source = (item: Omit<UiCatalogItem, 'kind' | 'cssCode' | 'htmlCode' | 'previewClass'>): UiCatalogItem => ({

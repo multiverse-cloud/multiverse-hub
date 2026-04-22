@@ -1,6 +1,7 @@
 import { cssEffects, categories as rawCategories, type CSSEffect } from '@/lib/css-effects-data'
 import { sourceUiComponents, type UiCatalogItem } from '@/lib/ui-source-components'
 import importedUiStore from '@/data/ui-imported-store.json'
+import hyperuiStore from '@/data/hyperui-components.json'
 import { slugify } from '@/lib/utils'
 
 export type { UiCatalogItem } from '@/lib/ui-source-components'
@@ -34,10 +35,11 @@ const CATEGORY_PRIORITY = [
 
 const CATEGORY_PRIORITY_INDEX = new Map<string, number>(CATEGORY_PRIORITY.map((category, index) => [category, index]))
 const importedUiEffects = (Array.isArray(importedUiStore.items) ? importedUiStore.items : []) as UiCatalogItem[]
+const hyperuiEffects = (Array.isArray(hyperuiStore.items) ? hyperuiStore.items : []) as UiCatalogItem[]
 const TARGET_TOTAL_ITEMS = 500
 const TARGET_GENERATED_COUNT = Math.max(
   0,
-  TARGET_TOTAL_ITEMS - sourceUiComponents.length - importedUiEffects.length
+  TARGET_TOTAL_ITEMS - sourceUiComponents.length - importedUiEffects.length - hyperuiEffects.length
 )
 
 export const generatedUiEffects = [...cssEffects]
@@ -48,7 +50,7 @@ export const generatedUiEffects = [...cssEffects]
   })
   .slice(0, TARGET_GENERATED_COUNT)
 
-export const uiEffects: UiCatalogItem[] = [...sourceUiComponents, ...importedUiEffects, ...generatedUiEffects]
+export const uiEffects: UiCatalogItem[] = [...sourceUiComponents, ...hyperuiEffects, ...importedUiEffects, ...generatedUiEffects]
 
 export type LibraryCategory = {
   id: string
@@ -112,6 +114,58 @@ const CATEGORY_SECTION_MAP: Record<string, Exclude<UiSectionId, 'all'>> = {
   card: 'components',
   layout: 'components',
   badge: 'components',
+  accordions: 'components',
+  alerts: 'components',
+  announcements: 'components',
+  banners: 'components',
+  breadcrumbs: 'components',
+  'blog-cards': 'components',
+  'button-groups': 'components',
+  buttons: 'components',
+  cards: 'components',
+  carts: 'components',
+  checkboxes: 'components',
+  'contact-forms': 'components',
+  ctas: 'components',
+  'details-list': 'components',
+  dividers: 'components',
+  dropdown: 'components',
+  'empty-content': 'components',
+  'empty-states': 'components',
+  faqs: 'components',
+  'feature-grids': 'components',
+  'file-uploaders': 'components',
+  filters: 'components',
+  footers: 'components',
+  grids: 'components',
+  headers: 'components',
+  inputs: 'components',
+  'logo-clouds': 'components',
+  loaders: 'components',
+  media: 'components',
+  modals: 'components',
+  'newsletter-signup': 'components',
+  pagination: 'components',
+  polls: 'components',
+  'product-cards': 'components',
+  'product-collections': 'components',
+  'progress-bars': 'components',
+  'quantity-inputs': 'components',
+  'radio-groups': 'components',
+  'range-inputs': 'components',
+  sections: 'components',
+  selects: 'components',
+  'side-menu': 'components',
+  'skip-links': 'components',
+  steps: 'components',
+  tables: 'components',
+  tabs: 'components',
+  'team-sections': 'components',
+  textareas: 'components',
+  timelines: 'components',
+  toasts: 'components',
+  toggles: 'components',
+  'vertical-menu': 'components',
   text: 'foundations',
   loading: 'foundations',
   background: 'foundations',
@@ -155,6 +209,58 @@ const CATEGORY_LABEL_OVERRIDES: Record<string, string> = {
   button: 'Buttons',
   notification: 'Badges',
   badge: 'Badges',
+  accordions: 'Accordions',
+  alerts: 'Alerts',
+  announcements: 'Announcements',
+  banners: 'Banners',
+  breadcrumbs: 'Breadcrumbs',
+  'blog-cards': 'Blog Cards',
+  'button-groups': 'Button Groups',
+  buttons: 'Buttons',
+  cards: 'Cards',
+  carts: 'Carts',
+  checkboxes: 'Checkboxes',
+  'contact-forms': 'Contact Forms',
+  ctas: 'CTA Sections',
+  'details-list': 'Details Lists',
+  dividers: 'Dividers',
+  dropdown: 'Dropdowns',
+  'empty-content': 'Empty Content',
+  'empty-states': 'Empty States',
+  faqs: 'FAQs',
+  'feature-grids': 'Feature Grids',
+  'file-uploaders': 'File Uploaders',
+  filters: 'Filters',
+  footers: 'Footers',
+  grids: 'Grids',
+  headers: 'Headers',
+  inputs: 'Inputs',
+  'logo-clouds': 'Logo Clouds',
+  loaders: 'Loaders',
+  media: 'Media',
+  modals: 'Modals',
+  'newsletter-signup': 'Newsletter Signup',
+  pagination: 'Pagination',
+  polls: 'Polls',
+  'product-cards': 'Product Cards',
+  'product-collections': 'Product Collections',
+  'progress-bars': 'Progress Bars',
+  'quantity-inputs': 'Quantity Inputs',
+  'radio-groups': 'Radio Groups',
+  'range-inputs': 'Range Inputs',
+  sections: 'Sections',
+  selects: 'Selects',
+  'side-menu': 'Side Menu',
+  'skip-links': 'Skip Links',
+  steps: 'Steps',
+  tables: 'Tables',
+  tabs: 'Tabs',
+  'team-sections': 'Team Sections',
+  textareas: 'Textareas',
+  timelines: 'Timelines',
+  toasts: 'Toasts',
+  toggles: 'Toggles',
+  'vertical-menu': 'Vertical Menu',
   checkbox: 'Checkboxes',
   radio: 'Radios',
   toggle: 'Checkboxes & Toggles',

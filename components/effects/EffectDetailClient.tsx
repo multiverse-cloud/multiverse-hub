@@ -7,12 +7,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft, Check, Copy, FileCode, Monitor, RotateCw, Share2 } from 'lucide-react'
 import {
   buildPlaygroundSnippet,
-  buildPreviewDoc,
   buildReactSnippet,
   buildTailwindStarter,
   getEffectSlug,
-  type UiCatalogItem,
-} from '@/lib/css-effects-library'
+} from '@/lib/ui-code-snippets'
+import type { UiCatalogItem } from '@/lib/ui-source-components'
 import { cn, copyToClipboard } from '@/lib/utils'
 import { trackUiCopy, trackUiView } from '@/lib/ui-engagement'
 
@@ -30,6 +29,18 @@ const SourceUiPreview = dynamic(() => import('@/components/ui-source/SourceUiPre
 })
 
 function getPreviewViewportClass(effect: UiCatalogItem) {
+  if (effect.provider === 'hyperui') {
+    if (['headers', 'footers', 'feature-grids', 'contact-forms', 'pricing', 'product-collections', 'team-sections', 'tables', 'side-menu', 'vertical-menu'].includes(effect.category)) {
+      return 'w-full max-w-[1120px] h-[min(62vh,620px)] min-h-[360px]'
+    }
+
+    if (['buttons', 'badges', 'breadcrumbs', 'button-groups', 'checkboxes', 'radio-groups', 'toggles', 'pagination', 'loaders', 'progress-bars', 'tabs'].includes(effect.category)) {
+      return 'w-full max-w-[920px] h-[260px] min-h-[220px]'
+    }
+
+    return 'w-full max-w-[960px] h-[min(48vh,460px)] min-h-[280px]'
+  }
+
   if (effect.kind === 'source') return 'w-full max-w-[720px] min-h-[280px]'
 
   if (['navbar', 'hero', 'feature', 'footer', 'table', 'dashboard', 'sidebar', 'ecommerce', 'layout'].includes(effect.category)) {
@@ -72,29 +83,42 @@ function getTabs(effect: UiCatalogItem) {
 }
 
 function RelatedCard({ effect }: { effect: UiCatalogItem }) {
+  const relatedScale = effect.provider === 'hyperui' ? 0.78 : 1
+  const slug = getEffectSlug(effect)
+
   return (
-    <article className="group overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-700 hover:shadow-lg">
-      <div className="h-32 overflow-hidden bg-white">
+    <article className="group overflow-hidden rounded-xl border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_18px_36px_-28px_rgba(15,23,42,0.35)] dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700">
+      <div className="relative h-40 overflow-hidden bg-white">
         {effect.kind === 'source' ? (
           <SourceUiPreview previewKey={effect.previewKey} compact />
         ) : (
           <iframe
             title={`${effect.title} preview`}
-            srcDoc={buildPreviewDoc(effect)}
-            className="h-full w-full border-0 bg-white"
+            src={`/ui/${slug}/preview`}
+            className="border-0 bg-white"
             sandbox="allow-scripts"
+            loading="lazy"
+            style={{
+              width: `${100 / relatedScale}%`,
+              height: `${100 / relatedScale}%`,
+              transform: `scale(${relatedScale})`,
+              transformOrigin: 'top center',
+              pointerEvents: 'none',
+            }}
           />
         )}
       </div>
       <Link
-        href={`/ui/${getEffectSlug(effect)}`}
-        className="flex cursor-pointer items-center justify-between gap-3 border-t border-slate-800 px-4 py-3 transition-colors hover:bg-slate-800/60"
+        href={`/ui/${slug}`}
+        className="flex cursor-pointer items-center justify-between gap-3 border-t border-slate-100 px-4 py-3 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-900"
       >
         <div className="min-w-0">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">{effect.category}</p>
-          <h3 className="mt-1 truncate text-sm font-semibold text-white">{effect.title}</h3>
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+            {effect.collectionLabel || effect.category}
+          </p>
+          <h3 className="mt-1 truncate text-sm font-semibold text-slate-950 dark:text-white">{effect.title}</h3>
         </div>
-        <ArrowLeft className="h-4 w-4 rotate-180 text-slate-500 transition-colors group-hover:text-slate-300" />
+        <ArrowLeft className="h-4 w-4 rotate-180 text-slate-400 transition-colors group-hover:text-slate-900 dark:group-hover:text-slate-100" />
       </Link>
     </article>
   )
@@ -107,8 +131,8 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
   const [previewMode, setPreviewMode] = useState<PreviewMode>('split')
   const [copied, setCopied] = useState(false)
   const [reloadToken, setReloadToken] = useState(0)
-  const previewDoc = useMemo(() => buildPreviewDoc(effect), [effect])
   const previewViewportClass = useMemo(() => getPreviewViewportClass(effect), [effect])
+  const slug = useMemo(() => getEffectSlug(effect), [effect])
 
   useEffect(() => {
     trackUiView(effect.id)
@@ -155,37 +179,37 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
   }
 
   return (
-    <div className="source-hub-scope bg-slate-950 text-slate-200">
-      <main className="flex min-h-screen flex-col overflow-hidden bg-slate-950">
-        <header className="z-20 flex h-16 shrink-0 items-center justify-between border-b border-slate-800 bg-slate-900 px-4 shadow-md md:px-6">
+    <div className="source-hub-scope bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+      <main className="flex min-h-screen flex-col overflow-hidden bg-white dark:bg-slate-950">
+        <header className="z-20 flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 md:px-6 dark:border-slate-800 dark:bg-slate-950">
           <div className="flex items-center gap-4">
             <button
               type="button"
               onClick={handleBack}
-              className="group flex items-center gap-2 text-slate-400 transition-colors hover:text-white"
+              className="group flex items-center gap-2 text-slate-500 transition-colors hover:text-slate-950 dark:text-slate-400 dark:hover:text-white"
             >
-              <div className="rounded-md p-1.5 transition-colors group-hover:bg-slate-800">
+              <div className="rounded-md p-1.5 transition-colors group-hover:bg-slate-100 dark:group-hover:bg-slate-800">
                 <ArrowLeft className="h-5 w-5" />
               </div>
               <span className="hidden font-medium sm:inline">Back to Library</span>
             </button>
-            <div className="hidden h-6 w-px bg-slate-800 sm:block" />
+            <div className="hidden h-6 w-px bg-slate-200 sm:block dark:bg-slate-800" />
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded bg-blue-500/10 text-blue-500">
+              <div className="flex h-8 w-8 items-center justify-center rounded bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-200">
                 <Monitor className="h-4 w-4" />
               </div>
-              <h1 className="text-lg font-bold tracking-tight text-white">{effect.title}</h1>
+              <h1 className="line-clamp-1 text-lg font-bold tracking-tight text-slate-950 dark:text-white">{effect.title}</h1>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="hidden items-center rounded-lg border border-slate-700 bg-slate-800 p-1 sm:flex">
+            <div className="hidden items-center rounded-lg border border-slate-200 bg-slate-50 p-1 sm:flex dark:border-slate-800 dark:bg-slate-900">
               <button
                 type="button"
                 onClick={() => setPreviewMode('split')}
                 className={cn(
                   'rounded px-3 py-1.5 text-xs font-medium transition-all',
-                  previewMode === 'split' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                  previewMode === 'split' ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white' : 'text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white'
                 )}
               >
                 Split View
@@ -195,7 +219,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
                 onClick={() => setPreviewMode('full')}
                 className={cn(
                   'rounded px-3 py-1.5 text-xs font-medium transition-all',
-                  previewMode === 'full' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                  previewMode === 'full' ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white' : 'text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white'
                 )}
               >
                 Full Preview
@@ -204,7 +228,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
             <button
               type="button"
               onClick={handleCopy}
-              className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition-all active:scale-95 hover:bg-blue-700"
+              className="flex items-center gap-2 rounded-lg bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
             >
               {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               <span>{copied ? 'Copied!' : 'Copy Code'}</span>
@@ -215,7 +239,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
         <main className="relative flex flex-1 flex-col overflow-auto lg:flex-row lg:overflow-hidden">
           <div
             className={cn(
-              'relative flex min-h-[420px] flex-col overflow-hidden border-b border-slate-800 bg-slate-100 group lg:min-h-0 lg:border-b-0',
+              'relative flex min-h-[420px] flex-col overflow-hidden border-b border-slate-200 bg-slate-50 group lg:min-h-0 lg:border-b-0 dark:border-slate-800 dark:bg-slate-900',
               previewMode === 'full' ? 'flex-1' : 'flex-[1.2]'
             )}
           >
@@ -249,7 +273,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
             <div className="flex flex-1 items-start justify-center overflow-auto p-4 md:p-6">
               <div
                 className={cn(
-                  'relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl transition-all duration-500',
+                  'relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_24px_60px_-36px_rgba(15,23,42,0.45)] transition-all duration-500 dark:border-slate-800',
                   previewViewportClass
                 )}
               >
@@ -261,7 +285,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
                   <iframe
                     key={`${effect.id}-${reloadToken}`}
                     title={`${effect.title} preview`}
-                    srcDoc={previewDoc}
+                    src={`/ui/${slug}/preview?reload=${reloadToken}`}
                     className="h-full w-full border-0 bg-white"
                     sandbox="allow-scripts"
                   />
@@ -271,7 +295,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
           </div>
 
           {previewMode === 'split' ? (
-            <div className="z-10 flex min-h-[420px] flex-1 flex-col border-l border-slate-800 bg-[#1e1e1e] shadow-2xl lg:min-h-0 lg:w-[450px] lg:flex-none xl:w-[600px]">
+            <div className="z-10 flex min-h-[420px] flex-1 flex-col border-l border-slate-200 bg-[#1e1e1e] shadow-2xl lg:min-h-0 lg:w-[450px] lg:flex-none xl:w-[600px] dark:border-slate-800">
               <div className="flex h-10 items-center gap-1 border-b border-[#1e1e1e] bg-[#252526] px-2">
                 {tabs.map(tab => (
                   <button
@@ -312,10 +336,10 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
         <section className="mx-auto max-w-7xl px-4 py-10">
           <div className="mb-4 flex items-end justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-white">Related components</h2>
-              <p className="mt-1 text-sm text-slate-400">More items from the merged UI library.</p>
+              <h2 className="text-xl font-bold text-slate-950 dark:text-white">Related components</h2>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">More items from the merged UI library.</p>
             </div>
-            <Link href="/ui" className="text-sm font-semibold text-blue-400 transition-colors hover:text-blue-300">
+            <Link href="/ui" className="text-sm font-semibold text-slate-900 transition-colors hover:text-slate-600 dark:text-slate-100 dark:hover:text-slate-300">
               View all
             </Link>
           </div>

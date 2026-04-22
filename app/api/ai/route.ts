@@ -25,6 +25,36 @@ const SYSTEM_PROMPTS: Record<string, string> = {
 
 const AI_RATE_LIMIT = { max: 20, windowMs: 60_000 }
 
+type AiRequestBody = {
+  tool?: string
+  input?: string
+  model?: string
+  messages?: Array<{ role: string; content: string }>
+  systemPrompt?: string
+  maxTokens?: number
+  temperature?: number
+}
+
+type OpenRouterErrorBody = {
+  error?: {
+    message?: string
+  }
+}
+
+type OpenRouterResponseBody = {
+  choices?: Array<{
+    message?: {
+      content?: string
+    }
+  }>
+  model?: string
+  usage?: {
+    prompt_tokens?: number
+    completion_tokens?: number
+    total_tokens?: number
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req.headers)
@@ -33,7 +63,7 @@ export async function POST(req: NextRequest) {
       return err('Rate limit exceeded. Max 20 AI requests per minute.', 429)
     }
 
-    const body = await req.json()
+    const body = (await req.json()) as AiRequestBody
     const { tool = 'default', input, model = 'openai/gpt-4o-mini', messages, systemPrompt } = body
 
     if (!input && !messages) return err('Missing input or messages')
@@ -68,11 +98,11 @@ export async function POST(req: NextRequest) {
     })
 
     if (!response.ok) {
-      const errData = await response.json().catch(() => ({}))
+      const errData = (await response.json().catch(() => ({}))) as OpenRouterErrorBody
       return err(`OpenRouter error: ${errData.error?.message || response.statusText}`, response.status)
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as OpenRouterResponseBody
     const result = data.choices?.[0]?.message?.content || ''
     const usage = data.usage || {}
 

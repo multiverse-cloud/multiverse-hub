@@ -67,6 +67,20 @@ function getRelatedEffects(effect: UiCatalogItem): UiCatalogItem[] {
     .map(item => item.candidate)
 }
 
+function stripPreviewDocument(effect: UiCatalogItem): UiCatalogItem {
+  const { previewDocument, ...rest } = effect
+  return rest
+}
+
+function stripRelatedPreviewPayload(effect: UiCatalogItem): UiCatalogItem {
+  const { cssCode, htmlCode, previewDocument, reactCode, usageCode, ...rest } = effect
+  return {
+    ...rest,
+    cssCode: '',
+    htmlCode: '',
+  }
+}
+
 export async function generateStaticParams() {
   return uiEffects.map(effect => ({
     slug: getEffectSlug(effect),
@@ -133,7 +147,7 @@ export default async function UiSlugPage({ params }: UiSlugPageProps) {
       : rawEffect
 
   const jsonLd = buildStructuredData('https://multiverse-tools.vercel.app', slug)
-  const relatedEffects = getRelatedEffects(effect)
+  const relatedEffects = getRelatedEffects(effect).map(stripRelatedPreviewPayload)
 
   return (
     <>
@@ -143,7 +157,7 @@ export default async function UiSlugPage({ params }: UiSlugPageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       ) : null}
-      <EffectDetailClient effect={effect} relatedEffects={relatedEffects} />
+      <EffectDetailClient effect={stripPreviewDocument(effect)} relatedEffects={relatedEffects} />
     </>
   )
 }

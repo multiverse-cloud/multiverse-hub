@@ -3,6 +3,11 @@ import { cookies } from 'next/headers'
 import { getAdminCredentials, createAdminSessionToken, ADMIN_SESSION_COOKIE } from '@/lib/admin-auth'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
+type AdminLoginPayload = {
+  email?: string
+  password?: string
+}
+
 export async function POST(request: Request) {
   try {
     const ip = getClientIp(request.headers)
@@ -24,9 +29,9 @@ export async function POST(request: Request) {
       )
     }
 
-    const { email, password } = await request.json()
+    const { email, password } = (await request.json()) as AdminLoginPayload
 
-    if (!email || !password) {
+    if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
       return NextResponse.json(
         { error: 'Email and password are required' },
         { status: 400, headers: { 'Cache-Control': 'no-store' } },

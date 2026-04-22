@@ -6,6 +6,12 @@ export const maxDuration = 60
 
 const AI_STREAM_RATE_LIMIT = { max: 20, windowMs: 60_000 }
 
+type AiStreamRequestBody = {
+  messages?: Array<{ role: string; content: string }>
+  model?: string
+  system?: string
+}
+
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req.headers)
@@ -17,8 +23,15 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const body = await req.json()
+    const body = (await req.json()) as AiStreamRequestBody
     const { messages, model = 'openai/gpt-4o-mini', system = 'You are a helpful AI assistant.' } = body
+
+    if (!Array.isArray(messages)) {
+      return new Response(
+        JSON.stringify({ error: 'Missing messages payload.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
 
     const apiKey = process.env.OPENROUTER_API_KEY
     if (!apiKey) {

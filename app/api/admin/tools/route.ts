@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { guardAdminWriteRequest } from '@/lib/admin-api-guard'
 import { updateTool } from '@/lib/db'
 
+type AdminToolsRequestBody = {
+  id?: string
+  updates?: Record<string, unknown>
+}
+
 export async function PATCH(request: NextRequest) {
   try {
     const blocked = await guardAdminWriteRequest(request, {
@@ -11,7 +16,7 @@ export async function PATCH(request: NextRequest) {
 
     if (blocked) return blocked
 
-    const body = await request.json()
+    const body = (await request.json()) as AdminToolsRequestBody
     const { id, updates } = body
 
     if (!id || !updates) {

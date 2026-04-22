@@ -4,23 +4,42 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { startTransition, useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { ArrowUpRight, Boxes, ChevronDown, Filter, Search, SearchX, X } from 'lucide-react'
-import {
-  buildPreviewDoc,
-  getEffectSlug,
-  getUiCollectionLabel,
-  getUiCollections,
-  getUiSectionIdForCategory,
-  getUiSections,
-  uiEffects,
-  type UiCatalogItem,
-  type UiSectionId,
-} from '@/lib/css-effects-library'
+import { getEffectSlug } from '@/lib/ui-code-snippets'
 import { cn } from '@/lib/utils'
+import type { UiCatalogItem } from '@/lib/ui-source-components'
+
+type UiSectionId = 'all' | 'components' | 'foundations'
+
+type UiSection = {
+  id: UiSectionId
+  label: string
+  count: number
+  description: string
+}
+
+type UiCollection = {
+  id: string
+  label: string
+  count: number
+  sectionId: Exclude<UiSectionId, 'all'>
+}
+
+type UiLibraryItem = Omit<
+  UiCatalogItem,
+  'cssCode' | 'htmlCode' | 'previewDocument' | 'reactCode' | 'usageCode'
+> & {
+  slug: string
+  sectionId: Exclude<UiSectionId, 'all'>
+}
 
 type CssEffectsLibraryClientProps = {
   initialQuery?: string
   initialSection?: UiSectionId
   initialCategory?: string
+  items: UiLibraryItem[]
+  sections: UiSection[]
+  collectionsBySection: Record<UiSectionId, UiCollection[]>
+  collectionLabels: Record<string, string>
 }
 
 type SortMode = 'featured' | 'newest' | 'name-asc' | 'name-desc'
@@ -33,36 +52,23 @@ const SourceUiPreview = dynamic(() => import('@/components/ui-source/SourceUiPre
   loading: () => <div className="h-full w-full animate-pulse bg-slate-100 dark:bg-slate-900" />,
 })
 
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-}
+function getCompactDocumentScale(effect: UiLibraryItem) {
+  if (effect.provider === 'hyperui') {
+    if (['headers', 'footers', 'feature-grids', 'contact-forms', 'pricing', 'product-collections', 'team-sections', 'tables', 'side-menu', 'vertical-menu'].includes(effect.category)) {
+      return 0.42
+    }
 
-function getCompactPreviewConfig(effect: UiCatalogItem) {
-  if (['navbar', 'hero', 'feature', 'footer', 'table', 'dashboard', 'sidebar', 'ecommerce', 'layout'].includes(effect.category)) {
-    return { scale: 0.46, width: '980px', minHeight: '520px', canvasHeight: '100%', padding: '12px' }
+    if (['blog-cards', 'cards', 'product-cards', 'empty-states', 'empty-content', 'modals', 'stats', 'steps', 'timelines'].includes(effect.category)) {
+      return 0.58
+    }
+
+    if (['buttons', 'badges', 'breadcrumbs', 'button-groups', 'checkboxes', 'radio-groups', 'toggles', 'pagination', 'loaders', 'progress-bars', 'tabs'].includes(effect.category)) {
+      return 0.86
+    }
+
+    return 0.72
   }
 
-  if (['form', 'auth', 'accordion', 'faq', 'search', 'filter', 'card', 'testimonial', 'pricing', 'stats'].includes(effect.category)) {
-    return { scale: 0.6, width: '620px', minHeight: '380px', canvasHeight: '100%', padding: '14px' }
-  }
-
-  if (['checkbox', 'radio', 'button', 'notification', 'badge', 'hover', 'tooltip', 'toggle', 'separator', 'tabs'].includes(effect.category)) {
-    return { scale: 0.84, width: '360px', minHeight: '260px', canvasHeight: '100%', padding: '18px' }
-  }
-
-  if (['shadow', 'shape', 'background', 'loading', 'text', 'border'].includes(effect.category)) {
-    return { scale: 0.76, width: '420px', minHeight: '280px', canvasHeight: '100%', padding: '18px' }
-  }
-
-  return { scale: 0.64, width: '520px', minHeight: '320px', canvasHeight: '100%', padding: '16px' }
-}
-
-function getCompactDocumentScale(effect: UiCatalogItem) {
   if (['navbar', 'hero', 'feature', 'footer', 'table', 'dashboard', 'sidebar', 'ecommerce', 'layout'].includes(effect.category)) {
     return 0.34
   }
@@ -82,105 +88,14 @@ function getCompactDocumentScale(effect: UiCatalogItem) {
   return 0.5
 }
 
-function buildCompactPreviewDoc(effect: UiCatalogItem) {
-  const config = getCompactPreviewConfig(effect)
-  return `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <base target="_self" />
-    <style>
-      * { box-sizing: border-box; }
-      html, body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        overflow: hidden;
-        overscroll-behavior: none;
-      }
-      ${effect.cssCode || ''}
-      body {
-        margin: 0;
-        width: 100vw;
-        height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: ${config.padding};
-        background: #ffffff;
-        font-family: Inter, system-ui, sans-serif;
-        overflow: hidden;
-      }
-      .preview-shell {
-        width: 100%;
-        height: ${config.canvasHeight};
-        min-height: ${config.minHeight};
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-      }
-      .preview-frame {
-        width: ${config.width};
-        transform: scale(${config.scale});
-        transform-origin: center center;
-        flex-shrink: 0;
-        max-width: none;
-      }
-      .preview-frame,
-      .preview-frame * {
-        box-sizing: border-box;
-      }
-      .preview-frame * {
-        max-width: 100%;
-      }
-      .preview-frame button,
-      .preview-frame a,
-      .preview-frame input,
-      .preview-frame textarea,
-      .preview-frame select {
-        pointer-events: none !important;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="preview-shell" aria-label="${escapeHtml(effect.title)} preview">
-      <div class="preview-frame">
-        ${effect.htmlCode}
-      </div>
-    </div>
-    <script>
-      (function () {
-        document.addEventListener('click', function (event) {
-          var anchor = event.target && event.target.closest ? event.target.closest('a[href]') : null;
-          if (!anchor) return;
-          event.preventDefault();
-          event.stopPropagation();
-        }, true);
-
-        document.addEventListener('submit', function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-        }, true);
-      })();
-    </script>
-  </body>
-</html>`
-}
-
 function EffectPreview({
   effect,
   compact = false,
 }: {
-  effect: UiCatalogItem
+  effect: UiLibraryItem
   compact?: boolean
 }) {
   const [loaded, setLoaded] = useState(false)
-  const previewDoc = useMemo(() => {
-    if (effect.kind === 'source') return null
-    if (compact) return effect.previewDocument || buildCompactPreviewDoc(effect)
-    return buildPreviewDoc(effect)
-  }, [compact, effect])
 
   useEffect(() => {
     setLoaded(false)
@@ -188,19 +103,19 @@ function EffectPreview({
       const timer = window.setTimeout(() => setLoaded(true), 220)
       return () => window.clearTimeout(timer)
     }
-  }, [effect.id, effect.kind, previewDoc])
+  }, [effect.id, effect.kind])
 
   return effect.kind === 'source' ? (
     <div className="relative h-full w-full bg-white">
       {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
       <SourceUiPreview previewKey={effect.previewKey} compact={compact} />
     </div>
-  ) : compact && effect.previewDocument ? (
+  ) : compact ? (
     <div className="relative flex h-full w-full items-start justify-center overflow-hidden bg-white">
       {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
       <iframe
         title={`${effect.title} preview`}
-        srcDoc={previewDoc || ''}
+        src={`/ui/${effect.slug}/preview`}
         className="border-0 bg-white"
         sandbox="allow-scripts"
         loading="lazy"
@@ -220,7 +135,7 @@ function EffectPreview({
       {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
       <iframe
         title={`${effect.title} preview`}
-        srcDoc={previewDoc || ''}
+        src={`/ui/${effect.slug}/preview`}
         className="h-full w-full border-0 bg-white"
         sandbox="allow-scripts"
         loading="lazy"
@@ -230,24 +145,25 @@ function EffectPreview({
   )
 }
 
-function PreviewCard({ effect }: { effect: UiCatalogItem }) {
+function PreviewCard({
+  effect,
+  collectionLabels,
+}: {
+  effect: UiLibraryItem
+  collectionLabels: Record<string, string>
+}) {
   return (
-    <article className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700">
-      <div className="relative h-64 overflow-hidden bg-white">
+    <article className="group overflow-hidden rounded-xl border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_18px_40px_-28px_rgba(15,23,42,0.35)] dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700">
+      <div className="relative h-56 overflow-hidden bg-white md:h-60">
         <EffectPreview effect={effect} compact />
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-slate-900/0 opacity-0 transition-all duration-300 group-hover:bg-slate-900/12 group-hover:opacity-100">
-          <div className="rounded-full bg-white px-4 py-2 text-xs font-semibold text-slate-900 shadow-lg">
-            Preview only
-          </div>
-        </div>
       </div>
       <Link
-        href={`/ui/${getEffectSlug(effect)}`}
+        href={`/ui/${effect.slug}`}
         className="flex cursor-pointer items-center justify-between gap-3 border-t border-slate-100 px-4 py-3 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-900"
       >
         <div className="min-w-0">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-            {getUiCollectionLabel(effect.category)}
+            {effect.collectionLabel || collectionLabels[effect.category] || effect.category}
           </p>
           <h3 className="mt-1 truncate text-sm font-semibold tracking-tight text-slate-950 dark:text-slate-50">
             {effect.title}
@@ -261,8 +177,8 @@ function PreviewCard({ effect }: { effect: UiCatalogItem }) {
 
 function SkeletonCard() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
-      <div className="aspect-[4/3] animate-pulse bg-slate-100 dark:bg-slate-900" />
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
+      <div className="h-56 animate-pulse bg-slate-100 dark:bg-slate-900 md:h-60" />
       <div className="space-y-3 px-4 py-3">
         <div className="h-3 w-20 animate-pulse rounded bg-slate-100 dark:bg-slate-900" />
         <div className="h-4 w-2/3 animate-pulse rounded bg-slate-100 dark:bg-slate-900" />
@@ -295,8 +211,8 @@ function SortSelect({
   )
 }
 
-function pickDiverseItems(items: UiCatalogItem[], count: number) {
-  const picks: UiCatalogItem[] = []
+function pickDiverseItems(items: UiLibraryItem[], count: number) {
+  const picks: UiLibraryItem[] = []
   const seenIds = new Set<string>()
   const seenCategories = new Set<string>()
 
@@ -318,7 +234,7 @@ function pickDiverseItems(items: UiCatalogItem[], count: number) {
   return picks
 }
 
-function sortItems(items: UiCatalogItem[], mode: SortMode) {
+function sortItems(items: UiLibraryItem[], mode: SortMode) {
   const next = [...items]
 
   switch (mode) {
@@ -344,6 +260,10 @@ export default function CssEffectsLibraryClient({
   initialQuery = '',
   initialSection = 'all',
   initialCategory = 'all',
+  items,
+  sections,
+  collectionsBySection,
+  collectionLabels,
 }: CssEffectsLibraryClientProps) {
   const [query, setQuery] = useState(initialQuery)
   const [section, setSection] = useState<UiSectionId>(initialSection)
@@ -358,8 +278,7 @@ export default function CssEffectsLibraryClient({
   const deferredCategory = useDeferredValue(category)
   const deferredSortMode = useDeferredValue(sortMode)
 
-  const sections = useMemo(() => getUiSections(), [])
-  const collections = useMemo(() => getUiCollections(deferredSection), [deferredSection])
+  const collections = collectionsBySection[deferredSection] || []
 
   useEffect(() => {
     try {
@@ -413,29 +332,29 @@ export default function CssEffectsLibraryClient({
   }, [category, hydrated, query, section, sortMode, visibleCount])
 
   const featuredItems = useMemo(
-    () => pickDiverseItems(sortItems(uiEffects.filter(item => item.featured), 'featured'), 6),
-    []
+    () => pickDiverseItems(sortItems(items.filter(item => item.featured), 'featured'), 6),
+    [items]
   )
 
   const filteredItems = useMemo(() => {
     const normalizedQuery = deferredQuery.trim().toLowerCase()
 
-    const base = uiEffects.filter(item => {
+    const base = items.filter(item => {
       const matchesSection =
-        deferredSection === 'all' || getUiSectionIdForCategory(item.category) === deferredSection
+        deferredSection === 'all' || item.sectionId === deferredSection
       const matchesCategory = deferredCategory === 'all' || item.category === deferredCategory
       const matchesQuery =
         normalizedQuery.length === 0 ||
         item.title.toLowerCase().includes(normalizedQuery) ||
         item.description.toLowerCase().includes(normalizedQuery) ||
-        getUiCollectionLabel(item.category).toLowerCase().includes(normalizedQuery) ||
+        (collectionLabels[item.category] || item.category).toLowerCase().includes(normalizedQuery) ||
         item.tags.some(tag => tag.toLowerCase().includes(normalizedQuery))
 
       return matchesSection && matchesCategory && matchesQuery
     })
 
     return sortItems(base, deferredSortMode)
-  }, [deferredCategory, deferredQuery, deferredSection, deferredSortMode])
+  }, [collectionLabels, deferredCategory, deferredQuery, deferredSection, deferredSortMode, items])
 
   const visibleItems = filteredItems.slice(0, visibleCount)
   const isFiltering =
@@ -666,7 +585,7 @@ export default function CssEffectsLibraryClient({
                 </div>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
                   {featuredItems.map(item => (
-                    <PreviewCard key={item.id} effect={item} />
+                    <PreviewCard key={item.id} effect={item} collectionLabels={collectionLabels} />
                   ))}
                 </div>
               </section>
@@ -726,7 +645,7 @@ export default function CssEffectsLibraryClient({
               <>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
                   {visibleItems.map(item => (
-                    <PreviewCard key={item.id} effect={item} />
+                    <PreviewCard key={item.id} effect={item} collectionLabels={collectionLabels} />
                   ))}
                 </div>
 

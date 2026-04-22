@@ -40,3 +40,4 @@ next-env.d.ts
 template-repo-export/
 public/template-previews/
 data/template-preview-capture-report.json
+hyperui-main/

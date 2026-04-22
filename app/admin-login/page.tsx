@@ -5,6 +5,11 @@ import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, Loader2, Lock, Mail, Shield } from 'lucide-react'
 import AuthShell from '@/app/_components/AuthShell'
 
+type AdminLoginResponse = {
+  error?: string
+  redirectUrl?: string
+}
+
 export default function AdminLoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -27,7 +32,7 @@ export default function AdminLoginPage() {
         body: JSON.stringify({ email: email.trim(), password }),
       })
 
-      const data = await res.json()
+      const data = (await res.json()) as AdminLoginResponse
 
       if (!res.ok) {
         throw new Error(data.error || 'Invalid admin credentials')
