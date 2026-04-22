@@ -176,11 +176,11 @@ function CategoryCard({
     <button
       type="button"
       onClick={() => onSelect(collection)}
-      className="group flex min-h-[118px] w-full cursor-pointer items-center justify-between rounded-xl border border-slate-200 bg-white px-6 py-5 text-left transition-colors hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700 dark:hover:bg-slate-900"
+      className="group flex min-h-[104px] w-full cursor-pointer items-center justify-between rounded-xl border border-slate-200/80 bg-white px-5 py-4 text-left shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700 dark:hover:bg-slate-800/50"
     >
       <div className="min-w-0">
-        <h3 className="text-lg font-semibold tracking-tight text-slate-950 dark:text-slate-50">{collection.label}</h3>
-        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{collection.count} components</p>
+        <h3 className="text-base font-semibold tracking-tight text-slate-950 dark:text-slate-50">{collection.label}</h3>
+        <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">{collection.count} components</p>
       </div>
       <ArrowUpRight className="h-5 w-5 shrink-0 text-slate-400 transition-colors group-hover:text-slate-900 dark:group-hover:text-white" />
     </button>
@@ -427,9 +427,9 @@ export default function CssEffectsLibraryClient({
   }
 
   const FilterPanel = (
-    <div className="space-y-8">
+    <div className="space-y-7">
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
         <input
           value={query}
           onChange={event =>
@@ -439,7 +439,7 @@ export default function CssEffectsLibraryClient({
             })
           }
           placeholder="Search resources..."
-          className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-900 shadow-sm outline-none transition-all placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
+          className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 shadow-sm outline-none transition-all placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
         />
       </div>
 
@@ -525,10 +525,10 @@ export default function CssEffectsLibraryClient({
                 })
               }
               className={cn(
-                'flex w-full items-center justify-between rounded-xl border px-3 py-3 text-left text-sm font-medium transition-colors',
+                'flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-left text-sm font-medium transition-all',
                 section === item.id
                   ? 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-blue-300'
-                  : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 dark:hover:border-slate-700'
+                  : 'border-transparent bg-transparent text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800/60'
               )}
             >
               <span>{item.label}</span>
@@ -551,10 +551,10 @@ export default function CssEffectsLibraryClient({
               })
             }
             className={cn(
-              'flex w-full items-center justify-between rounded-xl border px-3 py-3 text-left text-sm font-medium transition-colors',
+              'flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-left text-sm font-medium transition-all',
               category === 'all'
                 ? 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-blue-300'
-                : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 dark:hover:border-slate-700'
+                : 'border-transparent bg-transparent text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800/60'
             )}
           >
             <span>All Categories</span>
@@ -572,10 +572,10 @@ export default function CssEffectsLibraryClient({
                 })
               }
               className={cn(
-                'flex w-full items-center justify-between rounded-xl border px-3 py-3 text-left text-sm font-medium transition-colors',
+                'flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-left text-sm font-medium transition-all',
                 category === item.id
                   ? 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-blue-300'
-                  : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 dark:hover:border-slate-700'
+                  : 'border-transparent bg-transparent text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800/60'
               )}
             >
               <span className="truncate">{item.label}</span>
@@ -588,96 +588,98 @@ export default function CssEffectsLibraryClient({
   )
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-950">
-      <main className="relative mx-auto max-w-7xl px-4 pb-20 pt-28">
-        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.14),transparent_55%)] dark:bg-[radial-gradient(circle_at_top,rgba(96,165,250,0.16),transparent_55%)]" />
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-slate-900 md:text-5xl dark:text-slate-50">Components Library</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-500 dark:text-slate-400">
-            Browse our merged collection of imported hub components, source-backed UI blocks, and existing Multiverse items.
-          </p>
-        </div>
+    <div className="source-hub-scope min-h-screen bg-slate-50 dark:bg-slate-950">
+      <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-96 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(59,130,246,0.10),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(59,130,246,0.08),transparent)]" />
 
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
-          <aside className="custom-scrollbar hidden w-72 shrink-0 self-start lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
+      <main className="relative mx-auto flex max-w-[1600px] flex-col gap-8 px-4 pb-20 pt-8 lg:flex-row lg:items-start lg:px-6">
+        <aside className="hidden w-64 shrink-0 self-start lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto xl:w-72">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             {FilterPanel}
-          </aside>
+          </div>
+        </aside>
 
-          <div className="w-full flex-1">
-            <div className="sticky top-20 z-30 mb-8 rounded-2xl bg-slate-50/90 pb-4 backdrop-blur-md dark:bg-slate-950/90 md:py-2">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="flex items-center gap-1 rounded-xl border border-slate-100 bg-white p-1.5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                  <Link
-                    href="/templates"
-                    className="flex-1 rounded-lg px-6 py-2 text-center text-sm font-bold text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-50 md:flex-none"
-                  >
-                    Templates
-                  </Link>
-                  <div className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-slate-900 px-6 py-2 text-sm font-bold text-white dark:bg-white dark:text-slate-950 md:flex-none">
-                    <Boxes className="h-4 w-4" />
-                    Components
-                  </div>
-                </div>
+        <div className="min-w-0 flex-1">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50 md:text-4xl">
+              {category !== 'all'
+                ? collections.find(item => item.id === category)?.label || 'Components'
+                : 'Components Library'}
+            </h1>
+            <p className="mt-2 max-w-2xl text-base text-slate-500 dark:text-slate-400">
+              {category !== 'all'
+                ? `${filteredItems.length} source-backed UI items in this category.`
+                : 'Browse source-backed UI components, imported hub blocks, and clean preview-ready interface patterns.'}
+            </p>
+          </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="relative flex-1 md:hidden">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    <input
-                      value={query}
-                      onChange={event =>
-                        startTransition(() => {
-                          setQuery(event.target.value)
-                          setVisibleCount(INITIAL_VISIBLE_COUNT)
-                        })
-                      }
-                      placeholder="Search..."
-                      className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm shadow-sm outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-800 dark:bg-slate-900"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setMobileFiltersOpen(true)}
-                    className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 lg:hidden"
-                  >
-                    <Filter className="h-4 w-4" />
-                    Filters
-                    {activeFilterCount > 0 ? (
-                      <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-[10px] font-bold text-white">
-                        {activeFilterCount}
-                      </span>
-                    ) : null}
-                  </button>
+          <div className="sticky top-[72px] z-30 mb-6 -mx-4 bg-slate-50/90 px-4 py-3 backdrop-blur-md dark:bg-slate-950/90 lg:-mx-0 lg:rounded-xl lg:border lg:border-slate-200/60 lg:px-4 lg:shadow-sm dark:lg:border-slate-800">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex w-full items-center gap-1 rounded-xl border border-slate-200/80 bg-white p-1 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:w-auto">
+                <Link
+                  href="/templates"
+                  className="flex-1 rounded-lg px-5 py-2 text-center text-sm font-bold text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-50 sm:flex-none"
+                >
+                  Templates
+                </Link>
+                <div className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-bold text-white sm:flex-none">
+                  <Boxes className="h-4 w-4" />
+                  Components
                 </div>
               </div>
-            </div>
 
-            <div className="mb-6 flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-slate-50">
-                  {category === 'all' ? 'Browse categories' : collections.find(item => item.id === category)?.label || 'Components'}
-                </h2>
-                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                  {category === 'all'
-                    ? `${visibleCollections.length} categories available`
-                    : `${filteredItems.length} components in this category`}
-                </p>
-              </div>
-              {category !== 'all' ? (
+              <div className="flex items-center gap-3">
+                <div className="relative flex-1 lg:hidden">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <input
+                    value={query}
+                    onChange={event =>
+                      startTransition(() => {
+                        setQuery(event.target.value)
+                        setVisibleCount(INITIAL_VISIBLE_COUNT)
+                      })
+                    }
+                    placeholder="Search..."
+                    className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800"
+                  />
+                </div>
                 <button
                   type="button"
-                  onClick={() =>
-                    startTransition(() => {
-                      setCategory('all')
-                      setVisibleCount(INITIAL_VISIBLE_COUNT)
-                      updateUiUrl(section, 'all', query)
-                    })
-                  }
-                  className="hidden rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900 sm:inline-flex"
+                  onClick={() => setMobileFiltersOpen(true)}
+                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 lg:hidden"
                 >
-                  View categories
+                  <Filter className="h-4 w-4" />
+                  Filters
+                  {activeFilterCount > 0 ? (
+                    <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-[10px] font-bold text-white">
+                      {activeFilterCount}
+                    </span>
+                  ) : null}
                 </button>
-              ) : null}
+              </div>
             </div>
+          </div>
+
+          <div className="mb-5 flex items-center justify-between">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              <span className="font-bold text-slate-900 dark:text-slate-100">{filteredItems.length}</span>{' '}
+              items
+            </p>
+            {category !== 'all' ? (
+              <button
+                type="button"
+                onClick={() =>
+                  startTransition(() => {
+                    setCategory('all')
+                    setVisibleCount(INITIAL_VISIBLE_COUNT)
+                    updateUiUrl(section, 'all', query)
+                  })
+                }
+                className="hidden rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 sm:inline-flex"
+              >
+                View categories
+              </button>
+            ) : null}
+          </div>
 
             {!hydrated || isFiltering ? (
               <div className="space-y-6">
@@ -734,7 +736,6 @@ export default function CssEffectsLibraryClient({
                 ) : null}
               </>
             )}
-          </div>
         </div>
       </main>
 
