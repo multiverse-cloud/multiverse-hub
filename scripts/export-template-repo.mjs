@@ -1,4 +1,4 @@
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 const ROOT = process.cwd()
@@ -147,12 +147,22 @@ async function writeTemplateFolder(template) {
   }
 }
 
+async function resetExportRoot() {
+  await mkdir(EXPORT_ROOT, { recursive: true })
+  const entries = await readdir(EXPORT_ROOT, { withFileTypes: true })
+
+  for (const entry of entries) {
+    if (entry.name === '.git') continue
+    await rm(path.join(EXPORT_ROOT, entry.name), { recursive: true, force: true })
+  }
+}
+
 async function main() {
   const raw = await readFile(STORE_PATH, 'utf8')
   const parsed = JSON.parse(stripUtf8Bom(raw))
   const templates = Array.isArray(parsed.templates) ? parsed.templates : []
 
-  await rm(EXPORT_ROOT, { recursive: true, force: true })
+  await resetExportRoot()
   await mkdir(TEMPLATES_DIR, { recursive: true })
 
   const catalog = templates.map(template => ({
