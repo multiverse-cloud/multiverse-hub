@@ -418,7 +418,18 @@ function injectPreviewGuards(markup: string) {
   const headGuard = `
     <base target="_self" />
     <style>
-      html, body { overscroll-behavior: none; }
+      html, body {
+        overscroll-behavior: none;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      html::-webkit-scrollbar,
+      body::-webkit-scrollbar,
+      *::-webkit-scrollbar {
+        width: 0 !important;
+        height: 0 !important;
+        display: none !important;
+      }
     </style>`
 
   const bodyGuard = `

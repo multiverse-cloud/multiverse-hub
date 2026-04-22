@@ -43,6 +43,27 @@ type CssEffectsLibraryClientProps = {
 
 const INITIAL_VISIBLE_COUNT = 24
 const UI_STATE_KEY = 'multiverse:ui-universe-state:v2'
+const PREVIEW_SIZES = [
+  { id: 'mobile', label: 'Mobile', width: 375 },
+  { id: 'sm', label: 'SM', width: 640 },
+  { id: 'md', label: 'MD', width: 768 },
+  { id: 'lg', label: 'LG', width: 1024 },
+  { id: 'full', label: 'Full', width: null },
+] as const
+
+type PreviewSizeId = (typeof PREVIEW_SIZES)[number]['id']
+
+function updateUiUrl(section: UiSectionId, category: string, query: string) {
+  if (typeof window === 'undefined') return
+
+  const params = new URLSearchParams()
+  if (section !== 'all') params.set('section', section)
+  if (category !== 'all') params.set('category', category)
+  if (query.trim()) params.set('q', query.trim())
+
+  const nextUrl = params.toString() ? `/ui?${params.toString()}` : '/ui'
+  window.history.pushState(null, '', nextUrl)
+}
 
 const SourceUiPreview = dynamic(() => import('@/components/ui-source/SourceUiPreview'), {
   ssr: false,
@@ -105,7 +126,7 @@ function EffectPreview({
   return effect.kind === 'source' ? (
     <div className="relative h-full w-full bg-white">
       {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
-      <SourceUiPreview previewKey={effect.previewKey} compact={compact} />
+        <SourceUiPreview previewKey={effect.previewKey} compact={compact} />
     </div>
   ) : compact ? (
     <div className="relative flex h-full w-full items-start justify-center overflow-hidden bg-white">
@@ -116,6 +137,7 @@ function EffectPreview({
         className="border-0 bg-white"
         sandbox="allow-scripts"
         loading="lazy"
+        scrolling="no"
         onLoad={() => setLoaded(true)}
         style={{
           width: `${100 / getCompactDocumentScale(effect)}%`,
@@ -136,24 +158,32 @@ function EffectPreview({
         className="h-full w-full border-0 bg-white"
         sandbox="allow-scripts"
         loading="lazy"
+        scrolling="no"
         onLoad={() => setLoaded(true)}
       />
     </div>
   )
 }
 
-function CategoryCard({ collection }: { collection: UiCollection }) {
+function CategoryCard({
+  collection,
+  onSelect,
+}: {
+  collection: UiCollection
+  onSelect: (collection: UiCollection) => void
+}) {
   return (
-    <Link
-      href={`/ui?section=${collection.sectionId}&category=${collection.id}`}
-      className="group flex min-h-[118px] items-center justify-between rounded-xl border border-slate-200 bg-white px-6 py-5 transition-colors hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700 dark:hover:bg-slate-900"
+    <button
+      type="button"
+      onClick={() => onSelect(collection)}
+      className="group flex min-h-[118px] w-full cursor-pointer items-center justify-between rounded-xl border border-slate-200 bg-white px-6 py-5 text-left transition-colors hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700 dark:hover:bg-slate-900"
     >
       <div className="min-w-0">
         <h3 className="text-lg font-semibold tracking-tight text-slate-950 dark:text-slate-50">{collection.label}</h3>
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{collection.count} components</p>
       </div>
       <ArrowUpRight className="h-5 w-5 shrink-0 text-slate-400 transition-colors group-hover:text-slate-900 dark:group-hover:text-white" />
-    </Link>
+    </button>
   )
 }
 
@@ -167,6 +197,8 @@ function ComponentPreviewRow({
   onCopy: (effect: UiLibraryItem) => void
 }) {
   const isDark = Boolean(effect.darkVariant)
+  const [previewSize, setPreviewSize] = useState<PreviewSizeId>('full')
+  const activeSize = PREVIEW_SIZES.find(size => size.id === previewSize) || PREVIEW_SIZES[PREVIEW_SIZES.length - 1]
 
   return (
     <article className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
@@ -176,18 +208,20 @@ function ComponentPreviewRow({
           <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{effect.frameworkLabel || 'markup'}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {['Mobile', 'SM', 'MD', 'LG', 'Full'].map(size => (
-            <span
-              key={size}
+          {PREVIEW_SIZES.map(size => (
+            <button
+              key={size.id}
+              type="button"
+              onClick={() => setPreviewSize(size.id)}
               className={cn(
-                'rounded-md border px-2.5 py-1 text-xs font-semibold',
-                size === 'Full'
+                'rounded-md border px-2.5 py-1 text-xs font-semibold transition-colors',
+                previewSize === size.id
                   ? 'border-slate-950 bg-slate-950 text-white dark:border-white dark:bg-white dark:text-slate-950'
-                  : 'border-slate-200 bg-white text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300'
+                  : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-700'
               )}
             >
-              {size}
-            </span>
+              {size.label}
+            </button>
           ))}
           <Link
             href={`/ui/${effect.slug}`}
@@ -207,7 +241,12 @@ function ComponentPreviewRow({
         </div>
       </div>
       <div className={cn('relative h-[200px] overflow-hidden md:h-[220px]', isDark ? 'bg-slate-950' : 'bg-white')}>
-        <EffectPreview effect={effect} compact />
+        <div
+          className="mx-auto h-full max-w-full overflow-hidden transition-[width] duration-200"
+          style={{ width: activeSize.width ? `${activeSize.width}px` : '100%' }}
+        >
+          <EffectPreview effect={effect} compact />
+        </div>
       </div>
     </article>
   )
@@ -313,6 +352,25 @@ export default function CssEffectsLibraryClient({
     }
   }, [category, hydrated, query, section, visibleCount])
 
+  useEffect(() => {
+    function handlePopState() {
+      const params = new URLSearchParams(window.location.search)
+      const nextSection = (params.get('section') as UiSectionId | null) || 'all'
+      const nextCategory = params.get('category') || 'all'
+      const nextQuery = params.get('q') || ''
+
+      startTransition(() => {
+        setSection(nextSection === 'components' || nextSection === 'foundations' ? nextSection : 'all')
+        setCategory(nextCategory)
+        setQuery(nextQuery)
+        setVisibleCount(INITIAL_VISIBLE_COUNT)
+      })
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
+
   const filteredItems = useMemo(() => {
     const normalizedQuery = deferredQuery.trim().toLowerCase()
 
@@ -348,6 +406,26 @@ export default function CssEffectsLibraryClient({
     (category !== 'all' ? 1 : 0) +
     (query.trim() ? 1 : 0)
 
+  function selectCollection(collection: UiCollection) {
+    startTransition(() => {
+      setSection(collection.sectionId)
+      setCategory(collection.id)
+      setVisibleCount(INITIAL_VISIBLE_COUNT)
+      setMobileFiltersOpen(false)
+      updateUiUrl(collection.sectionId, collection.id, query)
+    })
+  }
+
+  function resetUiFilters() {
+    startTransition(() => {
+      setQuery('')
+      setSection('all')
+      setCategory('all')
+      setVisibleCount(INITIAL_VISIBLE_COUNT)
+      updateUiUrl('all', 'all', '')
+    })
+  }
+
   const FilterPanel = (
     <div className="space-y-8">
       <div className="relative">
@@ -371,14 +449,7 @@ export default function CssEffectsLibraryClient({
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Active Filters</h4>
             <button
               type="button"
-              onClick={() =>
-                startTransition(() => {
-                  setQuery('')
-                  setSection('all')
-                  setCategory('all')
-                  setVisibleCount(INITIAL_VISIBLE_COUNT)
-                })
-              }
+              onClick={resetUiFilters}
               className="text-[10px] font-bold text-blue-600 hover:underline"
             >
               Clear All
@@ -388,7 +459,14 @@ export default function CssEffectsLibraryClient({
             {section !== 'all' ? (
               <button
                 type="button"
-                onClick={() => setSection('all')}
+                onClick={() =>
+                  startTransition(() => {
+                    setSection('all')
+                    setCategory('all')
+                    setVisibleCount(INITIAL_VISIBLE_COUNT)
+                    updateUiUrl('all', 'all', query)
+                  })
+                }
                 className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
               >
                 {sections.find(item => item.id === section)?.label}
@@ -398,7 +476,13 @@ export default function CssEffectsLibraryClient({
             {category !== 'all' ? (
               <button
                 type="button"
-                onClick={() => setCategory('all')}
+                onClick={() =>
+                  startTransition(() => {
+                    setCategory('all')
+                    setVisibleCount(INITIAL_VISIBLE_COUNT)
+                    updateUiUrl(section, 'all', query)
+                  })
+                }
                 className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
               >
                 {collections.find(item => item.id === category)?.label || category}
@@ -408,7 +492,13 @@ export default function CssEffectsLibraryClient({
             {query.trim() ? (
               <button
                 type="button"
-                onClick={() => setQuery('')}
+                onClick={() =>
+                  startTransition(() => {
+                    setQuery('')
+                    setVisibleCount(INITIAL_VISIBLE_COUNT)
+                    updateUiUrl(section, category, '')
+                  })
+                }
                 className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
               >
                 {query.trim()}
@@ -431,6 +521,7 @@ export default function CssEffectsLibraryClient({
                   setSection(item.id)
                   setCategory('all')
                   setVisibleCount(INITIAL_VISIBLE_COUNT)
+                  updateUiUrl(item.id, 'all', query)
                 })
               }
               className={cn(
@@ -456,6 +547,7 @@ export default function CssEffectsLibraryClient({
               startTransition(() => {
                 setCategory('all')
                 setVisibleCount(INITIAL_VISIBLE_COUNT)
+                updateUiUrl(section, 'all', query)
               })
             }
             className={cn(
@@ -476,6 +568,7 @@ export default function CssEffectsLibraryClient({
                 startTransition(() => {
                   setCategory(item.id)
                   setVisibleCount(INITIAL_VISIBLE_COUNT)
+                  updateUiUrl(section, item.id, query)
                 })
               }
               className={cn(
@@ -506,7 +599,7 @@ export default function CssEffectsLibraryClient({
         </div>
 
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
-          <aside className="hidden w-72 shrink-0 self-start lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
+          <aside className="custom-scrollbar hidden w-72 shrink-0 self-start lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
             {FilterPanel}
           </aside>
 
@@ -576,6 +669,7 @@ export default function CssEffectsLibraryClient({
                     startTransition(() => {
                       setCategory('all')
                       setVisibleCount(INITIAL_VISIBLE_COUNT)
+                      updateUiUrl(section, 'all', query)
                     })
                   }
                   className="hidden rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900 sm:inline-flex"
@@ -594,7 +688,7 @@ export default function CssEffectsLibraryClient({
             ) : category === 'all' && !query.trim() ? (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {visibleCollections.map(collection => (
-                  <CategoryCard key={collection.id} collection={collection} />
+                  <CategoryCard key={collection.id} collection={collection} onSelect={selectCollection} />
                 ))}
               </div>
             ) : filteredItems.length === 0 ? (
@@ -608,14 +702,7 @@ export default function CssEffectsLibraryClient({
                 </p>
                 <button
                   type="button"
-                  onClick={() =>
-                    startTransition(() => {
-                      setQuery('')
-                      setSection('all')
-                      setCategory('all')
-                      setVisibleCount(INITIAL_VISIBLE_COUNT)
-                    })
-                  }
+                  onClick={resetUiFilters}
                   className="mt-8 text-sm font-bold text-blue-600 hover:underline"
                 >
                   Reset all filters
@@ -669,7 +756,7 @@ export default function CssEffectsLibraryClient({
                   <X className="h-5 w-5" />
                 </button>
               </div>
-              <div className="flex-1 overflow-y-auto p-6">{FilterPanel}</div>
+              <div className="custom-scrollbar flex-1 overflow-y-auto p-6">{FilterPanel}</div>
               <div className="border-t border-slate-100 p-6 dark:border-slate-800">
                 <button
                   type="button"
