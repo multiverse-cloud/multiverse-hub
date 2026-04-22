@@ -206,7 +206,7 @@ export default function DownloaderWorkspaceSection({
   const formatCount = mp4Options.length + webmOptions.length + audioOptions.length;
 
   return (
-    <section className="bg-white pb-8 pt-3 dark:bg-slate-950 sm:pb-12 sm:pt-4">
+    <section className="bg-white pb-10 pt-5 dark:bg-slate-950 sm:pb-14 sm:pt-6">
       <PremiumContainer className="max-w-6xl px-4 sm:px-6">
         <div className="space-y-5">
           <article className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200/70 dark:bg-slate-900/55 dark:ring-slate-800 sm:p-4">

@@ -17,7 +17,12 @@ import { getLucideIcon } from "@/lib/icons";
 import { CALCULATOR_STUDIO_SLUGS } from "@/lib/calculator-studio";
 import { PDF_STUDIO_STATIC_CONTENT } from "@/lib/pdf-studio-content";
 import { getToolRuntimeStatus } from "@/lib/tool-runtime-status";
-import { getDownloaderRouteByToolSlug } from "@/lib/downloader-route-data";
+import {
+  getDownloaderPageName,
+  getDownloaderRouteByToolSlug,
+  getDownloaderTabs,
+  getRelatedDownloaderRoutes,
+} from "@/lib/downloader-route-data";
 import { ACTIVE_CATEGORIES, resolveToolSlug, VIDEO_DOWNLOADER_TOOL_SLUGS, type Tool } from "@/lib/tools-data";
 import { getTools, getToolBySlug } from "@/lib/db";
 
@@ -374,6 +379,22 @@ export default async function ToolPage({ params }: Props) {
   const combinedSchema = [schemaMarkup, breadcrumbSchema, faqSchema];
 
   if (VIDEO_DOWNLOADER_TOOL_SLUGS.has(tool.slug)) {
+    const downloaderRoute = getDownloaderRouteByToolSlug(tool.slug);
+    const routeTabs = downloaderRoute
+      ? getDownloaderTabs(downloaderRoute).map(tab => ({
+          label: tab.label,
+          href: `/${tab.routeSlug}`,
+          active: tab.routeSlug === downloaderRoute.routeSlug,
+        }))
+      : [];
+    const relatedRoutes = downloaderRoute
+      ? getRelatedDownloaderRoutes(downloaderRoute).map(item => ({
+          label: getDownloaderPageName(item),
+          href: `/${item.routeSlug}`,
+          description: item.description,
+        }))
+      : [];
+
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
@@ -384,7 +405,12 @@ export default async function ToolPage({ params }: Props) {
             </div>
           </div>
         ) : null}
-        <VideoDownloaderClient tool={tool} />
+        <VideoDownloaderClient
+          tool={tool}
+          route={downloaderRoute || undefined}
+          routeTabs={routeTabs}
+          relatedRoutes={relatedRoutes}
+        />
       </PublicLayout>
     );
   }

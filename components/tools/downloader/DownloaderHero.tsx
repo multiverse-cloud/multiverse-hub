@@ -101,7 +101,7 @@ export default function DownloaderHero({
     <PremiumSection
       className={cn(
         "relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-white dark:from-slate-950 dark:via-slate-950 dark:to-slate-950",
-        hasResult ? "py-3 sm:py-4" : "pb-8 pt-5 sm:pb-12 sm:pt-9 md:pb-14 md:pt-11",
+        hasResult ? "py-5 sm:py-6" : "pb-10 pt-7 sm:pb-14 sm:pt-11 md:pb-16 md:pt-12",
       )}
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.14),transparent_65%)] dark:bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.2),transparent_65%)]" />
@@ -154,7 +154,7 @@ export default function DownloaderHero({
           buttonLabel={buttonLabel}
           className={cn(
             "mx-auto",
-            hasResult ? "mt-0 max-w-2xl" : "mt-4 max-w-3xl sm:mt-6",
+            hasResult ? "mt-0 max-w-2xl" : "mt-5 max-w-3xl sm:mt-7",
           )}
         />
 

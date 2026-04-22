@@ -596,8 +596,8 @@ export default function VideoDownloaderClient({
           {screenReaderStatus}
         </p>
       ) : null}
-      <div className="mx-auto w-full max-w-6xl px-4 pt-0 sm:px-6 lg:px-6 md:pt-1">
-        <div className="mb-1.5 flex items-center justify-between gap-2">
+      <div className="mx-auto w-full max-w-6xl px-4 pt-3 sm:px-6 lg:px-6 md:pt-4">
+        <div className="mb-3 flex items-center justify-between gap-2">
           <ToolBreadcrumb
             className="mb-0 min-w-0 flex-1"
             items={[
@@ -626,7 +626,7 @@ export default function VideoDownloaderClient({
       />
 
       {error ? (
-        <div className="mx-auto -mt-2 max-w-5xl px-4 lg:px-6">
+        <div className="mx-auto mt-2 max-w-5xl px-4 lg:px-6">
           <div
             role="alert"
             aria-live="assertive"

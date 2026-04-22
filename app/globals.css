@@ -48,6 +48,27 @@
         }
     }
 
+    @keyframes mvHeroBeam {
+        0%,
+        100% {
+            opacity: 0.25;
+            transform: translateX(-50%) scaleX(0.75);
+        }
+        50% {
+            opacity: 0.85;
+            transform: translateX(-50%) scaleX(1);
+        }
+    }
+
+    @keyframes mvWorkflow {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
     .animate-float {
         animation: float 6s ease-in-out infinite;
     }
@@ -81,6 +102,28 @@
 
     .mv-flip-word:nth-child(4) {
         animation-delay: 6s;
+    }
+
+    .mv-hero-beam {
+        animation: mvHeroBeam 5s ease-in-out infinite;
+        transform-origin: center;
+    }
+
+    .mv-workflow-track {
+        animation: mvWorkflow 18s linear infinite;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .mv-flip-word,
+        .mv-hero-beam,
+        .mv-workflow-track {
+            animation: none;
+        }
+
+        .mv-flip-word:first-child {
+            opacity: 1;
+            transform: none;
+        }
     }
 
     .grid-bg {

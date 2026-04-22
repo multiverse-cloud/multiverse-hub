@@ -24,7 +24,7 @@ export default function DownloaderSeoSection({
   }
 
   return (
-    <PremiumSection className="bg-white py-10 dark:bg-slate-950 sm:py-12">
+    <PremiumSection className="bg-white py-12 dark:bg-slate-950 sm:py-14">
       <PremiumContainer className="max-w-6xl">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
           <div className="space-y-8">
