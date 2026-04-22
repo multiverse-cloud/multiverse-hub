@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
 import {
   Clapperboard,
   Facebook,
@@ -64,6 +65,11 @@ interface Props {
   contentTypes?: string[];
   placeholder?: string;
   buttonLabel?: string;
+  tabs?: Array<{
+    label: string;
+    href: string;
+    active?: boolean;
+  }>;
   onUrlChange: (value: string) => void;
   onAnalyze: () => void;
 }
@@ -78,6 +84,7 @@ export default function DownloaderHero({
   contentTypes = [],
   placeholder,
   buttonLabel = "Download",
+  tabs = [],
   onUrlChange,
   onAnalyze,
 }: Props) {
@@ -116,6 +123,22 @@ export default function DownloaderHero({
                   >
                     {item}
                   </span>
+                ))}
+              </div>
+            ) : null}
+            {tabs.length > 1 ? (
+              <div className="mx-auto mt-4 flex max-w-3xl items-center justify-start gap-1 overflow-x-auto rounded-lg bg-slate-100 p-1 [scrollbar-width:none] dark:bg-slate-900 sm:justify-center [&::-webkit-scrollbar]:hidden">
+                {tabs.map(tab => (
+                  <Link
+                    key={tab.href}
+                    href={tab.href}
+                    className={cn(
+                      "shrink-0 rounded-md px-3 py-1.5 text-xs font-bold text-slate-500 transition-colors hover:bg-white hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-950 dark:hover:text-slate-50",
+                      tab.active && "bg-white text-slate-950 shadow-sm dark:bg-slate-950 dark:text-slate-50",
+                    )}
+                  >
+                    {tab.label}
+                  </Link>
                 ))}
               </div>
             ) : null}

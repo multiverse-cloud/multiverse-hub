@@ -74,17 +74,22 @@ export default function DownloaderFaqSection({
   toolName,
   platforms,
   contentTypes = [],
+  items: providedItems,
 }: {
   compact?: boolean;
   toolName?: string;
   platforms?: string[];
   contentTypes?: string[];
+  items?: FaqItem[];
 }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const items = useMemo(() => {
+    if (providedItems?.length) {
+      return providedItems.slice(0, compact ? 4 : 6);
+    }
     const contextualItems = getPlatformFaqs(toolName, platforms, contentTypes);
     return (contextualItems.length ? contextualItems : FAQ_ITEMS).slice(0, compact ? 4 : 6);
-  }, [compact, contentTypes, platforms, toolName]);
+  }, [compact, contentTypes, platforms, providedItems, toolName]);
 
   const faqSchema = {
     "@context": "https://schema.org",

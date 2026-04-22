@@ -90,11 +90,11 @@ interface VideoProfile {
 const SUPPORTED_VIDEO_PATTERNS = [
   /(?:youtube\.com\/(?:watch|shorts|playlist|live)|youtu\.be\/)/i,
   /(?:tiktok\.com|vm\.tiktok\.com)\//i,
-  /instagram\.com\/(?:reel|p|tv|stories|stories\/highlights)\//i,
+  /instagram\.com\/(?:reel|p|tv|stories|stories\/highlights|[a-z0-9._]+)\//i,
   /(?:twitter\.com|x\.com)\/.+\/status\//i,
   /vimeo\.com\//i,
   /(?:facebook\.com|fb\.watch)\//i,
-  /dailymotion\.com\/video/i,
+  /dailymotion\.com\/(?:video|playlist)/i,
   /(?:pinterest\.[a-z.]+\/pin\/|pin\.it\/)/i,
   /(?:reddit\.com\/r\/.+\/comments\/|redd\.it\/)/i,
   /snapchat\.com\/(?:spotlight|discover|story|add)\//i,

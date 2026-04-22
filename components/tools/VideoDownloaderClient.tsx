@@ -5,13 +5,13 @@ import toast from 'react-hot-toast'
 import type { DownloadOption } from '@/lib/video-downloader'
 import { PremiumPage } from '@/components/platform/premium/Surface'
 import DownloaderFaqSection from '@/components/tools/downloader/DownloaderFaqSection'
-import DownloaderFeaturesSection from '@/components/tools/downloader/DownloaderFeaturesSection'
 import DownloaderHero from '@/components/tools/downloader/DownloaderHero'
-import DownloaderHowToSection from '@/components/tools/downloader/DownloaderHowToSection'
+import DownloaderSeoSection from '@/components/tools/downloader/DownloaderSeoSection'
 import DownloaderWorkspaceSection from '@/components/tools/downloader/DownloaderWorkspaceSection'
 import ToolBreadcrumb from '@/components/tools/ToolBreadcrumb'
 import ToolActions from '@/components/tools/ToolActions'
 import type { Tool } from '@/lib/tools-data'
+import type { DownloaderRouteEntry } from '@/lib/downloader-route-data'
 import type { DownloadState, VideoInfo } from '@/components/tools/downloader/types'
 
 type DownloaderPageConfig = {
@@ -24,14 +24,26 @@ type DownloaderPageConfig = {
   categoryLabel: string
 }
 
+type DownloaderRouteTab = {
+  label: string
+  href: string
+  active?: boolean
+}
+
+type RelatedDownloaderRoute = {
+  label: string
+  href: string
+  description: string
+}
+
 const SUPPORTED_VIDEO_PATTERNS = [
   /(?:youtube\.com\/(?:watch|shorts|playlist|live)|youtu\.be\/)/i,
   /(?:tiktok\.com|vm\.tiktok\.com)\//i,
-  /instagram\.com\/(?:reel|p|tv|stories|stories\/highlights)\//i,
+  /instagram\.com\/(?:reel|p|tv|stories|stories\/highlights|[a-z0-9._]+)\//i,
   /(?:twitter\.com|x\.com)\/.+\/status\//i,
   /vimeo\.com\//i,
   /(?:facebook\.com|fb\.watch)\//i,
-  /dailymotion\.com\/video/i,
+  /dailymotion\.com\/(?:video|playlist)/i,
   /(?:pinterest\.[a-z.]+\/pin\/|pin\.it\/)/i,
   /(?:reddit\.com\/r\/.+\/comments\/|redd\.it\/)/i,
   /snapchat\.com\/(?:spotlight|discover|story|add)\//i,
@@ -72,7 +84,22 @@ function downloadBlob(blob: Blob, filename: string) {
   window.setTimeout(() => URL.revokeObjectURL(blobUrl), 1000)
 }
 
-function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
+function getDownloaderPageConfig(tool?: Tool, route?: DownloaderRouteEntry): DownloaderPageConfig {
+  if (route) {
+    const isAll = route.platform === 'All Platforms'
+    return {
+      title: route.title.split(' - ')[0] || route.title,
+      subtitle: route.description,
+      placeholder: route.placeholder,
+      buttonLabel: 'Download',
+      platforms: isAll
+        ? ['YouTube', 'TikTok', 'Instagram', 'Twitter / X', 'Facebook', 'Pinterest', 'Reddit']
+        : [route.platform],
+      contentTypes: route.contentTypes,
+      categoryLabel: isAll ? 'Video Tools' : `${route.platform} Tools`,
+    }
+  }
+
   switch (tool?.slug) {
     case 'instagram-video-downloader':
       return {
@@ -338,8 +365,18 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
   }
 }
 
-export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
-  const config = useMemo(() => getDownloaderPageConfig(tool), [tool])
+export default function VideoDownloaderClient({
+  tool,
+  route,
+  routeTabs = [],
+  relatedRoutes = [],
+}: {
+  tool?: Tool
+  route?: DownloaderRouteEntry
+  routeTabs?: DownloaderRouteTab[]
+  relatedRoutes?: RelatedDownloaderRoute[]
+}) {
+  const config = useMemo(() => getDownloaderPageConfig(tool, route), [route, tool])
   const [url, setUrl] = useState('')
   const [info, setInfo] = useState<VideoInfo | null>(null)
   const [loading, setLoading] = useState(false)
@@ -583,6 +620,7 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
         contentTypes={config.contentTypes}
         placeholder={config.placeholder}
         buttonLabel={config.buttonLabel}
+        tabs={routeTabs}
         onUrlChange={setUrl}
         onAnalyze={() => void fetchInfo()}
       />
@@ -612,9 +650,8 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
         />
       ) : null}
 
-      <DownloaderHowToSection compact />
-      <DownloaderFeaturesSection compact />
-      <DownloaderFaqSection compact toolName={tool?.name || config.title} platforms={config.platforms} contentTypes={config.contentTypes} />
+      <DownloaderSeoSection route={route} relatedRoutes={relatedRoutes} />
+      <DownloaderFaqSection compact toolName={config.title} platforms={config.platforms} contentTypes={config.contentTypes} items={route?.faq} />
     </PremiumPage>
   )
 }
