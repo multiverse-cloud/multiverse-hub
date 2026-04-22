@@ -140,7 +140,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${route.title} | Multiverse`,
     description: route.description,
-    keywords: route.keywords,
+    keywords: [
+      ...route.keywords,
+      "free online downloader",
+      "video downloader no watermark",
+      "mp4 downloader",
+      "mp3 downloader",
+      "reels downloader",
+      "shorts downloader",
+      "fast media downloader",
+    ],
     alternates: {
       canonical: pageUrl,
     },
@@ -167,6 +176,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     robots: {
       index: true,
       follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   };
 }

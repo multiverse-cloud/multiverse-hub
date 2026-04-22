@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
   const ytMatch = videoUrl.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
 
   if (!ytDlpAvailable && !ytMatch) {
-    return err('Video analysis is unavailable on this server because yt-dlp is not installed.', 503)
+    return err('Advanced video format detection is temporarily unavailable on this server. Try another link or use thumbnail mode.', 503)
   }
 
   try {
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
           audioFormats: [],
           thumbnailDownloads: buildThumbnailDownloads(thumbnail, thumbnailHD),
           videoId: ytMatch[1],
-          error: 'yt-dlp unavailable - thumbnail only mode',
+          error: 'Video formats are temporarily unavailable. Thumbnail-only mode is active for this link.',
         },
         { headers: INFO_CACHE_HEADERS }
       )

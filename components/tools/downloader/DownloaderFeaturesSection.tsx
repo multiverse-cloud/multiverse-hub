@@ -32,7 +32,7 @@ export default function DownloaderFeaturesSection({
           className={compact ? "mb-6" : "mb-12"}
         />
 
-        <div className={compact ? "grid gap-4 md:grid-cols-3" : "grid gap-6 md:grid-cols-2 xl:grid-cols-3"}>
+        <div className={compact ? "grid gap-3 md:grid-cols-3" : "grid gap-5 md:grid-cols-2 xl:grid-cols-3"}>
           {items.map((item, index) => {
             const Icon = item.icon;
             const color = ICON_COLORS[index % ICON_COLORS.length];
@@ -40,7 +40,7 @@ export default function DownloaderFeaturesSection({
             return (
               <PremiumCard
                 key={item.title}
-                className={compact ? "p-5 hover:-translate-y-0.5 hover:shadow-md" : "p-8 hover:-translate-y-1 hover:shadow-lg"}
+                className={compact ? "rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70" : "rounded-2xl border border-slate-200/70 bg-white p-7 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/70"}
               >
                 <div className={compact ? `mb-4 flex h-11 w-11 items-center justify-center rounded-2xl ${color.bg} ${color.text}` : `mb-6 flex h-14 w-14 items-center justify-center rounded-2xl ${color.bg} ${color.text}`}>
                   <Icon className={compact ? "h-5 w-5" : "h-6 w-6"} />

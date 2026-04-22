@@ -152,7 +152,7 @@ export default function SiteSearchInput({
       {showDropdown ? (
         <div
           className={cn(
-            'absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200/80 bg-white/98 shadow-2xl shadow-slate-900/[0.12] backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/98 dark:shadow-[0_32px_64px_-24px_rgba(2,6,23,0.55)]',
+            'absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xl shadow-slate-900/[0.12] dark:border-slate-800/80 dark:bg-slate-950 dark:shadow-[0_32px_64px_-24px_rgba(2,6,23,0.55)]',
             isHero ? '' : 'max-w-2xl',
             'animate-fade-in'
           )}

@@ -114,7 +114,7 @@ export async function GET(req: NextRequest) {
     return err('URL not supported. Try a public YouTube, Instagram, TikTok, Facebook, X, Pinterest, Reddit, Vimeo, Dailymotion, Twitch, Telegram, or similar supported media link.')
   }
   if (format !== 'thumbnail' && !isCommandAvailable(YTDLP_PATH)) {
-    return err('Video downloads are unavailable on this server because yt-dlp is not installed.', 503)
+    return err('Video downloads are temporarily unavailable on this server. Thumbnail downloads are still available.', 503)
   }
 
   if (format === 'thumbnail') {
@@ -190,7 +190,7 @@ export async function GET(req: NextRequest) {
     const message = (error as Error).message
 
     if (message.includes('yt-dlp') && message.includes('not found')) {
-      return err('yt-dlp is not installed. Run: pip install yt-dlp', 503)
+      return err('Video downloads are temporarily unavailable on this server. Please try again later.', 503)
     }
     if (message.includes('ffmpeg') && message.includes('not found')) {
       return err('ffmpeg is required for video downloads with audio. Install ffmpeg on the server.', 503)

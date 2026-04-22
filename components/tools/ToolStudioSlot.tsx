@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import type { ComponentType } from 'react'
+import VideoDownloaderClient from '@/components/tools/VideoDownloaderClient'
 import { VIDEO_DOWNLOADER_TOOL_SLUGS, type Tool } from '@/lib/tools-data'
 import { CALCULATOR_STUDIO_SLUGS } from '@/lib/calculator-studio'
 
@@ -25,7 +26,6 @@ const dynamicStudio = (loader: () => Promise<{ default: StudioComponent }>) =>
   })
 
 const ToolDetailClientSelector = dynamicStudio(() => import('@/components/tools/ToolDetailClientSelector'))
-const VideoDownloaderClient = dynamicStudio(() => import('@/components/tools/VideoDownloaderClient'))
 const VideoStudio = dynamicStudio(() => import('@/components/tools/VideoStudio'))
 const AudioStudio = dynamicStudio(() => import('@/components/tools/AudioStudio'))
 const TextStudio = dynamicStudio(() => import('@/components/tools/TextStudio'))
@@ -90,6 +90,7 @@ const VIDEO_STUDIO_SLUGS = new Set([
   'merge-video',
   'video-to-gif',
   'video-to-mp3',
+  'youtube-thumbnail-downloader',
   'change-video-speed',
   'rotate-video',
   'add-subtitles',

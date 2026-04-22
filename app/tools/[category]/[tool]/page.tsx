@@ -12,6 +12,7 @@ import SEOContent from "@/components/tools/SEOContent";
 import ToolActions from "@/components/tools/ToolActions";
 import ToolRuntimeBanner from "@/components/tools/ToolRuntimeBanner";
 import ToolStudioSlot from "@/components/tools/ToolStudioSlot";
+import VideoDownloaderClient from "@/components/tools/VideoDownloaderClient";
 import { getLucideIcon } from "@/lib/icons";
 import { CALCULATOR_STUDIO_SLUGS } from "@/lib/calculator-studio";
 import { PDF_STUDIO_STATIC_CONTENT } from "@/lib/pdf-studio-content";
@@ -24,7 +25,8 @@ interface Props {
   params: Promise<{ category: string; tool: string }>;
 }
 
-export const revalidate = 3600;
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 const PDF_STUDIO_SLUGS = new Set(Object.keys(PDF_STUDIO_STATIC_CONTENT));
 
@@ -59,6 +61,7 @@ const VIDEO_STUDIO_SLUGS = new Set([
   "merge-video",
   "video-to-gif",
   "video-to-mp3",
+  "youtube-thumbnail-downloader",
   "change-video-speed",
   "rotate-video",
   "add-subtitles",
@@ -374,12 +377,14 @@ export default async function ToolPage({ params }: Props) {
     return (
       <PublicLayout schemaMarkup={combinedSchema}>
         <RecentTracker slug={tool.slug} />
-        <div className="premium-shell" data-tool-shell="true">
-          <div className="mx-auto w-full max-w-7xl px-4 pt-8 sm:px-6 lg:px-6 md:pt-10">
-            <ToolRuntimeBanner status={runtimeStatus} />
+        {runtimeStatus ? (
+          <div className="premium-shell" data-tool-shell="true">
+            <div className="mx-auto w-full max-w-7xl px-4 pt-4 sm:px-6 lg:px-6 md:pt-5">
+              <ToolRuntimeBanner status={runtimeStatus} />
+            </div>
           </div>
-        </div>
-        <ToolStudioSlot tool={tool} />
+        ) : null}
+        <VideoDownloaderClient tool={tool} />
       </PublicLayout>
     );
   }

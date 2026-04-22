@@ -20,6 +20,7 @@ type DownloaderPageConfig = {
   placeholder: string
   buttonLabel: string
   platforms: string[]
+  contentTypes: string[]
   categoryLabel: string
 }
 
@@ -75,11 +76,12 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
   switch (tool?.slug) {
     case 'instagram-video-downloader':
       return {
-        title: 'Instagram Video Downloader',
-        subtitle: 'Paste an Instagram reel, post, story, or highlight link and download it in a compact mobile-friendly flow.',
+        title: 'Download Instagram Videos and Photos',
+        subtitle: 'Save Instagram videos, photos, reels, posts, stories, and highlights from public links.',
         placeholder: 'Paste Instagram reel, story, post, or highlight URL',
-        buttonLabel: 'Fetch Instagram',
+        buttonLabel: 'Download',
         platforms: ['Instagram'],
+        contentTypes: ['Videos', 'Photos', 'Reels', 'Posts', 'Stories', 'Highlights'],
         categoryLabel: 'Instagram Tools',
       }
     case 'instagram-story-downloader':
@@ -87,8 +89,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Instagram Story Downloader',
         subtitle: 'Quick story and highlight downloads with simple paste-and-save UX.',
         placeholder: 'Paste Instagram story or highlight URL',
-        buttonLabel: 'Fetch Story',
+        buttonLabel: 'Download',
         platforms: ['Instagram'],
+        contentTypes: ['Stories', 'Highlights', 'Videos', 'Photos'],
         categoryLabel: 'Instagram Tools',
       }
     case 'instagram-post-downloader':
@@ -96,8 +99,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Instagram Post Downloader',
         subtitle: 'Save public Instagram posts, videos, carousel media, and image pins with a simple paste-first workflow.',
         placeholder: 'Paste Instagram post URL',
-        buttonLabel: 'Fetch Post',
+        buttonLabel: 'Download',
         platforms: ['Instagram'],
+        contentTypes: ['Posts', 'Photos', 'Videos', 'Carousels'],
         categoryLabel: 'Instagram Tools',
       }
     case 'instagram-reels-downloader':
@@ -105,8 +109,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Instagram Reels Downloader',
         subtitle: 'Download Instagram reels, posts, and short video links without a cluttered workflow.',
         placeholder: 'Paste Instagram reel URL',
-        buttonLabel: 'Fetch Reel',
+        buttonLabel: 'Download',
         platforms: ['Instagram'],
+        contentTypes: ['Reels', 'Videos', 'Posts', 'Audio'],
         categoryLabel: 'Instagram Tools',
       }
     case 'tiktok-video-downloader':
@@ -114,8 +119,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'TikTok Video Downloader',
         subtitle: 'Paste a TikTok link and save video, audio, or thumbnail downloads in one place.',
         placeholder: 'Paste TikTok video URL',
-        buttonLabel: 'Fetch TikTok',
+        buttonLabel: 'Download',
         platforms: ['TikTok'],
+        contentTypes: ['Videos', 'Shorts', 'Audio', 'Thumbnails'],
         categoryLabel: 'TikTok Tools',
       }
     case 'youtube-shorts-downloader':
@@ -123,17 +129,19 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'YouTube Shorts Downloader',
         subtitle: 'Fast shorts downloads with MP4, MP3, and thumbnail options that work well on mobile.',
         placeholder: 'Paste YouTube Shorts URL',
-        buttonLabel: 'Fetch Short',
+        buttonLabel: 'Download',
         platforms: ['YouTube'],
+        contentTypes: ['Shorts', 'Videos', 'Audio', 'Thumbnails'],
         categoryLabel: 'YouTube Tools',
       }
     case 'youtube-playlist-downloader':
       return {
         title: 'YouTube Playlist Downloader',
-        subtitle: 'Analyze public playlist links and fetch available media when the source supports it.',
+        subtitle: 'Open public playlist links and download available media when the source supports it.',
         placeholder: 'Paste YouTube playlist URL',
-        buttonLabel: 'Fetch Playlist',
+        buttonLabel: 'Download',
         platforms: ['YouTube'],
+        contentTypes: ['Playlists', 'Videos', 'Audio', 'Thumbnails'],
         categoryLabel: 'YouTube Tools',
       }
     case 'youtube-video-downloader':
@@ -141,8 +149,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'YouTube Video Downloader',
         subtitle: 'Use one paste bar to grab YouTube video, audio, and thumbnail files with direct downloads.',
         placeholder: 'Paste YouTube video URL',
-        buttonLabel: 'Fetch YouTube',
+        buttonLabel: 'Download',
         platforms: ['YouTube'],
+        contentTypes: ['Videos', 'Shorts', 'Live', 'Audio', 'Thumbnails'],
         categoryLabel: 'YouTube Tools',
       }
     case 'facebook-video-downloader':
@@ -150,8 +159,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Facebook Video Downloader',
         subtitle: 'Download Facebook videos and reels with a cleaner compact layout and attachment downloads.',
         placeholder: 'Paste Facebook video or reel URL',
-        buttonLabel: 'Fetch Facebook',
+        buttonLabel: 'Download',
         platforms: ['Facebook'],
+        contentTypes: ['Videos', 'Reels', 'Live', 'Posts'],
         categoryLabel: 'Facebook Tools',
       }
     case 'facebook-reels-downloader':
@@ -159,17 +169,19 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Facebook Reels Downloader',
         subtitle: 'Download public Facebook reels and accessible short-form video links with a compact save flow.',
         placeholder: 'Paste Facebook reel URL',
-        buttonLabel: 'Fetch Reel',
+        buttonLabel: 'Download',
         platforms: ['Facebook'],
+        contentTypes: ['Reels', 'Videos', 'Posts'],
         categoryLabel: 'Facebook Tools',
       }
     case 'twitter-video-downloader':
       return {
         title: 'Twitter Video Downloader',
-        subtitle: 'Save Twitter and X videos with a simple paste, fetch, and download flow.',
+        subtitle: 'Save Twitter and X videos with a simple paste and download flow.',
         placeholder: 'Paste Twitter or X post URL',
-        buttonLabel: 'Fetch Tweet',
+        buttonLabel: 'Download',
         platforms: ['Twitter / X'],
+        contentTypes: ['Videos', 'GIFs', 'Posts', 'Recordings'],
         categoryLabel: 'Twitter Tools',
       }
     case 'pinterest-video-downloader':
@@ -177,8 +189,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Pinterest Video Downloader',
         subtitle: 'Save public video pins, idea pins, and image pins without a busy downloader layout.',
         placeholder: 'Paste Pinterest pin URL',
-        buttonLabel: 'Fetch Pin',
+        buttonLabel: 'Download',
         platforms: ['Pinterest'],
+        contentTypes: ['Video Pins', 'Idea Pins', 'Image Pins'],
         categoryLabel: 'Pinterest Tools',
       }
     case 'reddit-video-downloader':
@@ -186,8 +199,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Reddit Video Downloader',
         subtitle: 'Download public Reddit hosted videos, GIF posts, and supported embedded media.',
         placeholder: 'Paste Reddit post URL',
-        buttonLabel: 'Fetch Reddit',
+        buttonLabel: 'Download',
         platforms: ['Reddit'],
+        contentTypes: ['Videos', 'GIFs', 'Posts', 'Embedded media'],
         categoryLabel: 'Reddit Tools',
       }
     case 'vimeo-video-downloader':
@@ -195,8 +209,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Vimeo Video Downloader',
         subtitle: 'Download Vimeo video, audio, and thumbnail files with a compact professional UI.',
         placeholder: 'Paste Vimeo video URL',
-        buttonLabel: 'Fetch Vimeo',
+        buttonLabel: 'Download',
         platforms: ['Vimeo'],
+        contentTypes: ['Videos', 'Audio', 'Thumbnails'],
         categoryLabel: 'Vimeo Tools',
       }
     case 'dailymotion-video-downloader':
@@ -204,17 +219,19 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Dailymotion Video Downloader',
         subtitle: 'A neat downloader for Dailymotion links with quick format choices and clean mobile spacing.',
         placeholder: 'Paste Dailymotion video URL',
-        buttonLabel: 'Fetch Video',
+        buttonLabel: 'Download',
         platforms: ['Dailymotion'],
+        contentTypes: ['Videos', 'Playlists', 'Audio'],
         categoryLabel: 'Dailymotion Tools',
       }
     case 'snapchat-downloader':
       return {
         title: 'Snapchat Downloader',
-        subtitle: 'Fetch public Spotlight and story media when the content is accessible without login.',
+        subtitle: 'Download public Spotlight and story media when the content is accessible without login.',
         placeholder: 'Paste Snapchat public URL',
-        buttonLabel: 'Fetch Snap',
+        buttonLabel: 'Download',
         platforms: ['Snapchat'],
+        contentTypes: ['Spotlight', 'Public Stories', 'Videos'],
         categoryLabel: 'Snapchat Tools',
       }
     case 'linkedin-video-downloader':
@@ -222,8 +239,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'LinkedIn Video Downloader',
         subtitle: 'Save public LinkedIn video posts and accessible recordings with a developer-clean workflow.',
         placeholder: 'Paste LinkedIn video post URL',
-        buttonLabel: 'Fetch LinkedIn',
+        buttonLabel: 'Download',
         platforms: ['LinkedIn'],
+        contentTypes: ['Video Posts', 'Live recordings', 'Public posts'],
         categoryLabel: 'LinkedIn Tools',
       }
     case 'telegram-video-downloader':
@@ -231,17 +249,19 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Telegram Video Downloader',
         subtitle: 'Download public channel videos and media posts when the link is openly accessible.',
         placeholder: 'Paste Telegram public post URL',
-        buttonLabel: 'Fetch Telegram',
+        buttonLabel: 'Download',
         platforms: ['Telegram'],
+        contentTypes: ['Channel videos', 'Public media', 'Posts'],
         categoryLabel: 'Telegram Tools',
       }
     case 'twitch-clip-downloader':
       return {
         title: 'Twitch Clip Downloader',
-        subtitle: 'Fetch public Twitch clips, VOD links, and accessible stream media from one compact page.',
+        subtitle: 'Download public Twitch clips, VOD links, and accessible stream media from one compact page.',
         placeholder: 'Paste Twitch clip or VOD URL',
-        buttonLabel: 'Fetch Twitch',
+        buttonLabel: 'Download',
         platforms: ['Twitch'],
+        contentTypes: ['Clips', 'VODs', 'Streams'],
         categoryLabel: 'Twitch Tools',
       }
     case 'bilibili-downloader':
@@ -249,8 +269,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Bilibili Downloader',
         subtitle: 'Download public Bilibili videos and supported stream media with quick format choices.',
         placeholder: 'Paste Bilibili video URL',
-        buttonLabel: 'Fetch Bilibili',
+        buttonLabel: 'Download',
         platforms: ['Bilibili'],
+        contentTypes: ['Videos', 'Streams', 'Clips'],
         categoryLabel: 'Bilibili Tools',
       }
     case 'likee-video-downloader':
@@ -258,8 +279,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Likee Video Downloader',
         subtitle: 'Save public Likee short videos with automatic URL detection and clean direct actions.',
         placeholder: 'Paste Likee video URL',
-        buttonLabel: 'Fetch Likee',
+        buttonLabel: 'Download',
         platforms: ['Likee'],
+        contentTypes: ['Short videos', 'Audio', 'Thumbnails'],
         categoryLabel: 'Likee Tools',
       }
     case 'mxtakatak-downloader':
@@ -267,8 +289,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'MX TakaTak Downloader',
         subtitle: 'Download public MX TakaTak short videos when source media is available.',
         placeholder: 'Paste MX TakaTak video URL',
-        buttonLabel: 'Fetch MX TakaTak',
+        buttonLabel: 'Download',
         platforms: ['MX TakaTak'],
+        contentTypes: ['Short videos', 'Audio', 'Thumbnails'],
         categoryLabel: 'MX TakaTak Tools',
       }
     case 'sharechat-video-downloader':
@@ -276,8 +299,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'ShareChat Video Downloader',
         subtitle: 'Save public ShareChat and Moj short videos in a lightweight mobile-first downloader.',
         placeholder: 'Paste ShareChat or Moj video URL',
-        buttonLabel: 'Fetch Media',
+        buttonLabel: 'Download',
         platforms: ['ShareChat'],
+        contentTypes: ['Videos', 'Moj shorts', 'Public posts'],
         categoryLabel: 'ShareChat Tools',
       }
     case 'roposo-video-downloader':
@@ -285,8 +309,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Roposo Video Downloader',
         subtitle: 'Download public Roposo short videos with a simple paste, preview, and save flow.',
         placeholder: 'Paste Roposo video URL',
-        buttonLabel: 'Fetch Roposo',
+        buttonLabel: 'Download',
         platforms: ['Roposo'],
+        contentTypes: ['Short videos', 'Posts', 'Audio'],
         categoryLabel: 'Roposo Tools',
       }
     case 'triller-video-downloader':
@@ -294,8 +319,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'Triller Video Downloader',
         subtitle: 'Save public Triller short videos using a clean stateless downloader workspace.',
         placeholder: 'Paste Triller video URL',
-        buttonLabel: 'Fetch Triller',
+        buttonLabel: 'Download',
         platforms: ['Triller'],
+        contentTypes: ['Short videos', 'Music clips', 'Posts'],
         categoryLabel: 'Triller Tools',
       }
     case 'all-in-one-video-downloader':
@@ -304,8 +330,9 @@ function getDownloaderPageConfig(tool?: Tool): DownloaderPageConfig {
         title: 'All-in-One Video Downloader',
         subtitle: 'Download public videos from YouTube, TikTok, Instagram, X, Facebook, Pinterest, Reddit, Vimeo, and more in one common downloader.',
         placeholder: 'Paste any supported video URL',
-        buttonLabel: 'Fetch Video',
+        buttonLabel: 'Download',
         platforms: ['YouTube', 'TikTok', 'Instagram', 'Twitter / X', 'Facebook', 'Pinterest', 'Reddit'],
+        contentTypes: ['Videos', 'Photos', 'Reels', 'Shorts', 'Pins', 'GIFs', 'Audio'],
         categoryLabel: 'Video Tools',
       }
   }
@@ -318,6 +345,7 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [downloadState, setDownloadState] = useState<DownloadState | null>(null)
+  const [mounted, setMounted] = useState(false)
   const downloadAbortControllerRef = useRef<AbortController | null>(null)
   const infoAbortControllerRef = useRef<AbortController | null>(null)
   const lastAutoRequestedUrlRef = useRef('')
@@ -330,6 +358,21 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
     () => info?.videoFormats.filter(option => option.ext === 'webm') || [],
     [info]
   )
+  const screenReaderStatus = useMemo(() => {
+    if (error) return `Error: ${error}`
+    if (loading) return 'Analyzing link and loading available formats.'
+    if (downloadState?.phase === 'preparing') return 'Preparing your download.'
+    if (downloadState?.phase === 'downloading' && typeof downloadState.progress === 'number') {
+      return `Download in progress: ${downloadState.progress} percent.`
+    }
+    if (downloadState?.phase === 'downloading') return 'Download in progress.'
+    if (info) return 'Download options are ready.'
+    return 'Paste a link to analyze available download formats.'
+  }, [downloadState, error, info, loading])
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     return () => {
@@ -474,7 +517,7 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
     downloadBlob(blob, filename)
   }
 
-  async function startDownload(option: DownloadOption) {
+  async function startDownload(option: DownloadOption): Promise<boolean> {
     setError('')
 
     try {
@@ -482,9 +525,11 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
       setDownloadState({ id: option.id, phase: 'downloading', progress: 100 })
       toast.success('Download ready')
       window.setTimeout(clearDownloadState, 500)
+      return true
     } catch (downloadError) {
       setError((downloadError as Error).message)
       clearDownloadState()
+      return false
     }
   }
 
@@ -509,10 +554,15 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
 
   return (
     <PremiumPage>
-      <div className="mx-auto w-full max-w-7xl px-4 pt-6 sm:px-6 lg:px-6 md:pt-8">
-        <div className="mb-4 flex items-start justify-between gap-3">
+      {mounted ? (
+        <p className="sr-only" aria-live="polite" aria-atomic="true">
+          {screenReaderStatus}
+        </p>
+      ) : null}
+      <div className="mx-auto w-full max-w-6xl px-4 pt-0 sm:px-6 lg:px-6 md:pt-1">
+        <div className="mb-1.5 flex items-center justify-between gap-2">
           <ToolBreadcrumb
-            className="mb-0 flex-1"
+            className="mb-0 min-w-0 flex-1"
             items={[
               { label: 'All Tools', href: '/tools' },
               { label: config.categoryLabel, href: '/tools/video' },
@@ -530,6 +580,7 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
         title={config.title}
         subtitle={config.subtitle}
         platforms={config.platforms}
+        contentTypes={config.contentTypes}
         placeholder={config.placeholder}
         buttonLabel={config.buttonLabel}
         onUrlChange={setUrl}
@@ -538,7 +589,11 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
 
       {error ? (
         <div className="mx-auto -mt-2 max-w-5xl px-4 lg:px-6">
-          <div className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700 shadow-sm">
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700 shadow-sm dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300"
+          >
             {error}
           </div>
         </div>
@@ -559,7 +614,7 @@ export default function VideoDownloaderClient({ tool }: { tool?: Tool }) {
 
       <DownloaderHowToSection compact />
       <DownloaderFeaturesSection compact />
-      <DownloaderFaqSection compact />
+      <DownloaderFaqSection compact toolName={tool?.name || config.title} platforms={config.platforms} contentTypes={config.contentTypes} />
     </PremiumPage>
   )
 }

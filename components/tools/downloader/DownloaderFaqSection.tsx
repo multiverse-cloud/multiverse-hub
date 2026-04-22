@@ -1,23 +1,90 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import {
-  PremiumCard,
   PremiumContainer,
   PremiumSection,
-  PremiumSectionHeader,
 } from "@/components/platform/premium/Surface";
 import { cn } from "@/lib/utils";
 import { FAQ_ITEMS } from "./content";
 
+type FaqItem = {
+  question: string;
+  answer: string;
+};
+
+function getPlatformFaqs(toolName?: string, platforms?: string[], contentTypes: string[] = []): FaqItem[] {
+  const platform = platforms?.[0] || "supported platform";
+  const name = toolName || `${platform} Downloader`;
+  const isAllInOne = platform === "YouTube" ? false : platforms && platforms.length > 1;
+  const supportedList = contentTypes.length ? contentTypes.join(", ") : "public videos, audio, and thumbnails";
+
+  if (isAllInOne) {
+    return [
+      {
+        question: "Which public links can I use?",
+        answer:
+          `Use public links for ${supportedList} from supported platforms. Login-only, private, deleted, geo-blocked, or DRM-protected content is not supported.`,
+      },
+      {
+        question: "Does Multiverse save my download history?",
+        answer:
+          "No. The downloader is stateless: no public accounts, no saved history, no favorites, and no persistent user data.",
+      },
+      {
+        question: "Why are some quality options missing?",
+        answer:
+          "Available formats depend on the source upload and platform delivery. If the source only exposes a few variants, Multiverse only shows those available options.",
+      },
+      {
+        question: "Can I download audio or thumbnails?",
+        answer:
+          "When the source exposes them, Multiverse shows video, audio, and thumbnail options in the same result screen.",
+      },
+    ];
+  }
+
+  return [
+    {
+      question: `Can ${name} download private ${platform} content?`,
+      answer:
+        "No. Only public, accessible content is supported. Private, protected, deleted, login-required, or restricted media will show a clear unsupported message.",
+    },
+      {
+        question: `What can I download from ${platform}?`,
+        answer:
+        `This page is built for ${supportedList}. Available formats depend on the original source, so only public formats exposed by ${platform} will appear.`,
+    },
+    {
+      question: `Why does ${platform} quality change by link?`,
+      answer:
+        "Platforms expose different quality variants per upload. Multiverse shows the formats that are publicly available for that exact link.",
+    },
+    {
+      question: `Is ${name} mobile friendly?`,
+      answer:
+        "Yes. The input, preview, and format buttons are designed for quick one-hand use on mobile screens.",
+    },
+  ];
+}
+
 export default function DownloaderFaqSection({
   compact = false,
+  toolName,
+  platforms,
+  contentTypes = [],
 }: {
   compact?: boolean;
+  toolName?: string;
+  platforms?: string[];
+  contentTypes?: string[];
 }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const items = FAQ_ITEMS.slice(0, compact ? 4 : FAQ_ITEMS.length);
+  const items = useMemo(() => {
+    const contextualItems = getPlatformFaqs(toolName, platforms, contentTypes);
+    return (contextualItems.length ? contextualItems : FAQ_ITEMS).slice(0, compact ? 4 : 6);
+  }, [compact, contentTypes, platforms, toolName]);
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -33,37 +100,31 @@ export default function DownloaderFaqSection({
   };
 
   return (
-    <PremiumSection id="faq" className={compact ? "py-10" : "py-20"}>
+    <PremiumSection id="faq" className={compact ? "py-8" : "py-16"}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
-      <PremiumContainer className="max-w-4xl">
-        <PremiumSectionHeader
-          align="center"
-          title="Frequently Asked Questions"
-          description="Common questions about downloading videos, audio, and thumbnails from supported platforms."
-          className={compact ? "mb-6" : "mb-12"}
-        />
+      <PremiumContainer className="max-w-3xl">
+        <div className={compact ? "mb-4 text-center" : "mb-8 text-center"}>
+          <p className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
+            FAQ
+          </p>
+          <h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950 dark:text-slate-50">
+            {platforms?.length === 1 ? `${platforms[0]} downloader questions` : "Downloader questions"}
+          </h2>
+        </div>
 
-        <div className="space-y-3">
+        <div className="divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-900">
           {items.map((item, i) => {
             const isOpen = openIndex === i;
 
             return (
-              <PremiumCard
-                key={item.question}
-                className={cn(
-                  "overflow-hidden p-0 transition-all duration-300",
-                  isOpen
-                    ? "border-indigo-200/60 shadow-sm dark:border-indigo-800/30"
-                    : "hover:border-slate-300 dark:hover:border-slate-700",
-                )}
-              >
+              <div key={item.question}>
                 <button
                   id={`faq-btn-${i}`}
-                  className={compact ? "flex w-full items-center justify-between px-5 py-4 text-left text-sm font-semibold text-slate-950 transition-colors hover:text-indigo-600 dark:text-slate-50 dark:hover:text-indigo-400" : "flex w-full items-center justify-between px-6 py-5 text-left text-sm font-semibold text-slate-950 transition-colors hover:text-indigo-600 dark:text-slate-50 dark:hover:text-indigo-400"}
+                  className="flex w-full items-center justify-between gap-4 px-4 py-4 text-left text-sm font-extrabold text-slate-950 transition-colors hover:bg-slate-50 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-inset motion-reduce:transition-none dark:text-slate-50 dark:hover:bg-slate-800/60 dark:hover:text-slate-300"
                   onClick={() => setOpenIndex(isOpen ? null : i)}
                   aria-expanded={isOpen}
                   aria-controls={`faq-answer-${i}`}
@@ -71,8 +132,8 @@ export default function DownloaderFaqSection({
                   {item.question}
                   <ChevronDown
                     className={cn(
-                      "ml-4 h-4 w-4 shrink-0 text-slate-400 transition-transform duration-300",
-                      isOpen && "rotate-180 text-indigo-500",
+                      "h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200 motion-reduce:transition-none",
+                      isOpen && "rotate-180",
                     )}
                   />
                 </button>
@@ -82,19 +143,17 @@ export default function DownloaderFaqSection({
                   role="region"
                   aria-labelledby={`faq-btn-${i}`}
                   className={cn(
-                    "grid transition-all duration-300 ease-in-out",
-                    isOpen
-                      ? "grid-rows-[1fr] opacity-100"
-                      : "grid-rows-[0fr] opacity-0",
+                    "grid transition-all duration-300 ease-in-out motion-reduce:transition-none",
+                    isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
                   )}
                 >
                   <div className="overflow-hidden">
-                    <p className={compact ? "border-t border-slate-100 px-5 pb-4 pt-3 text-sm leading-6 text-slate-500 dark:border-slate-800 dark:text-slate-400" : "border-t border-slate-100 px-6 pb-5 pt-4 text-sm leading-7 text-slate-500 dark:border-slate-800 dark:text-slate-400"}>
+                    <p className="px-4 pb-4 text-sm leading-6 text-slate-500 dark:text-slate-400">
                       {item.answer}
                     </p>
                   </div>
                 </div>
-              </PremiumCard>
+              </div>
             );
           })}
         </div>

@@ -1,4 +1,4 @@
-import { ClipboardPaste, Link2, Loader2, X, Zap } from 'lucide-react'
+import { ClipboardPaste, Link2, Loader2, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface Props {
@@ -17,21 +17,15 @@ export default function DownloaderInputBar({
   loading,
   onUrlChange,
   onAnalyze,
-  placeholder = 'Paste video URL here',
-  buttonLabel = 'Analyze',
+  placeholder = 'Paste video URL',
+  buttonLabel = 'Download',
   tone: _tone = 'light',
   className,
 }: Props) {
   return (
-    <div
-      className={cn(
-        'rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_20px_48px_-24px_rgba(15,23,42,0.18)] dark:border-slate-800 dark:bg-slate-900',
-        className
-      )}
-    >
-      <div className="flex flex-col gap-2 md:flex-row md:items-center">
-        <div className="flex min-h-[58px] flex-1 items-center gap-3 rounded-xl bg-slate-50 px-4 dark:bg-slate-950">
-          <Link2 className="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" />
+    <div className={cn('flex items-center gap-2 rounded-xl border border-slate-200/70 bg-white px-2.5 py-2 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.45)] transition-colors duration-200 dark:border-slate-800 dark:bg-slate-900 sm:gap-3 sm:px-3 sm:py-2.5', className)}>
+      <div className="flex h-11 min-w-0 flex-1 items-center gap-2 sm:h-12">
+        <Link2 className="h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />
           <input
             type="url"
             value={url}
@@ -40,53 +34,48 @@ export default function DownloaderInputBar({
             onPaste={event => {
               const pastedText = event.clipboardData.getData('text')
               if (!pastedText) return
-              window.setTimeout(() => {
-                onUrlChange(pastedText)
-              }, 0)
+              window.setTimeout(() => onUrlChange(pastedText), 0)
             }}
             placeholder={placeholder}
-            className="w-full border-none bg-transparent py-3 text-base font-medium outline-none text-slate-900 placeholder:text-slate-400 dark:text-slate-50 dark:placeholder:text-slate-500"
+            aria-label={placeholder}
+            className="min-w-0 flex-1 border-none bg-transparent py-2 text-sm font-medium text-slate-900 outline-none focus:outline-none focus-visible:outline-none placeholder:font-normal placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-500 sm:text-[15px]"
           />
-        </div>
-
-        <div className="grid grid-cols-[48px_48px_minmax(0,1fr)] gap-2 p-1 md:flex md:w-auto">
           <button
             type="button"
             onClick={async () => {
               const pasted = await navigator.clipboard.readText().catch(() => '')
-              if (pasted) {
-                onUrlChange(pasted)
-              }
+              if (pasted) onUrlChange(pasted)
             }}
             aria-label="Paste URL"
             title="Paste URL"
-            className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 font-semibold transition-colors hover:bg-slate-50 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 motion-reduce:transition-none dark:hover:bg-slate-800 dark:hover:text-slate-100"
           >
-            <ClipboardPaste className="h-5 w-5" />
+            <ClipboardPaste className="h-4 w-4" aria-hidden="true" />
           </button>
-
           <button
             type="button"
             onClick={() => onUrlChange('')}
             aria-label="Clear URL"
             title="Clear URL"
             disabled={!url}
-            className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-50 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 motion-reduce:transition-none disabled:pointer-events-none disabled:opacity-30 dark:hover:bg-slate-800 dark:hover:text-slate-100"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" aria-hidden="true" />
           </button>
-
-          <button
-            type="button"
-            onClick={onAnalyze}
-            disabled={!url.trim() || loading}
-            className="inline-flex min-w-0 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/35 md:px-8 md:text-base"
-          >
-            {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Zap className="h-5 w-5" />}
-            {buttonLabel}
-          </button>
-        </div>
       </div>
+
+      <button
+          type="button"
+          onClick={onAnalyze}
+          disabled={!url.trim() || loading}
+          aria-busy={loading}
+          aria-live="polite"
+          className="inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-emerald-600 px-4 text-xs font-bold text-white transition-all duration-200 hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 motion-reduce:transition-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-12 sm:px-6 sm:text-sm"
+        >
+          {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : null}
+          <span className="hidden sm:inline">{loading ? 'Loading' : buttonLabel}</span>
+          <span className="sm:hidden">{loading ? '...' : 'Download'}</span>
+      </button>
     </div>
   )
 }

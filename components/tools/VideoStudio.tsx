@@ -14,6 +14,7 @@ import {
   Image as ImageIcon,
   Link2,
   Loader2,
+  ScanSearch,
   Music4,
   Play,
   RefreshCw,
@@ -21,6 +22,7 @@ import {
   Trash2,
   UploadCloud,
   X,
+  Youtube,
 } from 'lucide-react'
 import type { Tool } from '@/lib/tools-data'
 import { cn, downloadBlob, formatBytes } from '@/lib/utils'
@@ -36,7 +38,7 @@ const VIDEO_COPY = {
   'video-to-mp3': { eyebrow: 'Studio audio extraction', title: 'Video to MP3', summary: 'Extract audio cleanly from interviews, reels, and long-form video files.', badges: ['MP3 output', 'Bitrate control', 'Audio preview'], actionLabel: 'Extract audio', emptyTitle: 'MP3 result appears here', tip: '320 kbps is best when you want the cleanest output for re-use.' },
   'trim-video': { eyebrow: 'Precision cut editor', title: 'Trim Video', summary: 'Set clean start and end points without losing the original pace of the clip.', badges: ['Quick cut presets', 'Clip timing', 'Ready to export'], actionLabel: 'Trim clip', emptyTitle: 'Trimmed clip appears here', tip: 'Short social clips usually feel best around 15 to 30 seconds.' },
   'video-to-gif': { eyebrow: 'Loop export studio', title: 'Video to GIF', summary: 'Turn a short part of your video into a compact GIF with cleaner timing and size control.', badges: ['FPS control', 'Clip duration', 'GIF preview'], actionLabel: 'Create GIF', emptyTitle: 'GIF export appears here', tip: 'Use shorter clips and lower FPS for smaller GIF files.' },
-  'youtube-thumbnail-downloader': { eyebrow: 'Thumbnail extraction', title: 'YouTube Thumbnail Downloader', summary: 'Paste a YouTube link and pull the available thumbnail sizes in one clean workspace.', badges: ['Max resolution', 'Instant preview', 'All variants'], actionLabel: 'Fetch thumbnails', emptyTitle: 'Thumbnail preview appears here', tip: 'If max resolution is unavailable, use the HD or standard version instead.' },
+  'youtube-thumbnail-downloader': { eyebrow: 'Thumbnail extraction', title: 'YouTube Thumbnail Downloader', summary: 'Paste a YouTube link and pull the available thumbnail sizes in one clean workspace.', badges: ['Max resolution', 'Instant preview', 'All variants'], actionLabel: 'Download thumbnails', emptyTitle: 'Thumbnail preview appears here', tip: 'If max resolution is unavailable, use the HD or standard version instead.' },
   'change-video-speed': { eyebrow: 'Playback timing', title: 'Change Video Speed', summary: 'Speed up or slow down footage with direct presets and a cleaner export flow.', badges: ['0.75x to 2x', 'Pitch-safe audio', 'Live-ready output'], actionLabel: 'Process speed', emptyTitle: 'Speed-adjusted result appears here', tip: '1.25x and 1.5x are usually the cleanest for tutorials and talking-head clips.' },
   'mute-video': { eyebrow: 'Audio removal', title: 'Mute Video', summary: 'Remove the audio track and keep the visual timeline ready for silent playback.', badges: ['No audio track', 'Fast export', 'Clean preview'], actionLabel: 'Mute video', emptyTitle: 'Muted result appears here', tip: 'Muted exports are useful for ads, b-roll, and silent social loops.' },
   'gif-maker': { eyebrow: 'Frame sequence builder', title: 'GIF Maker', summary: 'Turn a group of images into one animated GIF with a simple sequence view.', badges: ['Image sequence', 'Frame delay', 'Animated output'], actionLabel: 'Build GIF', emptyTitle: 'Animated GIF appears here', tip: 'Lower frame delay creates faster motion. Use 0.6s to 1.2s for most loops.' },
@@ -357,6 +359,153 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
     } catch {
       window.open(variant.url, '_blank', 'noopener,noreferrer')
     }
+  }
+
+  if (tool.slug === 'youtube-thumbnail-downloader') {
+    const leadVariant = thumbnailVariants[0] || null
+    const videoId = metricValue(result?.metrics, 'Video ID', '')
+
+    return (
+      <div className="space-y-5" data-tool-shell="true">
+        <header className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1.5 text-xs font-black uppercase tracking-[0.16em] text-red-700 ring-1 ring-red-100 dark:bg-red-950/30 dark:text-red-300 dark:ring-red-900/40">
+            <Youtube className="h-4 w-4" />
+            YouTube thumbnails
+          </div>
+          <h1 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:text-4xl">
+            YouTube Thumbnail Downloader
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-base">
+            Paste a public YouTube video, Shorts, or share URL and download the available thumbnail sizes instantly.
+          </p>
+        </header>
+
+        <section className="overflow-hidden rounded-[22px] bg-white shadow-[0_24px_70px_-45px_rgba(15,23,42,0.35)] ring-1 ring-slate-200/80 dark:bg-slate-900 dark:ring-slate-800">
+          <div className="border-b border-slate-100 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-950/50 sm:p-4">
+            <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-center">
+              <div className="flex min-h-[54px] items-center gap-2 rounded-[15px] bg-white px-3 ring-1 ring-slate-200/80 focus-within:ring-red-300 dark:bg-slate-900 dark:ring-slate-800 dark:focus-within:ring-red-800">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-300">
+                  <Link2 className="h-4 w-4" />
+                </div>
+                <input
+                  value={urlInput}
+                  onChange={event => setUrlInput(event.target.value)}
+                  onKeyDown={event => event.key === 'Enter' && void handleProcess()}
+                  placeholder="Paste YouTube video or Shorts URL"
+                  className="min-w-0 flex-1 bg-transparent py-3 text-[15px] font-semibold text-slate-950 outline-none placeholder:font-medium placeholder:text-slate-400 dark:text-slate-50 dark:placeholder:text-slate-500"
+                />
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const pasted = await navigator.clipboard.readText().catch(() => '')
+                    if (pasted) setUrlInput(pasted)
+                  }}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                  title="Paste URL"
+                >
+                  <ClipboardPaste className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUrlInput('')}
+                  disabled={!urlInput}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                  title="Clear"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleProcess}
+                disabled={loading || !urlInput.trim()}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-[15px] bg-slate-950 px-5 text-sm font-black text-white shadow-[0_18px_36px_-24px_rgba(15,23,42,0.8)] transition hover:-translate-y-0.5 hover:bg-slate-800 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-55 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 sm:min-w-[160px]"
+              >
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ScanSearch className="h-4 w-4" />}
+                Download
+              </button>
+            </div>
+          </div>
+
+          <div className="grid gap-0 lg:grid-cols-[minmax(0,1.08fr)_380px]">
+            <div className="p-3 sm:p-4">
+              <div className="relative aspect-video overflow-hidden rounded-[18px] bg-slate-100 dark:bg-slate-950">
+                {leadVariant ? (
+                  <Image src={leadVariant.url} alt="Best YouTube thumbnail preview" fill className="object-cover" unoptimized sizes="(max-width: 1024px) 100vw, 820px" />
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center p-8 text-center">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-red-600 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                      <ImageIcon className="h-6 w-6" />
+                    </div>
+                    <h2 className="mt-4 text-xl font-black tracking-tight text-slate-950 dark:text-slate-50">Thumbnail preview</h2>
+                    <p className="mt-2 max-w-sm text-sm leading-6 text-slate-500 dark:text-slate-400">
+                      Paste a YouTube link to load max resolution, HD, medium, and default thumbnail variants.
+                    </p>
+                  </div>
+                )}
+                {leadVariant ? (
+                  <div className="absolute bottom-3 left-3 rounded-full bg-slate-950/80 px-3 py-1.5 text-xs font-bold text-white backdrop-blur">
+                    {leadVariant.label} · {leadVariant.size}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+
+            <aside className="border-t border-slate-100 p-3 dark:border-slate-800 sm:p-4 lg:border-l lg:border-t-0">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">Variants</p>
+                  <h2 className="mt-1 text-lg font-black text-slate-950 dark:text-slate-50">
+                    {thumbnailVariants.length ? `${thumbnailVariants.length} sizes ready` : 'Ready to fetch'}
+                  </h2>
+                </div>
+                {videoId ? (
+                  <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                    {videoId}
+                  </span>
+                ) : null}
+              </div>
+
+              {thumbnailVariants.length > 0 ? (
+                <div className="space-y-2.5">
+                  {thumbnailVariants.map(variant => (
+                    <div key={variant.label} className="grid grid-cols-[82px_minmax(0,1fr)_auto] items-center gap-3 rounded-[16px] bg-slate-50 p-2 ring-1 ring-slate-200/80 dark:bg-slate-950/55 dark:ring-slate-800">
+                      <div className="relative aspect-video overflow-hidden rounded-[11px] bg-slate-200 dark:bg-slate-900">
+                        <Image src={variant.url} alt={variant.label} fill className="object-cover" unoptimized sizes="96px" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-extrabold text-slate-950 dark:text-slate-50">{variant.label}</p>
+                        <p className="mt-0.5 text-xs font-medium text-slate-500 dark:text-slate-400">{variant.size}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleThumbnailDownload(variant)}
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-[13px] bg-white text-slate-800 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:bg-slate-950 hover:text-white dark:bg-slate-900 dark:text-slate-100 dark:ring-slate-800 dark:hover:bg-white dark:hover:text-slate-950"
+                        title={`Download ${variant.label}`}
+                      >
+                        <Download className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-[18px] border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center dark:border-slate-800 dark:bg-slate-950/50">
+                  <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">No thumbnail loaded yet.</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">Use a public YouTube URL. Some videos may not provide max resolution.</p>
+                </div>
+              )}
+
+              {error ? (
+                <div className="mt-3 rounded-[16px] border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 dark:border-red-900/50 dark:bg-red-950/25 dark:text-red-300">
+                  {error}
+                </div>
+              ) : null}
+            </aside>
+          </div>
+        </section>
+      </div>
+    )
   }
 
   return (

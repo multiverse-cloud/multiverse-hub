@@ -217,7 +217,7 @@ function MegaMenu({ link, tools }: { link: NavLink; tools?: Tool[] }) {
           "group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100",
         )}
       >
-        <div className="rounded-[24px] border border-slate-200/80 bg-white/95 p-6 shadow-[0_32px_64px_-24px_rgba(15,23,42,0.22)] backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/95 dark:shadow-[0_32px_64px_-24px_rgba(2,6,23,0.55)]">
+        <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-[0_28px_56px_-28px_rgba(15,23,42,0.24)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-[0_28px_56px_-28px_rgba(2,6,23,0.65)]">
           <div className="grid grid-cols-3 gap-6">
             {categories.map((cat) => {
               const CatIcon = getLucideIcon(cat.icon, Wrench);
@@ -336,10 +336,10 @@ export default async function Navbar({
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b backdrop-blur-xl",
+        "sticky top-0 z-50 border-b",
         templateVariant
           ? "border-[#252626] bg-[#121313]/96 shadow-[0_12px_26px_-20px_rgba(0,0,0,0.55)]"
-          : "border-slate-200/80 bg-white/88 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.35)] dark:border-slate-800/80 dark:bg-slate-950/88 dark:shadow-[0_12px_26px_-20px_rgba(2,6,23,0.55)]",
+          : "border-slate-200/80 bg-white shadow-[0_10px_24px_-20px_rgba(15,23,42,0.35)] dark:border-slate-800/80 dark:bg-slate-950 dark:shadow-[0_12px_26px_-20px_rgba(2,6,23,0.55)]",
       )}
     >
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-3 py-3 sm:gap-4 sm:px-4 lg:px-6 lg:py-3.5">

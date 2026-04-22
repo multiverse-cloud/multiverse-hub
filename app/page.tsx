@@ -13,11 +13,36 @@ import { getTools } from "@/lib/db";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Multiverse - Free Tools, UI Components, Templates, Prompts & Fixes",
+  title: "Multiverse - Free Online Tools, UI Components, Templates, Prompts & Fixes",
   description:
-    "Use free tools, UI components, website templates, AI prompts, discover guides, and troubleshooting fixes in one fast public platform. No public login required.",
+    "Use 150+ free online tools, UI components, website templates, AI prompts, discover guides, and troubleshooting fixes in one fast public platform. No public login required.",
+  keywords: [
+    "free online tools",
+    "video downloader",
+    "PDF tools",
+    "image tools",
+    "UI components",
+    "website templates",
+    "AI prompts",
+    "developer tools",
+    "SEO tools",
+    "troubleshooting fixes",
+  ],
   alternates: {
     canonical: "https://multiverse-tools.vercel.app",
+  },
+  openGraph: {
+    title: "Multiverse - Free Online Tools, UI Components, Templates, Prompts & Fixes",
+    description:
+      "A fast public workspace for creators and developers: download media, process files, copy UI, launch templates, and find practical fixes without sign-in.",
+    type: "website",
+    url: "https://multiverse-tools.vercel.app",
+  },
+  twitter: {
+    card: "summary",
+    title: "Multiverse - Free Online Tools and Creative Universes",
+    description:
+      "Free tools, UI components, templates, prompts, and fixes in one fast public platform.",
   },
 };
 

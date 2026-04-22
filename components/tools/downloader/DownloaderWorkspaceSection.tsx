@@ -1,15 +1,17 @@
 import Image from "next/image";
+import { useMemo } from "react";
+import type { LucideIcon } from "lucide-react";
 import {
+  BadgeCheck,
   CalendarDays,
-  Clapperboard,
+  Clock3,
   Copy,
   ExternalLink,
   Eye,
-  Headphones,
-  Heart,
-  ImageIcon,
-  Play,
-  Sparkles,
+  FileAudio2,
+  FileVideo2,
+  ImageDown,
+  Layers3,
 } from "lucide-react";
 import type { DownloadOption } from "@/lib/video-downloader";
 import { PremiumContainer } from "@/components/platform/premium/Surface";
@@ -24,80 +26,95 @@ interface Props {
   webmOptions: DownloadOption[];
   audioOptions: DownloadOption[];
   downloadState: DownloadState | null;
-  onDownload: (option: DownloadOption) => void;
+  onDownload: (option: DownloadOption) => Promise<boolean>;
   getButtonLabel: (option: DownloadOption) => string;
   onCopyLink: () => void;
 }
 
-type GroupTone = "indigo" | "emerald" | "slate";
+type Tone = "video" | "audio" | "image" | "web";
 
-const GROUP_STYLES: Record<
-  GroupTone,
-  {
-    dot: string;
-    icon: string;
-    badge: string;
-    ring: string;
-  }
-> = {
-  indigo: {
-    dot: "bg-indigo-500",
-    icon: "bg-indigo-100 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-300",
-    badge:
-      "bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300",
-    ring: "ring-indigo-200/60 dark:ring-indigo-800/40",
+const TONE_STYLES: Record<Tone, { icon: string; pill: string; button: "primary" | "secondary" }> = {
+  video: {
+    icon: "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300",
+    pill: "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300",
+    button: "primary",
   },
-  emerald: {
-    dot: "bg-emerald-500",
-    icon: "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-300",
-    badge:
-      "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300",
-    ring: "ring-emerald-200/60 dark:ring-emerald-800/40",
+  audio: {
+    icon: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300",
+    pill: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300",
+    button: "secondary",
   },
-  slate: {
-    dot: "bg-slate-400",
-    icon: "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-200",
-    badge: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200",
-    ring: "ring-slate-200/60 dark:ring-slate-700/40",
+  image: {
+    icon: "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300",
+    pill: "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300",
+    button: "secondary",
+  },
+  web: {
+    icon: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200",
+    pill: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200",
+    button: "secondary",
   },
 };
 
-function CompactDownloadRow({
+function MetaItem({
+  icon: Icon,
+  label,
+}: {
+  icon: LucideIcon;
+  label: string;
+}) {
+  return (
+    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+      <Icon className="h-3.5 w-3.5 text-slate-400" aria-hidden="true" />
+      {label}
+    </span>
+  );
+}
+
+function EmptyFormatState({ label }: { label: string }) {
+  return (
+    <div className="rounded-lg border border-dashed border-slate-200 bg-white px-3.5 py-4 text-sm font-medium text-slate-500 dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
+      {label}
+    </div>
+  );
+}
+
+function FormatRow({
   option,
   tone,
+  icon: Icon,
   downloadState,
   onDownload,
   getButtonLabel,
 }: {
   option: DownloadOption;
-  tone: GroupTone;
+  tone: Tone;
+  icon: LucideIcon;
   downloadState: DownloadState | null;
   onDownload: (option: DownloadOption) => void;
   getButtonLabel: (option: DownloadOption) => string;
 }) {
   const isBusy = downloadState?.id === option.id;
   const isDisabled = downloadState !== null && !isBusy;
+  const styles = TONE_STYLES[tone];
 
   return (
-    <div className="flex items-center gap-2.5 rounded-2xl border border-slate-200/80 bg-white/90 p-2 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-950/70 sm:gap-3 sm:p-2.5">
-      {/* Quality badge */}
-      <div
-        className={cn(
-          "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-[10px] font-black uppercase tracking-[0.06em] sm:h-10 sm:w-10 sm:rounded-[14px] sm:text-[11px]",
-          GROUP_STYLES[tone].badge,
-        )}
-      >
-        {option.qualityLabel.replace(/[^0-9A-Za-z]/g, "").slice(0, 3) ||
-          option.ext.toUpperCase()}
+    <div className="group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-xl bg-white p-3 ring-1 ring-slate-200/80 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-24px_rgba(15,23,42,0.42)] motion-reduce:hover:translate-y-0 motion-reduce:transition-none dark:bg-slate-950/70 dark:ring-slate-800 sm:p-3.5">
+      <div className={cn("flex h-9 w-9 items-center justify-center rounded-lg", styles.icon)}>
+        <Icon className="h-4 w-4" aria-hidden="true" />
       </div>
 
-      {/* Label + meta */}
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-[13px] font-extrabold text-slate-950 dark:text-slate-50 sm:text-[14px]">
-          {option.qualityLabel}
-        </p>
-        <p className="mt-0.5 text-[10px] font-medium text-slate-400 dark:text-slate-500 sm:text-xs">
-          {option.filesizeMB ? `${option.filesizeMB} MB` : "Ready to download"}
+      <div className="min-w-0">
+        <div className="flex min-w-0 items-center gap-2">
+          <p className="truncate text-sm font-bold text-slate-950 dark:text-slate-50">
+            {option.label || option.qualityLabel}
+          </p>
+          <span className={cn("hidden rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] sm:inline-flex", styles.pill)}>
+            {option.ext}
+          </span>
+        </div>
+        <p className="mt-0.5 truncate text-xs font-medium text-slate-500 dark:text-slate-400">
+          {option.filesizeMB ? `${option.filesizeMB} MB` : `${option.qualityLabel} ready`}
         </p>
       </div>
 
@@ -107,82 +124,66 @@ function CompactDownloadRow({
         busy={isBusy}
         disabled={isDisabled}
         onClick={() => onDownload(option)}
-        tone={tone === "indigo" ? "primary" : "secondary"}
+        tone={styles.button}
         compact
       />
     </div>
   );
 }
 
-function DownloadGroup({
+function FormatSection({
   title,
-  description,
-  options,
+  subtitle,
+  icon,
   tone,
-  icon: Icon,
+  options,
+  emptyLabel,
   downloadState,
   onDownload,
   getButtonLabel,
 }: {
   title: string;
-  description: string;
+  subtitle: string;
+  icon: LucideIcon;
+  tone: Tone;
   options: DownloadOption[];
-  tone: GroupTone;
-  icon: typeof Clapperboard;
+  emptyLabel: string;
   downloadState: DownloadState | null;
   onDownload: (option: DownloadOption) => void;
   getButtonLabel: (option: DownloadOption) => string;
 }) {
+  const HeaderIcon = icon;
+
   return (
-    <div
-      className={cn(
-        "rounded-2xl border bg-slate-50/80 p-3 ring-1 dark:border-slate-800 dark:bg-slate-950/50 sm:rounded-[20px] sm:p-3.5",
-        "border-slate-200/70",
-        GROUP_STYLES[tone].ring,
-      )}
-    >
-      {/* Group header */}
-      <div className="mb-2.5 flex items-center gap-2.5 sm:mb-3 sm:gap-3">
-        <div
-          className={cn(
-            "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl sm:h-10 sm:w-10 sm:rounded-2xl",
-            GROUP_STYLES[tone].icon,
-          )}
-        >
-          <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+    <section className="space-y-2.5">
+      <div className="flex items-center gap-2">
+        <div className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-lg", TONE_STYLES[tone].icon)}>
+          <HeaderIcon className="h-3.5 w-3.5" aria-hidden="true" />
         </div>
         <div className="min-w-0">
-          <div className="flex items-center gap-1.5">
-            <span
-              className={cn(
-                "h-1.5 w-1.5 shrink-0 rounded-full",
-                GROUP_STYLES[tone].dot,
-              )}
-            />
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 sm:text-[11px]">
-              {title}
-            </p>
-          </div>
-          <p className="mt-0.5 text-[10px] text-slate-400 dark:text-slate-500 sm:text-xs">
-            {description}
-          </p>
+          <h3 className="text-sm font-extrabold text-slate-950 dark:text-slate-50">{title}</h3>
+          <p className="hidden text-xs font-medium text-slate-500 dark:text-slate-400 sm:block">{subtitle}</p>
         </div>
       </div>
 
-      {/* Rows */}
-      <div className="space-y-2 sm:space-y-2.5">
-        {options.map((option) => (
-          <CompactDownloadRow
-            key={option.id}
-            option={option}
-            tone={tone}
-            downloadState={downloadState}
-            onDownload={onDownload}
-            getButtonLabel={getButtonLabel}
-          />
-        ))}
+      <div className="space-y-2">
+        {options.length > 0 ? (
+          options.map((option) => (
+            <FormatRow
+              key={option.id}
+              option={option}
+              tone={tone}
+              icon={icon}
+              downloadState={downloadState}
+              onDownload={onDownload}
+              getButtonLabel={getButtonLabel}
+            />
+          ))
+        ) : (
+          <EmptyFormatState label={emptyLabel} />
+        )}
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -197,206 +198,161 @@ export default function DownloaderWorkspaceSection({
   onCopyLink,
 }: Props) {
   const previewImage = info.thumbnailHQ || info.thumbnail;
-  const thumbnailTone: GroupTone = "indigo";
+  const primaryThumbnail = info.thumbnailDownloads[0] || null;
+  const thumbnailBusy = primaryThumbnail ? downloadState?.id === primaryThumbnail.id : false;
+  const stableMp4Options = useMemo(() => mp4Options, [mp4Options]);
+  const stableWebmOptions = useMemo(() => webmOptions, [webmOptions]);
+  const stableAudioOptions = useMemo(() => audioOptions, [audioOptions]);
+  const formatCount = mp4Options.length + webmOptions.length + audioOptions.length;
 
   return (
-    <section className="bg-gradient-to-b from-slate-50 to-white pb-10 pt-2 dark:from-slate-900 dark:to-slate-950 md:pb-12 md:pt-3">
-      <PremiumContainer className="max-w-7xl px-4 sm:px-6">
-        <div className="grid gap-4 lg:grid-cols-[1fr_1fr] lg:gap-5">
-          {/* ── LEFT: Video Preview Card ── */}
-          <div className="flex flex-col rounded-[22px] border border-slate-200/70 bg-white p-3 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.18)] dark:border-slate-800 dark:bg-slate-900/95 dark:shadow-none sm:p-4 lg:p-4">
-            {/* Thumbnail */}
-            <div className="relative aspect-video w-full overflow-hidden rounded-[14px] bg-slate-100 dark:bg-slate-950 sm:rounded-[18px]">
-              <Image
-                src={previewImage || ""}
-                alt={info.title}
-                fill
-                sizes="(max-width: 1023px) 100vw, 50vw"
-                className="object-cover object-center"
-                unoptimized
-              />
-              {/* Gradient overlay + play button */}
-              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-slate-950/50 via-transparent to-transparent">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-indigo-600 shadow-xl shadow-slate-900/20 sm:h-14 sm:w-14">
-                  <Play className="h-5 w-5 fill-current sm:h-6 sm:w-6" />
+    <section className="bg-white pb-8 pt-3 dark:bg-slate-950 sm:pb-12 sm:pt-4">
+      <PremiumContainer className="max-w-6xl px-4 sm:px-6">
+        <div className="space-y-5">
+          <article className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200/70 dark:bg-slate-900/55 dark:ring-slate-800 sm:p-4">
+            <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_180px] sm:items-center">
+              <div className="min-w-0 space-y-3">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-600 ring-1 ring-slate-200/80 dark:bg-slate-950 dark:text-slate-300 dark:ring-slate-800">
+                  <BadgeCheck className="h-3.5 w-3.5 text-emerald-600" aria-hidden="true" />
+                  {info.platform}
                 </div>
-              </div>
-              {/* Duration pill */}
-              <div className="absolute bottom-2.5 right-2.5 rounded-full bg-slate-950/80 px-2.5 py-1 font-mono text-[11px] font-semibold text-white backdrop-blur-sm sm:bottom-3 sm:right-3 sm:text-xs">
-                {formatDuration(info.duration)}
-              </div>
-            </div>
-
-            {/* Meta */}
-            <div className="mt-3 flex-1 sm:mt-4">
-              {/* Platform badge */}
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-[0.18em] text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300">
-                <span className="h-1 w-1 rounded-full bg-indigo-500" />
-                {info.platform}
-              </span>
-
-              {/* Title */}
-              <h2 className="mt-2 line-clamp-2 text-lg font-extrabold leading-snug text-slate-950 dark:text-slate-50 sm:mt-2.5 sm:text-xl lg:text-2xl">
-                {info.title}
-              </h2>
-
-              {/* Stats row */}
-              <div className="mt-3 flex flex-wrap gap-2 sm:mt-3.5 sm:gap-2.5">
-                <span className="inline-flex items-center gap-1.5 rounded-xl bg-sky-50 px-2.5 py-1.5 text-xs font-semibold text-sky-700 dark:bg-sky-950/40 dark:text-sky-300">
-                  <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                  <span className="hidden xs:inline">Views&nbsp;</span>
-                  {formatViews(info.viewCount)}
-                </span>
-                <span className="inline-flex items-center gap-1.5 rounded-xl bg-rose-50 px-2.5 py-1.5 text-xs font-semibold text-rose-600 dark:bg-rose-950/40 dark:text-rose-300">
-                  <Heart className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                  <span className="hidden xs:inline">Likes&nbsp;</span>
-                  {formatViews(info.likeCount)}
-                </span>
-                <span className="inline-flex items-center gap-1.5 rounded-xl bg-amber-50 px-2.5 py-1.5 text-xs font-semibold text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
-                  <CalendarDays className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                  {formatUploadDate(info.uploadDate) || "--"}
-                </span>
-              </div>
-
-              {/* Action buttons */}
-              <div className="mt-3 flex flex-wrap items-center gap-2 sm:mt-3.5 sm:gap-2.5">
-                {/* Copy link — prominent */}
-                <button
-                  type="button"
-                  onClick={onCopyLink}
-                  className="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-xs font-semibold text-indigo-700 transition-colors hover:bg-indigo-100 dark:border-indigo-800/60 dark:bg-indigo-950/40 dark:text-indigo-300 dark:hover:bg-indigo-950/70 sm:text-sm"
-                >
-                  <Copy className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  Copy Link
-                </button>
-
-                {/* Open original */}
-                <a
-                  href={info.webpage_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-300 dark:hover:bg-slate-900 sm:text-sm"
-                >
-                  <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  Open Original
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* ── RIGHT: Download Options Card ── */}
-          <div className="rounded-[22px] border border-slate-200/70 bg-white p-3 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.16)] dark:border-slate-800 dark:bg-slate-900/95 dark:shadow-none sm:p-4 lg:p-4">
-            {/* Card header */}
-            <div className="mb-3 sm:mb-4">
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500 sm:text-[11px]">
-                Available Downloads
-              </p>
-              <h3 className="mt-0.5 text-lg font-extrabold text-slate-950 dark:text-slate-50 sm:text-xl">
-                Choose Format
-              </h3>
-            </div>
-
-            {/* Format groups: stack on mobile, 2-col on desktop */}
-            <div className="flex flex-col gap-3 sm:grid sm:grid-cols-2 sm:gap-3 lg:flex lg:flex-col lg:gap-3">
-              <DownloadGroup
-                title="Video (MP4)"
-                description="Best compatibility, audio included"
-                options={mp4Options}
-                tone="indigo"
-                icon={Clapperboard}
-                downloadState={downloadState}
-                onDownload={onDownload}
-                getButtonLabel={getButtonLabel}
-              />
-
-              <DownloadGroup
-                title="Video (WEBM)"
-                description="High-quality web format"
-                options={webmOptions}
-                tone="emerald"
-                icon={Sparkles}
-                downloadState={downloadState}
-                onDownload={onDownload}
-                getButtonLabel={getButtonLabel}
-              />
-
-              <DownloadGroup
-                title="Audio Only"
-                description="MP3 & M4A audio extracts"
-                options={audioOptions}
-                tone="slate"
-                icon={Headphones}
-                downloadState={downloadState}
-                onDownload={onDownload}
-                getButtonLabel={getButtonLabel}
-              />
-
-              {/* Thumbnail group — full-width, spans both sm cols */}
-              <div
-                className={cn(
-                  "rounded-2xl border bg-slate-50/80 p-3 ring-1 dark:border-slate-800 dark:bg-slate-950/50 sm:col-span-2 sm:rounded-[20px] sm:p-3.5 lg:col-span-1",
-                  "border-slate-200/70",
-                  GROUP_STYLES[thumbnailTone].ring,
-                )}
-              >
-                {/* Group header */}
-                <div className="mb-2.5 flex items-center gap-2.5 sm:mb-3">
-                  <div
-                    className={cn(
-                      "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl sm:h-10 sm:w-10 sm:rounded-2xl",
-                      GROUP_STYLES[thumbnailTone].icon,
-                    )}
+                <div>
+                  <h2 className="line-clamp-2 text-base font-black leading-snug tracking-tight text-slate-950 dark:text-white sm:text-xl">
+                    {info.title}
+                  </h2>
+                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+                    <MetaItem icon={Clock3} label={formatDuration(info.duration)} />
+                    <MetaItem icon={Eye} label={formatViews(info.viewCount)} />
+                    <MetaItem icon={CalendarDays} label={formatUploadDate(info.uploadDate)} />
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={onCopyLink}
+                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-white px-3 text-xs font-bold text-slate-800 ring-1 ring-slate-200/80 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 motion-reduce:transition-none dark:bg-slate-950 dark:text-slate-100 dark:ring-slate-800 dark:hover:bg-slate-900"
                   >
-                    <ImageIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span
-                        className={cn(
-                          "h-1.5 w-1.5 shrink-0 rounded-full",
-                          GROUP_STYLES[thumbnailTone].dot,
-                        )}
-                      />
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 sm:text-[11px]">
-                        Thumbnail Downloads
-                      </p>
-                    </div>
-                    <p className="mt-0.5 text-[10px] text-slate-400 dark:text-slate-500 sm:text-xs">
-                      HD image exports
-                    </p>
-                  </div>
+                    <Copy className="h-3.5 w-3.5" aria-hidden="true" />
+                    Copy link
+                  </button>
+                  <a
+                    href={info.webpage_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-slate-950 px-3 text-xs font-bold text-white transition-colors hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/70 motion-reduce:transition-none dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                    Original
+                  </a>
                 </div>
+              </div>
 
-                {/* Thumbnail preview — full width */}
-                <div
-                  className="relative mb-2.5 w-full overflow-hidden rounded-[14px] bg-slate-100 dark:bg-slate-950 sm:mb-3 sm:rounded-[16px]"
-                  style={{ aspectRatio: "16/9" }}
-                >
+              <div className="relative h-28 overflow-hidden rounded-lg bg-slate-200 dark:bg-slate-800 sm:h-28">
+                {previewImage ? (
                   <Image
-                    src={previewImage || ""}
-                    alt={`${info.title} thumbnail preview`}
+                    src={previewImage}
+                    alt={`${info.title} thumbnail`}
                     fill
-                    sizes="(max-width: 1023px) 100vw, 50vw"
+                    sizes="(max-width: 640px) 100vw, 180px"
                     className="object-cover"
                     unoptimized
                   />
-                </div>
-
-                {/* Download rows */}
-                <div className="space-y-2 sm:space-y-2.5">
-                  {info.thumbnailDownloads.map((option) => (
-                    <CompactDownloadRow
-                      key={option.id}
-                      option={option}
-                      tone={thumbnailTone}
-                      downloadState={downloadState}
-                      onDownload={onDownload}
-                      getButtonLabel={getButtonLabel}
-                    />
-                  ))}
-                </div>
+                ) : null}
               </div>
             </div>
+          </article>
+
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
+            <div className="space-y-5">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+                    Select format
+                  </p>
+                  <h2 className="mt-1 text-lg font-black tracking-tight text-slate-950 dark:text-slate-50">
+                    Download options
+                  </h2>
+                </div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600 dark:bg-slate-900 dark:text-slate-300">
+                  <Layers3 className="h-3.5 w-3.5" aria-hidden="true" />
+                  {formatCount} formats
+                </span>
+              </div>
+
+              <FormatSection
+                title="MP4 video"
+                subtitle="Best compatibility, audio included"
+                icon={FileVideo2}
+                tone="video"
+                options={stableMp4Options}
+                emptyLabel="No MP4 formats were detected for this source."
+                downloadState={downloadState}
+                onDownload={onDownload}
+                getButtonLabel={getButtonLabel}
+              />
+
+              <FormatSection
+                title="WEBM video"
+                subtitle="High quality web-native exports"
+                icon={FileVideo2}
+                tone="web"
+                options={stableWebmOptions}
+                emptyLabel="No WEBM variants are available for this source."
+                downloadState={downloadState}
+                onDownload={onDownload}
+                getButtonLabel={getButtonLabel}
+              />
+
+              <FormatSection
+                title="Audio"
+                subtitle="Extract MP3 or M4A audio"
+                icon={FileAudio2}
+                tone="audio"
+                options={stableAudioOptions}
+                emptyLabel="Audio-only downloads are not available for this link."
+                downloadState={downloadState}
+                onDownload={onDownload}
+                getButtonLabel={getButtonLabel}
+              />
+            </div>
+
+            <aside className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200/70 dark:bg-slate-900/55 dark:ring-slate-800">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className={cn("flex h-9 w-9 shrink-0 items-center justify-center rounded-lg", TONE_STYLES.image.icon)}>
+                    <ImageDown className="h-4 w-4" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-extrabold text-slate-950 dark:text-slate-50">Thumbnail</h3>
+                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400">HD cover image</p>
+                  </div>
+                </div>
+                {primaryThumbnail ? (
+                  <DownloadActionButton
+                    optionId={primaryThumbnail.id}
+                    label={getButtonLabel(primaryThumbnail)}
+                    busy={Boolean(thumbnailBusy)}
+                    disabled={downloadState !== null && !thumbnailBusy}
+                    onClick={() => onDownload(primaryThumbnail)}
+                    tone="secondary"
+                    compact
+                  />
+                ) : null}
+              </div>
+
+              <div className="relative mt-3 aspect-video overflow-hidden rounded-lg bg-slate-200 dark:bg-slate-800">
+                {previewImage ? (
+                  <Image
+                    src={previewImage}
+                    alt={`${info.title} cover image`}
+                    fill
+                    sizes="(max-width: 1023px) 100vw, 300px"
+                    className="object-cover"
+                    unoptimized
+                  />
+                ) : null}
+              </div>
+            </aside>
           </div>
         </div>
       </PremiumContainer>

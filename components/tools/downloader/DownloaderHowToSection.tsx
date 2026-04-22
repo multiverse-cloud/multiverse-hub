@@ -20,14 +20,14 @@ export default function DownloaderHowToSection({
         <PremiumSectionHeader
           align="center"
           title="How to Download"
-          description="Download any video in a simple paste, fetch, and save flow."
+          description="Download public media in a simple paste, preview, and save flow."
           className={compact ? "mb-6" : "mb-12"}
         />
 
-        <div className={compact ? "grid gap-4 md:grid-cols-3" : "grid gap-8 md:grid-cols-2 xl:grid-cols-4"}>
+        <div className={compact ? "grid gap-3 md:grid-cols-3" : "grid gap-5 md:grid-cols-2 xl:grid-cols-4"}>
           {steps.map((item, index) => (
             <div key={item.step} className="relative flex items-stretch">
-              <PremiumCard className={compact ? "flex-1 p-5" : "flex-1 p-8"}>
+              <PremiumCard className={compact ? "flex-1 rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70" : "flex-1 rounded-2xl border border-slate-200/70 bg-white p-7 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/70"}>
                 <div className={compact ? "mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-indigo-100 font-display text-base font-black text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300" : "mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-100 font-display text-xl font-black text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300"}>
                   {index + 1}
                 </div>
