@@ -3,8 +3,7 @@
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { startTransition, useDeferredValue, useEffect, useMemo, useState } from 'react'
-import { ArrowUpRight, Boxes, ChevronDown, Filter, Search, SearchX, X } from 'lucide-react'
-import { getEffectSlug } from '@/lib/ui-code-snippets'
+import { ArrowUpRight, Boxes, Check, Copy, Eye, Filter, Search, SearchX, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { UiCatalogItem } from '@/lib/ui-source-components'
 
@@ -41,8 +40,6 @@ type CssEffectsLibraryClientProps = {
   collectionsBySection: Record<UiSectionId, UiCollection[]>
   collectionLabels: Record<string, string>
 }
-
-type SortMode = 'featured' | 'newest' | 'name-asc' | 'name-desc'
 
 const INITIAL_VISIBLE_COUNT = 24
 const UI_STATE_KEY = 'multiverse:ui-universe-state:v2'
@@ -145,115 +142,98 @@ function EffectPreview({
   )
 }
 
-function PreviewCard({
+function CategoryCard({ collection }: { collection: UiCollection }) {
+  return (
+    <Link
+      href={`/ui?section=${collection.sectionId}&category=${collection.id}`}
+      className="group flex min-h-[118px] items-center justify-between rounded-xl border border-slate-200 bg-white px-6 py-5 transition-colors hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700 dark:hover:bg-slate-900"
+    >
+      <div className="min-w-0">
+        <h3 className="text-lg font-semibold tracking-tight text-slate-950 dark:text-slate-50">{collection.label}</h3>
+        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{collection.count} components</p>
+      </div>
+      <ArrowUpRight className="h-5 w-5 shrink-0 text-slate-400 transition-colors group-hover:text-slate-900 dark:group-hover:text-white" />
+    </Link>
+  )
+}
+
+function ComponentPreviewRow({
   effect,
-  collectionLabels,
+  copied,
+  onCopy,
 }: {
   effect: UiLibraryItem
-  collectionLabels: Record<string, string>
+  copied: boolean
+  onCopy: (effect: UiLibraryItem) => void
 }) {
+  const isDark = Boolean(effect.darkVariant)
+
   return (
-    <article className="group overflow-hidden rounded-xl border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_18px_40px_-28px_rgba(15,23,42,0.35)] dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700">
-      <div className="relative h-56 overflow-hidden bg-white md:h-60">
+    <article className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
+      <div className="flex flex-col gap-3 border-b border-slate-100 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-950 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0">
+          <h3 className="truncate text-base font-semibold text-slate-950 dark:text-slate-50">{effect.variantLabel || effect.title}</h3>
+          <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{effect.frameworkLabel || 'markup'}</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {['Mobile', 'SM', 'MD', 'LG', 'Full'].map(size => (
+            <span
+              key={size}
+              className={cn(
+                'rounded-md border px-2.5 py-1 text-xs font-semibold',
+                size === 'Full'
+                  ? 'border-slate-950 bg-slate-950 text-white dark:border-white dark:bg-white dark:text-slate-950'
+                  : 'border-slate-200 bg-white text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300'
+              )}
+            >
+              {size}
+            </span>
+          ))}
+          <Link
+            href={`/ui/${effect.slug}`}
+            className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+          >
+            <Eye className="h-3.5 w-3.5" />
+            Preview
+          </Link>
+          <button
+            type="button"
+            onClick={() => onCopy(effect)}
+            className="inline-flex items-center gap-1.5 rounded-md bg-slate-950 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+          >
+            {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+            {copied ? 'Copied' : 'Copy'}
+          </button>
+        </div>
+      </div>
+      <div className={cn('relative h-[200px] overflow-hidden md:h-[220px]', isDark ? 'bg-slate-950' : 'bg-white')}>
         <EffectPreview effect={effect} compact />
       </div>
-      <Link
-        href={`/ui/${effect.slug}`}
-        className="flex cursor-pointer items-center justify-between gap-3 border-t border-slate-100 px-4 py-3 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-900"
-      >
-        <div className="min-w-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-            {effect.collectionLabel || collectionLabels[effect.category] || effect.category}
-          </p>
-          <h3 className="mt-1 truncate text-sm font-semibold tracking-tight text-slate-950 dark:text-slate-50">
-            {effect.title}
-          </h3>
-        </div>
-        <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-400 transition-colors group-hover:text-slate-900 dark:group-hover:text-slate-100" />
-      </Link>
     </article>
   )
 }
 
-function SkeletonCard() {
+function SkeletonRow() {
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
-      <div className="h-56 animate-pulse bg-slate-100 dark:bg-slate-900 md:h-60" />
-      <div className="space-y-3 px-4 py-3">
-        <div className="h-3 w-20 animate-pulse rounded bg-slate-100 dark:bg-slate-900" />
-        <div className="h-4 w-2/3 animate-pulse rounded bg-slate-100 dark:bg-slate-900" />
+      <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+        <div className="space-y-2">
+          <div className="h-4 w-36 animate-pulse rounded bg-slate-100 dark:bg-slate-900" />
+          <div className="h-3 w-20 animate-pulse rounded bg-slate-100 dark:bg-slate-900" />
+        </div>
+        <div className="h-8 w-28 animate-pulse rounded bg-slate-100 dark:bg-slate-900" />
       </div>
+      <div className="h-[200px] animate-pulse bg-slate-100 dark:bg-slate-900" />
     </div>
   )
 }
 
-function SortSelect({
-  value,
-  onChange,
-}: {
-  value: SortMode
-  onChange: (value: SortMode) => void
-}) {
-  return (
-    <div className="relative">
-      <select
-        value={value}
-        onChange={event => onChange(event.target.value as SortMode)}
-        className="h-10 appearance-none rounded-xl border border-slate-200 bg-white px-3 pr-9 text-sm font-semibold text-slate-900 shadow-sm outline-none transition-colors hover:border-slate-300 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-700"
-      >
-        <option value="featured">Featured First</option>
-        <option value="newest">Newest First</option>
-        <option value="name-asc">A to Z</option>
-        <option value="name-desc">Z to A</option>
-      </select>
-      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-    </div>
-  )
-}
-
-function pickDiverseItems(items: UiLibraryItem[], count: number) {
-  const picks: UiLibraryItem[] = []
-  const seenIds = new Set<string>()
-  const seenCategories = new Set<string>()
-
-  for (const item of items) {
-    if (picks.length >= count) break
-    if (seenIds.has(item.id) || seenCategories.has(item.category)) continue
-    picks.push(item)
-    seenIds.add(item.id)
-    seenCategories.add(item.category)
-  }
-
-  for (const item of items) {
-    if (picks.length >= count) break
-    if (seenIds.has(item.id)) continue
-    picks.push(item)
-    seenIds.add(item.id)
-  }
-
-  return picks
-}
-
-function sortItems(items: UiLibraryItem[], mode: SortMode) {
+function sortItems(items: UiLibraryItem[]) {
   const next = [...items]
-
-  switch (mode) {
-    case 'newest':
-      return next.sort((left, right) => (right.publishedAt || '').localeCompare(left.publishedAt || '') || left.title.localeCompare(right.title))
-    case 'name-desc':
-      return next.sort((left, right) => right.title.localeCompare(left.title))
-    case 'name-asc':
-      return next.sort((left, right) => left.title.localeCompare(right.title))
-    case 'featured':
-    default:
-      return next.sort((left, right) => {
-        if (left.featured !== right.featured) return left.featured ? -1 : 1
-        if ((right.publishedAt || '') !== (left.publishedAt || '')) {
-          return (right.publishedAt || '').localeCompare(left.publishedAt || '')
-        }
-        return left.title.localeCompare(right.title)
-      })
-  }
+  return next.sort((left, right) => {
+    if (left.darkVariant !== right.darkVariant) return left.darkVariant ? 1 : -1
+    return left.title.localeCompare(right.title)
+  })
 }
 
 export default function CssEffectsLibraryClient({
@@ -268,19 +248,24 @@ export default function CssEffectsLibraryClient({
   const [query, setQuery] = useState(initialQuery)
   const [section, setSection] = useState<UiSectionId>(initialSection)
   const [category, setCategory] = useState(initialCategory)
-  const [sortMode, setSortMode] = useState<SortMode>('featured')
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [hydrated, setHydrated] = useState(false)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
 
   const deferredQuery = useDeferredValue(query)
   const deferredSection = useDeferredValue(section)
   const deferredCategory = useDeferredValue(category)
-  const deferredSortMode = useDeferredValue(sortMode)
 
   const collections = collectionsBySection[deferredSection] || []
 
   useEffect(() => {
+    const hasUrlState = Boolean(initialQuery) || initialSection !== 'all' || initialCategory !== 'all'
+    if (hasUrlState) {
+      setHydrated(true)
+      return
+    }
+
     try {
       const rawState = window.sessionStorage.getItem(UI_STATE_KEY)
       if (rawState) {
@@ -288,14 +273,12 @@ export default function CssEffectsLibraryClient({
           query?: string
           section?: UiSectionId
           category?: string
-          sortMode?: SortMode
           visibleCount?: number
           scrollY?: number
         }
         if (typeof state.query === 'string') setQuery(state.query)
         if (state.section) setSection(state.section)
         if (typeof state.category === 'string') setCategory(state.category)
-        if (state.sortMode) setSortMode(state.sortMode)
         if (typeof state.visibleCount === 'number') setVisibleCount(state.visibleCount)
         window.requestAnimationFrame(() => {
           window.scrollTo({ top: state.scrollY || 0, behavior: 'auto' })
@@ -303,7 +286,7 @@ export default function CssEffectsLibraryClient({
       }
     } catch {}
     setHydrated(true)
-  }, [])
+  }, [initialCategory, initialQuery, initialSection])
 
   useEffect(() => {
     if (!hydrated) return
@@ -315,7 +298,6 @@ export default function CssEffectsLibraryClient({
           query,
           section,
           category,
-          sortMode,
           visibleCount,
           scrollY,
         })
@@ -329,12 +311,7 @@ export default function CssEffectsLibraryClient({
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [category, hydrated, query, section, sortMode, visibleCount])
-
-  const featuredItems = useMemo(
-    () => pickDiverseItems(sortItems(items.filter(item => item.featured), 'featured'), 6),
-    [items]
-  )
+  }, [category, hydrated, query, section, visibleCount])
 
   const filteredItems = useMemo(() => {
     const normalizedQuery = deferredQuery.trim().toLowerCase()
@@ -353,15 +330,18 @@ export default function CssEffectsLibraryClient({
       return matchesSection && matchesCategory && matchesQuery
     })
 
-    return sortItems(base, deferredSortMode)
-  }, [collectionLabels, deferredCategory, deferredQuery, deferredSection, deferredSortMode, items])
+    return sortItems(base)
+  }, [collectionLabels, deferredCategory, deferredQuery, deferredSection, items])
 
   const visibleItems = filteredItems.slice(0, visibleCount)
+  const visibleCollections = collections.filter(collection => {
+    const normalizedQuery = deferredQuery.trim().toLowerCase()
+    return normalizedQuery.length === 0 || collection.label.toLowerCase().includes(normalizedQuery)
+  })
   const isFiltering =
     query !== deferredQuery ||
     section !== deferredSection ||
-    category !== deferredCategory ||
-    sortMode !== deferredSortMode
+    category !== deferredCategory
 
   const activeFilterCount =
     (section !== 'all' ? 1 : 0) +
@@ -578,43 +558,43 @@ export default function CssEffectsLibraryClient({
               </div>
             </div>
 
-            {hydrated && featuredItems.length > 0 && section === 'all' && category === 'all' && !query.trim() ? (
-              <section className="mb-8">
-                <div className="mb-4">
-                  <h2 className="text-xl font-bold text-slate-900 dark:text-slate-50">Featured</h2>
-                </div>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-                  {featuredItems.map(item => (
-                    <PreviewCard key={item.id} effect={item} collectionLabels={collectionLabels} />
-                  ))}
-                </div>
-              </section>
-            ) : null}
-
             <div className="mb-6 flex items-center justify-between">
-              <div className="text-sm text-slate-500 dark:text-slate-400">
-                Showing <span className="font-bold text-slate-900 dark:text-slate-100">{filteredItems.length}</span> results
+              <div>
+                <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-slate-50">
+                  {category === 'all' ? 'Browse categories' : collections.find(item => item.id === category)?.label || 'Components'}
+                </h2>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                  {category === 'all'
+                    ? `${visibleCollections.length} categories available`
+                    : `${filteredItems.length} components in this category`}
+                </p>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="hidden text-xs font-bold uppercase tracking-widest text-slate-400 sm:block">
-                  Sort by:
-                </span>
-                <SortSelect
-                  value={sortMode}
-                  onChange={nextMode =>
+              {category !== 'all' ? (
+                <button
+                  type="button"
+                  onClick={() =>
                     startTransition(() => {
-                      setSortMode(nextMode)
+                      setCategory('all')
                       setVisibleCount(INITIAL_VISIBLE_COUNT)
                     })
                   }
-                />
-              </div>
+                  className="hidden rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900 sm:inline-flex"
+                >
+                  View categories
+                </button>
+              ) : null}
             </div>
 
             {!hydrated || isFiltering ? (
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-                {Array.from({ length: 9 }).map((_, index) => (
-                  <SkeletonCard key={index} />
+              <div className="space-y-6">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <SkeletonRow key={index} />
+                ))}
+              </div>
+            ) : category === 'all' && !query.trim() ? (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {visibleCollections.map(collection => (
+                  <CategoryCard key={collection.id} collection={collection} />
                 ))}
               </div>
             ) : filteredItems.length === 0 ? (
@@ -643,9 +623,14 @@ export default function CssEffectsLibraryClient({
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+                <div className="space-y-6">
                   {visibleItems.map(item => (
-                    <PreviewCard key={item.id} effect={item} collectionLabels={collectionLabels} />
+                    <ComponentPreviewRow
+                      key={item.id}
+                      effect={item}
+                      copied={copiedId === item.id}
+                      onCopy={handleCopy}
+                    />
                   ))}
                 </div>
 
@@ -700,4 +685,12 @@ export default function CssEffectsLibraryClient({
       ) : null}
     </div>
   )
+
+  async function handleCopy(effect: UiLibraryItem) {
+    try {
+      await navigator.clipboard.writeText(`${window.location.origin}/ui/${effect.slug}`)
+      setCopiedId(effect.id)
+      window.setTimeout(() => setCopiedId(null), 1600)
+    } catch {}
+  }
 }

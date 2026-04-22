@@ -57,18 +57,32 @@ export default function NavigationProgress() {
   // Listen for navigation start via link clicks
   useEffect(() => {
     function handleClick(e: MouseEvent) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+        return;
+      }
+
       const target = (e.target as HTMLElement).closest("a");
       if (!target) return;
+      if (target.target && target.target !== "_self") return;
+      if (target.hasAttribute("download")) return;
+      if (target.closest('[data-no-loader="true"]')) return;
+
       const href = target.getAttribute("href");
-      if (!href) return;
-      // Only trigger for internal navigation links
-      if (href.startsWith("/") || href.startsWith(window.location.origin)) {
-        const targetPath = href.startsWith("/")
-          ? href.split("?")[0]
-          : new URL(href).pathname;
-        if (targetPath !== pathname) {
+      if (!href || href.startsWith("#") || href.startsWith("javascript:")) return;
+
+      try {
+        const nextUrl = new URL(href, window.location.origin);
+        if (nextUrl.origin !== window.location.origin) return;
+
+        const currentUrl = new URL(window.location.href);
+        if (nextUrl.pathname === currentUrl.pathname) return;
+        if (nextUrl.href === currentUrl.href) return;
+
+        if (nextUrl.pathname !== pathname) {
           start();
         }
+      } catch {
+        return;
       }
     }
 

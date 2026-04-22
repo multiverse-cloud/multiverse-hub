@@ -100,18 +100,18 @@ export default function DownloaderHero({
   return (
     <PremiumSection
       className={cn(
-        "relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-white dark:from-slate-950 dark:via-slate-950 dark:to-slate-950",
-        hasResult ? "py-5 sm:py-6" : "pb-10 pt-7 sm:pb-14 sm:pt-11 md:pb-16 md:pt-12",
+        "relative overflow-hidden bg-white dark:bg-slate-950",
+        hasResult ? "py-5 sm:py-6" : "pb-9 pt-8 sm:pb-12 sm:pt-10 md:pb-14 md:pt-12",
       )}
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.14),transparent_65%)] dark:bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.2),transparent_65%)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.1),transparent_68%)] dark:bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.16),transparent_68%)]" />
       <PremiumContainer className={cn("relative z-10 text-center", hasResult ? "max-w-3xl" : "max-w-4xl")}>
         {!hasResult ? (
           <>
-            <h1 className="mx-auto max-w-3xl text-2xl font-black leading-[1.1] tracking-tight text-slate-950 dark:text-slate-50 sm:text-4xl md:text-5xl">
+            <h1 className="mx-auto max-w-3xl text-[1.75rem] font-bold leading-[1.12] tracking-tight text-slate-950 dark:text-slate-50 sm:text-4xl md:text-5xl">
               {title}
             </h1>
-            <p className="mx-auto mt-2 max-w-xl text-xs font-medium text-slate-500 dark:text-slate-400 sm:text-sm">
+            <p className="mx-auto mt-2.5 max-w-xl text-sm font-normal leading-6 text-slate-500 dark:text-slate-400 sm:text-[15px]">
               {subtitle}
             </p>
             {contentTypes.length > 0 ? (
@@ -119,7 +119,7 @@ export default function DownloaderHero({
                 {contentTypes.slice(0, 7).map((item) => (
                   <span
                     key={item}
-                    className="rounded-md border border-slate-200/70 bg-white px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+                    className="rounded-md bg-slate-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-600 dark:bg-slate-900 dark:text-slate-300"
                   >
                     {item}
                   </span>
@@ -132,8 +132,9 @@ export default function DownloaderHero({
                   <Link
                     key={tab.href}
                     href={tab.href}
+                    data-no-loader="true"
                     className={cn(
-                      "shrink-0 rounded-md px-3 py-1.5 text-xs font-bold text-slate-500 transition-colors hover:bg-white hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-950 dark:hover:text-slate-50",
+                      "shrink-0 rounded-md px-3 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:bg-white hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-950 dark:hover:text-slate-50",
                       tab.active && "bg-white text-slate-950 shadow-sm dark:bg-slate-950 dark:text-slate-50",
                     )}
                   >

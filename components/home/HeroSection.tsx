@@ -7,7 +7,6 @@ import {
   FileText,
   Image,
   LayoutTemplate,
-  ShieldCheck,
   Sparkles,
 } from "lucide-react";
 import HeroSearchBar from "@/components/home/HeroSearchBar";
@@ -26,8 +25,6 @@ const SUGGESTION_CHIPS = [
 
 const FLIP_WORDS = ["online tools", "UI components", "website templates", "AI prompts"];
 
-const WORKFLOW_ITEMS = ["Tools", "UI", "Templates", "Prompts", "Fixes", "Search"];
-
 export default function HeroSection() {
   return (
     <section className="relative overflow-hidden border-b border-slate-200/70 bg-white dark:border-slate-800/70 dark:bg-slate-950">
@@ -43,9 +40,9 @@ export default function HeroSection() {
       </div>
 
       <div className="relative mx-auto max-w-screen-2xl px-4 lg:px-6">
-        <div className="mx-auto flex min-h-[calc(100svh-5rem)] max-w-5xl flex-col items-center justify-center py-7 text-center sm:py-10 md:min-h-[calc(100svh-7rem)] md:py-14">
+        <div className="mx-auto flex min-h-[calc(100svh-4.25rem)] max-w-5xl flex-col items-center justify-center py-5 text-center sm:py-8 md:min-h-[calc(100svh-7rem)] md:py-10">
           <div
-            className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 sm:text-xs"
+            className="mb-3 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 sm:mb-4 sm:text-xs"
             style={{ animationFillMode: "both" }}
           >
             <span className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -56,7 +53,7 @@ export default function HeroSection() {
             className="w-full animate-fade-in"
             style={{ animationDelay: "0.08s", animationFillMode: "both" }}
           >
-            <h1 className="font-display text-[2.45rem] font-black leading-[0.98] tracking-[-0.055em] text-slate-950 dark:text-slate-50 sm:text-5xl md:text-6xl lg:text-[5rem]">
+            <h1 className="font-display text-[2.05rem] font-black leading-[0.98] tracking-[-0.055em] text-slate-950 dark:text-slate-50 sm:text-5xl md:text-6xl lg:text-[4.75rem]">
               One Multiverse for
               <span className="mx-auto mt-1 block h-[1.14em] max-w-[12.5ch] overflow-hidden text-blue-600 dark:text-blue-400 sm:mt-2">
                 <span className="mv-flip-stack">
@@ -68,7 +65,7 @@ export default function HeroSection() {
                 </span>
               </span>
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-7 text-slate-600 dark:text-slate-400 sm:text-lg sm:leading-8">
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400 sm:mt-4 sm:text-lg sm:leading-8">
               Download media, process files, copy production-ready UI, browse
               templates, use AI prompts, and fix everyday tech issues from one
               clean public workspace.
@@ -76,14 +73,14 @@ export default function HeroSection() {
           </div>
 
           <div
-            className="mt-5 w-full animate-fade-in sm:mt-6"
+            className="mt-4 w-full animate-fade-in sm:mt-6"
             style={{ animationDelay: "0.18s", animationFillMode: "both" }}
           >
             <HeroSearchBar />
           </div>
 
           <div
-            className="mt-4 flex flex-wrap justify-center gap-2 animate-fade-in sm:mt-5"
+            className="mt-3 flex max-w-[min(100%,680px)] flex-wrap justify-center gap-1.5 animate-fade-in sm:mt-5 sm:gap-2"
             style={{ animationDelay: "0.28s", animationFillMode: "both" }}
           >
             {SUGGESTION_CHIPS.map((chip) => {
@@ -92,7 +89,7 @@ export default function HeroSection() {
                 <Link
                   key={chip.label}
                   href={chip.href}
-                  className="group/chip inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:text-blue-700 motion-reduce:transition-none motion-reduce:hover:translate-y-0 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400 dark:hover:border-blue-900 dark:hover:text-blue-300 sm:text-sm"
+                  className="group/chip inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2 py-1 text-[11px] font-medium text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:text-blue-700 motion-reduce:transition-none motion-reduce:hover:translate-y-0 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400 dark:hover:border-blue-900 dark:hover:text-blue-300 sm:gap-1.5 sm:px-3 sm:py-1.5 sm:text-sm"
                 >
                   <Icon className="h-3.5 w-3.5 transition-transform group-hover/chip:scale-110" />
                   <span>{chip.label}</span>
@@ -102,12 +99,12 @@ export default function HeroSection() {
           </div>
 
           <div
-            className="mt-5 flex w-full flex-col items-center justify-center gap-2 animate-fade-in sm:mt-7 sm:w-auto sm:flex-row sm:gap-3"
+            className="mt-4 flex w-full flex-col items-center justify-center gap-2 animate-fade-in sm:mt-6 sm:w-auto sm:flex-row sm:gap-3"
             style={{ animationDelay: "0.36s", animationFillMode: "both" }}
           >
             <Link
               href="/tools"
-              className="group inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-6 py-3 text-sm font-bold text-white shadow-[0_16px_38px_-24px_rgba(15,23,42,0.8)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800 motion-reduce:transition-none motion-reduce:hover:translate-y-0 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 sm:w-auto sm:px-7"
+              className="group inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-6 py-2.5 text-sm font-semibold text-white shadow-[0_16px_38px_-24px_rgba(15,23,42,0.8)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800 motion-reduce:transition-none motion-reduce:hover:translate-y-0 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 sm:w-auto sm:px-7 sm:py-3"
             >
               <Sparkles className="h-4 w-4" />
               Explore Tools
@@ -115,34 +112,11 @@ export default function HeroSection() {
             </Link>
             <Link
               href="/templates"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 motion-reduce:transition-none motion-reduce:hover:translate-y-0 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-900 sm:w-auto sm:px-7"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 motion-reduce:transition-none motion-reduce:hover:translate-y-0 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-900 sm:w-auto sm:px-7 sm:py-3"
             >
               <LayoutTemplate className="h-4 w-4" />
               View Templates
             </Link>
-          </div>
-
-          <div
-            className="mt-6 w-full max-w-3xl overflow-hidden animate-fade-in sm:mt-8"
-            style={{ animationDelay: "0.44s", animationFillMode: "both" }}
-            aria-label="Multiverse workflow"
-          >
-            <div className="relative mx-auto flex max-w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 py-2 shadow-sm dark:border-slate-800 dark:bg-slate-950/90">
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-white to-transparent dark:from-slate-950" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white to-transparent dark:from-slate-950" />
-              <div className="mv-workflow-track flex min-w-max items-center gap-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400 sm:text-xs">
-                {[...WORKFLOW_ITEMS, ...WORKFLOW_ITEMS].map((item, index) => (
-                  <span key={`${item}-${index}`} className="inline-flex items-center gap-2">
-                    <span>{item}</span>
-                    <span className="h-1 w-1 rounded-full bg-blue-500/70" />
-                  </span>
-                ))}
-              </div>
-            </div>
-            <p className="mx-auto mt-3 flex max-w-xl items-center justify-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 sm:text-sm">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-              Built for public SEO traffic, mobile users, and fast repeat visits.
-            </p>
           </div>
         </div>
       </div>

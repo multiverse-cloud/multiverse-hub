@@ -106,6 +106,17 @@ export default function SourceHubChrome() {
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
+
       const target = event.target as HTMLElement | null;
       const link = target?.closest("a[href]") as HTMLAnchorElement | null;
 
@@ -122,6 +133,7 @@ export default function SourceHubChrome() {
         if (nextUrl.origin !== window.location.origin) return;
         if (link.closest('[data-no-loader="true"]')) return;
         if (nextUrl.pathname === window.location.pathname) return;
+        if (nextUrl.href === window.location.href) return;
         showLoader();
       } catch {}
     }
