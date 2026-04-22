@@ -1,4 +1,3 @@
-auren premium saas commerce kit | Auren Premium SaaS Commerce Kit | auren-premium-saas-commerce-kit
 blockforge build deploy defi protocols | BlockForge - Build & Deploy DeFi Protocols | blockforge-build-deploy-defi-protocols
 brandforge full service marketing agency | BrandForge - Full-Service Marketing Agency | brandforge-full-service-marketing-agency
 bug hunter developer portfolio | Bug Hunter Developer Portfolio | bug-hunter-developer-portfolio
@@ -11,7 +10,6 @@ designstudio creative digital agency | DesignStudio - Creative Digital Agency | 
 eventflow event marketing management | EventFlow - Event Marketing & Management | eventflow-event-marketing-management
 growthlab growth marketing agency | GrowthLab - Growth Marketing Agency | growthlab-growth-marketing-agency
 macos desktop portfolio experience | macOS Desktop Portfolio Experience | macos-desktop-portfolio-experience
-nexusshop platform ui kit | NexusShop Platform UI Kit | nexusshop-platform-ui-kit
 pixelforce ui ux design agency | PixelForce - UI/UX Design Agency | pixelforce-ui-ux-design-agency
 shopelite ecommerce ui kit | ShopElite Ecommerce UI Kit | shopelite-ecommerce-ui-kit
 socialvibe social media marketing agency | SocialVibe - Social Media Marketing Agency | socialvibe-social-media-marketing-agency

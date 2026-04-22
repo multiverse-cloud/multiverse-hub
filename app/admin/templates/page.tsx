@@ -1,12 +1,12 @@
-﻿import AdminTemplatesClient from '@/components/admin/AdminTemplatesClient'
-import { getTemplateLibraryData } from '@/lib/template-db'
+import AdminTemplatesClient from '@/components/admin/AdminTemplatesClient'
+import { getAdminTemplates, getTemplateLibraryData } from '@/lib/template-db'
 
 export default async function AdminTemplatesPage() {
-  const library = await getTemplateLibraryData()
+  const [library, templates] = await Promise.all([getTemplateLibraryData(), getAdminTemplates()])
 
   return (
     <AdminTemplatesClient
-      templates={library.templates}
+      templates={templates}
       categories={library.categories}
       platforms={library.platforms}
     />

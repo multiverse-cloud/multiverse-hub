@@ -119,10 +119,36 @@ function validateUiStore() {
   }
 }
 
+function validateTemplateStore() {
+  const templates = validateJsonCollection("data/template-local-store.json", "templates", "Templates");
+  const detailsDir = path.join(root, "data", "template-details");
+
+  for (const template of templates) {
+    if (template?.files?.some((file) => file?.content)) {
+      continue;
+    }
+
+    const detailPath = path.join(detailsDir, `${template.slug}.json`);
+    if (!fs.existsSync(detailPath)) {
+      addFailure(`Templates: missing detail file for "${template.slug}"`);
+      continue;
+    }
+
+    try {
+      const detail = JSON.parse(fs.readFileSync(detailPath, "utf8").replace(/^\uFEFF/, ""));
+      if (!Array.isArray(detail.files) || detail.files.length === 0) {
+        addFailure(`Templates: detail file for "${template.slug}" has no files array`);
+      }
+    } catch {
+      addFailure(`Templates: detail file for "${template.slug}" is invalid JSON`);
+    }
+  }
+}
+
 function main() {
   validateTools();
   validateJsonCollection("data/prompt-local-store.json", "prompts", "Prompts");
-  validateJsonCollection("data/template-local-store.json", "templates", "Templates");
+  validateTemplateStore();
   validateJsonCollection("data/discover-local-store.json", "lists", "Discover");
   validateUiStore();
 

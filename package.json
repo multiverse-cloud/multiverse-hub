@@ -12,7 +12,8 @@
     "production:check": "npm run build && npm run smoke:test -- --start --port 3035",
     "validate:content": "node scripts/validate-content.mjs",
     "export:templates": "node scripts/export-template-repo.mjs",
-    "templates:capture-previews": "node scripts/capture-template-previews.mjs"
+    "templates:capture-previews": "node scripts/capture-template-previews.mjs",
+    "templates:split-store": "node scripts/split-template-store.mjs"
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.15",

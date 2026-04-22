@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, Boxes, Cloud, LayoutTemplate, Sparkles, Smartphone, Zap } from 'lucide-react'
 import type { LibraryHubItem } from '@/lib/library-hub'
@@ -43,6 +44,20 @@ function PreviewSurface({ item }: { item: LibraryHubItem }) {
             pointerEvents: 'none',
             background: '#ffffff',
           }}
+        />
+      </div>
+    )
+  }
+
+  if (item.previewImage) {
+    return (
+      <div className="relative h-full w-full overflow-hidden bg-white">
+        <Image
+          src={item.previewImage}
+          alt={`${item.title} preview`}
+          fill
+          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+          className="object-cover object-top"
         />
       </div>
     )

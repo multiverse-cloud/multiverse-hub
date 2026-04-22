@@ -1,12 +1,13 @@
 import 'server-only'
 
-import { mkdir, readFile, writeFile } from 'fs/promises'
+import { mkdir, readFile, readdir, rm, writeFile } from 'fs/promises'
 import path from 'path'
 import { BASE_TEMPLATES, type TemplateEntry } from '@/lib/template-library-data'
 
 const DATA_DIR = path.join(process.cwd(), 'data')
 const LOCAL_TEMPLATE_STORE_FILE = path.join(DATA_DIR, 'template-local-store.json')
 const LOCAL_TEMPLATE_TITLE_REGISTRY_FILE = path.join(DATA_DIR, 'template-topic-titles.txt')
+const LOCAL_TEMPLATE_DETAILS_DIR = path.join(DATA_DIR, 'template-details')
 
 type TemplateLocalStoreFile = {
   templates: TemplateEntry[]
@@ -25,6 +26,10 @@ function normalizeTopic(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
 }
 
+function createTemplateDetailPath(slug: string) {
+  return path.join(LOCAL_TEMPLATE_DETAILS_DIR, `${slug}.json`)
+}
+
 function getTemplateMatchKey(template: TemplateEntry) {
   return template.slug || normalizeTopic(template.title)
 }
@@ -41,6 +46,7 @@ function sortTemplates(templates: TemplateEntry[]) {
 
 async function ensureDataDirectory() {
   await mkdir(DATA_DIR, { recursive: true })
+  await mkdir(LOCAL_TEMPLATE_DETAILS_DIR, { recursive: true })
 }
 
 async function writeTitleRegistry(templates: TemplateEntry[]) {
@@ -48,12 +54,42 @@ async function writeTitleRegistry(templates: TemplateEntry[]) {
   await writeFile(LOCAL_TEMPLATE_TITLE_REGISTRY_FILE, `${lines.join('\n')}\n`, 'utf8')
 }
 
+function stripTemplateForIndex(template: TemplateEntry): TemplateEntry {
+  return {
+    ...template,
+    files: template.files.map(file => ({
+      ...file,
+      content: '',
+    })),
+    previewHtml: undefined,
+  }
+}
+
+async function writeTemplateDetailFiles(templates: TemplateEntry[]) {
+  await mkdir(LOCAL_TEMPLATE_DETAILS_DIR, { recursive: true })
+  const nextSlugs = new Set(templates.map(template => template.slug))
+  const currentEntries = await readdir(LOCAL_TEMPLATE_DETAILS_DIR, { withFileTypes: true }).catch(() => [])
+
+  for (const entry of currentEntries) {
+    if (!entry.isFile() || !entry.name.endsWith('.json')) continue
+    const slug = entry.name.replace(/\.json$/i, '')
+    if (!nextSlugs.has(slug)) {
+      await rm(path.join(LOCAL_TEMPLATE_DETAILS_DIR, entry.name), { force: true })
+    }
+  }
+
+  for (const template of templates) {
+    await writeFile(createTemplateDetailPath(template.slug), `${JSON.stringify(template, null, 2)}\n`, 'utf8')
+  }
+}
+
 async function writeLocalStore(templates: TemplateEntry[], source: string) {
   await ensureDataDirectory()
 
   const sortedTemplates = sortTemplates(templates)
+  await writeTemplateDetailFiles(sortedTemplates)
   const payload: TemplateLocalStoreFile = {
-    templates: sortedTemplates,
+    templates: sortedTemplates.map(stripTemplateForIndex),
     meta: {
       source,
       generatedAt: new Date().toISOString(),
@@ -77,6 +113,38 @@ async function readLocalStore() {
   }
 }
 
+function hasEmbeddedTemplateContent(template: TemplateEntry) {
+  return template.files.some(file => Boolean(file.content)) || Boolean(template.previewHtml?.trim())
+}
+
+async function readTemplateDetail(slug: string) {
+  try {
+    const raw = await readFile(createTemplateDetailPath(slug), 'utf8')
+    return JSON.parse(stripUtf8Bom(raw)) as TemplateEntry
+  } catch {
+    return null
+  }
+}
+
+async function loadLocalTemplateEntries(detail = false) {
+  const entries = await readLocalStore()
+
+  if (!detail) {
+    return entries
+  }
+
+  return Promise.all(
+    entries.map(async template => {
+      if (hasEmbeddedTemplateContent(template)) {
+        return template
+      }
+
+      const detailEntry = await readTemplateDetail(template.slug)
+      return detailEntry || template
+    })
+  )
+}
+
 function resolveTemplateEntries(baseTemplates: TemplateEntry[], overrideTemplates: TemplateEntry[]) {
   // Once local templates exist, treat them as the full catalog so admin-curated
   // entries can completely replace the built-in starter set.
@@ -88,7 +156,11 @@ function resolveTemplateEntries(baseTemplates: TemplateEntry[], overrideTemplate
 }
 
 export async function loadLocalTemplateOverrideStore() {
-  return readLocalStore()
+  return loadLocalTemplateEntries(false)
+}
+
+export async function loadLocalTemplateOverrideStoreWithDetails() {
+  return loadLocalTemplateEntries(true)
 }
 
 export async function getMergedLocalTemplateEntries() {
@@ -96,8 +168,28 @@ export async function getMergedLocalTemplateEntries() {
   return resolveTemplateEntries(BASE_TEMPLATES, overrides)
 }
 
+export async function getMergedLocalTemplateEntriesWithDetails() {
+  const overrides = await loadLocalTemplateOverrideStoreWithDetails()
+  return resolveTemplateEntries(BASE_TEMPLATES, overrides)
+}
+
+export async function getLocalTemplateBySlugWithDetails(slug: string) {
+  const overrides = await loadLocalTemplateOverrideStore()
+  const match = overrides.find(template => template.slug === slug)
+
+  if (!match) {
+    return BASE_TEMPLATES.find(template => template.slug === slug) || null
+  }
+
+  if (hasEmbeddedTemplateContent(match)) {
+    return match
+  }
+
+  return (await readTemplateDetail(slug)) || match
+}
+
 export async function saveLocalTemplate(template: TemplateEntry) {
-  const currentOverrides = await loadLocalTemplateOverrideStore()
+  const currentOverrides = await loadLocalTemplateOverrideStoreWithDetails()
   const nextOverrides = currentOverrides.filter(existing => {
     const sameSlug = existing.slug === template.slug
     const sameId = existing.id === template.id
@@ -111,7 +203,7 @@ export async function saveLocalTemplate(template: TemplateEntry) {
 }
 
 export async function saveLocalTemplates(templates: TemplateEntry[]) {
-  const currentOverrides = await loadLocalTemplateOverrideStore()
+  const currentOverrides = await loadLocalTemplateOverrideStoreWithDetails()
   const incomingKeys = new Set(templates.map(getTemplateMatchKey))
   const nextOverrides = currentOverrides.filter(existing => !incomingKeys.has(getTemplateMatchKey(existing)))
 
@@ -128,5 +220,6 @@ export function getLocalTemplateStorePaths() {
   return {
     storeFile: LOCAL_TEMPLATE_STORE_FILE,
     titleRegistryFile: LOCAL_TEMPLATE_TITLE_REGISTRY_FILE,
+    detailsDir: LOCAL_TEMPLATE_DETAILS_DIR,
   }
 }

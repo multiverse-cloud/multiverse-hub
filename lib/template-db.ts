@@ -12,7 +12,13 @@ import {
   type TemplatePlatformDefinition,
   type TemplateType,
 } from '@/lib/template-library-data'
-import { getMergedLocalTemplateEntries, saveLocalTemplate, saveLocalTemplates } from '@/lib/template-local-store'
+import {
+  getLocalTemplateBySlugWithDetails,
+  getMergedLocalTemplateEntries,
+  getMergedLocalTemplateEntriesWithDetails,
+  saveLocalTemplate,
+  saveLocalTemplates,
+} from '@/lib/template-local-store'
 
 const TEMPLATES_TAG = 'templates'
 const TEMPLATE_MEMORY_CACHE_MS = 60 * 1000
@@ -255,16 +261,15 @@ export async function getPublishedTemplates() {
 }
 
 export async function getAdminTemplates() {
-  return (await getTemplateLibraryData()).templates
+  return getMergedLocalTemplateEntriesWithDetails()
 }
 
 export async function getTemplateBySlug(slug: string) {
-  const templates = await getPublishedTemplates()
-  return templates.find(template => template.slug === slug) || null
+  return getLocalTemplateBySlugWithDetails(slug)
 }
 
 export async function getRelatedTemplates(slug: string, limit = 4) {
-  const templates = await getPublishedTemplates()
+  const templates = (await getTemplateLibraryData()).templates
   const current = templates.find(template => template.slug === slug)
   if (!current) return []
   return buildRelatedTemplates(current, templates).slice(0, limit)

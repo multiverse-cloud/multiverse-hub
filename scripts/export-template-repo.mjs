@@ -3,6 +3,7 @@ import path from 'node:path'
 
 const ROOT = process.cwd()
 const STORE_PATH = path.join(ROOT, 'data', 'template-local-store.json')
+const DETAILS_DIR = path.join(ROOT, 'data', 'template-details')
 const EXPORT_ROOT = path.join(ROOT, 'template-repo-export')
 const TEMPLATES_DIR = path.join(EXPORT_ROOT, 'templates')
 const GENERATED_AT = new Date().toISOString()
@@ -21,6 +22,33 @@ function normalizeFileContent(file) {
   }
 
   return file.content
+}
+
+function hasEmbeddedTemplateContent(template) {
+  return Array.isArray(template.files) && template.files.some(file => file?.content) || Boolean(template.previewHtml)
+}
+
+async function loadFullTemplates() {
+  const raw = await readFile(STORE_PATH, 'utf8')
+  const parsed = JSON.parse(stripUtf8Bom(raw))
+  const templates = Array.isArray(parsed.templates) ? parsed.templates : []
+
+  return Promise.all(
+    templates.map(async template => {
+      if (hasEmbeddedTemplateContent(template)) {
+        return template
+      }
+
+      const detailPath = path.join(DETAILS_DIR, `${template.slug}.json`)
+
+      try {
+        const detailRaw = await readFile(detailPath, 'utf8')
+        return JSON.parse(stripUtf8Bom(detailRaw))
+      } catch {
+        return template
+      }
+    })
+  )
 }
 
 function toFolderReadme(template) {
@@ -158,9 +186,7 @@ async function resetExportRoot() {
 }
 
 async function main() {
-  const raw = await readFile(STORE_PATH, 'utf8')
-  const parsed = JSON.parse(stripUtf8Bom(raw))
-  const templates = Array.isArray(parsed.templates) ? parsed.templates : []
+  const templates = await loadFullTemplates()
 
   await resetExportRoot()
   await mkdir(TEMPLATES_DIR, { recursive: true })

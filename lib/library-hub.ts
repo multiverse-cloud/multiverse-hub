@@ -23,6 +23,7 @@ export type LibraryHubItem = {
     industry: string
   }
   previewDocument?: string
+  previewImage?: string
 }
 
 function mapUiItem(item: UiCatalogItem): LibraryHubItem {
@@ -62,6 +63,7 @@ function mapTemplateItem(template: TemplateEntry): LibraryHubItem {
       industry: template.industry,
     },
     previewDocument: template.previewHtml,
+    previewImage: template.previewImage,
   }
 }
 

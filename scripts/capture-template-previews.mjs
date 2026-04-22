@@ -6,6 +6,7 @@ import path from 'node:path'
 
 const ROOT = process.cwd()
 const STORE_PATH = path.join(ROOT, 'data', 'template-local-store.json')
+const DETAILS_DIR = path.join(ROOT, 'data', 'template-details')
 const ENV_PATH = path.join(ROOT, '.env.local')
 const OUTPUT_DIR = path.join(ROOT, 'public', 'template-previews')
 const REPORT_PATH = path.join(ROOT, 'data', 'template-preview-capture-report.json')
@@ -97,6 +98,21 @@ function resolveLiveUrl(template, baseUrl) {
   if (template.liveUrl) return String(template.liveUrl).trim()
   if (!baseUrl) return ''
   return `${baseUrl.replace(/\/+$/, '')}/${template.slug}`
+}
+
+function hasEmbeddedTemplateContent(template) {
+  return Array.isArray(template.files) && template.files.some(file => file?.content) || Boolean(template.previewHtml)
+}
+
+async function syncTemplateDetail(slug, updater) {
+  const detailPath = path.join(DETAILS_DIR, `${slug}.json`)
+
+  try {
+    const raw = await readFile(detailPath, 'utf8')
+    const detail = JSON.parse(stripUtf8Bom(raw))
+    updater(detail)
+    await writeFile(detailPath, `${JSON.stringify(detail, null, 2)}\n`, 'utf8')
+  } catch {}
 }
 
 async function captureScreenshot({ browserPath, url, outputPath }) {
@@ -260,6 +276,11 @@ async function main() {
       template.liveUrl = liveUrl
       template.previewImage = publicImagePath
       template.previewCapturedAt = new Date().toISOString()
+      await syncTemplateDetail(template.slug, detail => {
+        detail.liveUrl = template.liveUrl
+        detail.previewImage = template.previewImage
+        detail.previewCapturedAt = template.previewCapturedAt
+      })
 
       if (options.uploadCloudinary) {
         const publicId = `${folder}/${template.slug}`
@@ -272,6 +293,10 @@ async function main() {
           filePath: localImagePath,
         })
         template.previewImage = buildCloudinaryUrl(cloudName, payload.public_id || publicId)
+        await syncTemplateDetail(template.slug, detail => {
+          detail.previewImage = template.previewImage
+          detail.previewCapturedAt = template.previewCapturedAt
+        })
         uploaded += 1
       }
 
