@@ -1,6 +1,204 @@
 {
   "templates": [
     {
+      "id": "template-3d-interactive-portfolio",
+      "slug": "3d-interactive-portfolio",
+      "title": "3D Interactive Portfolio",
+      "seoTitle": "3D Interactive Portfolio - Downloadable Premium Portfolio Template | Multiverse",
+      "metaDescription": "A playful 3D-inspired portfolio with immersive visuals, interactive motion, and a modern experimental creator feel.",
+      "summary": "A playful 3D-inspired portfolio with immersive visuals, interactive motion, and a modern experimental creator feel.",
+      "description": "This portfolio template is designed for motion designers, creative developers, and digital artists who want a more interactive presentation with visual depth and a modern experimental tone.",
+      "category": "portfolio",
+      "categoryTitle": "Portfolio Sites",
+      "platform": "responsive",
+      "platformLabel": "Responsive",
+      "framework": "html-css-js",
+      "frameworkLabel": "HTML + CSS + JS",
+      "templateType": "template",
+      "industry": "Portfolio",
+      "style": "3D interactive portfolio",
+      "audience": "motion designers, digital artists, and creative technologists",
+      "tags": [
+        "3d portfolio",
+        "interactive portfolio",
+        "motion portfolio",
+        "creative developer site",
+        "html portfolio"
+      ],
+      "techStack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "prompt": "Design a premium interactive portfolio with 3D-inspired visuals, motion-rich sections, experimental composition, and strong creative energy.",
+      "sections": [
+        "Hero",
+        "Work",
+        "Interactive showcase",
+        "About",
+        "Contact"
+      ],
+      "layoutNotes": [
+        "The visual identity depends on motion and depth, so the composition should feel playful but still usable.",
+        "This template is suited for creators whose work benefits from a more experimental presentation."
+      ],
+      "responsiveNotes": [
+        "Interactive surfaces collapse into simpler touch-friendly modules on mobile.",
+        "Visual depth remains part of the experience without hurting readability on smaller screens."
+      ],
+      "bestFor": [
+        "Digital artists",
+        "Motion designers",
+        "Interactive portfolios"
+      ],
+      "files": [
+        {
+          "path": "index.html",
+          "language": "html",
+          "content": "",
+          "summary": "3D Interactive Portfolio complete template source.",
+          "primary": true
+        }
+      ],
+      "featured": true,
+      "updatedAt": "2026-04-25",
+      "license": "Free download",
+      "priceLabel": "Free",
+      "importSource": "10-portfolio-templates"
+    },
+    {
+      "id": "template-alex-chen-developer-terminal-portfolio",
+      "slug": "alex-chen-developer-terminal-portfolio",
+      "title": "Alex Chen Developer Terminal Portfolio",
+      "seoTitle": "Alex Chen Developer Terminal Portfolio - Downloadable Premium Portfolio Template | Multiverse",
+      "metaDescription": "A terminal-inspired developer portfolio with code aesthetics, animated surfaces, and a sharp technical personality.",
+      "summary": "A terminal-inspired developer portfolio with code aesthetics, animated surfaces, and a sharp technical personality.",
+      "description": "Built for engineers and technical creators, this portfolio template combines developer tooling references, terminal visuals, and interactive sections in a highly recognizable personal brand format.",
+      "category": "portfolio",
+      "categoryTitle": "Portfolio Sites",
+      "platform": "responsive",
+      "platformLabel": "Responsive",
+      "framework": "html-css-js",
+      "frameworkLabel": "HTML + CSS + JS",
+      "templateType": "template",
+      "industry": "Portfolio",
+      "style": "Terminal developer portfolio",
+      "audience": "developers, engineers, and technical personal brands",
+      "tags": [
+        "developer portfolio",
+        "terminal portfolio",
+        "code portfolio",
+        "engineer website",
+        "html portfolio"
+      ],
+      "techStack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "prompt": "Design a premium terminal-style developer portfolio with code-inspired typography, matrix details, sharp technical branding, and strong readability.",
+      "sections": [
+        "Hero",
+        "Projects",
+        "Experience",
+        "Skills",
+        "Contact"
+      ],
+      "layoutNotes": [
+        "The theme is technical and immersive, but the content still needs to scan quickly.",
+        "This template suits engineers who want a memorable code-centric personal site."
+      ],
+      "responsiveNotes": [
+        "The terminal-like layout collapses into simpler sections on mobile screens.",
+        "Decorative effects remain secondary so the site still feels usable on touch devices."
+      ],
+      "bestFor": [
+        "Developer portfolios",
+        "Engineer websites",
+        "Technical freelancers"
+      ],
+      "files": [
+        {
+          "path": "index.html",
+          "language": "html",
+          "content": "",
+          "summary": "Alex Chen Developer Terminal Portfolio complete template source.",
+          "primary": true
+        }
+      ],
+      "featured": true,
+      "updatedAt": "2026-04-25",
+      "license": "Free download",
+      "priceLabel": "Free",
+      "importSource": "10-portfolio-templates"
+    },
+    {
+      "id": "template-alex-morgan-dark-minimal-portfolio",
+      "slug": "alex-morgan-dark-minimal-portfolio",
+      "title": "Alex Morgan Dark Minimal Portfolio",
+      "seoTitle": "Alex Morgan Dark Minimal Portfolio - Downloadable Premium Portfolio Template | Multiverse",
+      "metaDescription": "A dark minimal portfolio template with editorial typography, custom cursor details, and a polished monochrome-first presentation.",
+      "summary": "A dark minimal portfolio template with editorial typography, custom cursor details, and a polished monochrome-first presentation.",
+      "description": "This portfolio template is ideal for designers, creative developers, and personal brands that want a calm premium look with darker surfaces, elegant type, and subtle motion.",
+      "category": "portfolio",
+      "categoryTitle": "Portfolio Sites",
+      "platform": "responsive",
+      "platformLabel": "Responsive",
+      "framework": "html-css-js",
+      "frameworkLabel": "HTML + CSS + JS",
+      "templateType": "template",
+      "industry": "Portfolio",
+      "style": "Dark minimal editorial portfolio",
+      "audience": "designers, creative developers, and personal brand sites",
+      "tags": [
+        "dark portfolio",
+        "minimal portfolio",
+        "editorial portfolio",
+        "personal website",
+        "html portfolio"
+      ],
+      "techStack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "prompt": "Design a premium dark minimal portfolio with editorial typography, monochrome surfaces, refined motion, and a calm luxury feel.",
+      "sections": [
+        "Hero",
+        "Selected work",
+        "About",
+        "Services",
+        "Contact"
+      ],
+      "layoutNotes": [
+        "The visual identity comes from typography, contrast, and spacing rather than busy UI framing.",
+        "This template works best when the creator wants a mature, design-led personal site."
+      ],
+      "responsiveNotes": [
+        "The dark editorial layout compresses neatly into a stacked mobile experience.",
+        "Typography and spacing remain readable without needing dense overlays on mobile."
+      ],
+      "bestFor": [
+        "Designer portfolios",
+        "Creative studios",
+        "Personal brand sites"
+      ],
+      "files": [
+        {
+          "path": "index.html",
+          "language": "html",
+          "content": "",
+          "summary": "Alex Morgan Dark Minimal Portfolio complete template source.",
+          "primary": true
+        }
+      ],
+      "featured": true,
+      "updatedAt": "2026-04-25",
+      "license": "Free download",
+      "priceLabel": "Free",
+      "importSource": "10-portfolio-templates"
+    },
+    {
       "id": "template-blockforge-build-deploy-defi-protocols",
       "slug": "blockforge-build-deploy-defi-protocols",
       "title": "BlockForge - Build & Deploy DeFi Protocols",
@@ -380,6 +578,73 @@
       "previewCapturedAt": "2026-04-21T08:37:15.479Z"
     },
     {
+      "id": "template-creative-agency-bold-portfolio",
+      "slug": "creative-agency-bold-portfolio",
+      "title": "Creative Agency Bold Portfolio",
+      "seoTitle": "Creative Agency Bold Portfolio - Downloadable Premium Portfolio Template | Multiverse",
+      "metaDescription": "A vibrant agency-style portfolio with bold typography, expressive color, and campaign-like case study framing.",
+      "summary": "A vibrant agency-style portfolio with bold typography, expressive color, and campaign-like case study framing.",
+      "description": "This portfolio template is built for studios and creative agencies that want a louder first impression, strong color usage, and more promotional energy across their portfolio sections.",
+      "category": "portfolio",
+      "categoryTitle": "Portfolio Sites",
+      "platform": "responsive",
+      "platformLabel": "Responsive",
+      "framework": "html-css-js",
+      "frameworkLabel": "HTML + CSS + JS",
+      "templateType": "template",
+      "industry": "Portfolio",
+      "style": "Bold creative agency portfolio",
+      "audience": "creative agencies, studios, and brand-first freelancers",
+      "tags": [
+        "creative agency portfolio",
+        "studio portfolio",
+        "bold portfolio",
+        "agency website",
+        "html portfolio"
+      ],
+      "techStack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "prompt": "Design a bold creative agency portfolio with expressive color, campaign-like typography, energetic layouts, and premium studio presentation.",
+      "sections": [
+        "Hero",
+        "Capabilities",
+        "Work",
+        "Process",
+        "Team",
+        "Contact"
+      ],
+      "layoutNotes": [
+        "The template is more expressive than minimal, so typography and color do most of the identity work.",
+        "Best used when the brand wants a louder agency-style presentation instead of a quiet portfolio."
+      ],
+      "responsiveNotes": [
+        "Large headlines compress into a cleaner stacked mobile layout while preserving contrast.",
+        "High-energy sections remain readable on smaller screens without depending on hover interactions."
+      ],
+      "bestFor": [
+        "Agencies",
+        "Creative studios",
+        "Visual brand portfolios"
+      ],
+      "files": [
+        {
+          "path": "index.html",
+          "language": "html",
+          "content": "",
+          "summary": "Creative Agency Bold Portfolio complete template source.",
+          "primary": true
+        }
+      ],
+      "featured": true,
+      "updatedAt": "2026-04-25",
+      "license": "Free download",
+      "priceLabel": "Free",
+      "importSource": "10-portfolio-templates"
+    },
+    {
       "id": "template-creativestudio-branding-design-agency",
       "slug": "creativestudio-branding-design-agency",
       "title": "CreativeStudio - Branding & Design Agency",
@@ -684,6 +949,72 @@
       "previewCapturedAt": "2026-04-21T08:35:44.196Z"
     },
     {
+      "id": "template-elena-voss-photographer-portfolio",
+      "slug": "elena-voss-photographer-portfolio",
+      "title": "Elena Voss Photographer Portfolio",
+      "seoTitle": "Elena Voss Photographer Portfolio - Downloadable Premium Portfolio Template | Multiverse",
+      "metaDescription": "A premium photographer portfolio with image-led storytelling, elegant typography, and a cleaner gallery-first layout.",
+      "summary": "A premium photographer portfolio with image-led storytelling, elegant typography, and a cleaner gallery-first layout.",
+      "description": "This template is designed for photographers and visual artists who need a high-trust personal site with large imagery, selective editorial copy, and portfolio-first presentation.",
+      "category": "portfolio",
+      "categoryTitle": "Portfolio Sites",
+      "platform": "responsive",
+      "platformLabel": "Responsive",
+      "framework": "html-css-js",
+      "frameworkLabel": "HTML + CSS + JS",
+      "templateType": "template",
+      "industry": "Portfolio",
+      "style": "Minimal photography portfolio",
+      "audience": "photographers, visual artists, and editorial creators",
+      "tags": [
+        "photography portfolio",
+        "photographer website",
+        "gallery portfolio",
+        "creative portfolio",
+        "html portfolio"
+      ],
+      "techStack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "prompt": "Design a premium photographer portfolio with clean gallery rhythm, strong image hierarchy, elegant typography, and minimal supporting copy.",
+      "sections": [
+        "Hero",
+        "Gallery",
+        "Selected work",
+        "About",
+        "Contact"
+      ],
+      "layoutNotes": [
+        "The page relies on imagery and whitespace more than interface chrome.",
+        "Use this template when the work itself needs to be the dominant visual anchor."
+      ],
+      "responsiveNotes": [
+        "Gallery blocks stack into mobile-friendly image rails with preserved rhythm.",
+        "Captions and metadata remain secondary so imagery keeps visual priority."
+      ],
+      "bestFor": [
+        "Photographers",
+        "Editorial artists",
+        "Gallery-style portfolios"
+      ],
+      "files": [
+        {
+          "path": "index.html",
+          "language": "html",
+          "content": "",
+          "summary": "Elena Voss Photographer Portfolio complete template source.",
+          "primary": true
+        }
+      ],
+      "featured": true,
+      "updatedAt": "2026-04-25",
+      "license": "Free download",
+      "priceLabel": "Free",
+      "importSource": "10-portfolio-templates"
+    },
+    {
       "id": "template-eventflow-event-marketing-management",
       "slug": "eventflow-event-marketing-management",
       "title": "EventFlow - Event Marketing & Management",
@@ -914,6 +1245,72 @@
       "priceLabel": "Free",
       "previewImage": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1600,h_1000/multiverse/template-cards/portfolio/macos-desktop-portfolio-experience",
       "previewCapturedAt": "2026-04-22T11:32:07.458Z"
+    },
+    {
+      "id": "template-neon-cyberpunk-portfolio",
+      "slug": "neon-cyberpunk-portfolio",
+      "title": "Neon Cyberpunk Portfolio",
+      "seoTitle": "Neon Cyberpunk Portfolio - Downloadable Premium Portfolio Template | Multiverse",
+      "metaDescription": "A cyberpunk portfolio template with neon lighting, futuristic UI surfaces, and high-energy branding for standout personal sites.",
+      "summary": "A cyberpunk portfolio template with neon lighting, futuristic UI surfaces, and high-energy branding for standout personal sites.",
+      "description": "This template is built for creators who want a loud futuristic portfolio with glowing accents, dark surfaces, animated visuals, and a more cinematic personal brand.",
+      "category": "portfolio",
+      "categoryTitle": "Portfolio Sites",
+      "platform": "responsive",
+      "platformLabel": "Responsive",
+      "framework": "html-css-js",
+      "frameworkLabel": "HTML + CSS + JS",
+      "templateType": "template",
+      "industry": "Portfolio",
+      "style": "Cyberpunk neon portfolio",
+      "audience": "creative technologists, gamers, and futuristic personal brands",
+      "tags": [
+        "cyberpunk portfolio",
+        "neon portfolio",
+        "futuristic portfolio",
+        "dark website",
+        "html portfolio"
+      ],
+      "techStack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "prompt": "Design a premium cyberpunk portfolio with neon lighting, futuristic surfaces, cinematic motion, and a memorable high-energy identity.",
+      "sections": [
+        "Hero",
+        "Projects",
+        "Skills",
+        "Experience",
+        "Contact"
+      ],
+      "layoutNotes": [
+        "The neon styling is the main identity layer, so sections should feel immersive without becoming unreadable.",
+        "This template works best for creators who want a visually loud, memorable portfolio."
+      ],
+      "responsiveNotes": [
+        "Large visual effects scale down into cleaner mobile sections with preserved contrast.",
+        "The page avoids depending on hover-only affordances so the theme still works on touch screens."
+      ],
+      "bestFor": [
+        "Creative developers",
+        "Gaming portfolios",
+        "Futuristic personal brands"
+      ],
+      "files": [
+        {
+          "path": "index.html",
+          "language": "html",
+          "content": "",
+          "summary": "Neon Cyberpunk Portfolio complete template source.",
+          "primary": true
+        }
+      ],
+      "featured": true,
+      "updatedAt": "2026-04-25",
+      "license": "Free download",
+      "priceLabel": "Free",
+      "importSource": "10-portfolio-templates"
     },
     {
       "id": "template-pixelforce-ui-ux-design-agency",
@@ -1521,6 +1918,72 @@
       "previewCapturedAt": "2026-04-21T08:49:02.524Z"
     },
     {
+      "id": "template-architect-studio-portfolio",
+      "slug": "architect-studio-portfolio",
+      "title": "Architect Studio Portfolio",
+      "seoTitle": "Architect Studio Portfolio - Downloadable Premium Portfolio Template | Multiverse",
+      "metaDescription": "A structured architecture portfolio with refined grids, calm typography, and project-led spatial storytelling.",
+      "summary": "A structured architecture portfolio with refined grids, calm typography, and project-led spatial storytelling.",
+      "description": "This template is suited for architects and spatial designers who need a clean portfolio with stronger project framing, restrained color use, and a credible studio-like presence.",
+      "category": "portfolio",
+      "categoryTitle": "Portfolio Sites",
+      "platform": "responsive",
+      "platformLabel": "Responsive",
+      "framework": "html-css-js",
+      "frameworkLabel": "HTML + CSS + JS",
+      "templateType": "template",
+      "industry": "Portfolio",
+      "style": "Architectural studio portfolio",
+      "audience": "architects, interior designers, and spatial studios",
+      "tags": [
+        "architect portfolio",
+        "architecture website",
+        "studio portfolio",
+        "project showcase",
+        "html portfolio"
+      ],
+      "techStack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "prompt": "Design a premium architecture portfolio with strict grids, calm typography, project-led case studies, and an understated studio aesthetic.",
+      "sections": [
+        "Hero",
+        "Projects",
+        "Studio",
+        "Approach",
+        "Contact"
+      ],
+      "layoutNotes": [
+        "The layout should feel spatial, ordered, and project-first.",
+        "This template fits creators who need a credible studio presence instead of a playful personal page."
+      ],
+      "responsiveNotes": [
+        "Project grids become stacked cards without losing the ordered hierarchy.",
+        "Whitespace remains generous so the portfolio stays premium on mobile screens."
+      ],
+      "bestFor": [
+        "Architects",
+        "Interior studios",
+        "Spatial design portfolios"
+      ],
+      "files": [
+        {
+          "path": "index.html",
+          "language": "html",
+          "content": "",
+          "summary": "Architect Studio Portfolio complete template source.",
+          "primary": true
+        }
+      ],
+      "featured": false,
+      "updatedAt": "2026-04-25",
+      "license": "Free download",
+      "priceLabel": "Free",
+      "importSource": "10-portfolio-templates"
+    },
+    {
       "id": "template-bookvault-online-bookstore-media",
       "slug": "bookvault-online-bookstore-media",
       "title": "BookVault - Online Bookstore & Media",
@@ -1738,6 +2201,72 @@
       "liveUrl": "https://multiverse-templates.vercel.app/braincode-ai-powered-code-generation",
       "previewImage": "https://res.cloudinary.com/dlgmkieem/image/upload/f_auto,q_auto,c_fill,w_1600,h_1000/multiverse/template-previews/braincode-ai-powered-code-generation",
       "previewCapturedAt": "2026-04-21T08:49:50.357Z"
+    },
+    {
+      "id": "template-brutalist-portfolio",
+      "slug": "brutalist-portfolio",
+      "title": "Brutalist Portfolio",
+      "seoTitle": "Brutalist Portfolio - Downloadable Premium Portfolio Template | Multiverse",
+      "metaDescription": "A bold brutalist portfolio with hard edges, strong contrast, and poster-like typography for a standout visual identity.",
+      "summary": "A bold brutalist portfolio with hard edges, strong contrast, and poster-like typography for a standout visual identity.",
+      "description": "This template is ideal for creatives who want an unapologetically bold personal website with heavy borders, raw shapes, and a more anti-polished, expressive portfolio direction.",
+      "category": "portfolio",
+      "categoryTitle": "Portfolio Sites",
+      "platform": "responsive",
+      "platformLabel": "Responsive",
+      "framework": "html-css-js",
+      "frameworkLabel": "HTML + CSS + JS",
+      "templateType": "template",
+      "industry": "Portfolio",
+      "style": "Brutalist portfolio",
+      "audience": "experimental designers, art directors, and bold personal brands",
+      "tags": [
+        "brutalist portfolio",
+        "bold portfolio",
+        "experimental website",
+        "graphic design site",
+        "html portfolio"
+      ],
+      "techStack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "prompt": "Design a premium brutalist portfolio with poster-like typography, hard-edged shapes, high contrast blocks, and a strong anti-polished identity.",
+      "sections": [
+        "Hero",
+        "Work",
+        "About",
+        "Services",
+        "Contact"
+      ],
+      "layoutNotes": [
+        "The brutalist identity should feel deliberate and graphic rather than messy.",
+        "This template works well for portfolios that want strong visual memorability over softness."
+      ],
+      "responsiveNotes": [
+        "Hard-edged modules stack into strong mobile sections without losing visual clarity.",
+        "Typography remains large and direct so the style survives smaller screens."
+      ],
+      "bestFor": [
+        "Experimental portfolios",
+        "Art direction sites",
+        "Bold personal brands"
+      ],
+      "files": [
+        {
+          "path": "index.html",
+          "language": "html",
+          "content": "",
+          "summary": "Brutalist Portfolio complete template source.",
+          "primary": true
+        }
+      ],
+      "featured": false,
+      "updatedAt": "2026-04-25",
+      "license": "Free download",
+      "priceLabel": "Free",
+      "importSource": "10-portfolio-templates"
     },
     {
       "id": "template-businessrealty-commercial-real-estate-solutions",
@@ -6290,6 +6819,72 @@
       "previewCapturedAt": "2026-04-21T08:40:15.831Z"
     },
     {
+      "id": "template-swiss-design-portfolio",
+      "slug": "swiss-design-portfolio",
+      "title": "Swiss Design Portfolio",
+      "seoTitle": "Swiss Design Portfolio - Downloadable Premium Portfolio Template | Multiverse",
+      "metaDescription": "A Swiss-style portfolio with disciplined grids, typographic clarity, and a high-signal visual system for modern design work.",
+      "summary": "A Swiss-style portfolio with disciplined grids, typographic clarity, and a high-signal visual system for modern design work.",
+      "description": "This template focuses on ordered layout, sharp typography, and restrained presentation, making it ideal for designers who want a rational, gallery-quality portfolio experience.",
+      "category": "portfolio",
+      "categoryTitle": "Portfolio Sites",
+      "platform": "responsive",
+      "platformLabel": "Responsive",
+      "framework": "html-css-js",
+      "frameworkLabel": "HTML + CSS + JS",
+      "templateType": "template",
+      "industry": "Portfolio",
+      "style": "Swiss grid portfolio",
+      "audience": "graphic designers, art directors, and modern creative portfolios",
+      "tags": [
+        "swiss design portfolio",
+        "grid portfolio",
+        "typography portfolio",
+        "minimal website",
+        "html portfolio"
+      ],
+      "techStack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "prompt": "Design a premium Swiss-inspired portfolio with rigid grids, typographic precision, editorial spacing, and a clean modernist visual system.",
+      "sections": [
+        "Hero",
+        "Work",
+        "About",
+        "Capabilities",
+        "Contact"
+      ],
+      "layoutNotes": [
+        "Grids and type do the work, so extra decorative UI should stay minimal.",
+        "This template is ideal when the creator wants precision and clarity over visual noise."
+      ],
+      "responsiveNotes": [
+        "The strict grid system simplifies into aligned stacked sections on smaller screens.",
+        "Spacing and text hierarchy remain the main identity even in mobile layouts."
+      ],
+      "bestFor": [
+        "Graphic designers",
+        "Modernist portfolios",
+        "Editorial design sites"
+      ],
+      "files": [
+        {
+          "path": "index.html",
+          "language": "html",
+          "content": "",
+          "summary": "Swiss Design Portfolio complete template source.",
+          "primary": true
+        }
+      ],
+      "featured": false,
+      "updatedAt": "2026-04-25",
+      "license": "Free download",
+      "priceLabel": "Free",
+      "importSource": "10-portfolio-templates"
+    },
+    {
       "id": "template-syncteam-team-collaboration-file-sync",
       "slug": "syncteam-team-collaboration-file-sync",
       "title": "SyncTeam - Team Collaboration & File Sync",
@@ -7020,6 +7615,72 @@
       "previewCapturedAt": "2026-04-21T08:46:19.991Z"
     },
     {
+      "id": "template-valentine-fashion-editorial-portfolio",
+      "slug": "valentine-fashion-editorial-portfolio",
+      "title": "Valentine Fashion Editorial Portfolio",
+      "seoTitle": "Valentine Fashion Editorial Portfolio - Downloadable Premium Portfolio Template | Multiverse",
+      "metaDescription": "A fashion-forward editorial portfolio with luxury-inspired pacing, larger imagery, and magazine-style visual rhythm.",
+      "summary": "A fashion-forward editorial portfolio with luxury-inspired pacing, larger imagery, and magazine-style visual rhythm.",
+      "description": "This fashion portfolio template is built for stylists, models, photographers, and editorial creatives who want a more luxurious personal site with strong visual pacing and high-contrast type.",
+      "category": "portfolio",
+      "categoryTitle": "Portfolio Sites",
+      "platform": "responsive",
+      "platformLabel": "Responsive",
+      "framework": "html-css-js",
+      "frameworkLabel": "HTML + CSS + JS",
+      "templateType": "template",
+      "industry": "Portfolio",
+      "style": "Luxury fashion editorial portfolio",
+      "audience": "fashion creatives, stylists, models, and editorial brands",
+      "tags": [
+        "fashion portfolio",
+        "editorial portfolio",
+        "luxury portfolio",
+        "stylist website",
+        "html portfolio"
+      ],
+      "techStack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "prompt": "Design a premium fashion editorial portfolio with luxury pacing, magazine-inspired composition, strong photography blocks, and clean typography.",
+      "sections": [
+        "Hero",
+        "Editorial work",
+        "Lookbook",
+        "About",
+        "Contact"
+      ],
+      "layoutNotes": [
+        "The template should feel more like a digital editorial spread than a standard portfolio grid.",
+        "Large imagery and refined type carry the brand identity throughout the page."
+      ],
+      "responsiveNotes": [
+        "Editorial sections collapse into touch-friendly image and text stacks.",
+        "The visual tone stays premium without relying on overly heavy chrome on mobile."
+      ],
+      "bestFor": [
+        "Fashion portfolios",
+        "Luxury personal brands",
+        "Editorial creators"
+      ],
+      "files": [
+        {
+          "path": "index.html",
+          "language": "html",
+          "content": "",
+          "summary": "Valentine Fashion Editorial Portfolio complete template source.",
+          "primary": true
+        }
+      ],
+      "featured": false,
+      "updatedAt": "2026-04-25",
+      "license": "Free download",
+      "priceLabel": "Free",
+      "importSource": "10-portfolio-templates"
+    },
+    {
       "id": "template-visionai-intelligent-image-analysis-api",
       "slug": "visionai-intelligent-image-analysis-api",
       "title": "VisionAI - Intelligent Image Analysis API",
@@ -7313,8 +7974,8 @@
     }
   ],
   "meta": {
-    "source": "split-store-migration",
-    "generatedAt": "2026-04-22T11:25:23.546Z",
-    "count": 96
+    "source": "admin-bulk-save + 10-portfolio-templates-import",
+    "generatedAt": "2026-04-25T12:29:19.502Z",
+    "count": 106
   }
 }
