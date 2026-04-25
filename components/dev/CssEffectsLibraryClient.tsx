@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { startTransition, useDeferredValue, useEffect, useMemo, useState } from 'react'
+import { startTransition, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowUpRight, Boxes, Check, Copy, Eye, Filter, Search, SearchX, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { UiCatalogItem } from '@/lib/ui-source-components'
@@ -198,7 +198,28 @@ function ComponentPreviewRow({
 }) {
   const isDark = Boolean(effect.darkVariant)
   const [previewSize, setPreviewSize] = useState<PreviewSizeId>('full')
+  const stageRef = useRef<HTMLDivElement>(null)
+  const [stageWidth, setStageWidth] = useState(0)
   const activeSize = PREVIEW_SIZES.find(size => size.id === previewSize) || PREVIEW_SIZES[PREVIEW_SIZES.length - 1]
+  const scaledWidth = activeSize.width ?? stageWidth
+  const sizeScale = activeSize.width && stageWidth ? Math.min(1, stageWidth / activeSize.width) : 1
+
+  useEffect(() => {
+    const node = stageRef.current
+    if (!node) return
+
+    const updateWidth = () => setStageWidth(node.clientWidth)
+    updateWidth()
+
+    const observer = new ResizeObserver(entries => {
+      const entry = entries[0]
+      if (!entry) return
+      setStageWidth(entry.contentRect.width)
+    })
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <article className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
@@ -207,45 +228,56 @@ function ComponentPreviewRow({
           <h3 className="truncate text-base font-semibold text-slate-950 dark:text-slate-50">{effect.variantLabel || effect.title}</h3>
           <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{effect.frameworkLabel || 'markup'}</p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {PREVIEW_SIZES.map(size => (
-            <button
-              key={size.id}
-              type="button"
-              onClick={() => setPreviewSize(size.id)}
-              className={cn(
-                'rounded-md border px-2.5 py-1 text-xs font-semibold transition-colors',
-                previewSize === size.id
-                  ? 'border-slate-950 bg-slate-950 text-white dark:border-white dark:bg-white dark:text-slate-950'
-                  : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-700'
-              )}
+        <div className="flex min-w-0 flex-col gap-2 md:items-end">
+          <div className="flex max-w-full items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {PREVIEW_SIZES.map(size => (
+              <button
+                key={size.id}
+                type="button"
+                onClick={() => setPreviewSize(size.id)}
+                className={cn(
+                  'shrink-0 rounded-md border px-2.5 py-1 text-xs font-semibold transition-colors',
+                  previewSize === size.id
+                    ? 'border-slate-950 bg-slate-950 text-white dark:border-white dark:bg-white dark:text-slate-950'
+                    : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-700'
+                )}
+              >
+                {size.label}
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href={`/ui/${effect.slug}`}
+              className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
             >
-              {size.label}
+              <Eye className="h-3.5 w-3.5" />
+              Preview
+            </Link>
+            <button
+              type="button"
+              onClick={() => onCopy(effect)}
+              className="inline-flex items-center gap-1.5 rounded-md bg-slate-950 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+            >
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              {copied ? 'Copied' : 'Copy'}
             </button>
-          ))}
-          <Link
-            href={`/ui/${effect.slug}`}
-            className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
-          >
-            <Eye className="h-3.5 w-3.5" />
-            Preview
-          </Link>
-          <button
-            type="button"
-            onClick={() => onCopy(effect)}
-            className="inline-flex items-center gap-1.5 rounded-md bg-slate-950 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
-          >
-            {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-            {copied ? 'Copied' : 'Copy'}
-          </button>
+          </div>
         </div>
       </div>
-      <div className={cn('relative h-[200px] overflow-hidden md:h-[220px]', isDark ? 'bg-slate-950' : 'bg-white')}>
-        <div
-          className="mx-auto h-full max-w-full overflow-hidden transition-[width] duration-200"
-          style={{ width: activeSize.width ? `${activeSize.width}px` : '100%' }}
-        >
-          <EffectPreview effect={effect} compact />
+      <div className={cn('relative h-[240px] overflow-hidden sm:h-[250px] md:h-[280px]', isDark ? 'bg-slate-950' : 'bg-white')}>
+        <div ref={stageRef} className="flex h-full w-full items-start justify-center overflow-hidden px-2 py-3 sm:px-3 sm:py-4">
+          <div
+            className="h-full overflow-hidden rounded-[18px] ring-1 ring-slate-200/70 transition-transform duration-200 dark:ring-slate-800/80"
+            style={{
+              width: scaledWidth ? `${scaledWidth}px` : '100%',
+              maxWidth: activeSize.width ? 'none' : '100%',
+              transform: `scale(${sizeScale})`,
+              transformOrigin: 'top center',
+            }}
+          >
+            <EffectPreview effect={effect} compact />
+          </div>
         </div>
       </div>
     </article>

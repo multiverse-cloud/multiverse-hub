@@ -123,7 +123,7 @@ export default function SiteSearchInput({
             className={cn(
               'w-full transition-all focus:outline-none',
               isHero
-                ? 'rounded-2xl border-2 border-slate-200/80 bg-white py-3 pl-10 pr-24 text-sm shadow-lg shadow-slate-900/[0.04] focus:border-indigo-400 focus:shadow-indigo-500/10 sm:py-3.5 sm:pl-12 sm:pr-36 sm:text-base dark:border-slate-800/80 dark:bg-slate-900/90 dark:shadow-none dark:focus:border-indigo-500'
+                ? 'rounded-2xl border border-slate-200/80 bg-white py-3 pl-10 pr-16 text-sm shadow-[0_18px_40px_-28px_rgba(15,23,42,0.28)] focus:border-indigo-400 focus:shadow-indigo-500/10 sm:py-3.5 sm:pl-12 sm:pr-36 sm:text-base dark:border-slate-800/80 dark:bg-slate-900/90 dark:shadow-none dark:focus:border-indigo-500'
                 : isMobile
                 ? 'rounded-lg border border-slate-200/60 bg-white/90 py-2 pl-8 pr-3 text-xs focus:border-indigo-400 focus:ring-1 focus:ring-indigo-500/20 dark:border-slate-700/60 dark:bg-slate-900/90 dark:text-slate-100'
                 : 'rounded-xl border border-slate-200 bg-white py-3 pl-9 pr-4 text-sm shadow-sm hover:border-indigo-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-700'
@@ -132,9 +132,9 @@ export default function SiteSearchInput({
           {isHero ? (
             <button
               type="submit"
-              className="absolute right-1.5 top-1/2 flex -translate-y-1/2 items-center gap-1 rounded-xl bg-slate-950 px-3 py-1.75 font-display text-[11px] font-bold tracking-tight text-white transition-all hover:bg-slate-800 hover:shadow-md sm:right-2 sm:gap-2 sm:rounded-2xl sm:px-5 sm:py-2.5 sm:text-sm dark:bg-slate-100 dark:text-slate-950 dark:hover:bg-white"
+              className="absolute right-1.5 top-1/2 flex h-10 min-w-10 -translate-y-1/2 items-center justify-center gap-1 rounded-xl bg-slate-950 px-3 text-[11px] font-semibold tracking-tight text-white transition-all hover:bg-slate-800 hover:shadow-md sm:right-2 sm:h-auto sm:min-w-0 sm:gap-2 sm:rounded-2xl sm:px-5 sm:py-2.5 sm:text-sm dark:bg-slate-100 dark:text-slate-950 dark:hover:bg-white"
             >
-              Search
+              <span className="hidden sm:inline">Search</span>
               <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </button>
           ) : isMobile ? (

@@ -41,10 +41,10 @@ function PreviewShell({
   return (
     <div
       className={`flex h-full w-full items-center justify-center overflow-hidden bg-white ${
-        compact ? 'p-4 [&_*]:pointer-events-none' : 'p-6'
+        compact ? 'p-3 sm:p-4 [&_*]:pointer-events-none' : 'p-6'
       }`}
     >
-      <div className={`w-full ${compact ? 'max-w-[320px]' : 'max-w-[360px]'}`}>{children}</div>
+      <div className={`w-full ${compact ? 'max-w-none' : 'max-w-[360px]'}`}>{children}</div>
     </div>
   )
 }

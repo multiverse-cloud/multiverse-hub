@@ -18,7 +18,7 @@ export default function ToolBreadcrumb({
 }) {
   if (!items || items.length === 0) return null;
 
-  const fullPathTitle = items.map((i) => i.label).join(" > ");
+  const fullPathTitle = items.map((item) => item.label).join(" > ");
   const hasCollapse = items.length >= 3;
   const first = items[0];
   const last = items[items.length - 1];
@@ -34,12 +34,11 @@ export default function ToolBreadcrumb({
       )}
     >
       <ol className="flex min-w-0 items-center gap-0.5 sm:gap-1">
-        {/* ── First item ── */}
-        <li className="flex items-center gap-0.5 sm:gap-1 min-w-0 shrink-0">
+        <li className="flex min-w-0 shrink-0 items-center gap-0.5 sm:gap-1">
           {first.href ? (
             <Link
               href={first.href}
-              className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md px-1.5 py-0.5"
+              className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-muted-foreground transition-colors hover:bg-slate-100 hover:text-foreground dark:hover:bg-slate-800"
             >
               {first.href === "/" ? (
                 <>
@@ -48,78 +47,69 @@ export default function ToolBreadcrumb({
                   <span className="sr-only">Home</span>
                 </>
               ) : (
-                <span className="truncate max-w-[100px] sm:max-w-none">
+                <span className="max-w-[90px] truncate sm:max-w-[150px] lg:max-w-none">
                   {first.label}
                 </span>
               )}
             </Link>
           ) : (
-            <span className="text-muted-foreground truncate max-w-[100px] sm:max-w-none px-1.5 py-0.5">
+            <span className="max-w-[90px] truncate px-1.5 py-0.5 text-muted-foreground sm:max-w-[150px] lg:max-w-none">
               {first.label}
             </span>
           )}
         </li>
 
-        {/* ── Mobile ellipsis (shown only when there are middle items, on small screens) ── */}
-        {hasCollapse && middle.length > 0 && (
+        {hasCollapse && middle.length > 0 ? (
           <>
-            <li
-              aria-hidden="true"
-              className="flex items-center shrink-0 sm:hidden"
-            >
+            <li aria-hidden="true" className="flex shrink-0 items-center sm:hidden">
               <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
             </li>
-            <li
-              aria-hidden="true"
-              className="flex items-center shrink-0 sm:hidden"
-            >
-              <span className="text-muted-foreground/60 text-[11px] px-0.5 select-none">
-                …
+            <li aria-hidden="true" className="flex shrink-0 items-center sm:hidden">
+              <span className="select-none px-0.5 text-[11px] text-muted-foreground/60">
+                ...
               </span>
             </li>
           </>
-        )}
+        ) : null}
 
-        {/* ── Middle items (hidden on mobile when collapsing, shown on sm+) ── */}
-        {middle.map((item, idx) => (
+        {middle.map((item, index) => (
           <li
-            key={`middle-${idx}`}
-            className="hidden sm:flex items-center gap-0.5 sm:gap-1 min-w-0"
+            key={`middle-${index}`}
+            className="hidden min-w-0 items-center gap-0.5 sm:flex sm:gap-1"
           >
             <ChevronRight
-              className="h-3 w-3 text-muted-foreground/40 shrink-0"
+              className="h-3 w-3 shrink-0 text-muted-foreground/40"
               aria-hidden="true"
             />
             {item.href ? (
               <Link
                 href={item.href}
-                className="text-muted-foreground hover:text-foreground transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md px-1.5 py-0.5 truncate max-w-[100px] sm:max-w-none"
+                className="max-w-[110px] truncate rounded-md px-1.5 py-0.5 text-muted-foreground transition-colors hover:bg-slate-100 hover:text-foreground dark:hover:bg-slate-800 sm:max-w-[150px] lg:max-w-none"
               >
                 {item.label}
               </Link>
             ) : (
-              <span className="text-muted-foreground truncate max-w-[100px] sm:max-w-none px-1.5 py-0.5">
+              <span className="max-w-[110px] truncate px-1.5 py-0.5 text-muted-foreground sm:max-w-[150px] lg:max-w-none">
                 {item.label}
               </span>
             )}
           </li>
         ))}
 
-        {/* ── Last item (only if more than one item total) ── */}
-        {items.length > 1 && (
-          <li className="flex items-center gap-0.5 sm:gap-1 min-w-0">
+        {items.length > 1 ? (
+          <li className="flex min-w-0 items-center gap-0.5 sm:gap-1">
             <ChevronRight
-              className="h-3 w-3 text-muted-foreground/40 shrink-0"
+              className="h-3 w-3 shrink-0 text-muted-foreground/40"
               aria-hidden="true"
             />
             <span
               aria-current="page"
-              className="truncate max-w-[min(42vw,180px)] px-0.5 font-medium text-foreground sm:max-w-none"
+              className="max-w-[min(46vw,190px)] truncate px-0.5 font-medium text-foreground sm:max-w-[240px] lg:max-w-none"
             >
               {last.label}
             </span>
           </li>
-        )}
+        ) : null}
       </ol>
     </nav>
   );

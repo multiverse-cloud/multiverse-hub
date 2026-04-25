@@ -19,8 +19,8 @@ const SUGGESTION_CHIPS = [
   },
   { label: "Merge PDF", href: "/tools/pdf/merge-pdf", icon: FileText },
   { label: "Compress Image", href: "/tools/image/compress-image", icon: Image },
-  { label: "JSON Formatter", href: "/tools/dev/json-formatter", icon: Code2 },
   { label: "Prompts", href: "/prompts", icon: Bot },
+  { label: "UI", href: "/ui", icon: Code2 },
 ];
 
 const FLIP_WORDS = ["online tools", "UI components", "website templates", "AI prompts"];
@@ -32,7 +32,7 @@ export default function HeroSection() {
         <div className="absolute inset-x-0 top-0 h-[360px] bg-[radial-gradient(circle_at_50%_0%,rgba(37,99,235,0.16),transparent_58%)] dark:bg-[radial-gradient(circle_at_50%_0%,rgba(96,165,250,0.18),transparent_60%)]" />
         <div className="absolute left-1/2 top-8 hidden h-[500px] w-[900px] -translate-x-1/2 rounded-full border border-slate-200/70 opacity-80 dark:border-slate-800/70 md:block" />
         <div className="absolute left-1/2 top-20 hidden h-[340px] w-[640px] -translate-x-1/2 rounded-full border border-slate-200/60 opacity-80 dark:border-slate-800/60 md:block" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,23,42,0.04)_1px,transparent_1px),linear-gradient(180deg,rgba(15,23,42,0.035)_1px,transparent_1px)] bg-[size:76px_76px] opacity-35 dark:opacity-16" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,23,42,0.04)_1px,transparent_1px),linear-gradient(180deg,rgba(15,23,42,0.035)_1px,transparent_1px)] bg-[size:76px_76px] opacity-20 dark:opacity-12" />
         <div className="mv-hero-beam absolute left-1/2 top-0 h-px w-[78vw] -translate-x-1/2 bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
         <div className="absolute left-[10%] top-24 hidden h-2 w-2 rounded-full bg-blue-500/45 animate-float md:block" />
         <div className="absolute right-[16%] top-32 hidden h-2.5 w-2.5 rounded-full bg-emerald-500/45 animate-float [animation-delay:1.4s] md:block" />
@@ -53,8 +53,8 @@ export default function HeroSection() {
             className="w-full animate-fade-in"
             style={{ animationDelay: "0.08s", animationFillMode: "both" }}
           >
-            <h1 className="font-display text-[1.95rem] font-black leading-[0.98] tracking-[-0.055em] text-slate-950 dark:text-slate-50 sm:text-[3.15rem] md:text-[4.1rem] lg:text-[4.55rem]">
-              One Multiverse for
+            <h1 className="font-display text-[2.05rem] font-black leading-[0.96] tracking-[-0.06em] text-slate-950 dark:text-slate-50 sm:text-[3.2rem] md:text-[4.2rem] lg:text-[4.7rem]">
+              Multiverse for
               <span className="mx-auto mt-1 block h-[1.1em] max-w-[12.5ch] overflow-hidden text-blue-600 dark:text-blue-400 sm:mt-1.5">
                 <span className="mv-flip-stack">
                   {FLIP_WORDS.map((word) => (
@@ -80,18 +80,21 @@ export default function HeroSection() {
           </div>
 
           <div
-            className="mt-2.5 flex max-w-[min(100%,640px)] flex-wrap justify-center gap-1 animate-fade-in sm:mt-3.5 sm:gap-1.5"
+            className="mt-2 flex w-full max-w-[min(100%,680px)] flex-wrap items-center justify-center gap-1.5 animate-fade-in sm:mt-3"
             style={{ animationDelay: "0.28s", animationFillMode: "both" }}
           >
+            <span className="hidden text-[11px] font-medium uppercase tracking-[0.16em] text-slate-400 sm:inline">
+              Quick access
+            </span>
             {SUGGESTION_CHIPS.map((chip) => {
               const Icon = chip.icon;
               return (
                 <Link
                   key={chip.label}
                   href={chip.href}
-                  className="group/chip inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-1.5 py-0.75 text-[10px] font-medium text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:text-blue-700 motion-reduce:transition-none motion-reduce:hover:translate-y-0 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400 dark:hover:border-blue-900 dark:hover:text-blue-300 sm:gap-1.5 sm:px-2.5 sm:py-1.5 sm:text-xs"
+                  className="group/chip inline-flex items-center gap-1 rounded-full border border-slate-200/80 bg-white/90 px-2.5 py-1 text-[10px] font-medium text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:text-blue-700 motion-reduce:transition-none motion-reduce:hover:translate-y-0 dark:border-slate-800 dark:bg-slate-950/90 dark:text-slate-400 dark:hover:border-blue-900 dark:hover:text-blue-300 sm:gap-1.5 sm:px-3 sm:py-1.5 sm:text-xs"
                 >
-                  <Icon className="h-3 w-3 transition-transform group-hover/chip:scale-110 sm:h-3.5 sm:w-3.5" />
+                  <Icon className="hidden h-3.5 w-3.5 transition-transform group-hover/chip:scale-110 sm:block" />
                   <span>{chip.label}</span>
                 </Link>
               );

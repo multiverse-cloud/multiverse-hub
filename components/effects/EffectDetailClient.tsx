@@ -31,31 +31,31 @@ const SourceUiPreview = dynamic(() => import('@/components/ui-source/SourceUiPre
 function getPreviewViewportClass(effect: UiCatalogItem) {
   if (effect.provider === 'hyperui') {
     if (['headers', 'footers', 'feature-grids', 'contact-forms', 'pricing', 'product-collections', 'team-sections', 'tables', 'side-menu', 'vertical-menu'].includes(effect.category)) {
-      return 'w-full max-w-[1120px] h-[min(62vh,620px)] min-h-[360px]'
+      return 'w-full max-w-[1120px] h-[clamp(280px,58vh,620px)] min-h-[280px] sm:min-h-[360px]'
     }
 
     if (['buttons', 'badges', 'breadcrumbs', 'button-groups', 'checkboxes', 'radio-groups', 'toggles', 'pagination', 'loaders', 'progress-bars', 'tabs'].includes(effect.category)) {
-      return 'w-full max-w-[920px] h-[260px] min-h-[220px]'
+      return 'w-full max-w-[920px] h-[clamp(220px,34vh,260px)] min-h-[220px]'
     }
 
-    return 'w-full max-w-[960px] h-[min(48vh,460px)] min-h-[280px]'
+    return 'w-full max-w-[960px] h-[clamp(260px,48vh,460px)] min-h-[260px] sm:min-h-[280px]'
   }
 
-  if (effect.kind === 'source') return 'w-full max-w-[720px] min-h-[280px]'
+  if (effect.kind === 'source') return 'w-full max-w-[720px] min-h-[240px] sm:min-h-[280px]'
 
   if (['navbar', 'hero', 'feature', 'footer', 'table', 'dashboard', 'sidebar', 'ecommerce', 'layout'].includes(effect.category)) {
-    return 'w-full max-w-[1080px] h-[min(62vh,620px)] min-h-[360px]'
+    return 'w-full max-w-[1080px] h-[clamp(280px,58vh,620px)] min-h-[280px] sm:min-h-[360px]'
   }
 
   if (['form', 'auth', 'accordion', 'faq', 'search', 'filter', 'card', 'testimonial', 'pricing', 'stats'].includes(effect.category)) {
-    return 'w-full max-w-[760px] h-[min(54vh,520px)] min-h-[320px]'
+    return 'w-full max-w-[760px] h-[clamp(260px,52vh,520px)] min-h-[260px] sm:min-h-[320px]'
   }
 
   if (['checkbox', 'radio', 'button', 'notification', 'badge', 'hover', 'tooltip', 'toggle', 'separator', 'tabs'].includes(effect.category)) {
-    return 'w-full max-w-[460px] h-[min(36vh,320px)] min-h-[220px]'
+    return 'w-full max-w-[460px] h-[clamp(220px,34vh,320px)] min-h-[220px]'
   }
 
-  return 'w-full max-w-[560px] h-[min(42vh,380px)] min-h-[240px]'
+  return 'w-full max-w-[560px] h-[clamp(220px,40vh,380px)] min-h-[220px] sm:min-h-[240px]'
 }
 
 function getTabs(effect: UiCatalogItem) {
@@ -181,8 +181,8 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
   return (
     <div className="source-hub-scope bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <main className="flex min-h-screen flex-col overflow-hidden bg-white dark:bg-slate-950">
-        <header className="z-20 flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 md:px-6 dark:border-slate-800 dark:bg-slate-950">
-          <div className="flex items-center gap-4">
+        <header className="z-20 flex min-h-16 shrink-0 flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3 md:px-6 dark:border-slate-800 dark:bg-slate-950">
+          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
             <button
               type="button"
               onClick={handleBack}
@@ -194,15 +194,15 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
               <span className="hidden font-medium sm:inline">Back to Library</span>
             </button>
             <div className="hidden h-6 w-px bg-slate-200 sm:block dark:bg-slate-800" />
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-200">
+            <div className="flex min-w-0 items-center gap-2">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-200">
                 <Monitor className="h-4 w-4" />
               </div>
-              <h1 className="line-clamp-1 text-lg font-bold tracking-tight text-slate-950 dark:text-white">{effect.title}</h1>
+              <h1 className="line-clamp-1 text-base font-bold tracking-tight text-slate-950 dark:text-white sm:text-lg">{effect.title}</h1>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:justify-end">
             <div className="hidden items-center rounded-lg border border-slate-200 bg-slate-50 p-1 sm:flex dark:border-slate-800 dark:bg-slate-900">
               <button
                 type="button"
@@ -228,7 +228,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
             <button
               type="button"
               onClick={handleCopy}
-              className="flex items-center gap-2 rounded-lg bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+              className="ml-auto flex items-center gap-2 rounded-lg bg-slate-950 px-3.5 py-2 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
             >
               {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               <span>{copied ? 'Copied!' : 'Copy Code'}</span>
@@ -236,14 +236,14 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
           </div>
         </header>
 
-        <main className="relative flex flex-1 flex-col overflow-auto lg:flex-row lg:overflow-hidden">
+        <main className="relative flex flex-1 min-w-0 flex-col overflow-hidden lg:flex-row">
           <div
             className={cn(
-              'relative flex min-h-[420px] flex-col overflow-hidden border-b border-slate-200 bg-slate-50 group lg:min-h-0 lg:border-b-0 dark:border-slate-800 dark:bg-slate-900',
+              'group relative flex min-h-[360px] min-w-0 flex-col overflow-hidden border-b border-slate-200 bg-slate-50 lg:min-h-0 lg:border-b-0 dark:border-slate-800 dark:bg-slate-900',
               previewMode === 'full' ? 'flex-1' : 'flex-[1.2]'
             )}
           >
-            <div className="flex h-10 items-center justify-between border-b border-slate-200 bg-white px-4">
+            <div className="flex h-10 items-center justify-between border-b border-slate-200 bg-white px-3 sm:px-4">
               <div className="flex gap-1.5">
                 <div className="h-3 w-3 rounded-full bg-red-400/80" />
                 <div className="h-3 w-3 rounded-full bg-amber-400/80" />
@@ -270,15 +270,15 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
               </div>
             </div>
 
-            <div className="flex flex-1 items-start justify-center overflow-auto p-4 md:p-6">
+            <div className="custom-scrollbar flex flex-1 items-start justify-center overflow-auto p-3 sm:p-4 md:p-6">
               <div
                 className={cn(
-                  'relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_24px_60px_-36px_rgba(15,23,42,0.45)] transition-all duration-500 dark:border-slate-800',
+                  'relative max-w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_24px_60px_-36px_rgba(15,23,42,0.45)] transition-all duration-500 dark:border-slate-800',
                   previewViewportClass
                 )}
               >
                 {effect.kind === 'source' ? (
-                  <div className="h-full w-full overflow-auto">
+                  <div className="custom-scrollbar h-full w-full overflow-auto">
                     <SourceUiPreview previewKey={effect.previewKey} />
                   </div>
                 ) : (
@@ -295,7 +295,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
           </div>
 
           {previewMode === 'split' ? (
-            <div className="z-10 flex min-h-[420px] flex-1 flex-col border-l border-slate-200 bg-[#1e1e1e] shadow-2xl lg:min-h-0 lg:w-[450px] lg:flex-none xl:w-[600px] dark:border-slate-800">
+            <div className="z-10 flex min-h-[360px] min-w-0 flex-1 flex-col border-l border-slate-200 bg-[#1e1e1e] shadow-2xl lg:min-h-0 lg:w-[450px] lg:flex-none xl:w-[600px] dark:border-slate-800">
               <div className="flex h-10 items-center gap-1 border-b border-[#1e1e1e] bg-[#252526] px-2">
                 {tabs.map(tab => (
                   <button
@@ -315,7 +315,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
                 ))}
               </div>
 
-              <div className="group relative flex-1 overflow-hidden bg-[#1e1e1e]">
+              <div className="group relative min-w-0 flex-1 overflow-hidden bg-[#1e1e1e]">
                 <button
                   type="button"
                   onClick={handleCopy}
@@ -323,7 +323,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
                 >
                   <Copy className="h-4 w-4" />
                 </button>
-                <pre className="m-0 h-full overflow-auto p-4 text-sm leading-relaxed text-slate-200">
+                <pre className="custom-scrollbar m-0 h-full overflow-auto p-4 text-sm leading-relaxed text-slate-200">
                   <code>{activeItem?.code}</code>
                 </pre>
               </div>
