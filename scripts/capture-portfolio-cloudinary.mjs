@@ -13,13 +13,31 @@ const TEMP_DIR = path.join(ROOT, '.tmp', 'portfolio-cloudinary')
 const CAPTURE_DIR = path.join(TEMP_DIR, 'captures')
 const PROFILE_DIR = path.join(TEMP_DIR, 'browser-profile')
 const CRASH_DIR = path.join(TEMP_DIR, 'crash')
-const PORTFOLIO_SLUGS = [
+const DEFAULT_PORTFOLIO_SLUGS = [
   'bug-hunter-developer-portfolio',
   'designer-folio-editorial-portfolio',
   'macos-desktop-portfolio-experience',
   'purple-wave-creative-portfolio',
   'retro-terminal-portfolio',
 ]
+
+function parseArgs(argv) {
+  const options = {
+    slugs: [],
+  }
+
+  for (const arg of argv) {
+    if (arg.startsWith('--slugs=')) {
+      options.slugs = arg
+        .slice('--slugs='.length)
+        .split(',')
+        .map(value => value.trim())
+        .filter(Boolean)
+    }
+  }
+
+  return options
+}
 
 function stripUtf8Bom(value) {
   return value.charCodeAt(0) === 0xfeff ? value.slice(1) : value
@@ -158,6 +176,7 @@ async function saveJson(filePath, payload) {
 }
 
 async function main() {
+  const options = parseArgs(process.argv.slice(2))
   const browserPath = resolveBrowserPath()
   if (!browserPath) {
     throw new Error('No supported browser executable found. Install Chrome/Edge or set TEMPLATE_PREVIEW_BROWSER.')
@@ -190,8 +209,9 @@ async function main() {
 
   const store = await loadJson(STORE_PATH)
   const results = []
+  const targetSlugs = options.slugs.length > 0 ? options.slugs : DEFAULT_PORTFOLIO_SLUGS
 
-  for (const slug of PORTFOLIO_SLUGS) {
+  for (const slug of targetSlugs) {
     const previewPath = path.join(EXPORT_DIR, slug, 'preview.html')
     if (!fs.existsSync(previewPath)) {
       throw new Error(`Preview file not found for ${slug}`)
