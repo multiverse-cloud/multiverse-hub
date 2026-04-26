@@ -97,12 +97,12 @@ function PromptShowcaseCard({ prompt }: { prompt: PromptEntry }) {
       prefetch={false}
       className="group overflow-hidden rounded-xl border border-border/80 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_16px_40px_-24px_rgba(15,23,42,0.16)] dark:hover:border-slate-700"
     >
-      <div className="relative aspect-[5/6] overflow-hidden bg-white dark:bg-slate-950">
+      <div className="relative aspect-[4/3] overflow-hidden bg-slate-50 dark:bg-slate-950">
         <PromptPreviewImage
           src={prompt.previewImage}
           alt={prompt.previewAlt}
           category={prompt.category}
-          imageFit="contain"
+          imageFit="cover"
           imgClassName="transition-transform duration-500 group-hover:scale-[1.01]"
         />
         {status ? (
@@ -114,7 +114,7 @@ function PromptShowcaseCard({ prompt }: { prompt: PromptEntry }) {
         ) : null}
       </div>
 
-      <div className="flex items-center justify-between gap-3 px-4 py-3">
+      <div className="flex items-center justify-between gap-3 px-3.5 py-3 md:px-4">
         <h3 className="line-clamp-2 text-sm font-semibold leading-5 text-foreground">{prompt.title}</h3>
         <span className="shrink-0 text-xs font-semibold text-muted-foreground transition-colors group-hover:text-foreground">
           Open
@@ -139,7 +139,7 @@ function PromptSection({
         <h2 className="text-lg font-bold tracking-tight text-foreground md:text-xl">{title}</h2>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
         {prompts.map(prompt => (
           <PromptShowcaseCard key={prompt.slug} prompt={prompt} />
         ))}
@@ -168,11 +168,20 @@ export default function PromptHubPage({
   }, [activeCategory, activeModel, searchQuery])
 
   const heroPrompts = useMemo(() => featuredPrompts.slice(0, FEATURED_LIMIT), [featuredPrompts])
+  const libraryPrompts = useMemo(() => {
+    if (isFilteredView) {
+      return filteredPrompts
+    }
+
+    const featuredSlugs = new Set(heroPrompts.map(prompt => prompt.slug))
+    return filteredPrompts.filter(prompt => !featuredSlugs.has(prompt.slug))
+  }, [filteredPrompts, heroPrompts, isFilteredView])
   const visiblePrompts = useMemo(
-    () => filteredPrompts.slice(0, visibleCount),
-    [filteredPrompts, visibleCount]
+    () => libraryPrompts.slice(0, visibleCount),
+    [libraryPrompts, visibleCount]
   )
-  const hasMore = visibleCount < filteredPrompts.length
+  const hasMore = visibleCount < libraryPrompts.length
+  const libraryCount = libraryPrompts.length
 
   return (
     <div className="min-h-screen bg-background">
@@ -207,77 +216,81 @@ export default function PromptHubPage({
             {activeModel !== 'all' ? <input type="hidden" name="model" value={activeModel} /> : null}
             <button
               type="submit"
-              className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg bg-slate-900 px-4 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-950 dark:hover:bg-slate-200"
+              className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg bg-slate-900 px-3.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-950 dark:hover:bg-slate-200 sm:px-4"
             >
               Search
             </button>
           </form>
 
-          <div className="mx-auto mt-4 flex max-w-5xl flex-wrap justify-center gap-2">
-            <Link
-              href={buildPromptHref({ category: 'all', model: activeModel, query: searchQuery })}
-              prefetch={false}
-              className={cn(
-                'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
-                activeCategory === 'all'
-                  ? 'border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950'
-                  : 'border-border bg-card text-muted-foreground hover:text-foreground'
-              )}
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              All
-            </Link>
-            {categories.map(category => {
-              const Icon = getCategoryIcon(category.id)
-              return (
-                <Link
-                  key={category.id}
-                  href={buildPromptHref({ category: category.id, model: activeModel, query: searchQuery })}
-                  prefetch={false}
-                  className={cn(
-                    'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
-                    activeCategory === category.id
-                      ? 'border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950'
-                      : 'border-border bg-card text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  {category.title.replace(' Prompts', '')}
-                </Link>
-              )
-            })}
-          </div>
-
-          <div className="mx-auto mt-2 flex max-w-5xl flex-wrap justify-center gap-2">
-            <Link
-              href={buildPromptHref({ category: activeCategory, model: 'all', query: searchQuery })}
-              prefetch={false}
-              className={cn(
-                'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] transition-colors',
-                activeModel === 'all'
-                  ? 'border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950'
-                  : 'border-border bg-card text-muted-foreground hover:text-foreground'
-              )}
-            >
-              <Bot className="h-3 w-3" />
-              All models
-            </Link>
-            {models.map(model => (
+          <div className="-mx-4 mt-4 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="mx-auto flex w-max min-w-full justify-start gap-2 sm:w-auto sm:min-w-0 sm:flex-wrap sm:justify-center">
               <Link
-                key={model}
-                href={buildPromptHref({ category: activeCategory, model, query: searchQuery })}
+                href={buildPromptHref({ category: 'all', model: activeModel, query: searchQuery })}
                 prefetch={false}
                 className={cn(
-                  'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] transition-colors',
-                  activeModel === model
+                  'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-[11px] font-semibold transition-colors sm:px-3 sm:text-xs',
+                  activeCategory === 'all'
+                    ? 'border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950'
+                    : 'border-border bg-card text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                All
+              </Link>
+              {categories.map(category => {
+                const Icon = getCategoryIcon(category.id)
+                return (
+                  <Link
+                    key={category.id}
+                    href={buildPromptHref({ category: category.id, model: activeModel, query: searchQuery })}
+                    prefetch={false}
+                    className={cn(
+                      'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-[11px] font-semibold transition-colors sm:px-3 sm:text-xs',
+                      activeCategory === category.id
+                        ? 'border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950'
+                        : 'border-border bg-card text-muted-foreground hover:text-foreground'
+                    )}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    {category.title.replace(' Prompts', '')}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="-mx-4 mt-2 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="mx-auto flex w-max min-w-full justify-start gap-2 sm:w-auto sm:min-w-0 sm:flex-wrap sm:justify-center">
+              <Link
+                href={buildPromptHref({ category: activeCategory, model: 'all', query: searchQuery })}
+                prefetch={false}
+                className={cn(
+                  'inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] transition-colors sm:px-3',
+                  activeModel === 'all'
                     ? 'border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950'
                     : 'border-border bg-card text-muted-foreground hover:text-foreground'
                 )}
               >
                 <Bot className="h-3 w-3" />
-                {model}
+                All models
               </Link>
-            ))}
+              {models.map(model => (
+                <Link
+                  key={model}
+                  href={buildPromptHref({ category: activeCategory, model, query: searchQuery })}
+                  prefetch={false}
+                  className={cn(
+                    'inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] transition-colors sm:px-3',
+                    activeModel === model
+                      ? 'border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950'
+                      : 'border-border bg-card text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  <Bot className="h-3 w-3" />
+                  {model}
+                </Link>
+              ))}
+            </div>
           </div>
 
           <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-muted-foreground">
@@ -304,14 +317,14 @@ export default function PromptHubPage({
                 {isFilteredView ? 'Filtered prompts' : 'Prompt library'}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                {totalResults > 0 ? `${visiblePrompts.length} of ${totalResults} prompts visible.` : 'No prompts found.'}
+                {libraryCount > 0 ? `${visiblePrompts.length} of ${libraryCount} prompts visible.` : 'No prompts found.'}
               </p>
             </div>
           </div>
 
           {visiblePrompts.length > 0 ? (
             <>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
                 {visiblePrompts.map(prompt => (
                   <PromptShowcaseCard key={prompt.slug} prompt={prompt} />
                 ))}
@@ -321,7 +334,7 @@ export default function PromptHubPage({
                 <div className="flex justify-center pt-2">
                   <button
                     type="button"
-                    onClick={() => setVisibleCount(count => Math.min(count + LOAD_MORE_COUNT, filteredPrompts.length))}
+                    onClick={() => setVisibleCount(count => Math.min(count + LOAD_MORE_COUNT, libraryPrompts.length))}
                     className="inline-flex items-center justify-center rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-slate-300 hover:bg-slate-50 dark:hover:border-slate-700 dark:hover:bg-slate-900"
                   >
                     Load more

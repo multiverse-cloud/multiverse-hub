@@ -45,6 +45,10 @@ function normalizeTopic(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
 }
 
+function normalizePromptBody(value: string) {
+  return value.toLowerCase().replace(/\s+/g, ' ').trim()
+}
+
 function getPromptMatchKey(prompt: PromptEntry) {
   return prompt.slug || normalizeTopic(prompt.title)
 }
@@ -113,8 +117,47 @@ function buildRelatedSlugs(entry: PromptEntry, prompts: PromptEntry[]) {
     .map(candidate => candidate.slug)
 }
 
+function dedupePromptEntries(entries: PromptEntry[]) {
+  const selected: PromptEntry[] = []
+  const slugMap = new Map<string, number>()
+  const titleMap = new Map<string, number>()
+  const promptMap = new Map<string, number>()
+
+  for (const entry of entries) {
+    const slugKey = entry.slug.trim().toLowerCase()
+    const titleKey = normalizeTopic(entry.title)
+    const promptKey = normalizePromptBody(entry.prompt)
+    const existingIndex = [slugMap.get(slugKey), titleMap.get(titleKey), promptMap.get(promptKey)].find(
+      value => typeof value === 'number'
+    )
+
+    if (typeof existingIndex !== 'number') {
+      const nextIndex = selected.push(entry) - 1
+      if (slugKey) slugMap.set(slugKey, nextIndex)
+      if (titleKey) titleMap.set(titleKey, nextIndex)
+      if (promptKey) promptMap.set(promptKey, nextIndex)
+      continue
+    }
+
+    const existing = selected[existingIndex]
+    const shouldReplace =
+      Number(Boolean(entry.featured)) > Number(Boolean(existing.featured)) ||
+      entry.updatedAt > existing.updatedAt ||
+      (entry.previewImage.startsWith('http') && !existing.previewImage.startsWith('http'))
+
+    if (shouldReplace) {
+      selected[existingIndex] = entry
+      if (slugKey) slugMap.set(slugKey, existingIndex)
+      if (titleKey) titleMap.set(titleKey, existingIndex)
+      if (promptKey) promptMap.set(promptKey, existingIndex)
+    }
+  }
+
+  return selected
+}
+
 function buildPromptLibraryState(entries: PromptEntry[]): PromptLibraryState {
-  const normalized = sortPrompts(entries.map(normalizePromptEntry))
+  const normalized = sortPrompts(dedupePromptEntries(entries.map(normalizePromptEntry)))
   const prompts = normalized.map(entry => ({
     ...entry,
     relatedSlugs: buildRelatedSlugs(entry, normalized),

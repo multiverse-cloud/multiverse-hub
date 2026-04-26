@@ -16,6 +16,7 @@ export default function PromptPreviewImage({
   className,
   imgClassName,
   imageFit = 'contain',
+  priority = false,
 }: {
   src: string
   alt: string
@@ -23,6 +24,7 @@ export default function PromptPreviewImage({
   className?: string
   imgClassName?: string
   imageFit?: 'cover' | 'contain'
+  priority?: boolean
 }) {
   const fallbackSrc = useMemo(() => getPromptPreviewFallback(category), [category])
   const [currentSrc, setCurrentSrc] = useState(src || fallbackSrc)
@@ -36,13 +38,15 @@ export default function PromptPreviewImage({
   return (
     <div className={cn('relative h-full w-full overflow-hidden bg-white dark:bg-slate-950', className)}>
       {!loaded ? (
-        <div className="absolute inset-0 animate-pulse bg-[linear-gradient(110deg,#f1f5f9_8%,#e2e8f0_18%,#f1f5f9_33%)] bg-[length:200%_100%] dark:bg-[linear-gradient(110deg,#0f172a_8%,#1e293b_18%,#0f172a_33%)]" />
+        <div className="absolute inset-0 animate-pulse bg-[linear-gradient(110deg,#f8fafc_8%,#e2e8f0_18%,#f8fafc_33%)] bg-[length:200%_100%] dark:bg-[linear-gradient(110deg,#0f172a_8%,#1e293b_18%,#0f172a_33%)]" />
       ) : null}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={currentSrc || fallbackSrc}
         alt={alt}
-        loading="lazy"
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : 'auto'}
+        decoding="async"
         onLoad={() => setLoaded(true)}
         onError={() => {
           if (currentSrc !== fallbackSrc) {
@@ -53,7 +57,7 @@ export default function PromptPreviewImage({
         referrerPolicy={isRemoteUrl(currentSrc) ? 'no-referrer' : undefined}
         className={cn(
           'absolute inset-0 h-full w-full',
-          imageFit === 'contain' ? 'object-contain object-center p-2' : 'object-cover object-center',
+          imageFit === 'contain' ? 'object-contain object-center p-1.5 md:p-2' : 'object-cover object-center',
           loaded ? 'opacity-100' : 'opacity-0',
           'transition-opacity duration-200',
           imgClassName
