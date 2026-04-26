@@ -7,6 +7,7 @@ Multiverse is currently a static-first public content platform with admin-only m
 - Run `npm run validate:content` before every build.
 - Run `npm run build` and confirm all static routes generate successfully.
 - Run `npm run smoke:test -- --start --port 3035` after a production build.
+- Check `/api/health` for a fast liveness response and `/api/ready` for environment readiness before each production release.
 - Check `git diff --check` before committing to catch whitespace or conflict-marker issues.
 
 ## Public Surface
@@ -19,6 +20,7 @@ Multiverse is currently a static-first public content platform with admin-only m
 ## Admin Surface
 
 - Keep `/admin` protected and `/admin-login` available.
+- Middleware and page-level auth must both verify a valid signed admin session token, not just cookie presence.
 - Admin write routes should require a valid admin session, use `no-store`, apply rate limits, and reject oversized payloads.
 - Cloudinary uploads should stay admin-only and enforce image type and size limits.
 - Admin cookies must be secure in production and scoped to admin functionality only.
@@ -36,6 +38,7 @@ Multiverse is currently a static-first public content platform with admin-only m
 - Lazy-load heavy studios, previews, and browser-only libraries.
 - Avoid shipping admin-only logic in public bundles.
 - Keep image previews optimized and responsive.
+- Keep expensive AI, OCR, audio, video, and download routes behind concurrency caps and body-size limits.
 - Watch high-traffic routes for bundle growth, especially `/tools/[category]/[tool]`, `/ui`, `/templates`, and `/prompts`.
 
 ## Privacy And Cookies
@@ -50,4 +53,5 @@ Multiverse is currently a static-first public content platform with admin-only m
 - The current no-DB model is safe for read-heavy traffic when pages are static and local content is cached.
 - Avoid per-request filesystem scans in public routes.
 - Do not add runtime search APIs for static content unless they are cached or pre-indexed.
+- Replace in-memory rate limiting with shared Upstash Redis limits in production so multi-instance traffic is enforced consistently.
 - Move content to a database later through the existing local-store/db facade pattern, not directly from components.

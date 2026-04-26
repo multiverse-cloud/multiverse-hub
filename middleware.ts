@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ADMIN_SESSION_COOKIE } from '@/lib/admin-auth'
+import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from '@/lib/admin-auth'
 
 function buildSignInUrl(request: NextRequest) {
   const signInUrl = new URL('/admin-login', request.url)
@@ -10,20 +10,18 @@ function buildSignInUrl(request: NextRequest) {
   return signInUrl
 }
 
-async function handleRequest(request: NextRequest, userId: string | null) {
+async function handleRequest(request: NextRequest) {
   const { pathname } = request.nextUrl
   const isAdminRoute = pathname === '/admin' || pathname.startsWith('/admin/')
-  const hasCustomAdminSession = Boolean(request.cookies.get(ADMIN_SESSION_COOKIE)?.value)
+  const cookieValue = request.cookies.get(ADMIN_SESSION_COOKIE)?.value
+  const customSession = cookieValue ? await verifyAdminSessionToken(cookieValue) : null
+  const hasValidAdminSession = Boolean(customSession)
 
-  if (isAdminRoute && !userId) {
-    if (hasCustomAdminSession) {
-      return NextResponse.next()
-    }
-
+  if (isAdminRoute && !hasValidAdminSession) {
     return NextResponse.redirect(buildSignInUrl(request))
   }
 
-  if (pathname === '/admin-login' && hasCustomAdminSession) {
+  if (pathname === '/admin-login' && hasValidAdminSession) {
     return NextResponse.redirect(new URL('/admin', request.url))
   }
 
@@ -31,7 +29,7 @@ async function handleRequest(request: NextRequest, userId: string | null) {
 }
 
 export default async function middleware(request: NextRequest) {
-  return handleRequest(request, null)
+  return handleRequest(request)
 }
 
 export const config = {

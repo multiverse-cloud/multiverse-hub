@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { err } from '@/lib/server-utils'
+import { err, RouteError, withConcurrencyLimit } from '@/lib/server-utils'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
@@ -24,6 +24,8 @@ const SYSTEM_PROMPTS: Record<string, string> = {
 }
 
 const AI_RATE_LIMIT = { max: 20, windowMs: 60_000 }
+const AI_CONCURRENCY_LIMIT = Number(process.env.AI_CONCURRENCY_LIMIT || 6)
+const MAX_AI_REQUEST_BYTES = Number(process.env.AI_MAX_REQUEST_BYTES || 64 * 1024)
 
 type AiRequestBody = {
   tool?: string
@@ -58,9 +60,14 @@ type OpenRouterResponseBody = {
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req.headers)
-    const limit = checkRateLimit(`ai:${ip}`, AI_RATE_LIMIT)
+    const limit = await checkRateLimit(`ai:${ip}`, AI_RATE_LIMIT)
     if (!limit.allowed) {
       return err('Rate limit exceeded. Max 20 AI requests per minute.', 429)
+    }
+
+    const contentLength = Number(req.headers.get('content-length') || '0')
+    if (Number.isFinite(contentLength) && contentLength > MAX_AI_REQUEST_BYTES) {
+      return err('Request body is too large for the AI route.', 413)
     }
 
     const body = (await req.json()) as AiRequestBody
@@ -80,42 +87,52 @@ export async function POST(req: NextRequest) {
     const sysPrompt = systemPrompt || SYSTEM_PROMPTS[tool] || SYSTEM_PROMPTS.default
     const msgs = messages || [{ role: 'user', content: input }]
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://multiverse-tools.vercel.app',
-        'X-Title': 'Multiverse Tools',
+    return await withConcurrencyLimit(
+      'ai-chat',
+      AI_CONCURRENCY_LIMIT,
+      async () => {
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+            'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://multiverse-tools.vercel.app',
+            'X-Title': 'Multiverse Tools',
+          },
+          body: JSON.stringify({
+            model,
+            messages: [{ role: 'system', content: sysPrompt }, ...msgs],
+            max_tokens: body.maxTokens || 2048,
+            temperature: body.temperature || 0.7,
+            stream: false,
+          }),
+        })
+
+        if (!response.ok) {
+          const errData = (await response.json().catch(() => ({}))) as OpenRouterErrorBody
+          return err(`OpenRouter error: ${errData.error?.message || response.statusText}`, response.status)
+        }
+
+        const data = (await response.json()) as OpenRouterResponseBody
+        const result = data.choices?.[0]?.message?.content || ''
+        const usage = data.usage || {}
+
+        return Response.json({
+          result,
+          model: data.model,
+          tokens: {
+            prompt: usage.prompt_tokens,
+            completion: usage.completion_tokens,
+            total: usage.total_tokens,
+          },
+        })
       },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: 'system', content: sysPrompt }, ...msgs],
-        max_tokens: body.maxTokens || 2048,
-        temperature: body.temperature || 0.7,
-        stream: false,
-      }),
-    })
-
-    if (!response.ok) {
-      const errData = (await response.json().catch(() => ({}))) as OpenRouterErrorBody
-      return err(`OpenRouter error: ${errData.error?.message || response.statusText}`, response.status)
-    }
-
-    const data = (await response.json()) as OpenRouterResponseBody
-    const result = data.choices?.[0]?.message?.content || ''
-    const usage = data.usage || {}
-
-    return Response.json({
-      result,
-      model: data.model,
-      tokens: {
-        prompt: usage.prompt_tokens,
-        completion: usage.completion_tokens,
-        total: usage.total_tokens,
-      },
-    })
+      'AI capacity is busy right now. Please retry in a moment.'
+    )
   } catch (e) {
+    if (e instanceof RouteError) {
+      return err(e.message, e.status)
+    }
     return err(`AI request failed: ${(e as Error).message}`, 500)
   }
 }

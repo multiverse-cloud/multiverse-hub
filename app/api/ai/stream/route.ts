@@ -1,10 +1,13 @@
 import { NextRequest } from 'next/server'
+import { RouteError, withConcurrencyLimit } from '@/lib/server-utils'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
 const AI_STREAM_RATE_LIMIT = { max: 20, windowMs: 60_000 }
+const AI_STREAM_CONCURRENCY_LIMIT = Number(process.env.AI_STREAM_CONCURRENCY_LIMIT || 4)
+const MAX_AI_STREAM_REQUEST_BYTES = Number(process.env.AI_STREAM_MAX_REQUEST_BYTES || 64 * 1024)
 
 type AiStreamRequestBody = {
   messages?: Array<{ role: string; content: string }>
@@ -15,11 +18,19 @@ type AiStreamRequestBody = {
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req.headers)
-    const limit = checkRateLimit(`ai-stream:${ip}`, AI_STREAM_RATE_LIMIT)
+    const limit = await checkRateLimit(`ai-stream:${ip}`, AI_STREAM_RATE_LIMIT)
     if (!limit.allowed) {
       return new Response(
         JSON.stringify({ error: 'Rate limit exceeded. Max 20 AI requests per minute.' }),
         { status: 429, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const contentLength = Number(req.headers.get('content-length') || '0')
+    if (Number.isFinite(contentLength) && contentLength > MAX_AI_STREAM_REQUEST_BYTES) {
+      return new Response(
+        JSON.stringify({ error: 'Request body is too large for the AI stream route.' }),
+        { status: 413, headers: { 'Content-Type': 'application/json' } }
       )
     }
 
@@ -41,36 +52,48 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://multiverse-tools.vercel.app',
-        'X-Title': 'Multiverse Tools',
-      },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: 'system', content: system }, ...messages],
-        max_tokens: 2048,
-        stream: true,
-      }),
-    })
+    return await withConcurrencyLimit(
+      'ai-stream',
+      AI_STREAM_CONCURRENCY_LIMIT,
+      async () => {
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+            'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://multiverse-tools.vercel.app',
+            'X-Title': 'Multiverse Tools',
+          },
+          body: JSON.stringify({
+            model,
+            messages: [{ role: 'system', content: system }, ...messages],
+            max_tokens: 2048,
+            stream: true,
+          }),
+        })
 
-    if (!response.ok) {
-      const text = await response.text()
-      return new Response(text, { status: response.status, headers: { 'Content-Type': 'application/json' } })
-    }
+        if (!response.ok) {
+          const text = await response.text()
+          return new Response(text, { status: response.status, headers: { 'Content-Type': 'application/json' } })
+        }
 
-    // Forward the SSE stream directly
-    return new Response(response.body, {
-      headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
+        return new Response(response.body, {
+          headers: {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+          },
+        })
       },
-    })
+      'AI streaming is busy right now. Please retry in a moment.'
+    )
   } catch (error) {
+    if (error instanceof RouteError) {
+      return new Response(
+        JSON.stringify({ error: error.message }),
+        { status: error.status, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
     console.error('AI stream failed:', error)
     return new Response(
       JSON.stringify({ error: 'Stream failed. Please try again.' }),

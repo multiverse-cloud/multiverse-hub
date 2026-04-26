@@ -25,6 +25,7 @@ export const maxDuration = 300
 
 const DOWNLOAD_CONCURRENCY_LIMIT = Number(process.env.DOWNLOAD_CONCURRENCY_LIMIT || 2)
 const DOWNLOAD_RATE_LIMIT = { max: 10, windowMs: 60_000 }
+const MAX_DOWNLOAD_URL_LENGTH = Number(process.env.DOWNLOAD_MAX_URL_LENGTH || 2000)
 
 function findDownloadedFile(id: string, preferredExt: string): string | undefined {
   const candidates = [
@@ -100,7 +101,7 @@ async function downloadThumbnail(videoUrl: string, title: string, quality: strin
 
 export async function GET(req: NextRequest) {
   const ip = getClientIp(req.headers)
-  const limit = checkRateLimit(`download:${ip}`, DOWNLOAD_RATE_LIMIT)
+  const limit = await checkRateLimit(`download:${ip}`, DOWNLOAD_RATE_LIMIT)
   if (!limit.allowed) return err('Rate limit exceeded. Max 10 downloads/minute.', 429)
 
   const requestUrl = new URL(req.url)
@@ -110,6 +111,9 @@ export async function GET(req: NextRequest) {
   const title = requestUrl.searchParams.get('title') || 'download'
 
   if (!videoUrl) return err('Missing ?url= parameter')
+  if (videoUrl.length > MAX_DOWNLOAD_URL_LENGTH) {
+    return err('URL is too long for this downloader route.', 413)
+  }
   if (!isSupportedVideoUrl(videoUrl)) {
     return err('URL not supported. Try a public YouTube, Instagram, TikTok, Facebook, X, Pinterest, Reddit, Vimeo, Dailymotion, Twitch, Telegram, or similar supported media link.')
   }

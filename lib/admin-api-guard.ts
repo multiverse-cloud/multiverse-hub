@@ -49,7 +49,7 @@ export async function guardAdminWriteRequest(
   }
 
   const ip = getClientIp(request.headers)
-  const rateLimit = checkRateLimit(`admin-write:${key}:${ip}`, {
+  const rateLimit = await checkRateLimit(`admin-write:${key}:${ip}`, {
     max: maxRequests,
     windowMs,
   })

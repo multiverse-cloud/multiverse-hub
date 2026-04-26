@@ -40,8 +40,8 @@ async function fetchWithTimeout(url, init = {}) {
   }
 }
 
-async function assertPage(path, { contains = [], excludes = [] } = {}) {
-  const response = await fetchWithTimeout(`${baseUrl}${path}`)
+async function assertPage(path, { contains = [], excludes = [], headers } = {}) {
+  const response = await fetchWithTimeout(`${baseUrl}${path}`, headers ? { headers } : undefined)
   const body = await response.text()
 
   if (response.status !== 200) {
@@ -90,6 +90,25 @@ async function assertPostStatus(path, status, body = {}) {
   }
 
   log(`PASS POST ${path} -> ${status}`)
+}
+
+async function assertJson(path, { status = 200, checks = [] } = {}) {
+  const response = await fetchWithTimeout(`${baseUrl}${path}`, { redirect: 'manual' })
+  const allowedStatuses = Array.isArray(status) ? status : [status]
+
+  if (!allowedStatuses.includes(response.status)) {
+    fail(`${path} returned ${response.status} instead of ${allowedStatuses.join(' or ')}`)
+  }
+
+  const json = await response.json()
+
+  for (const check of checks) {
+    if (!check(json)) {
+      fail(`${path} JSON payload failed validation`)
+    }
+  }
+
+  log(`PASS ${path} -> ${status} JSON`)
 }
 
 async function assertRedirect(path, { status, location }) {
@@ -183,7 +202,7 @@ async function run() {
   }
 
   await assertPage('/', {
-    contains: ['Explore All Tools'],
+    contains: ['Free Online Tools', 'Multiverse'],
   })
 
   await assertPage('/tools', {
@@ -212,6 +231,13 @@ async function run() {
 
   await assertPage('/admin-login', {
     contains: ['Admin Authentication'],
+  })
+
+  await assertPage('/admin-login', {
+    contains: ['Admin Authentication'],
+    headers: {
+      Cookie: 'multiverse_admin_session=fake-token',
+    },
   })
 
   await assertPostStatus('/api/admin/login', 400)
@@ -263,6 +289,21 @@ async function run() {
 
   await assertPage('/privacy', {
     contains: ['Privacy Policy'],
+  })
+
+  await assertJson('/api/health', {
+    checks: [
+      payload => payload?.ok === true,
+      payload => payload?.service === 'multiverse',
+    ],
+  })
+
+  await assertJson('/api/ready', {
+    status: [200, 503],
+    checks: [
+      payload => typeof payload?.ok === 'boolean',
+      payload => Boolean(payload?.checks),
+    ],
   })
 
   await assertPage('/terms', {

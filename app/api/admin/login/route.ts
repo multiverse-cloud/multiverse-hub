@@ -11,7 +11,7 @@ type AdminLoginPayload = {
 export async function POST(request: Request) {
   try {
     const ip = getClientIp(request.headers)
-    const rateLimit = checkRateLimit(`admin-login:${ip}`, {
+    const rateLimit = await checkRateLimit(`admin-login:${ip}`, {
       max: 8,
       windowMs: 15 * 60 * 1000,
     })

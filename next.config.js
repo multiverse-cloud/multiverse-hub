@@ -1,4 +1,19 @@
 /** @type {import('next').NextConfig} */
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'self'",
+  "form-action 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://va.vercel-scripts.com https://cdnjs.cloudflare.com https://unpkg.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com data:",
+  "img-src 'self' data: blob: https://images.unsplash.com https://img.youtube.com https://via.placeholder.com https://api.dicebear.com https://image.pollinations.ai https://api.qrserver.com https://res.cloudinary.com",
+  "media-src 'self' blob: data:",
+  "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com https://cdnjs.cloudflare.com https://unpkg.com",
+  "worker-src 'self' blob: https://cdnjs.cloudflare.com",
+].join('; ')
+
 const nextConfig = {
   poweredByHeader: false,
   images: {
@@ -66,6 +81,7 @@ const nextConfig = {
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Content-Security-Policy", value: CONTENT_SECURITY_POLICY },
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(self), geolocation=()",
