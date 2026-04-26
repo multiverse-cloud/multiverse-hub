@@ -71,6 +71,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
+      url: `${baseUrl}/career`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/career/builder`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.82,
+    },
+    {
+      url: `${baseUrl}/career/import`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.65,
+    },
+    {
+      url: `${baseUrl}/career/parser`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.78,
+    },
+    {
       url: `${baseUrl}/privacy`,
       lastModified: staticDate,
       changeFrequency: "yearly",

@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, Compass, LayoutTemplate, Search, ShieldAlert, Sparkles, Wrench } from 'lucide-react'
+import { ArrowRight, Briefcase, Compass, LayoutTemplate, Search, ShieldAlert, Sparkles, Wrench } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { fetchSiteSearch, type SiteSearchResult, type SiteSearchResultType } from '@/lib/site-search'
 
@@ -16,6 +16,7 @@ const TYPE_META: Record<
   fix: { label: 'Fixes', icon: ShieldAlert, accent: 'text-orange-600 dark:text-orange-300' },
   prompt: { label: 'Prompts', icon: Sparkles, accent: 'text-fuchsia-600 dark:text-fuchsia-300' },
   template: { label: 'Templates', icon: LayoutTemplate, accent: 'text-cyan-600 dark:text-cyan-300' },
+  career: { label: 'Career', icon: Briefcase, accent: 'text-blue-600 dark:text-blue-300' },
 }
 
 type SiteSearchInputProps = {
