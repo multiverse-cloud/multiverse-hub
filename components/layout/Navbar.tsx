@@ -3,7 +3,6 @@ import Image from "next/image";
 import {
   BatteryWarning,
   Bot,
-  Briefcase,
   Calculator,
   ChevronDown,
   Code2,
@@ -96,31 +95,6 @@ const NAV_LINKS: NavLink[] = [
         href: "/templates",
         icon: LayoutTemplate,
         desc: "Source-backed website templates with code downloads",
-      },
-    ],
-  },
-  {
-    name: "Career",
-    href: "/career",
-    icon: Briefcase,
-    megaItems: [
-      {
-        name: "Career Universe",
-        href: "/career",
-        icon: Briefcase,
-        desc: "Resume tools, CV templates, and ATS workflows",
-      },
-      {
-        name: "Resume Builder",
-        href: "/career/builder",
-        icon: FileText,
-        desc: "Live CV editor with premium templates",
-      },
-      {
-        name: "Resume Parser",
-        href: "/career/parser",
-        icon: Search,
-        desc: "ATS score, sections, and keyword checks",
       },
     ],
   },

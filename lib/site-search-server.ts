@@ -1,7 +1,6 @@
 import 'server-only'
 
 import { unstable_cache } from 'next/cache'
-import { CAREER_PAGES, CAREER_TEMPLATES } from '@/lib/career/career-data'
 import { getPublishedDiscoverLists } from '@/lib/discover-db'
 import { getDiscoverIntentLabel } from '@/lib/discover-query'
 import { FIX_GUIDES } from '@/lib/fixes-data'
@@ -185,65 +184,13 @@ const getCachedSearchSiteContent = unstable_cache(
         ),
       }))
 
-    const careerPages = [
-      {
-        title: 'Career Universe',
-        description: 'Resume builder, CV templates, resume import, and ATS parser for job applications.',
-        href: '/career',
-        category: 'Career Universe',
-        badge: 'Career',
-        tags: ['resume builder', 'cv builder', 'ats parser', 'resume templates'],
-      },
-      ...CAREER_PAGES.map(page => ({
-        title: page.title,
-        description: page.description,
-        href: page.href,
-        category: 'Career Universe',
-        badge: page.title.includes('Parser') ? 'Parser' : page.title.includes('Import') ? 'Import' : 'Builder',
-        tags: ['resume', 'cv', 'career', 'ats'],
-      })),
-      ...CAREER_TEMPLATES.map(template => ({
-        title: template.name,
-        description: `${template.role} template for ATS-friendly resumes and professional CVs.`,
-        href: `/career/builder?template=${template.id}`,
-        category: 'Career Templates',
-        badge: 'Template',
-        tags: template.seoKeywords,
-      })),
-    ]
-
-    const careerResults = careerPages
-      .filter(page =>
-        [page.title, page.description, page.category, page.badge, ...page.tags].some(value =>
-          includesQuery(value, normalizedQuery)
-        )
-      )
-      .map(page => ({
-        id: `career:${page.href}:${page.title}`,
-        type: 'career' as const,
-        title: page.title,
-        description: page.description,
-        href: page.href,
-        category: page.category,
-        badge: page.badge,
-        score: getScore(
-          {
-            title: page.title,
-            description: page.description,
-            category: page.category,
-            tags: page.tags,
-          },
-          normalizedQuery
-        ),
-      }))
-
-    return [...toolResults, ...discoverResults, ...fixResults, ...promptResults, ...templateResults, ...careerResults]
+    return [...toolResults, ...discoverResults, ...fixResults, ...promptResults, ...templateResults]
       .sort((left, right) => right.score - left.score || left.title.localeCompare(right.title))
       .slice(0, limit)
       .map(({ score: _score, ...result }) => result)
   },
   ['site-search-results'],
-  { revalidate: 1800, tags: ['discover', 'prompts', 'templates', 'tools', 'career'] }
+  { revalidate: 1800, tags: ['discover', 'prompts', 'templates', 'tools'] }
 )
 
 export async function searchSiteContent(query: string, limit = 12): Promise<SiteSearchResult[]> {

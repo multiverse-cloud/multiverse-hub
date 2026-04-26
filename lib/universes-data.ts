@@ -45,17 +45,6 @@ export const UNIVERSES: Universe[] = [
     color: 'slate',
   },
   {
-    id: 'career',
-    name: 'Career Universe',
-    description: 'Resume builder, ATS parser, and premium CV templates',
-    icon: 'Briefcase',
-    href: '/career',
-    gradient: 'from-blue-600 to-slate-900',
-    bgGradient: 'from-blue-50 to-slate-50 dark:from-blue-950/20 dark:to-slate-950/20',
-    count: '30+ CV Templates',
-    color: 'blue',
-  },
-  {
     id: 'dev',
     name: 'Dev Universe',
     description: 'JSON, APIs, code and dev utilities',

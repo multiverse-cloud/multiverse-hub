@@ -1,7 +1,6 @@
 ﻿import Link from "next/link";
 import type { Metadata } from "next";
 import {
-  Briefcase,
   Compass,
   LayoutTemplate,
   Search,
@@ -23,13 +22,12 @@ const TYPE_META: Record<
   fix: { label: "Fixes", icon: ShieldAlert },
   prompt: { label: "Prompts", icon: Sparkles },
   template: { label: "UI Templates", icon: LayoutTemplate },
-  career: { label: "Career", icon: Briefcase },
 };
 
 export const metadata: Metadata = {
   title: "Search - Multiverse",
   description:
-    "Search across tools, discover pages, fixes, prompts, UI templates, and career resources in one place.",
+    "Search across tools, discover pages, fixes, prompts, and UI templates in one place.",
   alternates: { canonical: "https://multiverse-tools.vercel.app/search" },
 };
 
@@ -61,8 +59,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     requestedType === "discover" ||
     requestedType === "fix" ||
     requestedType === "prompt" ||
-    requestedType === "template" ||
-    requestedType === "career"
+    requestedType === "template"
       ? requestedType
       : "all";
 
@@ -93,7 +90,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           </div>
           <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground">
             Search tools, discover rankings and guides, fixes, prompts, UI
-            templates, and career resources from one result surface.
+            templates from one result surface.
           </p>
 
           {/* Inline search form */}
