@@ -1,16 +1,20 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import type React from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import {
+  Copy,
   Download,
   FileJson,
   FileText,
+  Monitor,
   Plus,
   Printer,
   RotateCcw,
   Sparkles,
+  Smartphone,
   UploadCloud,
 } from 'lucide-react'
 import CareerMiniNav from '@/components/career/CareerMiniNav'
@@ -21,6 +25,7 @@ import { cn } from '@/lib/utils'
 const STORAGE_KEY = 'multiverse-career-resume-v1'
 
 type BuilderTab = 'cv' | 'design' | 'settings' | 'yaml'
+type BuilderView = 'split' | 'editor' | 'preview'
 
 function downloadText(filename: string, content: string, type = 'text/plain') {
   const blob = new Blob([content], { type })
@@ -78,97 +83,155 @@ function TextAreaField({
   )
 }
 
-function ResumePreview({ resume, templateId }: { resume: ResumeData; templateId: string }) {
+function ResumePreview({ resume, templateId, zoom = 100 }: { resume: ResumeData; templateId: string; zoom?: number }) {
   const template = getCareerTemplate(templateId)
   const compact = template.density === 'compact'
+  const contactItems = [
+    resume.location,
+    resume.email,
+    resume.phone,
+    resume.website,
+    resume.linkedin ? `LinkedIn: ${resume.linkedin}` : '',
+    resume.github ? `GitHub: ${resume.github}` : '',
+    ...(resume.customLinks ?? []).filter(link => link.label && link.url).map(link => `${link.label}: ${link.url}`),
+  ].filter(Boolean)
+
+  const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+    <h3
+      className={cn(
+        'border-b pb-1 text-base font-black',
+        template.layout === 'editorial' && 'border-b-0 text-lg uppercase tracking-[0.16em]',
+        template.layout === 'sidebar' && 'text-sm uppercase tracking-[0.14em]'
+      )}
+      style={{ borderColor: template.accent, color: template.accent }}
+    >
+      {children}
+    </h3>
+  )
+
+  const ExperienceBlock = () => (
+    <section className="mt-6">
+      <SectionTitle>Experience</SectionTitle>
+      <div className={cn('mt-3 space-y-4', template.layout === 'timeline' && 'border-l pl-4')} style={{ borderColor: template.accent }}>
+        {resume.experience.map((item) => (
+          <div key={item.id} className={cn(template.layout === 'timeline' && 'relative')}>
+            {template.layout === 'timeline' ? (
+              <span className="absolute -left-[22px] top-1 h-3 w-3 rounded-full border-2 border-white" style={{ backgroundColor: template.accent }} />
+            ) : null}
+            <div className="flex justify-between gap-4">
+              <p className="font-black">{item.company}, <span className="font-semibold">{item.role}</span></p>
+              <p className="shrink-0 text-right text-[11px] text-slate-500">{item.location}<br />{item.dates}</p>
+            </div>
+            <ul className="mt-1 list-disc space-y-1 pl-5 leading-5 text-slate-700">
+              {item.bullets.filter(Boolean).map((bullet) => (
+                <li key={bullet}>{bullet}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+
+  const EducationBlock = () => (
+    <section className="mt-6">
+      <SectionTitle>Education</SectionTitle>
+      <div className="mt-3 space-y-3">
+        {resume.education.map((item) => (
+          <div key={item.id} className="flex justify-between gap-4">
+            <div>
+              <p className="font-black">{item.school}</p>
+              <p className="text-slate-700">{item.degree}</p>
+              <p className="text-slate-600">{item.detail}</p>
+            </div>
+            <p className="shrink-0 text-right text-[11px] text-slate-500">{item.location}<br />{item.dates}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+
+  const ProjectSkillsBlock = () => (
+    <section className="mt-6 grid gap-6 sm:grid-cols-2">
+      <div>
+        <SectionTitle>Projects</SectionTitle>
+        <div className="mt-3 space-y-3">
+          {resume.projects.map((project) => (
+            <div key={project.id}>
+              <p className="font-black">{project.name}</p>
+              <p className="leading-5 text-slate-700">{project.description}</p>
+              <p className="text-[11px]" style={{ color: template.accent }}>{project.link}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div>
+        <SectionTitle>Skills</SectionTitle>
+        <p className="mt-3 leading-6 text-slate-700">{resume.skills}</p>
+      </div>
+    </section>
+  )
+
+  const mainContent = (
+    <>
+      <section className="mt-8">
+        <SectionTitle>{template.layout === 'academic' ? 'Research Profile' : 'Profile'}</SectionTitle>
+        <p className="mt-2 leading-6 text-slate-700">{resume.summary}</p>
+      </section>
+      <ExperienceBlock />
+      <EducationBlock />
+      <ProjectSkillsBlock />
+    </>
+  )
 
   return (
     <div className="mx-auto w-full max-w-[820px] bg-slate-100 p-3 dark:bg-slate-900 sm:p-6">
       <article
         className={cn(
-          'mx-auto min-h-[980px] w-full max-w-[760px] bg-white px-7 py-8 text-slate-950 shadow-[0_18px_48px_-34px_rgba(15,23,42,0.55)] sm:px-12 sm:py-11',
-          compact ? 'text-[12px]' : 'text-[13px]'
+          'mx-auto min-h-[980px] w-full max-w-[760px] origin-top bg-white text-slate-950 shadow-[0_18px_48px_-34px_rgba(15,23,42,0.55)] transition-transform',
+          compact ? 'text-[12px]' : 'text-[13px]',
+          template.layout === 'sidebar' ? 'grid grid-cols-[190px_1fr] p-0' : 'px-7 py-8 sm:px-12 sm:py-11',
+          template.layout === 'compact' && 'min-h-[860px]',
+          template.layout === 'editorial' && 'px-8 py-10 sm:px-14',
+          template.layout === 'academic' && 'font-serif'
         )}
-        style={{ borderTop: `5px solid ${template.accent}` }}
+        style={{
+          borderTop: template.layout === 'sidebar' ? undefined : `5px solid ${template.accent}`,
+          transform: `scale(${zoom / 100})`,
+          transformOrigin: 'top center',
+          marginBottom: zoom > 100 ? `${(zoom - 100) * 8}px` : undefined,
+        }}
       >
-        <header className={cn(template.tone === 'creative' ? 'text-left' : 'text-center')}>
-          <h2 className="text-3xl font-black tracking-tight" style={{ color: template.accent }}>
-            {resume.name || 'Your Name'}
-          </h2>
-          <p className="mt-2 text-sm font-semibold text-slate-700">{resume.headline}</p>
-          <p className="mt-3 text-[11px] text-slate-500">
-            {[resume.location, resume.email, resume.phone, resume.website].filter(Boolean).join(' | ')}
-          </p>
-        </header>
-
-        <section className="mt-8">
-          <h3 className="border-b pb-1 text-base font-black" style={{ borderColor: template.accent, color: template.accent }}>
-            Profile
-          </h3>
-          <p className="mt-2 leading-6 text-slate-700">{resume.summary}</p>
-        </section>
-
-        <section className="mt-6">
-          <h3 className="border-b pb-1 text-base font-black" style={{ borderColor: template.accent, color: template.accent }}>
-            Experience
-          </h3>
-          <div className="mt-3 space-y-4">
-            {resume.experience.map((item) => (
-              <div key={item.id}>
-                <div className="flex justify-between gap-4">
-                  <p className="font-black">{item.company}, <span className="font-semibold">{item.role}</span></p>
-                  <p className="shrink-0 text-right text-[11px] text-slate-500">{item.location}<br />{item.dates}</p>
-                </div>
-                <ul className="mt-1 list-disc space-y-1 pl-5 leading-5 text-slate-700">
-                  {item.bullets.filter(Boolean).map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
-                  ))}
-                </ul>
+        {template.layout === 'sidebar' ? (
+          <>
+            <aside className="min-h-full px-6 py-8 text-white" style={{ backgroundColor: template.accent }}>
+              <h2 className="text-2xl font-black tracking-tight">{resume.name || 'Your Name'}</h2>
+              <p className="mt-2 text-sm font-semibold text-white/80">{resume.headline}</p>
+              <div className="mt-8 space-y-2 text-[11px] text-white/80">
+                {contactItems.map(item => <p key={item}>{item}</p>)}
               </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-6">
-          <h3 className="border-b pb-1 text-base font-black" style={{ borderColor: template.accent, color: template.accent }}>
-            Education
-          </h3>
-          <div className="mt-3 space-y-3">
-            {resume.education.map((item) => (
-              <div key={item.id} className="flex justify-between gap-4">
-                <div>
-                  <p className="font-black">{item.school}</p>
-                  <p className="text-slate-700">{item.degree}</p>
-                  <p className="text-slate-600">{item.detail}</p>
-                </div>
-                <p className="shrink-0 text-right text-[11px] text-slate-500">{item.location}<br />{item.dates}</p>
+              <div className="mt-8">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-white/70">Skills</p>
+                <p className="mt-2 leading-6 text-white/85">{resume.skills}</p>
               </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-6 grid gap-6 sm:grid-cols-2">
-          <div>
-            <h3 className="border-b pb-1 text-base font-black" style={{ borderColor: template.accent, color: template.accent }}>
-              Projects
-            </h3>
-            <div className="mt-3 space-y-3">
-              {resume.projects.map((project) => (
-                <div key={project.id}>
-                  <p className="font-black">{project.name}</p>
-                  <p className="leading-5 text-slate-700">{project.description}</p>
-                  <p className="text-[11px]" style={{ color: template.accent }}>{project.link}</p>
-                </div>
-              ))}
+            </aside>
+            <div className="px-8 py-8">
+              {mainContent}
             </div>
-          </div>
-          <div>
-            <h3 className="border-b pb-1 text-base font-black" style={{ borderColor: template.accent, color: template.accent }}>
-              Skills
-            </h3>
-            <p className="mt-3 leading-6 text-slate-700">{resume.skills}</p>
-          </div>
-        </section>
+          </>
+        ) : (
+          <>
+            <header className={cn(template.layout === 'editorial' ? 'text-left' : 'text-center')}>
+              {template.layout === 'editorial' ? <p className="mb-3 text-xs font-black uppercase tracking-[0.22em]" style={{ color: template.accent }}>{resume.headline}</p> : null}
+              <h2 className={cn('font-black tracking-tight', template.layout === 'editorial' ? 'text-5xl leading-none' : 'text-3xl')} style={{ color: template.accent }}>
+                {resume.name || 'Your Name'}
+              </h2>
+              {template.layout !== 'editorial' ? <p className="mt-2 text-sm font-semibold text-slate-700">{resume.headline}</p> : null}
+              <p className="mt-3 text-[11px] text-slate-500">{contactItems.join(' | ')}</p>
+            </header>
+            {mainContent}
+          </>
+        )}
       </article>
     </div>
   )
@@ -179,6 +242,8 @@ export default function CareerBuilderApp() {
   const [resume, setResume] = useState<ResumeData>(DEFAULT_RESUME)
   const [templateId, setTemplateId] = useState(CAREER_TEMPLATES[0].id)
   const [tab, setTab] = useState<BuilderTab>('cv')
+  const [view, setView] = useState<BuilderView>('split')
+  const [zoom, setZoom] = useState(92)
   const yaml = useMemo(() => buildResumeYaml(resume, templateId), [resume, templateId])
   const activeTemplate = getCareerTemplate(templateId)
 
@@ -195,7 +260,13 @@ export default function CareerBuilderApp() {
       const saved = window.localStorage.getItem(STORAGE_KEY)
       if (saved) {
         const parsed = JSON.parse(saved) as { resume?: ResumeData; templateId?: string }
-        if (parsed.resume) setResume(parsed.resume)
+        if (parsed.resume) {
+          setResume({
+            ...DEFAULT_RESUME,
+            ...parsed.resume,
+            customLinks: parsed.resume.customLinks ?? DEFAULT_RESUME.customLinks,
+          })
+        }
         if (parsed.templateId) setTemplateId(parsed.templateId)
       }
     } catch {}
@@ -270,6 +341,13 @@ export default function CareerBuilderApp() {
                 ))}
               </div>
               <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setView(view === 'preview' ? 'split' : 'preview')}
+                  className="rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900"
+                  aria-label="Toggle preview focus"
+                >
+                  {view === 'preview' ? <Monitor className="h-4 w-4" /> : <Smartphone className="h-4 w-4" />}
+                </button>
                 <button onClick={resetResume} className="rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900" aria-label="Reset">
                   <RotateCcw className="h-4 w-4" />
                 </button>
@@ -280,7 +358,7 @@ export default function CareerBuilderApp() {
             </div>
           </div>
 
-          <div className="h-[calc(100dvh-112px)] overflow-y-auto px-4 py-5 custom-scrollbar sm:px-8">
+          <div className={cn('h-[calc(100dvh-112px)] overflow-y-auto px-4 py-5 custom-scrollbar sm:px-8', view === 'preview' && 'hidden lg:block')}>
             {tab === 'cv' ? (
               <div className="mx-auto max-w-3xl">
                 <p className="mb-5 text-xs font-black uppercase tracking-[0.22em] text-blue-600">CV Editor</p>
@@ -292,6 +370,49 @@ export default function CareerBuilderApp() {
                 <Field label="Website" value={resume.website} onChange={(value) => update('website', value)} />
                 <Field label="LinkedIn" value={resume.linkedin} onChange={(value) => update('linkedin', value)} />
                 <Field label="GitHub" value={resume.github} onChange={(value) => update('github', value)} />
+                <div className="border-b border-slate-100 py-4 dark:border-slate-800">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Custom label links</p>
+                    <button
+                      onClick={() => update('customLinks', [...(resume.customLinks ?? []), { id: `link-${Date.now()}`, label: 'Link', url: 'https://' }])}
+                      className="rounded-md bg-slate-950 px-2.5 py-1.5 text-xs font-bold text-white dark:bg-white dark:text-slate-950"
+                    >
+                      Add link
+                    </button>
+                  </div>
+                  <div className="mt-3 space-y-2">
+                    {(resume.customLinks ?? []).map((link, index) => (
+                      <div key={link.id} className="grid gap-2 sm:grid-cols-[0.42fr_1fr_auto]">
+                        <input
+                          value={link.label}
+                          onChange={(event) => {
+                            const next = [...(resume.customLinks ?? [])]
+                            next[index] = { ...link, label: event.target.value }
+                            update('customLinks', next)
+                          }}
+                          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-300 dark:border-slate-800 dark:bg-slate-950"
+                          placeholder="Label"
+                        />
+                        <input
+                          value={link.url}
+                          onChange={(event) => {
+                            const next = [...(resume.customLinks ?? [])]
+                            next[index] = { ...link, url: event.target.value }
+                            update('customLinks', next)
+                          }}
+                          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-300 dark:border-slate-800 dark:bg-slate-950"
+                          placeholder="https://"
+                        />
+                        <button
+                          onClick={() => update('customLinks', (resume.customLinks ?? []).filter(item => item.id !== link.id))}
+                          className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-500 hover:text-rose-600 dark:border-slate-800"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
                 <TextAreaField label="Summary" value={resume.summary} onChange={(value) => update('summary', value)} />
                 <TextAreaField label="Skills" value={resume.skills} onChange={(value) => update('skills', value)} />
 
@@ -355,6 +476,9 @@ export default function CareerBuilderApp() {
                         <span className="h-3 w-3 rounded-full" style={{ backgroundColor: template.accent }} />
                       </div>
                       <p className="mt-3 text-xs text-slate-500">{template.bestFor.slice(0, 2).join(' / ')}</p>
+                      <div className="mt-3 inline-flex rounded-md bg-slate-100 px-2 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 dark:bg-slate-900">
+                        {template.layout}
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -368,10 +492,31 @@ export default function CareerBuilderApp() {
                 <div className="mt-6 rounded-lg border border-slate-200 p-5 dark:border-slate-800">
                   <p className="font-black">Current template</p>
                   <p className="mt-1 text-sm text-slate-500">{activeTemplate.name} with {activeTemplate.density} density.</p>
+                  <div className="mt-5">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="font-bold">Preview zoom</span>
+                      <span className="text-slate-500">{zoom}%</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="72"
+                      max="118"
+                      value={zoom}
+                      onChange={(event) => setZoom(Number(event.target.value))}
+                      className="mt-3 w-full accent-slate-950 dark:accent-white"
+                    />
+                  </div>
                   <div className="mt-5 grid gap-3 sm:grid-cols-2">
                     <button onClick={() => downloadText('resume.yaml', yaml)} className="rounded-lg bg-slate-950 px-4 py-3 text-sm font-bold text-white dark:bg-white dark:text-slate-950">Download YAML</button>
                     <button onClick={() => downloadText('resume.json', JSON.stringify(resume, null, 2), 'application/json')} className="rounded-lg border border-slate-200 px-4 py-3 text-sm font-bold dark:border-slate-800">Download JSON</button>
                   </div>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(yaml)}
+                    className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-blue-600 dark:text-blue-300"
+                  >
+                    <Copy className="h-4 w-4" />
+                    Copy YAML to clipboard
+                  </button>
                 </div>
               </div>
             ) : null}
@@ -385,7 +530,7 @@ export default function CareerBuilderApp() {
           </div>
         </main>
 
-        <aside className="min-w-0 border-l border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-900">
+        <aside className={cn('min-w-0 border-l border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-900', view === 'editor' && 'hidden')}>
           <div className="sticky top-14 z-10 flex items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-2 dark:border-slate-800 dark:bg-slate-900">
             <div className="flex items-center gap-2 text-sm font-bold">
               <Sparkles className="h-4 w-4 text-blue-600" />
@@ -394,7 +539,7 @@ export default function CareerBuilderApp() {
             <button onClick={() => window.print()} className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white">Print</button>
           </div>
           <div className="h-[calc(100dvh-103px)] overflow-y-auto custom-scrollbar">
-            <ResumePreview resume={resume} templateId={templateId} />
+            <ResumePreview resume={resume} templateId={templateId} zoom={zoom} />
           </div>
         </aside>
       </div>

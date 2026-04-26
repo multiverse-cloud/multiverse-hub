@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { ArrowRight, CheckCircle2, FileText, ScanText, ShieldCheck, Sparkles, UploadCloud } from 'lucide-react'
 import { CAREER_FAQS, CAREER_PAGES, CAREER_TEMPLATES } from '@/lib/career/career-data'
 
@@ -7,6 +10,85 @@ const highlights = [
   'Live builder with print-ready preview',
   'ATS parser, keyword checks, and section scoring',
 ]
+
+const typingLines = [
+  'Built distributed systems serving 2M+ users with 99.97% uptime.',
+  'Reduced onboarding time by 41% through product-led workflow redesign.',
+  'Led cross-functional launches across engineering, design, and growth.',
+]
+
+function TypingResumePanel() {
+  const [lineIndex, setLineIndex] = useState(0)
+  const [visible, setVisible] = useState('')
+
+  useEffect(() => {
+    const fullLine = typingLines[lineIndex]
+
+    if (visible.length < fullLine.length) {
+      const timeout = window.setTimeout(() => setVisible(fullLine.slice(0, visible.length + 1)), 26)
+      return () => window.clearTimeout(timeout)
+    }
+
+    const timeout = window.setTimeout(() => {
+      setLineIndex((current) => (current + 1) % typingLines.length)
+      setVisible('')
+    }, 1300)
+    return () => window.clearTimeout(timeout)
+  }, [lineIndex, visible])
+
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-[0_24px_70px_-46px_rgba(15,23,42,0.35)] dark:border-slate-800 dark:bg-slate-900">
+      <div className="rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950">
+        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 text-xs dark:border-slate-800">
+          <span className="font-bold text-slate-500">LIVE RESUME COMPOSER</span>
+          <span className="rounded-md bg-slate-950 px-2 py-1 font-bold text-white dark:bg-white dark:text-slate-950">ATS Clean</span>
+        </div>
+        <div className="grid gap-0 lg:grid-cols-[0.86fr_1fr]">
+          <div className="border-b border-slate-200 p-4 dark:border-slate-800 lg:border-b-0 lg:border-r">
+            <div className="space-y-3">
+              {['Name', 'Headline', 'Location', 'Email'].map((label, index) => (
+                <div key={label} className="grid grid-cols-[82px_1fr] items-center gap-3 text-xs">
+                  <span className="font-semibold text-slate-400">{label}</span>
+                  <span className="h-8 rounded-md border border-slate-200 bg-white px-2 py-2 font-semibold text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
+                    {['Arun Pandian', 'Product Engineer', 'San Francisco, CA', 'arun@email.com'][index]}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-5 rounded-lg bg-slate-950 p-3 text-xs leading-6 text-slate-100">
+              <span className="text-blue-300">experience:</span>
+              <br />
+              <span className="text-slate-400">- </span>
+              {visible}
+              <span className="ml-0.5 inline-block h-4 w-1 translate-y-0.5 animate-pulse bg-blue-300" />
+            </div>
+          </div>
+
+          <div className="bg-slate-100 p-4 dark:bg-slate-900">
+            <div className="mx-auto aspect-[0.72] max-h-[520px] rounded-sm bg-white p-6 text-slate-950 shadow-sm">
+              <div className="border-l-4 border-blue-600 pl-4">
+                <p className="text-2xl font-black">Arun Pandian</p>
+                <p className="mt-1 text-xs font-semibold text-slate-500">Product Engineer | arun@email.com</p>
+              </div>
+              <div className="mt-7 space-y-4 text-[10px] leading-relaxed">
+                {['Profile', 'Experience', 'Projects', 'Skills'].map((section, index) => (
+                  <div key={section}>
+                    <p className="text-sm font-black text-blue-700">{section}</p>
+                    <div className="mt-2 space-y-1.5">
+                      <div className="h-2 rounded bg-slate-900" style={{ width: `${76 - index * 6}%` }} />
+                      <div className="h-1.5 w-full rounded bg-slate-200" />
+                      <div className="h-1.5 w-10/12 rounded bg-slate-200" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function CareerHomePage() {
   const featuredTemplates = CAREER_TEMPLATES.slice(0, 9)
@@ -53,33 +135,7 @@ export default function CareerHomePage() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-[0_24px_70px_-46px_rgba(15,23,42,0.35)] dark:border-slate-800 dark:bg-slate-900">
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-3 text-xs dark:border-slate-800">
-                <span className="font-bold text-slate-500">LIVE PREVIEW</span>
-                <span className="rounded-md bg-blue-600 px-2 py-1 font-bold text-white">Classic</span>
-              </div>
-              <div className="mx-auto mt-5 aspect-[0.72] max-h-[560px] rounded-sm bg-white p-6 text-slate-950 shadow-sm">
-                <div className="text-center">
-                  <p className="text-2xl font-black text-blue-700">arun</p>
-                  <p className="mt-2 text-[10px] text-slate-600">San Francisco, CA | john.doe@email.com | rendercv.com</p>
-                </div>
-                <div className="mt-7 space-y-5 text-[10px] leading-relaxed">
-                  {['Experience', 'Education', 'Projects', 'Skills'].map((section) => (
-                    <div key={section}>
-                      <p className="border-b border-blue-300 pb-1 text-sm font-black text-blue-700">{section}</p>
-                      <div className="mt-2 space-y-1.5">
-                        <div className="h-2 w-3/4 rounded bg-slate-900" />
-                        <div className="h-1.5 w-full rounded bg-slate-200" />
-                        <div className="h-1.5 w-11/12 rounded bg-slate-200" />
-                        <div className="h-1.5 w-4/5 rounded bg-slate-200" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <TypingResumePanel />
         </div>
       </section>
 

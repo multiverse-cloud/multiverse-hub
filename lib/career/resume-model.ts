@@ -25,6 +25,12 @@ export type ResumeProject = {
   link: string
 }
 
+export type ResumeCustomLink = {
+  id: string
+  label: string
+  url: string
+}
+
 export type ResumeData = {
   name: string
   headline: string
@@ -34,6 +40,7 @@ export type ResumeData = {
   website: string
   linkedin: string
   github: string
+  customLinks: ResumeCustomLink[]
   summary: string
   education: ResumeEducation[]
   experience: ResumeExperience[]
@@ -50,6 +57,18 @@ export const DEFAULT_RESUME: ResumeData = {
   website: 'https://rendercv.com',
   linkedin: 'rendercv',
   github: 'rendercv',
+  customLinks: [
+    {
+      id: 'link-portfolio',
+      label: 'Portfolio',
+      url: 'https://arun.dev',
+    },
+    {
+      id: 'link-calendly',
+      label: 'Book Call',
+      url: 'https://cal.com/arun',
+    },
+  ],
   summary:
     'Engineer with strong product thinking, practical delivery, and a record of building reliable systems with measurable outcomes.',
   education: [
@@ -122,6 +141,10 @@ export function buildResumeYaml(resume: ResumeData, template: string) {
     `      username: "${esc(resume.linkedin)}"`,
     `    - network: "GitHub"`,
     `      username: "${esc(resume.github)}"`,
+    ...resume.customLinks.flatMap(link => [
+      `    - network: "${esc(link.label)}"`,
+      `      url: "${esc(link.url)}"`,
+    ]),
     '  sections:',
     '    summary:',
     `      - "${esc(resume.summary)}"`,
@@ -156,4 +179,3 @@ export function buildResumeYaml(resume: ResumeData, template: string) {
     `  theme: "${esc(template)}"`,
   ].join('\n')
 }
-

@@ -13,6 +13,7 @@ export type CareerTemplate = {
   name: string
   role: string
   tone: CareerTemplateTone
+  layout: 'classic' | 'sidebar' | 'timeline' | 'compact' | 'editorial' | 'academic'
   accent: string
   density: 'airy' | 'balanced' | 'compact'
   bestFor: string[]
@@ -69,12 +70,27 @@ const templateRoles = [
   ['modern-two-page-cv', 'Modern Two Page CV', 'Senior Professional', 'executive', '#334155'],
 ] as const
 
+const templateLayouts: CareerTemplate['layout'][] = [
+  'classic',
+  'sidebar',
+  'timeline',
+  'compact',
+  'academic',
+  'editorial',
+]
+
 export const CAREER_TEMPLATES: CareerTemplate[] = templateRoles.map(
   ([id, name, role, tone, accent], index) => ({
     id,
     name,
     role,
     tone,
+    layout:
+      tone === 'academic'
+        ? 'academic'
+        : tone === 'creative'
+          ? 'editorial'
+          : templateLayouts[index % templateLayouts.length],
     accent,
     density: index % 5 === 0 ? 'compact' : index % 3 === 0 ? 'airy' : 'balanced',
     bestFor: [
