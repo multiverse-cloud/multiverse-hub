@@ -1,4 +1,4 @@
-﻿export interface Universe {
+export interface Universe {
   id: string
   name: string
   description: string
@@ -89,6 +89,17 @@ export const UNIVERSES: Universe[] = [
     color: 'pink',
   },
   {
+    id: 'career',
+    name: 'Career Universe',
+    description: 'ATS-friendly resume templates and career-ready CV layouts',
+    icon: 'Briefcase',
+    href: '/career',
+    gradient: 'from-emerald-500 to-teal-600',
+    bgGradient: 'from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20',
+    count: '9 Resume Templates',
+    color: 'emerald',
+  },
+  {
     id: 'templates',
     name: 'UI Templates',
     description: 'Premium downloadable UI template kits with live preview and code bundles',
@@ -96,7 +107,7 @@ export const UNIVERSES: Universe[] = [
     href: '/templates',
     gradient: 'from-cyan-500 to-sky-600',
     bgGradient: 'from-cyan-50 to-sky-50 dark:from-cyan-950/20 dark:to-sky-950/20',
-    count: '3 Downloadable UI Templates',
+    count: '106 UI Templates',
     color: 'cyan',
   },
   {

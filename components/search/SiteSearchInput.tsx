@@ -3,7 +3,16 @@
 import Link from 'next/link'
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, Compass, LayoutTemplate, Search, ShieldAlert, Sparkles, Wrench } from 'lucide-react'
+import {
+  ArrowRight,
+  Briefcase,
+  Compass,
+  LayoutTemplate,
+  Search,
+  ShieldAlert,
+  Sparkles,
+  Wrench,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { fetchSiteSearch, type SiteSearchResult, type SiteSearchResultType } from '@/lib/site-search'
 
@@ -16,6 +25,7 @@ const TYPE_META: Record<
   fix: { label: 'Fixes', icon: ShieldAlert, accent: 'text-orange-600 dark:text-orange-300' },
   prompt: { label: 'Prompts', icon: Sparkles, accent: 'text-fuchsia-600 dark:text-fuchsia-300' },
   template: { label: 'Templates', icon: LayoutTemplate, accent: 'text-cyan-600 dark:text-cyan-300' },
+  career: { label: 'Career', icon: Briefcase, accent: 'text-emerald-600 dark:text-emerald-300' },
 }
 
 type SiteSearchInputProps = {
@@ -56,13 +66,13 @@ export default function SiteSearchInput({
     }
   }, [deferredQuery])
 
-  // Close dropdown on outside click
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsFocused(false)
       }
     }
+
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
@@ -95,6 +105,7 @@ export default function SiteSearchInput({
     if (activeType !== 'all') {
       params.set('type', activeType)
     }
+
     router.push(`/search?${params.toString()}`)
     setIsFocused(false)
   }
@@ -110,7 +121,7 @@ export default function SiteSearchInput({
           <Search
             className={cn(
               'absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors',
-              isHero ? 'h-5 w-5 sm:left-4' : isMobile ? 'h-4 w-4 left-2.5' : 'h-4 w-4',
+              isHero ? 'h-5 w-5 sm:left-4' : isMobile ? 'left-2.5 h-4 w-4' : 'h-4 w-4',
               isFocused && 'text-indigo-500'
             )}
           />
@@ -125,8 +136,8 @@ export default function SiteSearchInput({
               isHero
                 ? 'rounded-2xl border border-slate-200/80 bg-white py-3 pl-10 pr-16 text-sm shadow-[0_18px_40px_-28px_rgba(15,23,42,0.28)] focus:border-indigo-400 focus:shadow-indigo-500/10 sm:py-3.5 sm:pl-12 sm:pr-36 sm:text-base dark:border-slate-800/80 dark:bg-slate-900/90 dark:shadow-none dark:focus:border-indigo-500'
                 : isMobile
-                ? 'rounded-lg border border-slate-200/60 bg-white/90 py-2 pl-8 pr-3 text-xs focus:border-indigo-400 focus:ring-1 focus:ring-indigo-500/20 dark:border-slate-700/60 dark:bg-slate-900/90 dark:text-slate-100'
-                : 'rounded-xl border border-slate-200 bg-white py-3 pl-9 pr-4 text-sm shadow-sm hover:border-indigo-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-700'
+                  ? 'rounded-lg border border-slate-200/60 bg-white/90 py-2 pl-8 pr-3 text-xs focus:border-indigo-400 focus:ring-1 focus:ring-indigo-500/20 dark:border-slate-700/60 dark:bg-slate-900/90 dark:text-slate-100'
+                  : 'rounded-xl border border-slate-200 bg-white py-3 pl-9 pr-4 text-sm shadow-sm hover:border-indigo-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-700'
             )}
           />
           {isHero ? (
@@ -152,13 +163,11 @@ export default function SiteSearchInput({
       {showDropdown ? (
         <div
           className={cn(
-            'absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xl shadow-slate-900/[0.12] dark:border-slate-800/80 dark:bg-slate-950 dark:shadow-[0_32px_64px_-24px_rgba(2,6,23,0.55)]',
-            isHero ? '' : 'max-w-2xl',
-            'animate-fade-in'
+            'animate-fade-in absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xl shadow-slate-900/[0.12] dark:border-slate-800/80 dark:bg-slate-950 dark:shadow-[0_32px_64px_-24px_rgba(2,6,23,0.55)]',
+            isHero ? '' : 'max-w-2xl'
           )}
           style={{ animationDuration: '0.15s' }}
         >
-          {/* Type filter tabs */}
           <div className="flex flex-wrap items-center gap-2 border-b border-slate-200/80 px-4 py-3 dark:border-slate-800/80">
             <button
               type="button"
@@ -195,8 +204,7 @@ export default function SiteSearchInput({
             })}
           </div>
 
-          {/* Results */}
-          <div className="max-h-[420px] overflow-y-auto custom-scrollbar">
+          <div className="custom-scrollbar max-h-[420px] overflow-y-auto">
             {filteredResults.map(result => {
               const meta = TYPE_META[result.type]
               const Icon = meta.icon
@@ -230,7 +238,6 @@ export default function SiteSearchInput({
             })}
           </div>
 
-          {/* Footer */}
           <div className="border-t border-slate-200/80 px-4 py-3 dark:border-slate-800/80">
             <button
               type="button"

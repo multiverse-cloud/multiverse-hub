@@ -99,6 +99,31 @@ const NAV_LINKS: NavLink[] = [
     ],
   },
   {
+    name: "Career",
+    href: "/career",
+    icon: Briefcase,
+    megaItems: [
+      {
+        name: "Career Universe",
+        href: "/career",
+        icon: Briefcase,
+        desc: "ATS-friendly resume templates and CV layouts",
+      },
+      {
+        name: "Engineering Resumes",
+        href: "/career?category=software-engineering",
+        icon: Code2,
+        desc: "Sharper templates for software and technical roles",
+      },
+      {
+        name: "Academic CVs",
+        href: "/career?category=academic-research",
+        icon: Globe,
+        desc: "Long-form research and academic CV layouts",
+      },
+    ],
+  },
+  {
     name: "Dev",
     href: "/dev",
     icon: Code2,

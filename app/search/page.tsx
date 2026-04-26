@@ -1,6 +1,7 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import type { Metadata } from "next";
 import {
+  Briefcase,
   Compass,
   LayoutTemplate,
   Search,
@@ -22,12 +23,13 @@ const TYPE_META: Record<
   fix: { label: "Fixes", icon: ShieldAlert },
   prompt: { label: "Prompts", icon: Sparkles },
   template: { label: "UI Templates", icon: LayoutTemplate },
+  career: { label: "Career", icon: Briefcase },
 };
 
 export const metadata: Metadata = {
   title: "Search - Multiverse",
   description:
-    "Search across tools, discover pages, fixes, prompts, and UI templates in one place.",
+    "Search across tools, discover pages, fixes, prompts, UI templates, and career resume templates in one place.",
   alternates: { canonical: "https://multiverse-tools.vercel.app/search" },
 };
 
@@ -59,7 +61,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     requestedType === "discover" ||
     requestedType === "fix" ||
     requestedType === "prompt" ||
-    requestedType === "template"
+    requestedType === "template" ||
+    requestedType === "career"
       ? requestedType
       : "all";
 
@@ -89,11 +92,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             </div>
           </div>
           <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground">
-            Search tools, discover rankings and guides, fixes, prompts, and UI
-            templates from one result surface.
+            Search tools, discover rankings and guides, fixes, prompts, UI
+            templates, and career resume layouts from one result surface.
           </p>
 
-          {/* Inline search form */}
           <form action="/search" method="get" className="mt-5">
             {activeType !== "all" && (
               <input type="hidden" name="type" value={activeType} />
@@ -105,7 +107,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                   type="text"
                   name="q"
                   defaultValue={query}
-                  placeholder='Try "AI tools", "pricing page", "JWT decoder"…'
+                  placeholder='Try "resume template", "AI tools", "pricing page", or "JWT decoder"'
                   autoComplete="off"
                   className="w-full rounded-2xl border border-border bg-background py-2.5 pl-9 pr-4 text-sm outline-none ring-offset-background transition-colors placeholder:text-muted-foreground focus:border-slate-400 focus:ring-2 focus:ring-slate-200 dark:focus:border-slate-600 dark:focus:ring-slate-800"
                 />
@@ -119,7 +121,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             </div>
           </form>
 
-          {/* Filter type pills */}
           <div className="mt-4 flex flex-wrap gap-1.5">
             <Link
               href={buildSearchHref(query, "all")}
@@ -155,8 +156,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               Enter at least 2 characters to search.
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Try searches like "AI tools", "phone battery", "pricing page", or
-              "mobile banking UI".
+              Try searches like "resume template", "AI tools", "phone
+              battery", or "mobile banking UI".
             </p>
           </div>
         ) : results.length === 0 ? (

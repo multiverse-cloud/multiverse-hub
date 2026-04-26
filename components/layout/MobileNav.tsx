@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Bot,
+  Briefcase,
   Code2,
   Compass,
   Home,
@@ -53,6 +54,12 @@ const MOBILE_NAV_LINKS = [
     href: "/library",
     icon: Layers3,
     subtitle: "UI and templates",
+  },
+  {
+    name: "Career",
+    href: "/career",
+    icon: Briefcase,
+    subtitle: "Resume templates",
   },
   {
     name: "Discover",

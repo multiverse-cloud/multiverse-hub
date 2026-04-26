@@ -13,17 +13,19 @@ import { getTools } from "@/lib/db";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Multiverse - Free Online Tools, UI Components, Templates, Prompts & Fixes",
+  title: "Multiverse - Free Online Tools, UI Components, Resume Templates, Prompts & Fixes",
   description:
-    "Use 150+ free online tools, UI components, website templates, AI prompts, discover guides, and troubleshooting fixes in one fast public platform. No public login required.",
+    "Use 150+ free online tools, UI components, ATS-friendly resume templates, website templates, prompts, discover guides, and troubleshooting fixes in one fast public platform.",
   keywords: [
     "free online tools",
     "video downloader",
     "PDF tools",
     "image tools",
     "UI components",
+    "resume templates",
+    "ats friendly resume",
     "website templates",
-    "AI prompts",
+    "prompts",
     "developer tools",
     "SEO tools",
     "troubleshooting fixes",
@@ -32,17 +34,17 @@ export const metadata: Metadata = {
     canonical: "https://multiverse-tools.vercel.app",
   },
   openGraph: {
-    title: "Multiverse - Free Online Tools, UI Components, Templates, Prompts & Fixes",
+    title: "Multiverse - Free Online Tools, UI Components, Resume Templates, Prompts & Fixes",
     description:
-      "A fast public workspace for creators and developers: download media, process files, copy UI, launch templates, and find practical fixes without sign-in.",
+      "A fast public workspace for creators and developers: use tools, browse UI, download resume and website templates, and find practical fixes without sign-in.",
     type: "website",
     url: "https://multiverse-tools.vercel.app",
   },
   twitter: {
     card: "summary",
-    title: "Multiverse - Free Online Tools and Creative Universes",
+    title: "Multiverse - Free Online Tools, Resume Templates, and Creative Universes",
     description:
-      "Free tools, UI components, templates, prompts, and fixes in one fast public platform.",
+      "Free tools, UI components, resume templates, prompts, and fixes in one fast public platform.",
   },
 };
 
