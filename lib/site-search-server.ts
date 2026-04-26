@@ -1,7 +1,6 @@
 import 'server-only'
 
 import { unstable_cache } from 'next/cache'
-import { getCareerTemplates } from '@/lib/career-db'
 import { getPublishedDiscoverLists } from '@/lib/discover-db'
 import { getDiscoverIntentLabel } from '@/lib/discover-query'
 import { FIX_GUIDES } from '@/lib/fixes-data'
@@ -18,15 +17,12 @@ function includesQuery(value: string | undefined, query: string) {
   return Boolean(value && normalize(value).includes(query))
 }
 
-function getScore(
-  candidate: {
-    title: string
-    description?: string
-    category?: string
-    tags?: string[]
-  },
-  query: string
-) {
+function getScore(candidate: {
+  title: string
+  description?: string
+  category?: string
+  tags?: string[]
+}, query: string) {
   const normalizedTitle = normalize(candidate.title)
   let score = 0
 
@@ -188,56 +184,13 @@ const getCachedSearchSiteContent = unstable_cache(
         ),
       }))
 
-    const careerTemplates = await getCareerTemplates()
-    const careerResults = careerTemplates
-      .filter(template =>
-        [
-          template.title,
-          template.summary,
-          template.description,
-          template.categoryTitle,
-          template.theme,
-          template.audience,
-          template.focus,
-          ...template.tags,
-          ...template.bestFor,
-          ...template.sections,
-        ].some(value => includesQuery(value, normalizedQuery))
-      )
-      .map(template => ({
-        id: `career:${template.id}`,
-        type: 'career' as const,
-        title: template.title,
-        description: template.summary,
-        href: `/career/${template.slug}`,
-        category: 'Career Universe',
-        subcategory: template.categoryTitle,
-        badge: 'Resume',
-        score: getScore(
-          {
-            title: template.title,
-            description: `${template.summary} ${template.description} ${template.focus}`,
-            category: `${template.categoryTitle} ${template.theme} ${template.audience}`,
-            tags: [...template.tags, ...template.bestFor, ...template.sections],
-          },
-          normalizedQuery
-        ),
-      }))
-
-    return [
-      ...toolResults,
-      ...discoverResults,
-      ...fixResults,
-      ...promptResults,
-      ...templateResults,
-      ...careerResults,
-    ]
+    return [...toolResults, ...discoverResults, ...fixResults, ...promptResults, ...templateResults]
       .sort((left, right) => right.score - left.score || left.title.localeCompare(right.title))
       .slice(0, limit)
       .map(({ score: _score, ...result }) => result)
   },
   ['site-search-results'],
-  { revalidate: 1800, tags: ['career', 'discover', 'prompts', 'templates', 'tools'] }
+  { revalidate: 1800, tags: ['discover', 'prompts', 'templates', 'tools'] }
 )
 
 export async function searchSiteContent(query: string, limit = 12): Promise<SiteSearchResult[]> {

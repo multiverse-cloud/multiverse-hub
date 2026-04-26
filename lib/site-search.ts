@@ -1,4 +1,4 @@
-export type SiteSearchResultType = 'tool' | 'discover' | 'fix' | 'prompt' | 'template' | 'career'
+﻿export type SiteSearchResultType = 'tool' | 'discover' | 'fix' | 'prompt' | 'template'
 
 export type SiteSearchResult = {
   id: string
