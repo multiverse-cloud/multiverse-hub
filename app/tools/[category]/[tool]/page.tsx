@@ -25,6 +25,7 @@ import {
 } from "@/lib/downloader-route-data";
 import { ACTIVE_CATEGORIES, resolveToolSlug, VIDEO_DOWNLOADER_TOOL_SLUGS, type Tool } from "@/lib/tools-data";
 import { getTools, getToolBySlug } from "@/lib/db";
+import { SITE_URL, absoluteUrl } from "@/lib/site-url";
 
 interface Props {
   params: Promise<{ category: string; tool: string }>;
@@ -204,8 +205,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (VIDEO_DOWNLOADER_TOOL_SLUGS.has(tool.slug)) {
     const downloaderRoute = getDownloaderRouteByToolSlug(tool.slug);
     const url = downloaderRoute
-      ? `https://multiverse-tools.vercel.app/${downloaderRoute.routeSlug}`
-      : `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`;
+      ? absoluteUrl(`/${downloaderRoute.routeSlug}`)
+      : absoluteUrl(`/tools/${tool.categorySlug}/${tool.slug}`);
     return {
       title: `${tool.name} - Fast MP4, MP3 and HD downloads`,
       description:
@@ -228,7 +229,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         url,
         images: [
           {
-            url: "https://multiverse-tools.vercel.app/og-tool.png",
+            url: absoluteUrl("/og-tool.png"),
             width: 1200,
             height: 630,
             alt: tool.name,
@@ -239,7 +240,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         card: "summary_large_image",
         title: `${tool.name} - Fast public media downloader`,
         description: tool.description,
-        images: ["https://multiverse-tools.vercel.app/og-tool.png"],
+        images: [absoluteUrl("/og-tool.png")],
       },
     };
   }
@@ -258,16 +259,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ...tool.tags,
     ],
     alternates: {
-      canonical: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`,
+      canonical: absoluteUrl(`/tools/${tool.categorySlug}/${tool.slug}`),
     },
     openGraph: {
       title: `${tool.name} - Free Online ${tool.category}`,
       description: tool.description,
       type: "website",
-      url: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`,
+      url: absoluteUrl(`/tools/${tool.categorySlug}/${tool.slug}`),
       images: [
         {
-          url: `https://multiverse-tools.vercel.app/og-tool.png`,
+          url: absoluteUrl("/og-tool.png"),
           width: 1200,
           height: 630,
           alt: tool.name,
@@ -278,7 +279,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: `${tool.name} - Free Online ${tool.category}`,
       description: tool.description,
-      images: ["https://multiverse-tools.vercel.app/og-tool.png"],
+      images: [absoluteUrl("/og-tool.png")],
     },
   };
 }
@@ -299,7 +300,7 @@ export default async function ToolPage({ params }: Props) {
 
   const runtimeStatus = getToolRuntimeStatus(tool);
 
-  const pageUrl = `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`;
+  const pageUrl = absoluteUrl(`/tools/${tool.categorySlug}/${tool.slug}`);
 
   const schemaMarkup = {
     "@context": "https://schema.org",
@@ -324,19 +325,19 @@ export default async function ToolPage({ params }: Props) {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://multiverse-tools.vercel.app/",
+        item: SITE_URL,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Tools",
-        item: "https://multiverse-tools.vercel.app/tools",
+        item: absoluteUrl("/tools"),
       },
       {
         "@type": "ListItem",
         position: 3,
         name: tool.category,
-        item: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}`,
+        item: absoluteUrl(`/tools/${tool.categorySlug}`),
       },
       {
         "@type": "ListItem",

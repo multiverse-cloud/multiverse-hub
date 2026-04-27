@@ -1,6 +1,7 @@
 import { createRequire } from 'module'
 import { NextRequest } from 'next/server'
 import { PDFDocument } from 'pdf-lib'
+import { API_BODY_LIMITS, API_RATE_LIMITS, guardRateLimit } from '@/lib/api-protection'
 import { parseFormData, err, fileResponse } from '@/lib/server-utils'
 
 export const runtime = 'nodejs'
@@ -128,7 +129,10 @@ async function compressWithProfile(buffer: Buffer, requestedProfile: Compression
 
 export async function POST(req: NextRequest) {
   try {
-    const { files, fields } = await parseFormData(req)
+    const limited = await guardRateLimit(req, 'tools:pdf:compress', API_RATE_LIMITS.toolHeavy, 'Too many PDF compression jobs. Please retry in a moment.')
+    if (limited) return limited
+
+    const { files, fields } = await parseFormData(req, { maxBytes: API_BODY_LIMITS.pdfUpload })
     const pdf = files.find(f => f.fieldname === 'file')
     if (!pdf) return err('No PDF file uploaded')
     const profile =

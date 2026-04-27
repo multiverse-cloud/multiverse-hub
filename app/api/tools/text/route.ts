@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
-import { err } from '@/lib/server-utils'
+import { API_BODY_LIMITS, API_RATE_LIMITS, guardRateLimit, readJsonBody } from '@/lib/api-protection'
+import { err, getErrorStatus } from '@/lib/server-utils'
 import crypto from 'crypto'
 
 export const runtime = 'nodejs'
@@ -9,10 +10,13 @@ export async function POST(req: NextRequest) {
   const action = url.searchParams.get('action') || 'word-count'
 
   try {
-    const body = await req.json() as {
+    const limited = await guardRateLimit(req, 'tools:text', API_RATE_LIMITS.toolJson, 'Too many text jobs. Please retry in a moment.')
+    if (limited) return limited
+
+    const body = await readJsonBody<{
       text?: string
       options?: Record<string, any>
-    }
+    }>(req, API_BODY_LIMITS.jsonLarge)
     const { text = '', options = {} } = body
 
     if (!text && action !== 'lorem') return err('Missing text input')
@@ -152,6 +156,6 @@ export async function POST(req: NextRequest) {
         return err(`Unknown text action: ${action}`)
     }
   } catch (e) {
-    return err(`Text processing failed: ${(e as Error).message}`, 500)
+    return err(`Text processing failed: ${(e as Error).message}`, getErrorStatus(e, 500))
   }
 }

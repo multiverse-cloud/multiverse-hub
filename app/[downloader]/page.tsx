@@ -12,12 +12,13 @@ import {
 } from "@/lib/downloader-route-data";
 import { getToolBySlug } from "@/lib/db";
 import type { Tool } from "@/lib/tools-data";
+import { SITE_URL } from "@/lib/site-url";
 
 type Props = {
   params: Promise<{ downloader: string }>;
 };
 
-const BASE_URL = "https://multiverse-tools.vercel.app";
+const BASE_URL = SITE_URL;
 
 export const revalidate = 3600;
 

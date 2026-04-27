@@ -41,6 +41,7 @@ const FOOTER_LINKS = {
     { name: "UI Universe", href: "/ui" },
     { name: "Template Library", href: "/templates" },
     { name: "Discover", href: "/discover" },
+    { name: "Feedback", href: "/feedback" },
   ],
 };
 
@@ -162,9 +163,9 @@ export default function Footer({
             </p>
 
             <div className="flex items-center gap-3">
-              <Link
-                href="/contact"
-                aria-label="Email"
+            <Link
+              href="/feedback"
+              aria-label="Feedback"
                 className={cn(
                   "flex h-9 w-9 items-center justify-center rounded-2xl border transition-colors",
                   templateVariant

@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { exec, spawn } from 'child_process'
 import { promisify } from 'util'
 import fs from 'fs'
+import { API_BODY_LIMITS, API_RATE_LIMITS, guardRateLimit } from '@/lib/api-protection'
 import {
   FFMPEG_PATH,
   cleanupFiles,
@@ -20,7 +21,7 @@ export const maxDuration = 300
 
 const execAsync = promisify(exec)
 const VIDEO_PROCESS_CONCURRENCY_LIMIT = Number(process.env.VIDEO_PROCESS_CONCURRENCY_LIMIT || 2)
-const VIDEO_UPLOAD_MAX_BYTES = Number(process.env.VIDEO_UPLOAD_MAX_BYTES || 150 * 1024 * 1024)
+const VIDEO_UPLOAD_MAX_BYTES = API_BODY_LIMITS.videoUpload
 
 function buildAtempoFilter(speed: number) {
   const factors: string[] = []
@@ -95,6 +96,9 @@ export async function POST(req: NextRequest) {
   const outputPath = tmpPath(`${id}-output`)
 
   try {
+    const limited = await guardRateLimit(req, 'tools:video', API_RATE_LIMITS.toolHeavy, 'Too many video jobs. Please retry in a moment.')
+    if (limited) return limited
+
     return await withConcurrencyLimit(
       'video-processing',
       VIDEO_PROCESS_CONCURRENCY_LIMIT,

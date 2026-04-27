@@ -3,6 +3,7 @@ import { spawn } from 'child_process'
 import fs from 'fs'
 import JSZip from 'jszip'
 import { PDFDocument, degrees, StandardFonts, rgb } from 'pdf-lib'
+import { API_BODY_LIMITS, API_RATE_LIMITS, guardRateLimit } from '@/lib/api-protection'
 import {
   TMP_DIR,
   cleanupFiles,
@@ -28,6 +29,7 @@ export const maxDuration = 60
 
 const QPDF_PATH = process.env.QPDF_PATH || 'qpdf'
 const PDFTOPPM_PATH = process.env.PDFTOPPM_PATH || 'pdftoppm'
+const PDF_TRANSFORM_UPLOAD_MAX_BYTES = API_BODY_LIMITS.pdfUpload
 
 function runCommand(command: string, args: string[]): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -65,7 +67,10 @@ export async function POST(req: NextRequest) {
   const id = randomId()
 
   try {
-    const { files, fields } = await parseFormData(req)
+    const limited = await guardRateLimit(req, 'tools:pdf:transform', API_RATE_LIMITS.toolHeavy, 'Too many PDF transform jobs. Please retry in a moment.')
+    if (limited) return limited
+
+    const { files, fields } = await parseFormData(req, { maxBytes: PDF_TRANSFORM_UPLOAD_MAX_BYTES })
     const primaryFile = files.find(f => f.fieldname === 'file') || files[0]
 
     if (action === 'images-to-pdf') {

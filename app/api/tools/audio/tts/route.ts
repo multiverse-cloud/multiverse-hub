@@ -1,17 +1,21 @@
 import { NextRequest } from 'next/server'
-import { err, fileResponse } from '@/lib/server-utils'
+import { API_BODY_LIMITS, API_RATE_LIMITS, guardRateLimit, readJsonBody } from '@/lib/api-protection'
+import { err, fileResponse, getErrorStatus } from '@/lib/server-utils'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as {
+    const limited = await guardRateLimit(req, 'tools:audio:tts', API_RATE_LIMITS.toolHeavy, 'Too many text-to-speech jobs. Please retry in a moment.')
+    if (limited) return limited
+
+    const body = await readJsonBody<{
       text?: string
       voice?: string
       speed?: number
       format?: string
-    }
+    }>(req, API_BODY_LIMITS.jsonSmall)
 
     const text = body.text?.trim() || ''
     if (!text) return err('Enter text to synthesize')
@@ -52,6 +56,6 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(await response.arrayBuffer())
     return fileResponse(buffer, `speech.${format}`, format === 'wav' ? 'audio/wav' : 'audio/mpeg')
   } catch (error) {
-    return err(`Text-to-speech failed: ${(error as Error).message}`, 500)
+    return err(`Text-to-speech failed: ${(error as Error).message}`, getErrorStatus(error, 500))
   }
 }

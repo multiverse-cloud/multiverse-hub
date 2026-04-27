@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import JSZip from 'jszip'
 import sharp from 'sharp'
+import { API_BODY_LIMITS, API_RATE_LIMITS, guardRateLimit } from '@/lib/api-protection'
 import { err, fileResponse, parseFormData } from '@/lib/server-utils'
 
 export const runtime = 'nodejs'
@@ -180,7 +181,10 @@ export async function POST(req: NextRequest) {
   const action = url.searchParams.get('action') || 'compress'
 
   try {
-    const { files, fields } = await parseFormData(req)
+    const limited = await guardRateLimit(req, 'tools:image', API_RATE_LIMITS.toolFile, 'Too many image jobs. Please retry in a moment.')
+    if (limited) return limited
+
+    const { files, fields } = await parseFormData(req, { maxBytes: API_BODY_LIMITS.imageUpload })
     const imgFile = files.find(file => file.fieldname === 'file')
     if (!imgFile) return err('No image file uploaded')
 

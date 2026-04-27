@@ -1,11 +1,12 @@
 import { NextRequest } from 'next/server'
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
+import { API_BODY_LIMITS, API_RATE_LIMITS, guardRateLimit } from '@/lib/api-protection'
 import { parseFormData, err, fileResponse } from '@/lib/server-utils'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
-const MERGE_UPLOAD_MAX_BYTES = 100 * 1024 * 1024
+const MERGE_UPLOAD_MAX_BYTES = API_BODY_LIMITS.pdfUpload
 const DEFAULT_PAGE_SIZE: [number, number] = [595.28, 841.89]
 
 type SourcePdf = {
@@ -126,6 +127,9 @@ async function addContentsPages(
 
 export async function POST(req: NextRequest) {
   try {
+    const limited = await guardRateLimit(req, 'tools:pdf:merge', API_RATE_LIMITS.toolHeavy, 'Too many PDF merge jobs. Please retry in a moment.')
+    if (limited) return limited
+
     const { files, fields } = await parseFormData(req, { maxBytes: MERGE_UPLOAD_MAX_BYTES })
     const pdfs = files.filter(f => f.fieldname === 'files' || f.fieldname === 'file')
 

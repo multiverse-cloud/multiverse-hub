@@ -3,6 +3,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
 import SourceHubChrome from '@/components/source-hub/SourceHubChrome'
 import AppProviders from '@/components/providers/AppProviders'
+import { SITE_URL, absoluteUrl } from '@/lib/site-url'
 import './globals.css'
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -53,7 +54,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'Multiverse Team' }],
   creator: 'Multiverse',
   publisher: 'Multiverse Tools',
-  metadataBase: new URL('https://multiverse-tools.vercel.app'),
+  metadataBase: new URL(SITE_URL),
   icons: {
     icon: '/SiteLogo.png',
     apple: '/SiteLogo.png',
@@ -61,7 +62,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://multiverse-tools.vercel.app',
+    url: SITE_URL,
     title: 'Multiverse - Free Tools, UI, Templates, Prompts & Fix Guides',
     description: 'Free tools, UI components, templates, AI prompts, discover guides, and fixes in one fast public platform.',
     siteName: 'Multiverse Tools',
@@ -89,14 +90,14 @@ const GLOBAL_SITE_SCHEMA = [
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Multiverse Tools',
-    url: 'https://multiverse-tools.vercel.app',
+    url: SITE_URL,
     description:
       'A public platform for free online tools, UI components, website templates, AI prompts, discover guides, and troubleshooting fixes.',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://multiverse-tools.vercel.app/search?q={search_term_string}',
+        urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },
@@ -105,9 +106,9 @@ const GLOBAL_SITE_SCHEMA = [
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Multiverse Tools',
-    url: 'https://multiverse-tools.vercel.app',
-    logo: 'https://multiverse-tools.vercel.app/SiteLogo.png',
-    sameAs: ['https://multiverse-tools.vercel.app'],
+    url: SITE_URL,
+    logo: absoluteUrl('/SiteLogo.png'),
+    sameAs: [SITE_URL],
   },
 ]
 

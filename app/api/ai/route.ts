@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server'
 import { err, RouteError, withConcurrencyLimit } from '@/lib/server-utils'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
+import { readJsonBody } from '@/lib/api-protection'
+import { SITE_URL } from '@/lib/site-url'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
@@ -70,7 +72,7 @@ export async function POST(req: NextRequest) {
       return err('Request body is too large for the AI route.', 413)
     }
 
-    const body = (await req.json()) as AiRequestBody
+    const body = await readJsonBody<AiRequestBody>(req, MAX_AI_REQUEST_BYTES)
     const { tool = 'default', input, model = 'openai/gpt-4o-mini', messages, systemPrompt } = body
 
     if (!input && !messages) return err('Missing input or messages')
@@ -96,7 +98,7 @@ export async function POST(req: NextRequest) {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`,
-            'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://multiverse-tools.vercel.app',
+            'HTTP-Referer': SITE_URL,
             'X-Title': 'Multiverse Tools',
           },
           body: JSON.stringify({

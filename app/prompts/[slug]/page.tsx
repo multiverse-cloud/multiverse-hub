@@ -4,6 +4,7 @@ import PublicLayout from '@/components/layout/PublicLayout'
 import UniverseTopBar from '@/components/public/UniverseTopBar'
 import PromptDetailPage from '@/components/prompts/PromptDetailPage'
 import { getPromptBySlug, getPublishedPrompts, getRelatedPrompts } from '@/lib/prompt-db'
+import { SITE_URL } from '@/lib/site-url'
 
 type PromptSlugPageProps = {
   params: Promise<{ slug: string }>
@@ -108,7 +109,7 @@ export default async function PromptSlugPage({ params }: PromptSlugPageProps) {
   }
 
   const relatedPrompts = await getRelatedPrompts(slug, 4)
-  const jsonLd = await buildPromptStructuredData('https://multiverse-tools.vercel.app', slug)
+  const jsonLd = await buildPromptStructuredData(SITE_URL, slug)
 
   return (
     <PublicLayout>

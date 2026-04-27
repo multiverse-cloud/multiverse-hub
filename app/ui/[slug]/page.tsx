@@ -10,6 +10,7 @@ import {
   uiEffects,
   type UiCatalogItem,
 } from '@/lib/css-effects-library'
+import { SITE_URL } from '@/lib/site-url'
 
 type UiSlugPageProps = {
   params: Promise<{ slug: string }>
@@ -146,7 +147,7 @@ export default async function UiSlugPage({ params }: UiSlugPageProps) {
         }
       : rawEffect
 
-  const jsonLd = buildStructuredData('https://multiverse-tools.vercel.app', slug)
+  const jsonLd = buildStructuredData(SITE_URL, slug)
   const relatedEffects = getRelatedEffects(effect).map(stripRelatedPreviewPayload)
 
   return (

@@ -1,4 +1,6 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { API_BODY_LIMITS, API_RATE_LIMITS, guardRateLimit, readJsonBody } from '@/lib/api-protection'
+import { SITE_URL } from '@/lib/site-url'
 
 function normalizeEmail(value: unknown) {
   return typeof value === 'string' ? value.trim().toLowerCase() : ''
@@ -8,9 +10,12 @@ function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json().catch(() => null)) as { email?: string } | null
+    const limited = await guardRateLimit(request, 'newsletter', API_RATE_LIMITS.toolJson, 'Too many newsletter requests. Please retry in a moment.')
+    if (limited) return limited
+
+    const body = await readJsonBody<{ email?: string }>(request, API_BODY_LIMITS.jsonSmall).catch(() => null)
     const email = normalizeEmail(body?.email)
 
     if (!isValidEmail(email)) {
@@ -32,7 +37,7 @@ export async function POST(request: Request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Origin: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+        Origin: SITE_URL,
       },
       body: JSON.stringify({
         service_id: serviceId,

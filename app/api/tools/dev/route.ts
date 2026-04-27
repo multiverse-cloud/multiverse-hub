@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
-import { err } from '@/lib/server-utils'
+import { API_BODY_LIMITS, API_RATE_LIMITS, guardRateLimit, readJsonBody } from '@/lib/api-protection'
+import { err, getErrorStatus } from '@/lib/server-utils'
 import { assertSafeRemoteUrl } from '@/lib/network-guards'
 import crypto from 'crypto'
 
@@ -10,10 +11,13 @@ export async function POST(req: NextRequest) {
   const action = url.searchParams.get('action') || 'json-format'
 
   try {
-    const body = await req.json() as {
+    const limited = await guardRateLimit(req, 'tools:dev', API_RATE_LIMITS.toolJson, 'Too many developer tool requests. Please retry in a moment.')
+    if (limited) return limited
+
+    const body = await readJsonBody<{
       input?: string
       options?: Record<string, any>
-    }
+    }>(req, API_BODY_LIMITS.jsonLarge)
     const { input = '', options = {} } = body
 
     switch (action) {
@@ -454,6 +458,6 @@ export async function POST(req: NextRequest) {
         return err(`Unknown dev action: ${action}`)
     }
   } catch (e) {
-    return err(`Dev tool failed: ${(e as Error).message}`, 500)
+    return err(`Dev tool failed: ${(e as Error).message}`, getErrorStatus(e, 500))
   }
 }

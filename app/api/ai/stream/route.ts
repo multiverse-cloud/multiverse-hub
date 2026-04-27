@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server'
 import { RouteError, withConcurrencyLimit } from '@/lib/server-utils'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
+import { readJsonBody } from '@/lib/api-protection'
+import { SITE_URL } from '@/lib/site-url'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
@@ -34,7 +36,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const body = (await req.json()) as AiStreamRequestBody
+    const body = await readJsonBody<AiStreamRequestBody>(req, MAX_AI_STREAM_REQUEST_BYTES)
     const { messages, model = 'openai/gpt-4o-mini', system = 'You are a helpful AI assistant.' } = body
 
     if (!Array.isArray(messages)) {
@@ -61,7 +63,7 @@ export async function POST(req: NextRequest) {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`,
-            'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://multiverse-tools.vercel.app',
+            'HTTP-Referer': SITE_URL,
             'X-Title': 'Multiverse Tools',
           },
           body: JSON.stringify({

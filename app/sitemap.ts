@@ -5,9 +5,10 @@ import { getPublishedTemplates } from "@/lib/template-db";
 import { DOWNLOADER_ROUTES } from "@/lib/downloader-route-data";
 import { ACTIVE_CATEGORIES, TOOLS, VIDEO_DOWNLOADER_TOOL_SLUGS } from "@/lib/tools-data";
 import { getEffectSlug, uiEffects } from "@/lib/css-effects-library";
+import { SITE_URL } from "@/lib/site-url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://multiverse-tools.vercel.app";
+  const baseUrl = SITE_URL;
   const staticDate = new Date("2025-01-01");
   const contentDate = new Date("2026-04-01");
 

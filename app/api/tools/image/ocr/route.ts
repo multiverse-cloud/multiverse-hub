@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import Tesseract from 'tesseract.js'
+import { API_RATE_LIMITS, guardRateLimit } from '@/lib/api-protection'
 import { err, getErrorStatus, parseFormData, withConcurrencyLimit } from '@/lib/server-utils'
 
 export const runtime = 'nodejs'
@@ -43,6 +44,9 @@ async function recognizeQueued(lang: string, buffer: Buffer) {
 
 export async function POST(req: NextRequest) {
   try {
+    const limited = await guardRateLimit(req, 'tools:ocr', API_RATE_LIMITS.toolHeavy, 'Too many OCR jobs. Please retry in a moment.')
+    if (limited) return limited
+
     return await withConcurrencyLimit(
       'ocr-processing',
       OCR_PROCESS_CONCURRENCY_LIMIT,

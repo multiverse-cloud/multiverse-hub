@@ -5,6 +5,7 @@ import PublicLayout from '@/components/layout/PublicLayout'
 import UniverseTopBar from '@/components/public/UniverseTopBar'
 import { getDiscoverListBySlug, getPublishedDiscoverLists } from '@/lib/discover-db'
 import type { DiscoverList } from '@/lib/discover-data'
+import { SITE_URL } from '@/lib/site-url'
 
 type DiscoverPageProps = {
   params: Promise<{ slug: string }>
@@ -150,7 +151,7 @@ export default async function DiscoverSlugPage({ params }: DiscoverPageProps) {
 
   const allLists = await getPublishedDiscoverLists()
   const relatedLists = allLists.filter(candidate => list.relatedSlugs.includes(candidate.slug))
-  const baseUrl = 'https://multiverse-tools.vercel.app'
+  const baseUrl = SITE_URL
   const jsonLd = buildDiscoverStructuredData(baseUrl, list)
 
   return (

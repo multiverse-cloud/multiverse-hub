@@ -4,6 +4,7 @@ import PublicLayout from '@/components/layout/PublicLayout'
 import UniverseTopBar from '@/components/public/UniverseTopBar'
 import FixGuidePage from '@/components/fixes/FixGuidePage'
 import { FIX_GUIDES, getFixGuideBySlug, getRelatedFixGuides } from '@/lib/fixes-data'
+import { SITE_URL } from '@/lib/site-url'
 
 type FixGuidePageProps = {
   params: Promise<{ slug: string }>
@@ -102,7 +103,7 @@ export default async function FixSlugPage({ params }: FixGuidePageProps) {
   }
 
   const relatedGuides = getRelatedFixGuides(slug, 4)
-  const jsonLd = buildFixStructuredData('https://multiverse-tools.vercel.app', slug)
+  const jsonLd = buildFixStructuredData(SITE_URL, slug)
 
   return (
     <PublicLayout>

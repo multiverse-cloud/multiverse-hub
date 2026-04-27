@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import JSZip from 'jszip'
 import crypto from 'crypto'
+import { API_BODY_LIMITS, API_RATE_LIMITS, guardRateLimit } from '@/lib/api-protection'
 import { parseFormData, err, fileResponse } from '@/lib/server-utils'
 import path from 'path'
 
@@ -47,7 +48,10 @@ export async function POST(req: NextRequest) {
   const action = url.searchParams.get('action') || 'zip'
 
   try {
-    const { files, fields } = await parseFormData(req)
+    const limited = await guardRateLimit(req, 'tools:file', API_RATE_LIMITS.toolFile, 'Too many file jobs. Please retry in a moment.')
+    if (limited) return limited
+
+    const { files, fields } = await parseFormData(req, { maxBytes: API_BODY_LIMITS.fileUpload })
 
     // ── Create ZIP ──────────────────────────────────────────
     if (action === 'zip') {

@@ -1,12 +1,13 @@
 import { NextRequest } from 'next/server'
 import { PDFDocument } from 'pdf-lib'
 import JSZip from 'jszip'
+import { API_BODY_LIMITS, API_RATE_LIMITS, guardRateLimit } from '@/lib/api-protection'
 import { parseFormData, err, fileResponse } from '@/lib/server-utils'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
-const SPLIT_UPLOAD_MAX_BYTES = 100 * 1024 * 1024
+const SPLIT_UPLOAD_MAX_BYTES = API_BODY_LIMITS.pdfUpload
 
 type SplitMode = 'range' | 'pages' | 'all'
 
@@ -78,6 +79,9 @@ function buildRangeSegments(ranges: RangePart[]) {
 
 export async function POST(req: NextRequest) {
   try {
+    const limited = await guardRateLimit(req, 'tools:pdf:split', API_RATE_LIMITS.toolHeavy, 'Too many PDF split jobs. Please retry in a moment.')
+    if (limited) return limited
+
     const { files, fields } = await parseFormData(req, { maxBytes: SPLIT_UPLOAD_MAX_BYTES })
     const pdf = files.find(f => f.fieldname === 'file')
     if (!pdf) return err('No PDF file uploaded')

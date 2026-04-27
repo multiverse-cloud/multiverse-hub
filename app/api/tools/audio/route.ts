@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { spawn } from 'child_process'
 import fs from 'fs'
+import { API_BODY_LIMITS, API_RATE_LIMITS, guardRateLimit } from '@/lib/api-protection'
 import {
   FFMPEG_PATH,
   cleanupFiles,
@@ -18,7 +19,7 @@ export const runtime = 'nodejs'
 export const maxDuration = 120
 
 const AUDIO_PROCESS_CONCURRENCY_LIMIT = Number(process.env.AUDIO_PROCESS_CONCURRENCY_LIMIT || 3)
-const AUDIO_UPLOAD_MAX_BYTES = Number(process.env.AUDIO_UPLOAD_MAX_BYTES || 100 * 1024 * 1024)
+const AUDIO_UPLOAD_MAX_BYTES = API_BODY_LIMITS.audioUpload
 
 function runFFmpeg(args: string[]): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -50,6 +51,9 @@ export async function POST(req: NextRequest) {
   const id = randomId()
 
   try {
+    const limited = await guardRateLimit(req, 'tools:audio', API_RATE_LIMITS.toolHeavy, 'Too many audio jobs. Please retry in a moment.')
+    if (limited) return limited
+
     return await withConcurrencyLimit(
       'audio-processing',
       AUDIO_PROCESS_CONCURRENCY_LIMIT,

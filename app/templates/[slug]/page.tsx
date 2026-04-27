@@ -2,6 +2,7 @@
 import { notFound } from 'next/navigation'
 import TemplateDetailPage from '@/components/templates/TemplateDetailPage'
 import { getPublishedTemplates, getRelatedTemplates, getTemplateBySlug } from '@/lib/template-db'
+import { SITE_URL } from '@/lib/site-url'
 
 type TemplateSlugPageProps = {
   params: Promise<{ slug: string }>
@@ -132,7 +133,7 @@ export default async function TemplateSlugPage({ params }: TemplateSlugPageProps
   }
 
   const relatedTemplates = await getRelatedTemplates(slug, 3)
-  const jsonLd = await buildTemplateStructuredData('https://multiverse-tools.vercel.app', slug)
+  const jsonLd = await buildTemplateStructuredData(SITE_URL, slug)
 
   return (
     <>

@@ -83,7 +83,7 @@ const QUICK_LINKS_LEFT = [
 const QUICK_LINKS_RIGHT = [
   { name: "All Tools", href: "/tools" },
   { name: "Library", href: "/library" },
-  { name: "Sitemap", href: "/sitemap.xml" },
+  { name: "Feedback", href: "/feedback" },
 ];
 
 export default function MobileNav({
