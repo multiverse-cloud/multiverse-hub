@@ -17,6 +17,7 @@ import {
 import type { Tool } from '@/lib/tools-data'
 import { cn, downloadBlob, formatBytes } from '@/lib/utils'
 import { getMaxFileSize } from '@/lib/file-limits'
+import MobileToolActionBar from './MobileToolActionBar'
 
 const FILE_COPY = {
   'csv-viewer': {
@@ -339,6 +340,14 @@ export default function FileViewerStudio({ tool }: { tool: Tool }) {
 
   return (
     <div className="space-y-6" data-tool-shell="true">
+      <MobileToolActionBar
+        primaryLabel={copy.actionLabel}
+        onPrimary={handleProcess}
+        primaryDisabled={loading || (!file && !textInput.trim())}
+        loading={loading}
+        secondaryLabel="Reset"
+        onSecondary={handleReset}
+      />
       <header className="max-w-3xl">
         <div className="flex flex-wrap gap-2 hidden sm:flex">
           {copy.badges.map(item => (

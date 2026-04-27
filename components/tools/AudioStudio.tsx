@@ -25,6 +25,7 @@ import { buildDropzoneAccept, formatAcceptedFormats } from './file-accept'
 import { handleAudioTextTool } from './processors/text-audio'
 import { handleAudioTool } from './processors/file-media'
 import type { FileProcessResult } from './processors/types'
+import MobileToolActionBar from './MobileToolActionBar'
 
 type QueueItem = { id: string; file: File; previewUrl: string }
 
@@ -428,20 +429,28 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
   ]
 
   return (
-    <div className="space-y-8" data-tool-shell="true">
+    <div className="space-y-4 sm:space-y-8" data-tool-shell="true">
+      <MobileToolActionBar
+        primaryLabel={copy.actionLabel}
+        onPrimary={handleProcess}
+        primaryDisabled={loading}
+        loading={loading}
+        secondaryLabel="Reset"
+        onSecondary={resetAll}
+      />
       <header className="max-w-3xl">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">
           {copy.badges.map(item => (
             <span key={item} className="premium-chip">
               {item}
             </span>
           ))}
         </div>
-        <p className="mt-6 premium-kicker">{copy.eyebrow}</p>
-        <h1 className="mt-2 font-display text-4xl font-extrabold tracking-tight text-slate-950 md:text-5xl dark:text-slate-50">
+        <p className="mt-3 premium-kicker sm:mt-6">{copy.eyebrow}</p>
+        <h1 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-slate-950 sm:text-4xl md:text-5xl dark:text-slate-50">
           {copy.title}
         </h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300">
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:mt-4 sm:text-base sm:leading-7 dark:text-slate-300">
           {copy.summary}
         </p>
       </header>
@@ -465,8 +474,8 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
                 <textarea
                   value={textInput}
                   onChange={event => setTextInput(event.target.value)}
-                  rows={10}
-                  className="min-h-[260px] w-full rounded-2xl bg-slate-50 px-4 py-4 text-sm leading-7 text-slate-700 outline-none ring-1 ring-slate-200 transition focus:ring-2 focus:ring-indigo-300 dark:bg-slate-950/40 dark:text-slate-100 dark:ring-slate-800"
+                  rows={6}
+                  className="min-h-[150px] w-full rounded-xl bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-700 outline-none ring-1 ring-slate-200 transition focus:ring-2 focus:ring-indigo-300 sm:min-h-[260px] sm:rounded-2xl sm:py-4 sm:leading-7 dark:bg-slate-950/40 dark:text-slate-100 dark:ring-slate-800"
                   placeholder="Paste the voice script you want to convert into audio."
                 />
               </div>

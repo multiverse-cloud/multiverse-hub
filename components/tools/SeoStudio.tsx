@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import type { Tool } from '@/lib/tools-data'
 import { cn, downloadBlob } from '@/lib/utils'
+import MobileToolActionBar from './MobileToolActionBar'
 
 const SEO_COPY = {
   'backlink-checker': { eyebrow: 'Off-page review', title: 'Backlink Checker', summary: 'Review backlink-style outreach signals and anchor opportunities from a focused domain workspace.', badges: ['Domain input', 'Signal review', 'Anchor ideas'], actionLabel: 'Review link signals' },
@@ -297,12 +298,20 @@ export default function SeoStudio({ tool }: { tool: Tool }) {
   }
 
   return (
-    <div className="space-y-8" data-tool-shell="true">
+    <div className="space-y-4 sm:space-y-8" data-tool-shell="true">
+      <MobileToolActionBar
+        primaryLabel={copy.actionLabel}
+        onPrimary={handleProcess}
+        primaryDisabled={loading}
+        loading={loading}
+        secondaryLabel="Reset"
+        onSecondary={resetAll}
+      />
       <header className="max-w-3xl">
-        <div className="flex flex-wrap gap-2">{copy.badges.map(item => <span key={item} className="premium-chip">{item}</span>)}</div>
-        <p className="mt-6 premium-kicker">{copy.eyebrow}</p>
-        <h1 className="mt-2 font-display text-4xl font-extrabold tracking-tight text-slate-950 md:text-5xl dark:text-slate-50">{copy.title}</h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300">{copy.summary}</p>
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">{copy.badges.map(item => <span key={item} className="premium-chip">{item}</span>)}</div>
+        <p className="mt-3 premium-kicker sm:mt-6">{copy.eyebrow}</p>
+        <h1 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-slate-950 sm:text-4xl md:text-5xl dark:text-slate-50">{copy.title}</h1>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:mt-4 sm:text-base sm:leading-7 dark:text-slate-300">{copy.summary}</p>
       </header>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.14fr)_360px]">

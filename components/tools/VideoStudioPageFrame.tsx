@@ -20,7 +20,7 @@ export default function VideoStudioPageFrame({
 }) {
   return (
     <div className="premium-shell" data-tool-shell="true">
-      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-6 md:py-10">
+      <div className="mx-auto w-full max-w-7xl px-3 pb-28 pt-4 sm:px-6 lg:px-6 md:py-10">
         <div className="mb-6 flex items-start justify-between gap-3">
           <ToolBreadcrumb
             className="mb-0 flex-1"

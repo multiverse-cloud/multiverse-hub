@@ -17,6 +17,7 @@ import type { Tool } from '@/lib/tools-data'
 import { cn, downloadBlob } from '@/lib/utils'
 import { handleDevTool } from './processors/text-dev'
 import type { FileProcessResult } from './processors/types'
+import MobileToolActionBar from './MobileToolActionBar'
 
 const DEV_COPY = {
   'api-tester': { eyebrow: 'Request workspace', title: 'API Tester', summary: 'Send a request, inspect the response, and keep headers, method, and payload in one cleaner workspace.', badges: ['Request builder', 'Response stats', 'Headers and body'], actionLabel: 'Send request' },
@@ -299,6 +300,14 @@ export default function DevStudio({ tool }: { tool: Tool }) {
 
   return (
     <div className="space-y-4 sm:space-y-5" data-tool-shell="true">
+      <MobileToolActionBar
+        primaryLabel={copy.actionLabel}
+        onPrimary={handleProcess}
+        primaryDisabled={loading}
+        loading={loading}
+        secondaryLabel="Reset"
+        onSecondary={resetAll}
+      />
       <header className="max-w-3xl">
         <div className="flex flex-wrap gap-1.5">
           {copy.badges.map(item => (

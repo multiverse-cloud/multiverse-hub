@@ -19,6 +19,7 @@ import { cn, downloadBlob, formatBytes } from "@/lib/utils";
 import { buildDropzoneAccept, formatAcceptedFormats } from "./file-accept";
 import { handleImageTool } from "./processors/file-image";
 import type { FileProcessResult } from "./processors/types";
+import MobileToolActionBar from "./MobileToolActionBar";
 
 const TRANSFORM_COPY = {
   "compress-image": {
@@ -615,6 +616,15 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
 
   return (
     <div className="space-y-4 sm:space-y-5">
+      <MobileToolActionBar
+        primaryLabel={copy.actionLabel}
+        onPrimary={handleProcess}
+        primaryDisabled={!file}
+        loading={loading}
+        secondaryLabel="Reset"
+        onSecondary={handleReset}
+        secondaryDisabled={!file && !result}
+      />
       <div className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr] sm:gap-6">
         <div className="space-y-4 sm:space-y-6">
           <div className="space-y-3 sm:space-y-4">
@@ -645,7 +655,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
             <div
               {...getRootProps()}
               className={cn(
-                "rounded-[1.25rem] border-2 border-dashed px-4 py-6 transition-colors sm:rounded-[1.75rem] sm:px-6 sm:py-8",
+                "rounded-[1.15rem] border border-dashed px-4 py-5 transition-colors sm:rounded-[1.75rem] sm:border-2 sm:px-6 sm:py-8",
                 isDragActive
                   ? "border-indigo-500 bg-indigo-50/60"
                   : "border-slate-200 bg-slate-50/70",
@@ -653,11 +663,11 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
             >
               <input {...getInputProps()} />
               {!file ? (
-                <div className="flex min-h-[240px] flex-col items-center justify-center text-center sm:min-h-[320px]">
+                <div className="flex min-h-[150px] flex-col items-center justify-center text-center sm:min-h-[320px]">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600 sm:mb-5 sm:h-16 sm:w-16 sm:rounded-3xl">
                     <UploadCloud className="h-6 w-6 sm:h-7 sm:w-7" />
                   </div>
-                  <h2 className="font-display text-xl font-bold tracking-tight text-slate-950 sm:text-2xl">
+                  <h2 className="font-display text-base font-bold tracking-tight text-slate-950 sm:text-2xl">
                     Drop your image here
                   </h2>
                   <p className="mt-2 max-w-md text-xs leading-5 text-slate-500 sm:mt-3 sm:text-sm sm:leading-6">

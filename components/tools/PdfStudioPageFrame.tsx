@@ -39,7 +39,7 @@ export default function PdfStudioPageFrame({
 }) {
   return (
     <div className="premium-shell" data-tool-shell="true">
-      <div className="mx-auto w-full max-w-7xl px-3 py-6 sm:px-6 sm:py-8 lg:px-6 lg:py-10">
+      <div className="mx-auto w-full max-w-7xl px-3 pb-28 pt-4 sm:px-6 sm:py-8 lg:px-6 lg:py-10">
         {/* Header row: breadcrumb + actions */}
         <div className="mb-4 flex items-start justify-between gap-3 sm:mb-6">
           <ToolBreadcrumb

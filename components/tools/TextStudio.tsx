@@ -25,6 +25,7 @@ import { handleAudioTool } from './processors/file-media'
 import { handleDevTool } from './processors/text-dev'
 import { handleTextTool } from './processors/text-tools'
 import type { FileProcessResult } from './processors/types'
+import MobileToolActionBar from './MobileToolActionBar'
 
 const TEXT_COPY = {
   'ai-text-generator': { eyebrow: 'Creative drafting', title: 'AI Text Generator', summary: 'Turn a short prompt into a polished draft with clearer structure and ready-to-edit output.', badges: ['Prompt based', 'Draft ready', 'Fast result'], actionLabel: 'Generate text' },
@@ -413,6 +414,14 @@ export default function TextStudio({ tool }: { tool: Tool }) {
 
   return (
     <div className="space-y-4 sm:space-y-5" data-tool-shell="true">
+      <MobileToolActionBar
+        primaryLabel={copy.actionLabel}
+        onPrimary={handleProcess}
+        primaryDisabled={loading}
+        loading={loading}
+        secondaryLabel="Reset"
+        onSecondary={resetAll}
+      />
       <header className="max-w-3xl">
         <div className="flex flex-wrap gap-1.5">
           {copy.badges.map(item => (
@@ -438,16 +447,16 @@ export default function TextStudio({ tool }: { tool: Tool }) {
                 <input {...getInputProps()} />
                 <div
                   className={cn(
-                    'flex min-h-[200px] flex-col items-center justify-center rounded-[20px] border border-dashed px-6 py-8 text-center transition sm:min-h-[280px] sm:rounded-[28px] sm:px-8 sm:py-10',
+                    'flex min-h-[150px] flex-col items-center justify-center rounded-[18px] border border-dashed px-4 py-6 text-center transition sm:min-h-[280px] sm:rounded-[28px] sm:px-8 sm:py-10',
                     isDragActive
                       ? 'border-indigo-400 bg-indigo-50/70 dark:border-indigo-500 dark:bg-indigo-950/20'
                       : 'border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70'
                   )}
                 >
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition group-hover:bg-indigo-50 group-hover:text-indigo-600 dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-indigo-950/30 sm:h-20 sm:w-20">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition group-hover:bg-indigo-50 group-hover:text-indigo-600 dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-indigo-950/30 sm:h-20 sm:w-20">
                     <UploadCloud className="h-7 w-7 sm:h-8 sm:w-8" />
                   </div>
-                  <h2 className="mt-4 font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:mt-6 sm:text-2xl">
+                  <h2 className="mt-3 font-display text-base font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:mt-6 sm:text-2xl">
                     Drop your speech file here
                   </h2>
                   <p className="mt-2 max-w-md text-xs leading-5 text-slate-500 dark:text-slate-400 sm:mt-2 sm:text-sm sm:leading-6">

@@ -9,6 +9,7 @@ import { copyToClipboard } from '@/lib/utils'
 import UploadZone from './UploadZone'
 import { buildDropzoneAccept, formatAcceptedFormats } from './file-accept'
 import { analyzeImagePalette, buildPaletteReport, generatePaletteFromSeed } from './processors/image-palette'
+import MobileToolActionBar from './MobileToolActionBar'
 
 export default function ToolDetailBothClient({ tool }: { tool: Tool }) {
   const acceptedFormats = useMemo(
@@ -90,7 +91,16 @@ export default function ToolDetailBothClient({ tool }: { tool: Tool }) {
   const hasInput = files.length > 0 || textInput.trim().length > 0
 
   return (
-    <div className="space-y-6 p-5 md:p-6">
+    <div className="space-y-4 p-4 sm:space-y-6 sm:p-5 md:p-6">
+      <MobileToolActionBar
+        primaryLabel="Generate Palette"
+        onPrimary={handleGenerate}
+        primaryDisabled={!hasInput}
+        loading={loading}
+        secondaryLabel="Reset"
+        onSecondary={resetAll}
+        secondaryDisabled={!hasInput && colors.length === 0}
+      />
       <UploadZone
         onFiles={incomingFiles => setFiles(incomingFiles.slice(0, 1))}
         accept={uploadAccept}

@@ -88,16 +88,16 @@ export default function UploadZone({
       <div
         {...getRootProps()}
         className={cn(
-          "upload-zone group min-h-[120px] sm:min-h-[160px]",
+          "upload-zone group min-h-[96px] sm:min-h-[150px]",
           isDragActive && "dragging",
         )}
       >
         <input {...getInputProps()} />
-        <div className="pointer-events-none flex flex-col items-center gap-2.5 sm:gap-3">
+        <div className="pointer-events-none flex flex-col items-center gap-2 sm:gap-3">
           {/* Icon with animated background */}
           <div
             className={cn(
-              "relative flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl transition-all duration-300",
+              "relative flex h-10 w-10 sm:h-16 sm:w-16 items-center justify-center rounded-xl sm:rounded-2xl transition-all duration-300",
               isDragActive
                 ? "bg-indigo-100 scale-110 dark:bg-indigo-900/40"
                 : "bg-gradient-to-br from-slate-100 to-slate-50 group-hover:from-indigo-100 group-hover:to-indigo-50 dark:from-slate-800 dark:to-slate-900 dark:group-hover:from-indigo-900/40 dark:group-hover:to-indigo-950/40",
@@ -139,7 +139,7 @@ export default function UploadZone({
                   </>
                 ))}
             </p>
-            <p className="mt-1 sm:mt-1.5 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+            <p className="mt-0.5 sm:mt-1.5 text-[11px] sm:text-sm text-muted-foreground leading-relaxed">
               {helperText}
             </p>
           </div>

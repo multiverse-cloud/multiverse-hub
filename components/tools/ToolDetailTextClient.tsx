@@ -7,6 +7,7 @@ import { Copy, CheckCircle, Loader2, RefreshCw, Play, AlertCircle, ExternalLink,
 import { cn, copyToClipboard, downloadBlob } from '@/lib/utils'
 import type { TextProcessResult } from './processors/types'
 import toast from 'react-hot-toast'
+import MobileToolActionBar from './MobileToolActionBar'
 
 function getPlaceholder(slug: string): string {
   const m: Record<string, string> = {
@@ -358,7 +359,16 @@ export default function ToolDetailTextClient({ tool }: { tool: Tool }) {
                   : 'Run Tool'
 
   return (
-    <div className="space-y-6 p-5 md:p-6">
+    <div className="space-y-4 p-4 sm:space-y-6 sm:p-5 md:p-6">
+      <MobileToolActionBar
+        primaryLabel={btnLabel}
+        onPrimary={tool.slug === 'audio-recorder' ? handleRecorderAction : handleProcess}
+        primaryDisabled={loading}
+        loading={loading}
+        secondaryLabel="Reset"
+        onSecondary={resetAll}
+        secondaryDisabled={!output && !textInput && !imagePreview && !outputBlob}
+      />
       {needsText && tool.slug !== 'audio-recorder' && (
         <div className="space-y-1.5">
           <label className="premium-label">
@@ -464,7 +474,7 @@ export default function ToolDetailTextClient({ tool }: { tool: Tool }) {
 
       {apiError && <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-4"><AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" /><pre className="whitespace-pre-wrap text-xs text-red-600">{apiError}</pre></div>}
 
-      {imagePreview && <div className="space-y-3"><div className="flex items-center justify-between"><h3 className="flex items-center gap-2 font-display text-sm font-bold tracking-tight"><CheckCircle className="w-4 h-4 text-emerald-500" />Preview</h3><a href={imagePreview} download target="_blank" rel="noreferrer" className="btn-secondary px-4 py-2 text-sm"><ExternalLink className="w-3.5 h-3.5" />Open</a></div><div className="relative h-[280px] w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:h-[360px] lg:h-[450px]"><Image src={imagePreview} alt="Result" fill unoptimized sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1024px" style={{ objectFit: 'contain' }} /></div></div>}
+      {imagePreview && <div className="space-y-3"><div className="flex items-center justify-between"><h3 className="flex items-center gap-2 font-display text-sm font-bold tracking-tight"><CheckCircle className="w-4 h-4 text-emerald-500" />Preview</h3><a href={imagePreview} download target="_blank" rel="noreferrer" className="btn-secondary px-4 py-2 text-sm"><ExternalLink className="w-3.5 h-3.5" />Open</a></div><div className="relative h-[240px] w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm sm:h-[360px] sm:rounded-2xl lg:h-[450px]"><Image src={imagePreview} alt="Result" fill unoptimized sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1024px" style={{ objectFit: 'contain' }} /></div></div>}
 
       {mediaPreviewUrl && (
         <div className="space-y-2">

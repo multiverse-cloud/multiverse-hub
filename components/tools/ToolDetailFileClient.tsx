@@ -24,6 +24,7 @@ import { cn, copyToClipboard, downloadBlob, formatBytes } from '@/lib/utils'
 import type { FilePreviewType, FileProcessResult, FileResultMetric } from './processors/types'
 import { buildDropzoneAccept, formatAcceptedFormats } from './file-accept'
 import toast from 'react-hot-toast'
+import MobileToolActionBar from './MobileToolActionBar'
 
 type ExtraInputConfig = {
   label: string
@@ -414,8 +415,17 @@ export default function ToolDetailFileClient({ tool }: { tool: Tool }) {
   const showPreviewGrid = Boolean(sourcePreviewUrl || resultPreviewUrl)
 
   return (
-    <div className="space-y-6 p-5 md:p-6">
-      <div className="grid gap-3 sm:grid-cols-3">
+    <div className="space-y-4 p-4 sm:space-y-6 sm:p-5 md:p-6">
+      <MobileToolActionBar
+        primaryLabel={btnLabel}
+        onPrimary={handleProcess}
+        primaryDisabled={files.length === 0}
+        loading={loading}
+        secondaryLabel="Reset"
+        onSecondary={resetAll}
+        secondaryDisabled={!output && files.length === 0 && !outputBlob}
+      />
+      <div className="hidden gap-3 sm:grid sm:grid-cols-3">
         {toolHighlights.map(item => (
           <div key={item} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
             {item}
@@ -434,7 +444,7 @@ export default function ToolDetailFileClient({ tool }: { tool: Tool }) {
       />
 
       {hasAdvancedOptions && (
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:rounded-2xl sm:p-4">
           <div className="mb-4 flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-indigo-500" />
             <h3 className="font-display text-sm font-bold tracking-tight text-slate-950">Processing Options</h3>
@@ -605,7 +615,7 @@ export default function ToolDetailFileClient({ tool }: { tool: Tool }) {
                 <h3 className="font-display text-sm font-bold tracking-tight text-slate-950">Source {getPreviewTypeLabel(sourcePreviewType)}</h3>
               </div>
               <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <div className={cn(sourcePreviewType === 'audio' ? 'min-h-[240px]' : 'relative h-[280px] sm:h-[360px]')}>
+                <div className={cn(sourcePreviewType === 'audio' ? 'min-h-[220px]' : 'relative h-[240px] sm:h-[360px]')}>
                   <PreviewSurface url={sourcePreviewUrl} type={sourcePreviewType} alt="Source preview" />
                 </div>
               </div>
@@ -634,7 +644,7 @@ export default function ToolDetailFileClient({ tool }: { tool: Tool }) {
               </div>
 
               <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <div className={cn(resultPreviewType === 'audio' ? 'min-h-[240px]' : 'relative h-[280px] sm:h-[360px] lg:h-[420px]')}>
+                <div className={cn(resultPreviewType === 'audio' ? 'min-h-[220px]' : 'relative h-[240px] sm:h-[360px] lg:h-[420px]')}>
                   <PreviewSurface url={resultPreviewUrl} type={resultPreviewType} alt="Processed preview" />
                 </div>
               </div>

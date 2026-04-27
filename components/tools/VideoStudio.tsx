@@ -29,6 +29,7 @@ import { cn, downloadBlob, formatBytes } from '@/lib/utils'
 import { buildDropzoneAccept, formatAcceptedFormats } from './file-accept'
 import { handleVideoTool } from './processors/file-media'
 import type { FilePreviewType, FileProcessResult, FileResultMetric } from './processors/types'
+import MobileToolActionBar from './MobileToolActionBar'
 
 type QueueItem = { id: string; file: File; previewUrl: string }
 type ThumbnailVariant = { label: string; size: string; url: string }
@@ -367,6 +368,14 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
 
     return (
       <div className="space-y-5" data-tool-shell="true">
+        <MobileToolActionBar
+          primaryLabel="Download"
+          onPrimary={handleProcess}
+          primaryDisabled={loading || !urlInput.trim()}
+          loading={loading}
+          secondaryLabel="Reset"
+          onSecondary={resetAll}
+        />
         <header className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1.5 text-xs font-black uppercase tracking-[0.16em] text-red-700 ring-1 ring-red-100 dark:bg-red-950/30 dark:text-red-300 dark:ring-red-900/40">
             <Youtube className="h-4 w-4" />
@@ -509,12 +518,20 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
   }
 
   return (
-    <div className="space-y-8" data-tool-shell="true">
+    <div className="space-y-4 sm:space-y-8" data-tool-shell="true">
+      <MobileToolActionBar
+        primaryLabel={tool.slug === 'youtube-thumbnail-downloader' ? 'Fetch thumbnails' : copy.actionLabel}
+        onPrimary={handleProcess}
+        primaryDisabled={loading || (tool.slug === 'youtube-thumbnail-downloader' ? !urlInput.trim() : queue.length === 0)}
+        loading={loading}
+        secondaryLabel="Reset"
+        onSecondary={resetAll}
+      />
       <header className="max-w-3xl">
-        <div className="flex flex-wrap gap-2">{copy.badges.map(item => <span key={item} className="premium-chip">{item}</span>)}</div>
-        <p className="mt-6 premium-kicker">{copy.eyebrow}</p>
-        <h1 className="mt-2 font-display text-4xl font-extrabold tracking-tight text-slate-950 md:text-5xl dark:text-slate-50">{copy.title}</h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300">{copy.summary}</p>
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">{copy.badges.map(item => <span key={item} className="premium-chip">{item}</span>)}</div>
+        <p className="mt-3 premium-kicker sm:mt-6">{copy.eyebrow}</p>
+        <h1 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-slate-950 sm:text-4xl md:text-5xl dark:text-slate-50">{copy.title}</h1>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:mt-4 sm:text-base sm:leading-7 dark:text-slate-300">{copy.summary}</p>
       </header>
 
       <div className={cn('grid gap-6', tool.slug === 'youtube-thumbnail-downloader' ? '' : 'xl:grid-cols-[minmax(0,1.15fr)_360px]')}>
@@ -539,10 +556,10 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
               </>
             ) : (
               <>
-                <div {...getRootProps()} className={cn('rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/80 px-6 py-10 text-center transition-all dark:border-slate-800 dark:bg-slate-950/30', isDragActive && 'border-indigo-400 bg-indigo-50/60 dark:bg-indigo-950/20')}>
+                <div {...getRootProps()} className={cn('rounded-xl border border-dashed border-slate-200 bg-slate-50/80 px-4 py-6 text-center transition-all dark:border-slate-800 dark:bg-slate-950/30 sm:rounded-2xl sm:border-2 sm:px-6 sm:py-10', isDragActive && 'border-indigo-400 bg-indigo-50/60 dark:bg-indigo-950/20')}>
                   <input {...getInputProps()} />
-                  <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-300"><UploadCloud className="h-6 w-6" /></div>
-                  <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">{tool.slug === 'gif-maker' ? 'Drop image sequence here' : tool.slug === 'merge-video' ? 'Drop video clips here' : 'Drop source file here'}</h2>
+                  <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-300 sm:mb-5 sm:h-14 sm:w-14 sm:rounded-2xl"><UploadCloud className="h-5 w-5 sm:h-6 sm:w-6" /></div>
+                  <h2 className="font-display text-base font-extrabold tracking-tight text-slate-950 sm:text-xl dark:text-slate-50">{tool.slug === 'gif-maker' ? 'Drop image sequence here' : tool.slug === 'merge-video' ? 'Drop video clips here' : 'Drop source file here'}</h2>
                   <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{activeItem ? `${formatBytes(activeItem.file.size)} ready to process` : acceptLabel}</p>
                   <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
                     <button type="button" onClick={open} className="btn-primary px-5 py-2.5 text-sm">Choose file{multiple ? 's' : ''}</button>
