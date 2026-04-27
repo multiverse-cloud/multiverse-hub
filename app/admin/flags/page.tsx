@@ -86,8 +86,17 @@ const DEFAULT_FLAGS = [
     id: "adsense",
     group: "Monetization",
     label: "Google AdSense",
-    desc: "Enable ad placements",
-    enabled: false,
+    desc: "Env-gated Auto ads. Keep off until AdSense approves the domain and ads.txt is verified.",
+    enabled:
+      process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ENABLED === "true" &&
+      Boolean(process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT),
+  },
+  {
+    id: "adsense_ready",
+    group: "Monetization",
+    label: "AdSense Eligibility Mode",
+    desc: "Use this checklist before enabling ads: enough useful content, privacy/terms pages, crawlable ads.txt, and no misleading download flows.",
+    enabled: Boolean(process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT),
   },
   {
     id: "beta_tools",

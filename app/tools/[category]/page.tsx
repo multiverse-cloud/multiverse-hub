@@ -4,6 +4,7 @@ import PublicLayout from "@/components/layout/PublicLayout";
 import CategoryPage from "@/components/tools/CategoryPage";
 import { ACTIVE_CATEGORIES } from "@/lib/tools-data";
 import { getToolsByCategory } from "@/lib/db";
+import { absoluteUrl } from "@/lib/site-url";
 
 export const revalidate = 3600;
 
@@ -29,7 +30,7 @@ export async function generateMetadata({
     title: `${cat.name} - ${countLabel}Free Online ${cat.name} | Multiverse`,
     description: `${cat.description} Use our free ${cat.name.toLowerCase()} with no sign-up required. Fast, private, and browser-based.`,
     alternates: {
-      canonical: `https://multiverse-tools.vercel.app/tools/${category}`,
+      canonical: absoluteUrl(`/tools/${category}`),
     },
   };
 }

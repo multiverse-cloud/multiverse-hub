@@ -13,6 +13,7 @@ import {
   Sparkles,
   Wand2,
 } from "lucide-react";
+import { POPULAR_SITE_LANGUAGES } from "@/lib/seo-languages";
 import { callOpenRouter, cn, generateImage } from "@/lib/utils";
 
 const DESIGN_TOOLS = [
@@ -58,6 +59,20 @@ const DESIGN_TOOLS = [
     desc: "Create social thumbnail directions",
     tone: "bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300",
   },
+  {
+    id: "design-system",
+    icon: Paintbrush,
+    label: "Design System",
+    desc: "Tokens, spacing, states, and component rules",
+    tone: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
+  },
+  {
+    id: "image-prompt",
+    icon: Wand2,
+    label: "Image Prompt",
+    desc: "Premium prompts for AI image previews",
+    tone: "bg-cyan-100 text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-300",
+  },
 ];
 
 const EXAMPLE_PROMPTS: Record<string, string[]> = {
@@ -91,6 +106,16 @@ const EXAMPLE_PROMPTS: Record<string, string[]> = {
     "A LinkedIn banner for a senior frontend engineer",
     "A social card for a blog post about AI trends",
   ],
+  "design-system": [
+    "A minimal SaaS design system for a finance dashboard",
+    "A premium mobile app spacing and color system",
+    "A dark editor interface with accessible components",
+  ],
+  "image-prompt": [
+    "A hero background for a productivity SaaS website",
+    "A premium template preview screenshot for a portfolio site",
+    "A clean mobile app mockup for a video downloader",
+  ],
 };
 
 const UI_SYSTEM_PROMPTS: Record<string, string> = {
@@ -106,6 +131,10 @@ const UI_SYSTEM_PROMPTS: Record<string, string> = {
     "You are a React expert. Generate a production-ready React component with TypeScript and Tailwind CSS.",
   "thumbnail-gen":
     "You are a social design specialist. Create an SVG thumbnail layout in 1280 by 720 format with strong contrast and clear title placement.",
+  "design-system":
+    "You are a principal product designer. Generate a concise design system spec with tokens, spacing, typography, component states, accessibility notes, and Tailwind-friendly examples.",
+  "image-prompt":
+    "You are an expert AI art director. Generate a polished image-generation prompt with subject, composition, lighting, camera, color, style, negative prompt, and aspect ratio.",
 };
 
 export default function DesignAIClient() {
@@ -113,6 +142,7 @@ export default function DesignAIClient() {
   const [prompt, setPrompt] = useState("");
   const [output, setOutput] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [language, setLanguage] = useState("English");
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<"code" | "preview">("preview");
 
@@ -145,7 +175,7 @@ export default function DesignAIClient() {
       } else {
         const systemPrompt = UI_SYSTEM_PROMPTS[activeTool];
         const result = await callOpenRouter(
-          [{ role: "user", content: prompt }],
+          [{ role: "user", content: `${prompt}\n\nRespond in ${language}. Keep the result practical, premium, and production-ready.` }],
           "openai/gpt-4o-mini",
           systemPrompt,
         );
@@ -230,9 +260,21 @@ export default function DesignAIClient() {
 
             {/* Prompt textarea */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-950 dark:text-slate-50">
-                Prompt
-              </label>
+              <div className="flex items-center justify-between gap-3">
+                <label className="text-sm font-semibold text-slate-950 dark:text-slate-50">
+                  Prompt
+                </label>
+                <select
+                  value={language}
+                  onChange={event => setLanguage(event.target.value)}
+                  className="h-9 rounded-lg border border-border bg-card px-2.5 text-xs font-semibold text-foreground outline-none"
+                  aria-label="Output language"
+                >
+                  {POPULAR_SITE_LANGUAGES.map(item => (
+                    <option key={item.code} value={item.label}>{item.label}</option>
+                  ))}
+                </select>
+              </div>
               <textarea
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}

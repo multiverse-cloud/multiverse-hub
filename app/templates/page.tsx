@@ -9,6 +9,7 @@ import {
   resolveTemplateCategory,
   resolveTemplatePlatform,
 } from '@/lib/template-query'
+import { absoluteUrl } from '@/lib/site-url'
 
 export const metadata: Metadata = {
   title: 'Free Premium UI Templates for React, Next.js, Dashboards, Landing Pages | Multiverse',
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
     title: 'Free Premium UI Templates for React, Next.js, Dashboards, Landing Pages | Multiverse',
     description:
       'Browse free premium UI templates for React, Next.js, dashboards, landing pages, auth screens, ecommerce, and modern product launches.',
-    url: '/templates',
+    url: absoluteUrl('/templates'),
     type: 'website',
   },
   twitter: {
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
     description:
       'Browse free premium UI templates for React, Next.js, dashboards, landing pages, auth screens, ecommerce, and modern product launches.',
   },
-  alternates: { canonical: 'https://multiverse-tools.vercel.app/templates' },
+  alternates: { canonical: absoluteUrl('/templates') },
 }
 
 export const revalidate = 3600;

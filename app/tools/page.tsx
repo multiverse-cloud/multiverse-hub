@@ -3,6 +3,7 @@ import PublicLayout from "@/components/layout/PublicLayout";
 import UniverseTopBar from "@/components/public/UniverseTopBar";
 import ToolsListing from "@/components/tools/ToolsListing";
 import { TOOLS } from "@/lib/tools-data";
+import { absoluteUrl } from "@/lib/site-url";
 
 export const revalidate = 3600;
 
@@ -10,12 +11,12 @@ export const metadata: Metadata = {
   title: "Tools - Free Online Utilities | Multiverse",
   description: `Explore ${TOOLS.length}+ free online tools for PDF, image, video, audio, text, and developer workflows. No sign-up, no watermarks, no limits. Fast, private tools that run in your browser.`,
   alternates: {
-    canonical: "https://multiverse-tools.vercel.app/tools",
+    canonical: absoluteUrl("/tools"),
   },
   openGraph: {
     title: "Tools - Free Online Utilities | Multiverse",
     description: `Explore ${TOOLS.length}+ free online tools for PDF, image, video, audio, text, and developer workflows. No sign-up, no watermarks, no limits.`,
-    url: "https://multiverse-tools.vercel.app/tools",
+    url: absoluteUrl("/tools"),
   },
 };
 

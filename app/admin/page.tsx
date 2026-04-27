@@ -20,6 +20,8 @@ import { getAdminDiscoverLists } from "@/lib/discover-db";
 import { getLocalDiscoverStorePaths } from "@/lib/discover-local-store";
 import { getPublishedPrompts } from "@/lib/prompt-db";
 import { getPublishedTemplates } from "@/lib/template-db";
+import { getCloudinaryConfig } from "@/lib/cloudinary";
+import { getGoogleAdsenseClient, isGoogleAdsenseEnabled } from "@/lib/adsense";
 import { cn } from "@/lib/utils";
 import { isCommandAvailable, YTDLP_PATH } from "@/lib/server-utils";
 
@@ -94,6 +96,9 @@ export default async function AdminDashboard() {
   const discoverStoreStats = await stat(discoverStorePaths.storeFile).catch(
     () => null,
   );
+  const cloudinaryConfig = getCloudinaryConfig();
+  const adsenseClient = getGoogleAdsenseClient();
+  const adsenseEnabled = isGoogleAdsenseEnabled();
   const discoverStoreSizeKb = discoverStoreStats
     ? Math.max(1, Math.round(discoverStoreStats.size / 1024))
     : 0;
@@ -146,6 +151,24 @@ export default async function AdminDashboard() {
       detail: process.env.REMOVEBG_API_KEY
         ? "Hosted background removal can call Remove.bg."
         : "Add `REMOVEBG_API_KEY` to remove the hosted-demo disabled state.",
+    },
+    {
+      name: "Cloudinary previews",
+      status: cloudinaryConfig.cloudName ? "Configured" : "Needs cloud",
+      healthy: Boolean(cloudinaryConfig.cloudName),
+      detail: cloudinaryConfig.cloudName
+        ? `Using cloud "${cloudinaryConfig.cloudName}" for prompt and template preview images.`
+        : "Set `CLOUDINARY_CLOUD_NAME` before uploading new prompt/template screenshots.",
+    },
+    {
+      name: "Google AdSense",
+      status: adsenseEnabled ? "Enabled" : adsenseClient ? "Ready, off" : "Not configured",
+      healthy: Boolean(adsenseClient),
+      detail: adsenseEnabled
+        ? "Auto ads script and ads.txt are active for the current deployment."
+        : adsenseClient
+          ? "Publisher ID is present. Enable only after the domain is approved in AdSense."
+          : "Set `NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT` and keep `NEXT_PUBLIC_GOOGLE_ADSENSE_ENABLED=false` until review is complete.",
     },
   ];
 

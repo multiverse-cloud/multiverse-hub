@@ -5,12 +5,13 @@ const CONTENT_SECURITY_POLICY = [
   "object-src 'none'",
   "frame-ancestors 'self'",
   "form-action 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://va.vercel-scripts.com https://cdnjs.cloudflare.com https://unpkg.com",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://va.vercel-scripts.com https://cdnjs.cloudflare.com https://unpkg.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
-  "img-src 'self' data: blob: https://images.unsplash.com https://img.youtube.com https://via.placeholder.com https://api.dicebear.com https://image.pollinations.ai https://api.qrserver.com https://res.cloudinary.com",
+  "img-src 'self' data: blob: https://images.unsplash.com https://img.youtube.com https://via.placeholder.com https://api.dicebear.com https://image.pollinations.ai https://api.qrserver.com https://res.cloudinary.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
   "media-src 'self' blob: data:",
-  "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com https://cdnjs.cloudflare.com https://unpkg.com",
+  "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com https://cdnjs.cloudflare.com https://unpkg.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
+  "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
   "worker-src 'self' blob: https://cdnjs.cloudflare.com",
 ].join('; ')
 

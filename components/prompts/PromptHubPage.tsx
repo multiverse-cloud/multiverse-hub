@@ -95,9 +95,9 @@ function PromptShowcaseCard({ prompt }: { prompt: PromptEntry }) {
     <Link
       href={`/prompts/${prompt.slug}`}
       prefetch={false}
-      className="group overflow-hidden rounded-xl border border-border/80 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_16px_40px_-24px_rgba(15,23,42,0.16)] dark:hover:border-slate-700"
+      className="group overflow-hidden rounded-lg border border-border/80 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_16px_40px_-24px_rgba(15,23,42,0.16)] dark:hover:border-slate-700"
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-slate-50 dark:bg-slate-950">
+      <div className="relative aspect-square overflow-hidden bg-slate-50 dark:bg-slate-950 sm:aspect-[4/3]">
         <PromptPreviewImage
           src={prompt.previewImage}
           alt={prompt.previewAlt}
@@ -114,9 +114,9 @@ function PromptShowcaseCard({ prompt }: { prompt: PromptEntry }) {
         ) : null}
       </div>
 
-      <div className="flex items-center justify-between gap-3 px-3.5 py-3 md:px-4">
-        <h3 className="line-clamp-2 text-sm font-semibold leading-5 text-foreground">{prompt.title}</h3>
-        <span className="shrink-0 text-xs font-semibold text-muted-foreground transition-colors group-hover:text-foreground">
+      <div className="flex items-center justify-between gap-2 px-3 py-2.5 md:px-4 md:py-3">
+        <h3 className="line-clamp-2 text-xs font-semibold leading-4 text-foreground sm:text-sm sm:leading-5">{prompt.title}</h3>
+        <span className="hidden shrink-0 text-xs font-semibold text-muted-foreground transition-colors group-hover:text-foreground sm:inline">
           Open
         </span>
       </div>
@@ -139,7 +139,7 @@ function PromptSection({
         <h2 className="text-lg font-bold tracking-tight text-foreground md:text-xl">{title}</h2>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 2xl:grid-cols-5">
         {prompts.map(prompt => (
           <PromptShowcaseCard key={prompt.slug} prompt={prompt} />
         ))}
@@ -187,7 +187,7 @@ export default function PromptHubPage({
     <div className="min-h-screen bg-background">
       <div className="relative overflow-hidden border-b border-border bg-background">
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-72 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.12),transparent_58%)] dark:bg-[radial-gradient(circle_at_top,rgba(96,165,250,0.14),transparent_58%)]" />
-        <div className="page-content py-7 md:py-9">
+        <div className="page-content py-5 md:py-8">
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
               <Sparkles className="h-3.5 w-3.5" />
@@ -228,7 +228,7 @@ export default function PromptHubPage({
                 href={buildPromptHref({ category: 'all', model: activeModel, query: searchQuery })}
                 prefetch={false}
                 className={cn(
-                  'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-[11px] font-semibold transition-colors sm:px-3 sm:text-xs',
+                  'inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-[10px] font-semibold transition-colors sm:h-9 sm:px-3 sm:text-xs',
                   activeCategory === 'all'
                     ? 'border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950'
                     : 'border-border bg-card text-muted-foreground hover:text-foreground'
@@ -245,7 +245,7 @@ export default function PromptHubPage({
                     href={buildPromptHref({ category: category.id, model: activeModel, query: searchQuery })}
                     prefetch={false}
                     className={cn(
-                      'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-[11px] font-semibold transition-colors sm:px-3 sm:text-xs',
+                      'inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-[10px] font-semibold transition-colors sm:h-9 sm:px-3 sm:text-xs',
                       activeCategory === category.id
                         ? 'border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950'
                         : 'border-border bg-card text-muted-foreground hover:text-foreground'
@@ -293,7 +293,7 @@ export default function PromptHubPage({
             </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-muted-foreground">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[11px] font-semibold text-muted-foreground sm:gap-3 sm:text-xs">
             <span>{totalPrompts} prompts</span>
             <span className="hidden h-1 w-1 rounded-full bg-border sm:inline-flex" />
             <span>{imagePrompts} visual prompts</span>
@@ -324,7 +324,7 @@ export default function PromptHubPage({
 
           {visiblePrompts.length > 0 ? (
             <>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
+              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 2xl:grid-cols-5">
                 {visiblePrompts.map(prompt => (
                   <PromptShowcaseCard key={prompt.slug} prompt={prompt} />
                 ))}

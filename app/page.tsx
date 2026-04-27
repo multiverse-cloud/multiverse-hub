@@ -4,11 +4,13 @@ import FAQSection from "@/components/home/FAQSection";
 import HeroSection from "@/components/home/HeroSection";
 import HeroStatsSection from "@/components/home/HeroStatsSection";
 import NewToolsSection from "@/components/home/NewToolsSection";
+import NewContentSection from "@/components/home/NewContentSection";
 import TrendingToolsSection from "@/components/home/TrendingToolsSection";
 import UniversesSection from "@/components/home/UniversesSection";
 import WhyMultiverse from "@/components/home/WhyMultiverse";
 import PublicLayout from "@/components/layout/PublicLayout";
 import { getTools } from "@/lib/db";
+import { SITE_URL } from "@/lib/site-url";
 
 export const revalidate = 3600;
 
@@ -29,14 +31,14 @@ export const metadata: Metadata = {
     "troubleshooting fixes",
   ],
   alternates: {
-    canonical: "https://multiverse-tools.vercel.app",
+    canonical: SITE_URL,
   },
   openGraph: {
     title: "Multiverse - Free Online Tools, UI Components, Templates, Prompts & Fixes",
     description:
       "A fast public workspace for creators and developers: download media, process files, copy UI, launch templates, and find practical fixes without sign-in.",
     type: "website",
-    url: "https://multiverse-tools.vercel.app",
+    url: SITE_URL,
   },
   twitter: {
     card: "summary",
@@ -152,6 +154,9 @@ export default async function HomePage() {
       </Suspense>
       <Suspense fallback={<ToolGridSkeleton />}>
         <NewToolsSection />
+      </Suspense>
+      <Suspense fallback={<ToolGridSkeleton />}>
+        <NewContentSection />
       </Suspense>
       <WhyMultiverse />
       <FAQSection />

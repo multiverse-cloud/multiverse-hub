@@ -35,6 +35,16 @@ export default function PromptPreviewImage({
     setCurrentSrc(src || fallbackSrc)
   }, [fallbackSrc, src])
 
+  useEffect(() => {
+    if (!currentSrc || currentSrc === fallbackSrc || loaded) return
+
+    const timer = window.setTimeout(() => {
+      setCurrentSrc(fallbackSrc)
+    }, 9000)
+
+    return () => window.clearTimeout(timer)
+  }, [currentSrc, fallbackSrc, loaded])
+
   return (
     <div className={cn('relative h-full w-full overflow-hidden bg-white dark:bg-slate-950', className)}>
       {!loaded ? (
@@ -42,6 +52,7 @@ export default function PromptPreviewImage({
       ) : null}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
+        key={currentSrc || fallbackSrc}
         src={currentSrc || fallbackSrc}
         alt={alt}
         loading={priority ? 'eager' : 'lazy'}
@@ -52,6 +63,8 @@ export default function PromptPreviewImage({
           if (currentSrc !== fallbackSrc) {
             setLoaded(false)
             setCurrentSrc(fallbackSrc)
+          } else {
+            setLoaded(true)
           }
         }}
         referrerPolicy={isRemoteUrl(currentSrc) ? 'no-referrer' : undefined}

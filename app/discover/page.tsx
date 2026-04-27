@@ -13,6 +13,7 @@ import {
   resolveDiscoverFacet,
   normalizeDiscoverSearchParam,
 } from "@/lib/discover-query";
+import { absoluteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
   title: "Discover – Rankings, Guides & Curated Picks",
@@ -29,14 +30,14 @@ export const metadata: Metadata = {
     title: "Discover – Rankings & Curated Picks | Multiverse",
     description: "Curated top-10 rankings, watch guides, and editorial picks.",
     type: "website",
-    url: "https://multiverse-tools.vercel.app/discover",
+    url: absoluteUrl("/discover"),
   },
   twitter: {
     card: "summary_large_image",
     title: "Discover – Rankings & Curated Picks",
     description: "Curated top-10 rankings, watch guides, and editorial picks.",
   },
-  alternates: { canonical: "https://multiverse-tools.vercel.app/discover" },
+  alternates: { canonical: absoluteUrl("/discover") },
 };
 
 export const revalidate = 3600;

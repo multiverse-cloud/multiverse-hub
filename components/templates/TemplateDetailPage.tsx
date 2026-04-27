@@ -43,7 +43,8 @@ export default function TemplateDetailPage({
     [reloadToken, template.slug, viewport],
   )
 
-  const downloadHref = `/templates/${template.slug}/download`
+  const downloadHref = template.downloadUrl || `/templates/${template.slug}/download`
+  const isExternalDownload = /^https?:\/\//i.test(downloadHref)
 
   async function handleShare() {
     const url = typeof window !== 'undefined' ? window.location.href : ''
@@ -213,6 +214,7 @@ export default function TemplateDetailPage({
           {/* Download */}
           <a
             href={downloadHref}
+            {...(isExternalDownload ? { target: '_blank', rel: 'noreferrer' } : {})}
             className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 py-2 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition-all hover:bg-blue-500 hover:shadow-blue-600/40 active:scale-95"
           >
             <Download className="h-3.5 w-3.5" />
@@ -358,12 +360,36 @@ export default function TemplateDetailPage({
                 <p className="text-xs text-slate-300">{template.license}</p>
               </div>
             )}
+
+            {(template.liveUrl || template.githubUrl || template.vercelDeployUrl) && (
+              <div>
+                <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">Publishing links</p>
+                <div className="space-y-2">
+                  {template.liveUrl ? (
+                    <a href={template.liveUrl} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl border border-white/8 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-300 transition-colors hover:bg-white/8 hover:text-white">
+                      Live Vercel preview <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  ) : null}
+                  {template.githubUrl ? (
+                    <a href={template.githubUrl} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl border border-white/8 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-300 transition-colors hover:bg-white/8 hover:text-white">
+                      GitHub source <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  ) : null}
+                  {template.vercelDeployUrl ? (
+                    <a href={template.vercelDeployUrl} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl border border-white/8 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-300 transition-colors hover:bg-white/8 hover:text-white">
+                      Deploy to Vercel <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  ) : null}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Footer CTA */}
           <div className="border-t border-white/8 p-5">
             <a
               href={downloadHref}
+              {...(isExternalDownload ? { target: '_blank', rel: 'noreferrer' } : {})}
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition-all hover:bg-blue-500"
             >
               <Download className="h-4 w-4" />

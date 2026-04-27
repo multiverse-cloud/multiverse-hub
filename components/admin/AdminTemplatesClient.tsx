@@ -2,7 +2,22 @@
 
 import { useDeferredValue, useEffect, useMemo, useState, useTransition } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, ChevronRight, Download, Eye, Plus, RefreshCw, RotateCcw, Save, Search, Upload } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  Cloud,
+  Download,
+  Eye,
+  Github,
+  Link2,
+  Plus,
+  RefreshCw,
+  Rocket,
+  RotateCcw,
+  Save,
+  Search,
+  Upload,
+} from 'lucide-react'
 import { parseTemplateImportPayload, type TemplateImportSummary } from '@/lib/template-import'
 import type { TemplateCategoryId, TemplateEntry, TemplatePlatformId } from '@/lib/template-library-data'
 import { cn, downloadBlob, readFileAsText, slugify } from '@/lib/utils'
@@ -230,6 +245,29 @@ export default function AdminTemplatesClient({
     setFeedback({ tone: 'success', title: 'Template export ready', message: 'The current UI templates JSON has been downloaded.' })
   }
 
+  function updateSelectedJsonField(field: keyof TemplateEntry, value: string) {
+    try {
+      const parsed = JSON.parse(jsonEditor || '{}') as TemplateEntry
+      const nextValue = value.trim()
+      const nextTemplate = {
+        ...parsed,
+        [field]: nextValue || undefined,
+      }
+      setJsonEditor(JSON.stringify(nextTemplate, null, 2))
+      setTemplatesState(previous =>
+        previous.map(template =>
+          template.id === selectedId ? { ...template, [field]: nextValue || undefined } : template
+        )
+      )
+    } catch {
+      setFeedback({
+        tone: 'error',
+        title: 'Fix JSON first',
+        message: 'The JSON editor has a syntax error, so quick publishing fields cannot be synced yet.',
+      })
+    }
+  }
+
   function saveCurrentTemplate() {
     if (!selectedTemplate) return
 
@@ -447,6 +485,80 @@ export default function AdminTemplatesClient({
                 <div className="rounded-2xl border border-border bg-background p-4 text-sm">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Category</p>
                   <p className="mt-2 font-semibold text-foreground">{selectedTemplate.categoryTitle}</p>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-border bg-background p-4">
+                <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                  <div>
+                    <p className="text-sm font-bold text-foreground">Publishing links</p>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                      Fast fields for card preview, Vercel live demo, and GitHub download routing. These sync into the JSON below.
+                    </p>
+                  </div>
+                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300">
+                    <Cloud className="h-3 w-3" />
+                    Cloud-ready
+                  </span>
+                </div>
+
+                <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                  {[
+                    {
+                      field: 'previewImage' as keyof TemplateEntry,
+                      label: 'Cloudinary preview image',
+                      placeholder: 'https://res.cloudinary.com/.../template-preview',
+                      icon: Cloud,
+                    },
+                    {
+                      field: 'cloudinaryPublicId' as keyof TemplateEntry,
+                      label: 'Cloudinary public ID',
+                      placeholder: 'multiverse/template-previews/template-slug',
+                      icon: Cloud,
+                    },
+                    {
+                      field: 'liveUrl' as keyof TemplateEntry,
+                      label: 'Vercel live preview link',
+                      placeholder: 'https://multiverse-templates.vercel.app/template-slug',
+                      icon: Rocket,
+                    },
+                    {
+                      field: 'vercelDeployUrl' as keyof TemplateEntry,
+                      label: 'Vercel deploy/import link',
+                      placeholder: 'https://vercel.com/new/clone?...',
+                      icon: Rocket,
+                    },
+                    {
+                      field: 'githubUrl' as keyof TemplateEntry,
+                      label: 'GitHub source link',
+                      placeholder: 'https://github.com/multiverse-cloud/multiverse-templates/tree/main/template',
+                      icon: Github,
+                    },
+                    {
+                      field: 'downloadUrl' as keyof TemplateEntry,
+                      label: 'Direct download link',
+                      placeholder: 'https://github.com/.../archive/refs/heads/main.zip',
+                      icon: Link2,
+                    },
+                  ].map(item => {
+                    const Icon = item.icon
+                    const value = (selectedTemplate[item.field] as string | undefined) || ''
+
+                    return (
+                      <label key={item.field} className="block">
+                        <span className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+                          <Icon className="h-3.5 w-3.5" />
+                          {item.label}
+                        </span>
+                        <input
+                          value={value}
+                          onChange={event => updateSelectedJsonField(item.field, event.target.value)}
+                          placeholder={item.placeholder}
+                          className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm outline-none transition-colors focus:border-slate-400 dark:focus:border-slate-600"
+                        />
+                      </label>
+                    )
+                  })}
                 </div>
               </div>
 

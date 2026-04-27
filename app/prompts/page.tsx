@@ -10,6 +10,7 @@ import {
   resolvePromptCategory,
   resolvePromptModel,
 } from "@/lib/prompt-query";
+import { absoluteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
   title:
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     description:
       "Browse premium prompts for ChatGPT, Claude, coding, work, study, image generation, and image editing workflows.",
     type: "website",
-    url: "https://multiverse-tools.vercel.app/prompts",
+    url: absoluteUrl("/prompts"),
   },
   twitter: {
     card: "summary_large_image",
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
     description:
       "Browse premium prompts for ChatGPT, Claude, coding, work, study, image generation, and image editing workflows.",
   },
-  alternates: { canonical: "https://multiverse-tools.vercel.app/prompts" },
+  alternates: { canonical: absoluteUrl("/prompts") },
 };
 
 export const revalidate = 3600;

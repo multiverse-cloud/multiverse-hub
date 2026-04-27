@@ -4,7 +4,7 @@ import PublicLayout from '@/components/layout/PublicLayout'
 import UniverseTopBar from '@/components/public/UniverseTopBar'
 import PromptDetailPage from '@/components/prompts/PromptDetailPage'
 import { getPromptBySlug, getPublishedPrompts, getRelatedPrompts } from '@/lib/prompt-db'
-import { SITE_URL } from '@/lib/site-url'
+import { SITE_URL, absoluteUrl } from '@/lib/site-url'
 
 type PromptSlugPageProps = {
   params: Promise<{ slug: string }>
@@ -83,7 +83,7 @@ export async function generateMetadata({ params }: PromptSlugPageProps): Promise
     openGraph: {
       title: prompt.seoTitle,
       description: prompt.metaDescription,
-      url: `/prompts/${prompt.slug}`,
+      url: absoluteUrl(`/prompts/${prompt.slug}`),
       type: 'article',
       images: [
         {
@@ -96,6 +96,9 @@ export async function generateMetadata({ params }: PromptSlugPageProps): Promise
       card: 'summary_large_image',
       title: prompt.seoTitle,
       description: prompt.metaDescription,
+    },
+    alternates: {
+      canonical: absoluteUrl(`/prompts/${prompt.slug}`),
     },
   }
 }

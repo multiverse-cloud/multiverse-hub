@@ -261,7 +261,7 @@ export default function TemplateLivePreview({
     return (
       <div className={cn('relative overflow-hidden bg-white dark:bg-slate-950', frameClass, className)}>
         {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
-        <div className="absolute inset-0 p-2">
+        <div className="absolute inset-0">
           <Image
             src={template.previewImage}
             alt={`${template.title} preview image`}
@@ -348,7 +348,7 @@ export default function TemplateLivePreview({
       <div className={cn('relative overflow-hidden rounded-xl border border-border bg-card', frameClass, className)}>
         {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(148,163,184,0.18),transparent_55%)]" />
-        <div className="absolute inset-0 p-3">
+        <div className="absolute inset-0">
           <Image
             src={template.previewImage}
             alt={`${template.title} preview image`}

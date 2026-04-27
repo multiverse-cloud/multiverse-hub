@@ -70,8 +70,11 @@ export type TemplateEntry = {
   files: TemplateSourceFile[]
   previewHtml?: string
   previewImage?: string
+  cloudinaryPublicId?: string
   previewCapturedAt?: string
   liveUrl?: string
+  vercelDeployUrl?: string
+  githubUrl?: string
   downloadUrl?: string
   featured?: boolean
   updatedAt: string

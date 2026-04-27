@@ -214,7 +214,7 @@ export default function DiscoverClient({
             </div>
             <span className="section-label">Discover</span>
           </div>
-          <h1 className="text-2xl font-bold sm:text-3xl md:text-4xl">
+          <h1 className="text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
             Curated Rankings And Guides
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground sm:text-base">
@@ -281,7 +281,13 @@ export default function DiscoverClient({
       </div>
 
       <div className="page-content">
-        <div className="mb-5 grid gap-3 sm:gap-4 grid-cols-2 md:grid-cols-3">
+        <div className="mb-4 flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-muted-foreground sm:hidden">
+          <span>{totalPublished} pages</span>
+          <span>{rankingCount} rankings</span>
+          <span>{guideCount} guides</span>
+        </div>
+
+        <div className="mb-5 hidden gap-3 sm:grid sm:gap-4 sm:grid-cols-2 md:grid-cols-3">
           <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
             <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:text-xs">
               Published Lists
@@ -433,7 +439,7 @@ export default function DiscoverClient({
                     {list.description}
                   </p>
 
-                  <div className="mt-3 space-y-1.5 sm:mt-4 sm:space-y-2">
+                  <div className="mt-3 hidden space-y-1.5 sm:mt-4 sm:block sm:space-y-2">
                     {topPreview.map((entry) => (
                       <div
                         key={entry}

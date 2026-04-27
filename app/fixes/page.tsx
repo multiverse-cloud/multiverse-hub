@@ -15,6 +15,7 @@ import {
   resolveFixCluster,
   normalizeFixSearchParam,
 } from "@/lib/fixes-query";
+import { absoluteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
   title: "Fixes Universe - 150 Problem Guides for Mobile, PC, Apps and Wi-Fi",
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     description:
       "Fix battery drain, slow phones, Wi-Fi issues, crashing apps, gaming lag, and common device problems with simple step-by-step guides.",
     type: "website",
-    url: "https://multiverse-tools.vercel.app/fixes",
+    url: absoluteUrl("/fixes"),
   },
   twitter: {
     card: "summary_large_image",
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
     description:
       "Fix battery drain, slow phones, Wi-Fi issues, crashing apps, gaming lag, and common device problems with simple step-by-step guides.",
   },
-  alternates: { canonical: "https://multiverse-tools.vercel.app/fixes" },
+  alternates: { canonical: absoluteUrl("/fixes") },
 };
 
 export const revalidate = 3600;

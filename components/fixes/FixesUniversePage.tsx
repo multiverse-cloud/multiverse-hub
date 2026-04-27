@@ -161,14 +161,14 @@ export default function FixesUniversePage({
   return (
     <div className="min-h-screen premium-shell">
       <section className="page-hero overflow-hidden border-b border-border bg-slate-50/70 dark:bg-slate-950">
-        <div className="page-hero-inner py-8 md:py-10">
-          <div className="rounded-[30px] border border-slate-200/80 bg-white/92 p-6 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.35)] dark:border-slate-800/80 dark:bg-slate-950/88 md:p-8">
+        <div className="page-hero-inner py-5 md:py-10">
+          <div className="rounded-2xl border border-slate-200/80 bg-white/92 p-4 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.35)] dark:border-slate-800/80 dark:bg-slate-950/88 md:rounded-[30px] md:p-8">
             <div className="max-w-4xl">
               <div className="page-badge border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-900/50 dark:bg-orange-950/30 dark:text-orange-300">
                 <ShieldAlert className="h-4 w-4" />
                 Fixes Universe
               </div>
-              <h1 className="mt-4 font-display text-4xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50 md:text-5xl">
+              <h1 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50 md:mt-4 md:text-5xl">
                 150 easy fixes for phones, PCs, apps, games, and Wi-Fi.
               </h1>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base">
@@ -176,7 +176,7 @@ export default function FixesUniversePage({
               </p>
             </div>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <div className="mt-6 hidden gap-3 sm:grid sm:grid-cols-3">
               <div className="rounded-2xl border border-border bg-card p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Pages</p>
                 <p className="mt-2 text-2xl font-black tracking-tight">{totalGuides}</p>
@@ -191,12 +191,12 @@ export default function FixesUniversePage({
               </div>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-2">
+            <div className="-mx-1 mt-4 flex gap-2 overflow-x-auto px-1 pb-1 scrollbar-hide md:mt-6 md:flex-wrap md:overflow-visible md:pb-0">
               <Link
                 href={buildFixesHref('all')}
                 prefetch={false}
                 className={cn(
-                  'rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
+                  'shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
                   activeCluster === 'all'
                     ? 'border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950'
                     : 'border-border bg-card text-muted-foreground hover:text-foreground'
@@ -210,7 +210,7 @@ export default function FixesUniversePage({
                   href={buildFixesHref(cluster.id)}
                   prefetch={false}
                   className={cn(
-                    'rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
+                    'shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
                     activeCluster === cluster.id
                       ? 'border-orange-600 bg-orange-600 text-white dark:border-orange-400 dark:bg-orange-400 dark:text-slate-950'
                       : 'border-border bg-card text-muted-foreground hover:text-foreground'
@@ -224,8 +224,8 @@ export default function FixesUniversePage({
         </div>
       </section>
 
-      <div className="page-content space-y-8">
-        <section className="grid gap-3 md:grid-cols-3">
+      <div className="page-content space-y-6 md:space-y-8">
+        <section className="hidden gap-3 md:grid md:grid-cols-3">
           {FIXES_SIGNAL_BLOCKS.map(block => (
             <div key={block.title} className="rounded-2xl border border-border bg-card p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{block.title}</p>

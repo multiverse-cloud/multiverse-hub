@@ -1,8 +1,11 @@
 import type { Metadata } from 'next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
+import AdsenseScript from '@/components/ads/AdsenseScript'
 import SourceHubChrome from '@/components/source-hub/SourceHubChrome'
 import AppProviders from '@/components/providers/AppProviders'
+import { getGoogleAdsenseClient } from '@/lib/adsense'
+import { LANGUAGE_DISCOVERY_META } from '@/lib/seo-languages'
 import { SITE_URL, absoluteUrl } from '@/lib/site-url'
 import './globals.css'
 
@@ -23,6 +26,8 @@ const jetbrains = JetBrains_Mono({
   variable: '--font-jetbrains',
   display: 'swap',
 })
+
+const googleAdsenseClient = getGoogleAdsenseClient()
 
 export const metadata: Metadata = {
   title: {
@@ -55,6 +60,13 @@ export const metadata: Metadata = {
   creator: 'Multiverse',
   publisher: 'Multiverse Tools',
   metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      en: SITE_URL,
+      'x-default': SITE_URL,
+    },
+  },
   icons: {
     icon: '/SiteLogo.png',
     apple: '/SiteLogo.png',
@@ -82,6 +94,11 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  },
+  other: {
+    'content-language': 'en',
+    'available-languages': LANGUAGE_DISCOVERY_META,
+    ...(googleAdsenseClient ? { 'google-adsense-account': googleAdsenseClient } : {}),
   },
 }
 
@@ -168,6 +185,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(GLOBAL_SITE_SCHEMA) }}
         />
+        <AdsenseScript />
         <link rel="icon" href="/SiteLogo.png" type="image/png" />
       </head>
       <body className="mobile-viewport-fix min-h-[100dvh] overflow-x-hidden bg-background font-sans text-foreground antialiased safe-area-top">
