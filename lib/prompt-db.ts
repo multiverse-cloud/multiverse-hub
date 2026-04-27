@@ -12,7 +12,7 @@ import { getPromptPreviewDefault, isPromptPlaceholderPreview } from '@/lib/promp
 import { getMergedLocalPromptEntries, saveLocalPrompt, saveLocalPrompts } from '@/lib/prompt-local-store'
 
 const PROMPTS_TAG = 'prompts'
-const PROMPTS_MEMORY_CACHE_MS = 60 * 1000
+const PROMPTS_MEMORY_CACHE_MS = 60 * 60 * 1000
 
 let promptLibraryCache:
   | {

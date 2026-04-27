@@ -38,6 +38,8 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://multiverse-tools.vercel.app/templates' },
 }
 
+export const revalidate = 3600;
+
 interface TemplatesPageProps {
   searchParams?: Promise<{
     page?: string | string[]

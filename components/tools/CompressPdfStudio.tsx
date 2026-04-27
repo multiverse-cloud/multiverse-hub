@@ -267,6 +267,28 @@ export default function CompressPdfStudio({ tool }: { tool: Tool }) {
           )}
         </div>
 
+        {file && (
+          <div className="flex gap-2 sm:hidden">
+            <button
+              type="button"
+              onClick={handleCompress}
+              disabled={loading}
+              className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55"
+            >
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+              Compress PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => setFile(null)}
+              className="inline-flex min-h-11 items-center justify-center rounded-xl bg-slate-100 px-3 text-slate-700 transition active:scale-[0.98]"
+              aria-label="Reset"
+            >
+              Reset
+            </button>
+          </div>
+        )}
+
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start sm:gap-4">
           <div className="space-y-2 sm:space-y-3">
             <h3 className="font-display text-base font-bold tracking-tight text-slate-950 sm:text-lg">
@@ -355,7 +377,7 @@ export default function CompressPdfStudio({ tool }: { tool: Tool }) {
         </div>
       </div>
 
-      <aside className="space-y-3 xl:sticky xl:top-24 sm:space-y-4">
+      <aside className={cn("space-y-3 xl:sticky xl:top-24 sm:space-y-4", !file && !outputBlob && "hidden sm:block")}>
         <div className="premium-card p-4 shadow-[0_16px_32px_-28px_rgba(37,99,235,0.35)] sm:p-6">
           <div className="mb-4 flex items-center justify-between sm:mb-5">
             <h2 className="font-display text-sm font-bold tracking-tight text-slate-950 sm:text-base">
@@ -437,7 +459,7 @@ export default function CompressPdfStudio({ tool }: { tool: Tool }) {
                   type="button"
                   onClick={handleCompress}
                   disabled={!file || loading}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2.5 font-display text-xs font-bold tracking-tight text-slate-950 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:bg-white/70 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
+                  className={cn("inline-flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2.5 font-display text-xs font-bold tracking-tight text-slate-950 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:bg-white/70 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm", !file && "hidden sm:inline-flex")}
                 >
                   {loading ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin sm:h-4 sm:w-4" />

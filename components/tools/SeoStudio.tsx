@@ -15,7 +15,6 @@ import {
 } from 'lucide-react'
 import type { Tool } from '@/lib/tools-data'
 import { cn, downloadBlob } from '@/lib/utils'
-import MobileToolActionBar from './MobileToolActionBar'
 
 const SEO_COPY = {
   'backlink-checker': { eyebrow: 'Off-page review', title: 'Backlink Checker', summary: 'Review backlink-style outreach signals and anchor opportunities from a focused domain workspace.', badges: ['Domain input', 'Signal review', 'Anchor ideas'], actionLabel: 'Review link signals' },
@@ -296,17 +295,10 @@ export default function SeoStudio({ tool }: { tool: Tool }) {
     if (!result?.output) return
     downloadBlob(new Blob([result.output], { type: 'text/plain;charset=utf-8' }), `${tool.slug}.txt`)
   }
+  const hasSeoInput = primaryInput.trim().length > 0
 
   return (
     <div className="space-y-4 sm:space-y-8" data-tool-shell="true">
-      <MobileToolActionBar
-        primaryLabel={copy.actionLabel}
-        onPrimary={handleProcess}
-        primaryDisabled={loading}
-        loading={loading}
-        secondaryLabel="Reset"
-        onSecondary={resetAll}
-      />
       <header className="max-w-3xl">
         <div className="flex flex-wrap gap-1.5 sm:gap-2">{copy.badges.map(item => <span key={item} className="premium-chip">{item}</span>)}</div>
         <p className="mt-3 premium-kicker sm:mt-6">{copy.eyebrow}</p>
@@ -349,9 +341,31 @@ export default function SeoStudio({ tool }: { tool: Tool }) {
               </div>
             </div>
           </section>
+
+          {hasSeoInput && (
+            <div className="flex gap-2 sm:hidden">
+              <button
+                type="button"
+                onClick={handleProcess}
+                disabled={loading}
+                className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55"
+              >
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+                {copy.actionLabel}
+              </button>
+              <button
+                type="button"
+                onClick={resetAll}
+                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-slate-100 px-3 text-slate-700 transition active:scale-[0.98] dark:bg-slate-800 dark:text-slate-100"
+                aria-label="Reset workspace"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </button>
+            </div>
+          )}
         </div>
 
-        <div className="space-y-5">
+        <div className={cn("space-y-5", !hasSeoInput && !result && "hidden sm:block")}>
           <section className="premium-card p-5">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">Live process</h2>
@@ -404,7 +418,7 @@ export default function SeoStudio({ tool }: { tool: Tool }) {
         </section>
       )}
 
-      <div className="flex flex-wrap gap-3">
+      <div className="hidden flex-wrap gap-3 sm:flex">
         <button type="button" onClick={handleProcess} disabled={loading} className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#24389c,#465fd6)] px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3 sm:text-sm">
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
           {copy.actionLabel}

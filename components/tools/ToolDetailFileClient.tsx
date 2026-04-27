@@ -24,7 +24,6 @@ import { cn, copyToClipboard, downloadBlob, formatBytes } from '@/lib/utils'
 import type { FilePreviewType, FileProcessResult, FileResultMetric } from './processors/types'
 import { buildDropzoneAccept, formatAcceptedFormats } from './file-accept'
 import toast from 'react-hot-toast'
-import MobileToolActionBar from './MobileToolActionBar'
 
 type ExtraInputConfig = {
   label: string
@@ -413,18 +412,10 @@ export default function ToolDetailFileClient({ tool }: { tool: Tool }) {
   const btnLabel = loading ? 'Processing...' : 'Process File'
   const metricsToRender = resultMetrics.length > 0 ? resultMetrics : buildFallbackMetrics(outputBlob, outputFilename)
   const showPreviewGrid = Boolean(sourcePreviewUrl || resultPreviewUrl)
+  const hasFileInput = files.length > 0
 
   return (
     <div className="space-y-4 p-4 sm:space-y-6 sm:p-5 md:p-6">
-      <MobileToolActionBar
-        primaryLabel={btnLabel}
-        onPrimary={handleProcess}
-        primaryDisabled={files.length === 0}
-        loading={loading}
-        secondaryLabel="Reset"
-        onSecondary={resetAll}
-        secondaryDisabled={!output && files.length === 0 && !outputBlob}
-      />
       <div className="hidden gap-3 sm:grid sm:grid-cols-3">
         {toolHighlights.map(item => (
           <div key={item} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
@@ -442,6 +433,28 @@ export default function ToolDetailFileClient({ tool }: { tool: Tool }) {
         onRemove={index => setFiles(current => current.filter((_, itemIndex) => itemIndex !== index))}
         description={acceptLabel ? `Supported: ${acceptLabel}` : undefined}
       />
+
+      {hasFileInput && (
+        <div className="flex gap-2 sm:hidden">
+          <button
+            type="button"
+            onClick={handleProcess}
+            disabled={loading}
+            className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55"
+          >
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+            {btnLabel}
+          </button>
+          <button
+            type="button"
+            onClick={resetAll}
+            className="inline-flex min-h-11 items-center justify-center rounded-xl bg-slate-100 px-3 text-slate-700 transition active:scale-[0.98]"
+            aria-label="Reset"
+          >
+            <RefreshCw className="h-4 w-4" />
+          </button>
+        </div>
+      )}
 
       {hasAdvancedOptions && (
         <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:rounded-2xl sm:p-4">
@@ -570,7 +583,7 @@ export default function ToolDetailFileClient({ tool }: { tool: Tool }) {
         </div>
       )}
 
-      <div className="flex flex-wrap gap-3">
+      <div className="hidden flex-wrap gap-3 sm:flex">
         <button
           onClick={handleProcess}
           disabled={loading || files.length === 0}

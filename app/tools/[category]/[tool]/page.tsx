@@ -30,8 +30,8 @@ interface Props {
   params: Promise<{ category: string; tool: string }>;
 }
 
-export const revalidate = 0;
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+export const dynamicParams = true;
 
 const PDF_STUDIO_SLUGS = new Set(Object.keys(PDF_STUDIO_STATIC_CONTENT));
 
@@ -299,6 +299,8 @@ export default async function ToolPage({ params }: Props) {
 
   const runtimeStatus = getToolRuntimeStatus(tool);
 
+  const pageUrl = `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`;
+
   const schemaMarkup = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -311,7 +313,7 @@ export default async function ToolPage({ params }: Props) {
       price: "0.00",
       priceCurrency: "USD",
     },
-    url: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`,
+    url: pageUrl,
   };
 
   const breadcrumbSchema = {
@@ -340,7 +342,7 @@ export default async function ToolPage({ params }: Props) {
         "@type": "ListItem",
         position: 4,
         name: tool.name,
-        item: `https://multiverse-tools.vercel.app/tools/${tool.categorySlug}/${tool.slug}`,
+        item: pageUrl,
       },
     ],
   };
@@ -376,7 +378,54 @@ export default async function ToolPage({ params }: Props) {
     ],
   };
 
-  const combinedSchema = [schemaMarkup, breadcrumbSchema, faqSchema];
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: `How to use ${tool.name}`,
+    description: `Use ${tool.name} online in a few simple steps. No public account is required.`,
+    totalTime: "PT1M",
+    supply: tool.inputType === "file"
+      ? [{ "@type": "HowToSupply", name: tool.acceptedFormats?.join(", ") || "Supported file" }]
+      : undefined,
+    step: [
+      {
+        "@type": "HowToStep",
+        position: 1,
+        name:
+          tool.inputType === "file"
+            ? "Upload your file"
+            : tool.inputType === "url"
+              ? "Paste your URL"
+              : "Add your input",
+        text:
+          tool.inputType === "file"
+            ? `Upload a supported ${tool.acceptedFormats?.join(", ") || "file"} into the workspace.`
+            : tool.inputType === "url"
+              ? "Paste the public URL you want to process."
+              : "Paste or type the content you want to process.",
+        url: pageUrl,
+      },
+      {
+        "@type": "HowToStep",
+        position: 2,
+        name: "Adjust options",
+        text: "Choose the available settings that match your output needs.",
+        url: pageUrl,
+      },
+      {
+        "@type": "HowToStep",
+        position: 3,
+        name: "Process and export",
+        text:
+          tool.outputType === "file"
+            ? "Run the tool and download the finished file when it is ready."
+            : "Run the tool and copy the finished result from the output panel.",
+        url: pageUrl,
+      },
+    ],
+  };
+
+  const combinedSchema = [schemaMarkup, breadcrumbSchema, faqSchema, howToSchema];
 
   if (VIDEO_DOWNLOADER_TOOL_SLUGS.has(tool.slug)) {
     const downloaderRoute = getDownloaderRouteByToolSlug(tool.slug);

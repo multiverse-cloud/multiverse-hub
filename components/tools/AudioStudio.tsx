@@ -25,7 +25,6 @@ import { buildDropzoneAccept, formatAcceptedFormats } from './file-accept'
 import { handleAudioTextTool } from './processors/text-audio'
 import { handleAudioTool } from './processors/file-media'
 import type { FileProcessResult } from './processors/types'
-import MobileToolActionBar from './MobileToolActionBar'
 
 type QueueItem = { id: string; file: File; previewUrl: string }
 
@@ -427,17 +426,10 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
       value: acceptsTextInput ? 'Voice output' : acceptLabel,
     },
   ]
+  const hasAudioInput = acceptsTextInput ? textInput.trim().length > 0 : queue.length > 0
 
   return (
     <div className="space-y-4 sm:space-y-8" data-tool-shell="true">
-      <MobileToolActionBar
-        primaryLabel={copy.actionLabel}
-        onPrimary={handleProcess}
-        primaryDisabled={loading}
-        loading={loading}
-        secondaryLabel="Reset"
-        onSecondary={resetAll}
-      />
       <header className="max-w-3xl">
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
           {copy.badges.map(item => (
@@ -484,7 +476,7 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
                 <input {...getInputProps()} />
                 <div
                   className={cn(
-                    'flex min-h-[300px] flex-col items-center justify-center rounded-[28px] border border-dashed px-8 py-10 text-center transition',
+                    'flex min-h-[150px] flex-col items-center justify-center rounded-[18px] border border-dashed px-4 py-6 text-center transition sm:min-h-[300px] sm:rounded-[28px] sm:px-8 sm:py-10',
                     isDragActive
                       ? 'border-indigo-400 bg-indigo-50/70 dark:border-indigo-500 dark:bg-indigo-950/20'
                       : 'border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70'
@@ -581,6 +573,28 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
               </div>
             )}
           </section>
+
+          {hasAudioInput && (
+            <div className="flex gap-2 sm:hidden">
+              <button
+                type="button"
+                onClick={handleProcess}
+                disabled={loading}
+                className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55"
+              >
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+                {copy.actionLabel}
+              </button>
+              <button
+                type="button"
+                onClick={resetAll}
+                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-slate-100 px-3 text-slate-700 transition active:scale-[0.98] dark:bg-slate-800 dark:text-slate-100"
+                aria-label="Reset workspace"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </button>
+            </div>
+          )}
 
           <section className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
             <div className="premium-card p-5 sm:p-6">
@@ -946,7 +960,7 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
         </div>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className={cn("grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]", !hasAudioInput && !result && "hidden sm:grid")}>
         <section className="premium-card overflow-hidden">
           <div className="border-b border-slate-200/70 px-5 py-4 dark:border-slate-800/70">
             <p className="premium-kicker">Preview</p>
@@ -997,7 +1011,7 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
           </div>
         </section>
 
-        <section className="premium-card p-5">
+        <section className="hidden premium-card p-5 sm:block">
           <p className="premium-kicker">Workflow note</p>
           <h2 className="mt-2 font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
             Keep it simple
@@ -1010,7 +1024,7 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
         </section>
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="hidden flex-wrap gap-3 sm:flex">
         <button
           type="button"
           onClick={handleProcess}

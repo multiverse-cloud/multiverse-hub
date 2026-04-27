@@ -188,20 +188,36 @@ export async function POST(req: NextRequest) {
     const meta = await pipeline.metadata()
 
     if (action === 'compress') {
-      const quality = parseInt(fields.quality || '80')
-      const format = (fields.format || meta.format || 'jpeg') as 'jpeg' | 'png' | 'webp'
+      const quality = Math.max(35, Math.min(95, parseInt(fields.quality || '78')))
+      const requestedFormat = fields.format as 'jpeg' | 'png' | 'webp' | undefined
+      const inputFormat = (meta.format || 'jpeg') as 'jpeg' | 'png' | 'webp'
+      const format = requestedFormat || (inputFormat === 'webp' ? 'webp' : 'webp')
 
-      if (format === 'jpeg') pipeline = pipeline.jpeg({ quality, mozjpeg: true })
-      else if (format === 'png') pipeline = pipeline.png({ quality, compressionLevel: 9 })
-      else if (format === 'webp') pipeline = pipeline.webp({ quality })
+      const buildCompressed = (targetFormat: 'jpeg' | 'png' | 'webp', targetQuality: number) => {
+        let next = sharp(imgFile.buffer).rotate()
+        if (targetFormat === 'jpeg') next = next.flatten({ background: '#ffffff' }).jpeg({ quality: targetQuality, mozjpeg: true })
+        else if (targetFormat === 'png') next = next.png({ compressionLevel: 9, adaptiveFiltering: true, palette: true })
+        else next = next.webp({ quality: targetQuality, effort: 5 })
+        return next.toBuffer()
+      }
 
-      const buf = await pipeline.toBuffer()
-      const mime = format === 'jpeg' ? 'image/jpeg' : format === 'png' ? 'image/png' : 'image/webp'
-      const ext = format === 'jpeg' ? 'jpg' : format
+      let buf = await buildCompressed(format, quality)
+      let outputFormat = format
+
+      if (buf.length >= imgFile.buffer.length && !requestedFormat && inputFormat !== 'webp') {
+        const aggressive = await buildCompressed('webp', Math.max(45, quality - 22))
+        if (aggressive.length < buf.length) {
+          buf = aggressive
+          outputFormat = 'webp'
+        }
+      }
+
+      const mime = outputFormat === 'jpeg' ? 'image/jpeg' : outputFormat === 'png' ? 'image/png' : 'image/webp'
+      const ext = outputFormat === 'jpeg' ? 'jpg' : outputFormat
       const res = fileResponse(buf, `compressed.${ext}`, mime)
       res.headers.set('X-Original-Size', imgFile.buffer.length.toString())
       res.headers.set('X-Output-Size', buf.length.toString())
-      res.headers.set('X-Savings', Math.round((1 - buf.length / imgFile.buffer.length) * 100).toString())
+      res.headers.set('X-Savings', Math.max(0, Math.round((1 - buf.length / imgFile.buffer.length) * 100)).toString())
       return res
     }
 

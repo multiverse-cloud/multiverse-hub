@@ -1,10 +1,21 @@
 ﻿import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import TemplateDetailPage from '@/components/templates/TemplateDetailPage'
-import { getRelatedTemplates, getTemplateBySlug } from '@/lib/template-db'
+import { getPublishedTemplates, getRelatedTemplates, getTemplateBySlug } from '@/lib/template-db'
 
 type TemplateSlugPageProps = {
   params: Promise<{ slug: string }>
+}
+
+export const revalidate = 3600
+export const dynamicParams = true
+
+export async function generateStaticParams() {
+  const templates = await getPublishedTemplates()
+
+  return templates.map(template => ({
+    slug: template.slug,
+  }))
 }
 
 function getFrameworkLabel(value: string) {

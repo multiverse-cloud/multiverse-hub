@@ -10,6 +10,17 @@ type DiscoverPageProps = {
   params: Promise<{ slug: string }>
 }
 
+export const revalidate = 3600
+export const dynamicParams = true
+
+export async function generateStaticParams() {
+  const lists = await getPublishedDiscoverLists()
+
+  return lists.map(list => ({
+    slug: list.slug,
+  }))
+}
+
 function buildDiscoverStructuredData(baseUrl: string, list: DiscoverList) {
   const pageUrl = `${baseUrl}/discover/${list.slug}`
 

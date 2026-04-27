@@ -39,6 +39,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://multiverse-tools.vercel.app/discover" },
 };
 
+export const revalidate = 3600;
+
 interface DiscoverPageProps {
   searchParams?: Promise<{
     page?: string | string[];

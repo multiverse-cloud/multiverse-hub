@@ -29,7 +29,6 @@ import { cn, downloadBlob, formatBytes } from '@/lib/utils'
 import { buildDropzoneAccept, formatAcceptedFormats } from './file-accept'
 import { handleVideoTool } from './processors/file-media'
 import type { FilePreviewType, FileProcessResult, FileResultMetric } from './processors/types'
-import MobileToolActionBar from './MobileToolActionBar'
 
 type QueueItem = { id: string; file: File; previewUrl: string }
 type ThumbnailVariant = { label: string; size: string; url: string }
@@ -179,6 +178,7 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
 
   const activeItem = queue.find(item => item.id === activeId) || queue[0] || null
   const sourcePreviewType = getPreviewType(activeItem?.file)
+  const hasVideoInput = tool.slug === 'youtube-thumbnail-downloader' ? urlInput.trim().length > 0 : queue.length > 0
   const statusLabel = loading ? processMessage.loading : result ? processMessage.done : processMessage.idle
 
   useEffect(() => () => {
@@ -368,14 +368,6 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
 
     return (
       <div className="space-y-5" data-tool-shell="true">
-        <MobileToolActionBar
-          primaryLabel="Download"
-          onPrimary={handleProcess}
-          primaryDisabled={loading || !urlInput.trim()}
-          loading={loading}
-          secondaryLabel="Reset"
-          onSecondary={resetAll}
-        />
         <header className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1.5 text-xs font-black uppercase tracking-[0.16em] text-red-700 ring-1 ring-red-100 dark:bg-red-950/30 dark:text-red-300 dark:ring-red-900/40">
             <Youtube className="h-4 w-4" />
@@ -519,14 +511,6 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
 
   return (
     <div className="space-y-4 sm:space-y-8" data-tool-shell="true">
-      <MobileToolActionBar
-        primaryLabel={tool.slug === 'youtube-thumbnail-downloader' ? 'Fetch thumbnails' : copy.actionLabel}
-        onPrimary={handleProcess}
-        primaryDisabled={loading || (tool.slug === 'youtube-thumbnail-downloader' ? !urlInput.trim() : queue.length === 0)}
-        loading={loading}
-        secondaryLabel="Reset"
-        onSecondary={resetAll}
-      />
       <header className="max-w-3xl">
         <div className="flex flex-wrap gap-1.5 sm:gap-2">{copy.badges.map(item => <span key={item} className="premium-chip">{item}</span>)}</div>
         <p className="mt-3 premium-kicker sm:mt-6">{copy.eyebrow}</p>
@@ -580,6 +564,28 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
             )}
           </section>
 
+          {tool.slug !== 'youtube-thumbnail-downloader' && hasVideoInput && (
+            <div className="flex gap-2 sm:hidden">
+              <button
+                type="button"
+                onClick={handleProcess}
+                disabled={loading || queue.length === 0 || (tool.slug === 'merge-video' && queue.length < 2)}
+                className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55"
+              >
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+                {copy.actionLabel}
+              </button>
+              <button
+                type="button"
+                onClick={resetAll}
+                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-slate-100 px-3 text-slate-700 transition active:scale-[0.98] dark:bg-slate-800 dark:text-slate-100"
+                aria-label="Reset workspace"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+
           {tool.slug !== 'youtube-thumbnail-downloader' && (
             <section className="premium-panel overflow-hidden">
               {activeItem ? (
@@ -594,7 +600,7 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
                   </div>
                 </>
               ) : (
-                <div className="flex h-[320px] items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950/30 dark:text-slate-400">{copy.emptyTitle}</div>
+                <div className="hidden h-[320px] items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950/30 dark:text-slate-400 sm:flex">{copy.emptyTitle}</div>
               )}
             </section>
           )}
@@ -677,7 +683,7 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
 
         {tool.slug !== 'youtube-thumbnail-downloader' && (
           <aside className="space-y-5">
-            <div className="premium-card p-5 shadow-[0_16px_32px_-28px_rgba(37,99,235,0.35)]">
+            <div className={cn("premium-card p-5 shadow-[0_16px_32px_-28px_rgba(37,99,235,0.35)]", !hasVideoInput && !result && "hidden sm:block")}>
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">Live process</h3>
                 <span className="text-sm font-bold text-indigo-600 dark:text-indigo-300">{loading ? `${Math.round(progress)}%` : result ? '100%' : 'Idle'}</span>
@@ -692,7 +698,7 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
               </div>
             </div>
 
-            <div className="noise relative overflow-hidden rounded-2xl bg-slate-950 p-6 text-white">
+            <div className={cn("noise relative overflow-hidden rounded-2xl bg-slate-950 p-6 text-white", !result && "hidden sm:block")}>
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.22),transparent_45%)]" />
               <div className="relative">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600/90"><CheckCircle2 className="h-6 w-6" /></div>

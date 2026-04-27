@@ -44,6 +44,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://multiverse-tools.vercel.app/fixes" },
 };
 
+export const revalidate = 3600;
+
 interface FixesPageProps {
   searchParams?: Promise<{
     page?: string | string[];

@@ -17,7 +17,6 @@ import {
 import type { Tool } from '@/lib/tools-data'
 import { cn, downloadBlob, formatBytes } from '@/lib/utils'
 import { getMaxFileSize } from '@/lib/file-limits'
-import MobileToolActionBar from './MobileToolActionBar'
 
 const FILE_COPY = {
   'csv-viewer': {
@@ -337,17 +336,10 @@ export default function FileViewerStudio({ tool }: { tool: Tool }) {
     setZipResult(null)
     setError('')
   }
+  const hasFileInput = Boolean(file) || textInput.trim().length > 0
 
   return (
     <div className="space-y-6" data-tool-shell="true">
-      <MobileToolActionBar
-        primaryLabel={copy.actionLabel}
-        onPrimary={handleProcess}
-        primaryDisabled={loading || (!file && !textInput.trim())}
-        loading={loading}
-        secondaryLabel="Reset"
-        onSecondary={handleReset}
-      />
       <header className="max-w-3xl">
         <div className="flex flex-wrap gap-2 hidden sm:flex">
           {copy.badges.map(item => (
@@ -420,9 +412,31 @@ export default function FileViewerStudio({ tool }: { tool: Tool }) {
               </div>
             )}
           </section>
+
+          {hasFileInput && (
+            <div className="flex gap-2 sm:hidden">
+              <button
+                type="button"
+                onClick={handleProcess}
+                disabled={loading}
+                className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55"
+              >
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                {copy.actionLabel}
+              </button>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-slate-100 px-3 text-slate-700 transition active:scale-[0.98] dark:bg-slate-800 dark:text-slate-100"
+                aria-label="Reset"
+              >
+                Reset
+              </button>
+            </div>
+          )}
         </div>
 
-        <div className="space-y-4">
+        <div className={cn("space-y-4", !hasFileInput && !result && !zipResult && "hidden sm:block")}>
           <section className="premium-card p-4">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-lg font-extrabold tracking-tight text-slate-950 dark:text-slate-50">Live process</h2>
@@ -642,7 +656,7 @@ export default function FileViewerStudio({ tool }: { tool: Tool }) {
       )}
 
       {/* Action buttons */}
-      <div className="flex flex-wrap gap-2">
+      <div className="hidden flex-wrap gap-2 sm:flex">
         <button
           type="button"
           onClick={handleProcess}

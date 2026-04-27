@@ -10,7 +10,7 @@ import {
 } from '@/lib/discover-local-store'
 
 const DISCOVER_TAG = 'discover'
-const DISCOVER_MEMORY_CACHE_MS = 60 * 1000
+const DISCOVER_MEMORY_CACHE_MS = 60 * 60 * 1000
 
 let allDiscoverListsCache:
   | {

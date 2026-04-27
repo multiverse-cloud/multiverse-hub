@@ -38,6 +38,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://multiverse-tools.vercel.app/prompts" },
 };
 
+export const revalidate = 3600;
+
 interface PromptsPageProps {
   searchParams?: Promise<{
     page?: string | string[];

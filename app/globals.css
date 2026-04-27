@@ -757,12 +757,96 @@ body {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
     padding: 0.625rem 1rem;
     border-radius: 0.75rem;
     border: 1px solid rgba(226, 232, 240, 0.8);
     background: linear-gradient(135deg, #ffffff, #f8fafc);
     transition: all 0.2s ease;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+@media (max-width: 640px) {
+    [data-tool-shell="true"] {
+        overflow-x: hidden;
+    }
+
+    [data-tool-shell="true"] header {
+        margin-bottom: 0.75rem;
+    }
+
+    [data-tool-shell="true"] header .premium-chip,
+    [data-tool-shell="true"] header [class*="badge"] {
+        display: none;
+    }
+
+    [data-tool-shell="true"] header h1 {
+        font-size: 1.45rem !important;
+        line-height: 1.12 !important;
+        letter-spacing: -0.035em;
+    }
+
+    [data-tool-shell="true"] header p:not(.premium-kicker) {
+        margin-top: 0.45rem !important;
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        font-size: 0.82rem !important;
+        line-height: 1.45rem !important;
+    }
+
+    [data-tool-shell="true"] .premium-panel,
+    [data-tool-shell="true"] .premium-card {
+        border-radius: 0.9rem !important;
+        box-shadow: none !important;
+    }
+
+    [data-tool-shell="true"] .premium-panel:not(.overflow-hidden),
+    [data-tool-shell="true"] .premium-card:not(.overflow-hidden) {
+        padding: 0.9rem !important;
+    }
+
+    [data-tool-shell="true"] .premium-kicker {
+        font-size: 0.62rem !important;
+        letter-spacing: 0.14em !important;
+    }
+
+    [data-tool-shell="true"] .premium-option-chip {
+        border-radius: 0.65rem !important;
+        padding: 0.45rem 0.7rem !important;
+        font-size: 0.72rem !important;
+    }
+
+    [data-tool-shell="true"] .premium-textarea {
+        min-height: 8.5rem !important;
+        border-radius: 0.8rem !important;
+    }
+
+    [data-tool-shell="true"] .upload-zone {
+        border-width: 1px;
+        border-radius: 0.9rem;
+        padding: 1rem;
+        min-height: 5.75rem;
+        box-shadow: none;
+    }
+
+    [data-tool-shell="true"] .btn-primary,
+    [data-tool-shell="true"] .btn-secondary {
+        min-height: 2.6rem;
+        border-radius: 0.75rem;
+    }
+
+    .file-item-chip {
+        gap: 0.55rem;
+        padding: 0.55rem 0.65rem;
+    }
+
+    .file-item-chip > * {
+        min-width: 0;
+    }
 }
 .file-item-chip:hover {
     border-color: rgba(99, 102, 241, 0.2);

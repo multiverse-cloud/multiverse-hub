@@ -19,7 +19,6 @@ import { cn, downloadBlob, formatBytes } from "@/lib/utils";
 import { buildDropzoneAccept, formatAcceptedFormats } from "./file-accept";
 import { handleImageTool } from "./processors/file-image";
 import type { FileProcessResult } from "./processors/types";
-import MobileToolActionBar from "./MobileToolActionBar";
 
 const TRANSFORM_COPY = {
   "compress-image": {
@@ -615,16 +614,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-5">
-      <MobileToolActionBar
-        primaryLabel={copy.actionLabel}
-        onPrimary={handleProcess}
-        primaryDisabled={!file}
-        loading={loading}
-        secondaryLabel="Reset"
-        onSecondary={handleReset}
-        secondaryDisabled={!file && !result}
-      />
+    <div className="space-y-4 sm:space-y-5" data-tool-shell="true">
       <div className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr] sm:gap-6">
         <div className="space-y-4 sm:space-y-6">
           <div className="space-y-3 sm:space-y-4">
@@ -716,6 +706,28 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
               )}
             </div>
           </div>
+
+          {file && (
+            <div className="flex gap-2 sm:hidden">
+              <button
+                type="button"
+                onClick={handleProcess}
+                disabled={loading}
+                className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55"
+              >
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                {copy.actionLabel}
+              </button>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-slate-100 px-3 text-slate-700 transition active:scale-[0.98]"
+                aria-label="Reset workspace"
+              >
+                Reset
+              </button>
+            </div>
+          )}
 
           <div className="grid gap-3 lg:grid-cols-[1.12fr_0.88fr] sm:gap-4">
             <section className="rounded-xl bg-slate-100/90 p-4 sm:rounded-[1.8rem] sm:p-5">
@@ -893,7 +905,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                 type="button"
                 onClick={handleProcess}
                 disabled={!file || loading}
-                className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-[11px] font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 sm:rounded-2xl sm:px-5 sm:py-3 sm:text-sm"
+                className={cn("inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-[11px] font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 sm:rounded-2xl sm:px-5 sm:py-3 sm:text-sm", !file && "hidden sm:inline-flex")}
               >
                 {loading ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin sm:h-4 sm:w-4" />

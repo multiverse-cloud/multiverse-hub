@@ -17,7 +17,6 @@ import type { Tool } from '@/lib/tools-data'
 import { cn, downloadBlob } from '@/lib/utils'
 import { handleDevTool } from './processors/text-dev'
 import type { FileProcessResult } from './processors/types'
-import MobileToolActionBar from './MobileToolActionBar'
 
 const DEV_COPY = {
   'api-tester': { eyebrow: 'Request workspace', title: 'API Tester', summary: 'Send a request, inspect the response, and keep headers, method, and payload in one cleaner workspace.', badges: ['Request builder', 'Response stats', 'Headers and body'], actionLabel: 'Send request' },
@@ -297,17 +296,11 @@ export default function DevStudio({ tool }: { tool: Tool }) {
     if (!result?.output) return
     downloadBlob(new Blob([result.output], { type: 'text/plain;charset=utf-8' }), `${tool.slug}.txt`)
   }
+  const canRunWithoutInput = ['uuid-generator', 'cron-generator', 'cron-expression-generator', 'gitignore-generator', 'gradient-generator', 'css-gradient-generator'].includes(tool.slug)
+  const hasDevInput = inputText.trim().length > 0 || canRunWithoutInput
 
   return (
     <div className="space-y-4 sm:space-y-5" data-tool-shell="true">
-      <MobileToolActionBar
-        primaryLabel={copy.actionLabel}
-        onPrimary={handleProcess}
-        primaryDisabled={loading}
-        loading={loading}
-        secondaryLabel="Reset"
-        onSecondary={resetAll}
-      />
       <header className="max-w-3xl">
         <div className="flex flex-wrap gap-1.5">
           {copy.badges.map(item => (
@@ -350,6 +343,28 @@ export default function DevStudio({ tool }: { tool: Tool }) {
             )}
           </section>
 
+          {hasDevInput && (
+            <div className="flex gap-2 sm:hidden">
+              <button
+                type="button"
+                onClick={handleProcess}
+                disabled={loading}
+                className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55"
+              >
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+                {copy.actionLabel}
+              </button>
+              <button
+                type="button"
+                onClick={resetAll}
+                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-slate-100 px-3 text-slate-700 transition active:scale-[0.98] dark:bg-slate-800 dark:text-slate-100"
+                aria-label="Reset workspace"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+
           <section className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_280px] sm:gap-5">
             <div className="premium-card p-4 sm:p-5 sm:p-6">
               <div className="mb-4 flex items-center justify-between gap-2.5 sm:mb-5 sm:gap-3">
@@ -378,7 +393,7 @@ export default function DevStudio({ tool }: { tool: Tool }) {
           </section>
         </div>
 
-        <div className="space-y-4 sm:space-y-5">
+        <div className={cn("space-y-4 sm:space-y-5", !hasDevInput && !result && "hidden sm:block")}>
           <section className="premium-card p-4 sm:p-5">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-base font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:text-xl">Live process</h2>
@@ -437,7 +452,7 @@ export default function DevStudio({ tool }: { tool: Tool }) {
         </section>
       )}
 
-      <div className="flex flex-wrap gap-2">
+      <div className="hidden flex-wrap gap-2 sm:flex">
         <button type="button" onClick={handleProcess} disabled={loading} className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#24389c,#465fd6)] px-3 py-2 text-[11px] font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 sm:py-2.5 sm:text-xs sm:px-6 sm:py-3 sm:text-sm">
           {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin sm:h-4 sm:w-4" /> : <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
           {copy.actionLabel}

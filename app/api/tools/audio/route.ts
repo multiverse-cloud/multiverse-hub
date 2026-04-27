@@ -131,7 +131,11 @@ export async function POST(req: NextRequest) {
           fs.writeFileSync(inputPath, audio.buffer)
 
           await runFFmpeg(['-i', inputPath, '-acodec', 'libmp3lame', '-b:a', targetBitrate, '-y', outFile])
-          const outputSize = fs.statSync(outFile).size
+          let outputSize = fs.statSync(outFile).size
+          if (outputSize >= audio.buffer.length && targetBitrate !== '64k') {
+            await runFFmpeg(['-i', inputPath, '-acodec', 'libmp3lame', '-b:a', '64k', '-y', outFile])
+            outputSize = fs.statSync(outFile).size
+          }
           cleanupFiles(inputPath)
           return filePathResponse(outFile, 'compressed.mp3', 'audio/mpeg', {
             'X-Original-Size': audio.buffer.length.toString(),

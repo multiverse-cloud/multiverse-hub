@@ -3,10 +3,21 @@ import { notFound } from 'next/navigation'
 import PublicLayout from '@/components/layout/PublicLayout'
 import UniverseTopBar from '@/components/public/UniverseTopBar'
 import PromptDetailPage from '@/components/prompts/PromptDetailPage'
-import { getPromptBySlug, getRelatedPrompts } from '@/lib/prompt-db'
+import { getPromptBySlug, getPublishedPrompts, getRelatedPrompts } from '@/lib/prompt-db'
 
 type PromptSlugPageProps = {
   params: Promise<{ slug: string }>
+}
+
+export const revalidate = 3600;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const prompts = await getPublishedPrompts()
+
+  return prompts.map(prompt => ({
+    slug: prompt.slug,
+  }))
 }
 
 async function buildPromptStructuredData(baseUrl: string, slug: string) {

@@ -19,7 +19,6 @@ import { cn } from "@/lib/utils";
 import type { DownloadState, VideoInfo } from "./types";
 import DownloadActionButton from "./DownloadActionButton";
 import { formatDuration, formatUploadDate, formatViews } from "./helpers";
-import MobileToolActionBar from "../MobileToolActionBar";
 
 interface Props {
   info: VideoInfo;
@@ -205,19 +204,9 @@ export default function DownloaderWorkspaceSection({
   const stableWebmOptions = useMemo(() => webmOptions, [webmOptions]);
   const stableAudioOptions = useMemo(() => audioOptions, [audioOptions]);
   const formatCount = mp4Options.length + webmOptions.length + audioOptions.length;
-  const primaryDownload = mp4Options[0] || webmOptions[0] || audioOptions[0] || primaryThumbnail;
 
   return (
     <section className="bg-white pb-10 pt-5 dark:bg-slate-950 sm:pb-14 sm:pt-6">
-      {primaryDownload ? (
-        <MobileToolActionBar
-          primaryLabel={getButtonLabel(primaryDownload)}
-          onPrimary={() => void onDownload(primaryDownload)}
-          primaryDisabled={downloadState !== null && downloadState.id !== primaryDownload.id}
-          loading={downloadState?.id === primaryDownload.id}
-          primaryIcon="download"
-        />
-      ) : null}
       <PremiumContainer className="max-w-6xl px-4 sm:px-6">
         <div className="space-y-5">
           <article className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200/70 dark:bg-slate-900/55 dark:ring-slate-800 sm:p-4">

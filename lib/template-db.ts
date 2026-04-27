@@ -21,7 +21,7 @@ import {
 } from '@/lib/template-local-store'
 
 const TEMPLATES_TAG = 'templates'
-const TEMPLATE_MEMORY_CACHE_MS = 60 * 1000
+const TEMPLATE_MEMORY_CACHE_MS = 60 * 60 * 1000
 
 let templateLibraryCache:
   | {

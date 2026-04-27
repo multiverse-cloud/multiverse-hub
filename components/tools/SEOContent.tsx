@@ -1,6 +1,3 @@
-'use client'
-
-import React from 'react'
 import { CheckCircle2, HelpCircle, Lightbulb, ShieldCheck } from 'lucide-react'
 import type { Tool } from '@/lib/tools-data'
 

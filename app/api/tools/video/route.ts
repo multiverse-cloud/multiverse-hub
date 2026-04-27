@@ -156,18 +156,23 @@ export async function POST(req: NextRequest) {
                     ? '35'
                     : '28'
           const outFile = outputPath + '.mp4'
-          await runFFmpeg([
+          const runCompression = (targetCrf: string, audioBitrate: string) => runFFmpeg([
             '-i', inputPath,
             '-vcodec', 'libx264',
-            '-crf', crf,
+            '-crf', targetCrf,
             '-preset', 'fast',
             '-acodec', 'aac',
-            '-b:a', '128k',
+            '-b:a', audioBitrate,
             '-movflags', '+faststart',
             '-y', outFile,
           ])
 
-          const outputSize = fs.statSync(outFile).size
+          await runCompression(crf, '128k')
+          let outputSize = fs.statSync(outFile).size
+          if (outputSize >= video.buffer.length) {
+            await runCompression('38', '96k')
+            outputSize = fs.statSync(outFile).size
+          }
           cleanupFiles(inputPath)
           return filePathResponse(outFile, 'compressed.mp4', 'video/mp4', {
             'X-Original-Size': video.buffer.length.toString(),

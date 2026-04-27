@@ -7,7 +7,6 @@ import { Copy, CheckCircle, Loader2, RefreshCw, Play, AlertCircle, ExternalLink,
 import { cn, copyToClipboard, downloadBlob } from '@/lib/utils'
 import type { TextProcessResult } from './processors/types'
 import toast from 'react-hot-toast'
-import MobileToolActionBar from './MobileToolActionBar'
 
 function getPlaceholder(slug: string): string {
   const m: Record<string, string> = {
@@ -357,18 +356,10 @@ export default function ToolDetailTextClient({ tool }: { tool: Tool }) {
                 : tool.inputType === 'url'
                   ? 'Fetch'
                   : 'Run Tool'
+  const hasTextInput = textInput.trim().length > 0 || tool.categorySlug === 'calculator' || tool.slug === 'audio-recorder'
 
   return (
     <div className="space-y-4 p-4 sm:space-y-6 sm:p-5 md:p-6">
-      <MobileToolActionBar
-        primaryLabel={btnLabel}
-        onPrimary={tool.slug === 'audio-recorder' ? handleRecorderAction : handleProcess}
-        primaryDisabled={loading}
-        loading={loading}
-        secondaryLabel="Reset"
-        onSecondary={resetAll}
-        secondaryDisabled={!output && !textInput && !imagePreview && !outputBlob}
-      />
       {needsText && tool.slug !== 'audio-recorder' && (
         <div className="space-y-1.5">
           <label className="premium-label">
@@ -387,6 +378,28 @@ export default function ToolDetailTextClient({ tool }: { tool: Tool }) {
       )}
 
       {tool.slug === 'text-diff-checker' && <div className="space-y-1.5"><label className="premium-label">Second Text</label><textarea value={diffText2} onChange={e => setDiffText2(e.target.value)} placeholder="Paste second text..." rows={4} className="premium-textarea font-mono" /></div>}
+
+      {hasTextInput && tool.slug !== 'audio-recorder' && (
+        <div className="flex gap-2 sm:hidden">
+          <button
+            type="button"
+            onClick={handleProcess}
+            disabled={loading}
+            className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55"
+          >
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+            {btnLabel}
+          </button>
+          <button
+            type="button"
+            onClick={resetAll}
+            className="inline-flex min-h-11 items-center justify-center rounded-xl bg-slate-100 px-3 text-slate-700 transition active:scale-[0.98]"
+            aria-label="Reset"
+          >
+            <RefreshCw className="h-4 w-4" />
+          </button>
+        </div>
+      )}
 
       {tool.slug === 'regex-tester' && (
         <div className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-[minmax(0,1fr)_120px]">
@@ -463,7 +476,7 @@ export default function ToolDetailTextClient({ tool }: { tool: Tool }) {
         </div>
       )}
 
-      <div className="flex gap-3 flex-wrap">
+      <div className="hidden gap-3 flex-wrap sm:flex">
         <button onClick={tool.slug === 'audio-recorder' ? handleRecorderAction : handleProcess} disabled={loading} className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none">
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}{btnLabel}
         </button>
