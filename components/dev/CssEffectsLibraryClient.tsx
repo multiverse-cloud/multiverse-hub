@@ -624,8 +624,8 @@ export default function CssEffectsLibraryClient({
       <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-96 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(59,130,246,0.10),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(59,130,246,0.08),transparent)]" />
 
       <main className="relative mx-auto flex max-w-[1600px] flex-col gap-8 px-4 pb-20 pt-8 lg:flex-row lg:items-start lg:px-6">
-        <aside className="hidden w-64 shrink-0 self-start lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto xl:w-72">
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <aside className="hidden w-64 shrink-0 self-start lg:sticky lg:top-[88px] lg:block xl:w-72">
+          <div className="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             {FilterPanel}
           </div>
         </aside>

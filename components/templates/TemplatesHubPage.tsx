@@ -61,8 +61,8 @@ function TemplateCard({ template, large = false }: { template: TemplateEntry; la
     )}>
       {/* Full-width desktop preview — scaled iframe */}
       <div className={cn(
-        'relative overflow-hidden bg-[#eef2f7] dark:bg-slate-950',
-        large ? 'h-80' : 'h-56',
+        'relative overflow-hidden bg-white dark:bg-slate-950',
+        large ? 'h-96' : 'h-64',
       )}>
         <TemplateLivePreview template={template} compact className="rounded-none border-0 bg-transparent" />
         {/* Hover reveal overlay */}
@@ -119,13 +119,15 @@ function SortSelect({
       <select
         value={value}
         onChange={event => onChange(event.target.value as SortMode)}
-        className="h-10 appearance-none rounded-xl border border-slate-200 bg-white px-3 pr-9 text-sm font-semibold text-slate-900 shadow-sm outline-none transition-colors hover:border-slate-300 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-slate-600"
+        className="h-10 min-w-[154px] appearance-none rounded-lg border border-slate-200 bg-white px-3.5 pr-10 text-sm font-bold text-slate-800 shadow-[0_10px_24px_-18px_rgba(15,23,42,0.35)] outline-none transition-all hover:border-slate-300 hover:bg-slate-50 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-700 dark:hover:bg-slate-800 dark:focus:ring-slate-800"
       >
         <option value="newest">Newest First</option>
         <option value="name-asc">A to Z</option>
         <option value="name-desc">Z to A</option>
       </select>
-      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+      <span className="pointer-events-none absolute right-2.5 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+        <ChevronDown className="h-3.5 w-3.5" />
+      </span>
     </div>
   )
 }
@@ -381,8 +383,8 @@ export default function TemplatesHubPage({
 
       <main className="relative mx-auto flex max-w-[1600px] flex-col gap-8 px-4 pb-20 pt-8 lg:flex-row lg:items-start lg:px-6">
         {/* ─── Sidebar ─── */}
-        <aside className="hidden w-64 shrink-0 self-start lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto xl:w-72">
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <aside className="hidden w-64 shrink-0 self-start lg:sticky lg:top-[88px] lg:block xl:w-72">
+          <div className="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             {filterPanel}
           </div>
         </aside>

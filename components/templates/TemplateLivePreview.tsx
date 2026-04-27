@@ -250,6 +250,7 @@ export default function TemplateLivePreview({
   reloadToken?: number
 }) {
   const ratio = template.category === 'mobile' ? 'aspect-[10/16]' : compact ? 'aspect-[4/3]' : 'aspect-[16/10]'
+  const frameClass = compact ? 'h-full w-full' : ratio
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -258,9 +259,9 @@ export default function TemplateLivePreview({
 
   if (compact && template.previewImage) {
     return (
-      <div className={cn('relative overflow-hidden bg-card', ratio, className)}>
+      <div className={cn('relative overflow-hidden bg-white dark:bg-slate-950', frameClass, className)}>
         {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 p-2">
           <Image
             src={template.previewImage}
             alt={`${template.title} preview image`}
@@ -268,7 +269,7 @@ export default function TemplateLivePreview({
             sizes="(min-width: 1536px) 25vw, (min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
             onLoad={() => setLoaded(true)}
             className={cn(
-              'object-cover object-top transition-opacity duration-200',
+              'object-contain object-top transition-opacity duration-200',
               loaded ? 'opacity-100' : 'opacity-0'
             )}
           />
@@ -344,7 +345,7 @@ export default function TemplateLivePreview({
 
   if (template.previewImage) {
     return (
-      <div className={cn('relative overflow-hidden rounded-xl border border-border bg-card', ratio, className)}>
+      <div className={cn('relative overflow-hidden rounded-xl border border-border bg-card', frameClass, className)}>
         {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(148,163,184,0.18),transparent_55%)]" />
         <div className="absolute inset-0 p-3">
