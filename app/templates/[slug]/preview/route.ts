@@ -13,6 +13,10 @@ export async function GET(
     return new Response('Template preview not found.', { status: 404 })
   }
 
+  if (!template.previewHtml && template.files.length === 0 && template.liveUrl) {
+    return Response.redirect(template.liveUrl)
+  }
+
   const html = buildTemplatePreviewHtml(template)
   const embed = request.nextUrl.searchParams.get('embed') === '1'
   const body = embed ? html.replace('<body', '<body data-embed="1"') : html

@@ -38,10 +38,15 @@ export default function TemplateDetailPage({
   const [copied, setCopied] = useState(false)
   const [infoOpen, setInfoOpen] = useState(false)
 
+  const hasLocalPreview = Boolean(template.previewHtml || template.files.length > 0)
   const previewSrc = useMemo(
-    () => `/templates/${template.slug}/preview?embed=1&viewport=${viewport}&reload=${reloadToken}`,
-    [reloadToken, template.slug, viewport],
+    () =>
+      hasLocalPreview
+        ? `/templates/${template.slug}/preview?embed=1&viewport=${viewport}&reload=${reloadToken}`
+        : template.liveUrl || `/templates/${template.slug}/preview?embed=1&viewport=${viewport}&reload=${reloadToken}`,
+    [hasLocalPreview, reloadToken, template.liveUrl, template.slug, viewport],
   )
+  const isExternalPreview = /^https?:\/\//i.test(previewSrc)
 
   const downloadHref = template.downloadUrl || `/templates/${template.slug}/download`
   const isExternalDownload = /^https?:\/\//i.test(downloadHref)
@@ -283,7 +288,7 @@ export default function TemplateDetailPage({
                 iframeLoaded ? 'opacity-100' : 'opacity-0',
               )}
               onLoad={() => setIframeLoaded(true)}
-              sandbox="allow-scripts"
+              sandbox={isExternalPreview ? 'allow-scripts allow-same-origin' : 'allow-scripts'}
               style={{ minHeight: viewport === 'desktop' ? '100%' : '100dvh' }}
             />
           </div>

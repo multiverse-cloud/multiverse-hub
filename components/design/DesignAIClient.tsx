@@ -13,7 +13,6 @@ import {
   Sparkles,
   Wand2,
 } from "lucide-react";
-import { POPULAR_SITE_LANGUAGES } from "@/lib/seo-languages";
 import { callOpenRouter, cn, generateImage } from "@/lib/utils";
 
 const DESIGN_TOOLS = [
@@ -142,7 +141,6 @@ export default function DesignAIClient() {
   const [prompt, setPrompt] = useState("");
   const [output, setOutput] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const [language, setLanguage] = useState("English");
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<"code" | "preview">("preview");
 
@@ -175,7 +173,7 @@ export default function DesignAIClient() {
       } else {
         const systemPrompt = UI_SYSTEM_PROMPTS[activeTool];
         const result = await callOpenRouter(
-          [{ role: "user", content: `${prompt}\n\nRespond in ${language}. Keep the result practical, premium, and production-ready.` }],
+          [{ role: "user", content: prompt }],
           "openai/gpt-4o-mini",
           systemPrompt,
         );
@@ -260,21 +258,9 @@ export default function DesignAIClient() {
 
             {/* Prompt textarea */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between gap-3">
-                <label className="text-sm font-semibold text-slate-950 dark:text-slate-50">
-                  Prompt
-                </label>
-                <select
-                  value={language}
-                  onChange={event => setLanguage(event.target.value)}
-                  className="h-9 rounded-lg border border-border bg-card px-2.5 text-xs font-semibold text-foreground outline-none"
-                  aria-label="Output language"
-                >
-                  {POPULAR_SITE_LANGUAGES.map(item => (
-                    <option key={item.code} value={item.label}>{item.label}</option>
-                  ))}
-                </select>
-              </div>
+              <label className="text-sm font-semibold text-slate-950 dark:text-slate-50">
+                Prompt
+              </label>
               <textarea
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}

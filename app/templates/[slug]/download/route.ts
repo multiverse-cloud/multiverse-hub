@@ -22,6 +22,9 @@ function buildMetadata(template: NonNullable<Awaited<ReturnType<typeof getTempla
     sections: template.sections,
     bestFor: template.bestFor,
     liveUrl: template.liveUrl || null,
+    githubUrl: template.githubUrl || null,
+    downloadUrl: template.downloadUrl || null,
+    vercelDeployUrl: template.vercelDeployUrl || null,
     previewImage: template.previewImage || null,
     updatedAt: template.updatedAt,
     license: template.license,
@@ -43,6 +46,8 @@ function buildReadme(template: NonNullable<Awaited<ReturnType<typeof getTemplate
     `- Framework: ${template.frameworkLabel}`,
     `- Platform: ${template.platformLabel}`,
     template.liveUrl ? `- Live preview: ${template.liveUrl}` : null,
+    template.githubUrl ? `- Source: ${template.githubUrl}` : null,
+    template.downloadUrl ? `- Download: ${template.downloadUrl}` : null,
     '',
     '## Included files',
     '',
@@ -65,10 +70,18 @@ export async function GET(_request: Request, context: RouteContext) {
     return NextResponse.json({ error: 'Template not found.' }, { status: 404 })
   }
 
+  if (template.downloadUrl && /^https?:\/\//i.test(template.downloadUrl)) {
+    return NextResponse.redirect(template.downloadUrl)
+  }
+
+  if (template.githubUrl && /^https?:\/\//i.test(template.githubUrl) && template.files.length === 0) {
+    return NextResponse.redirect(template.githubUrl)
+  }
+
   const primaryFile = template.files.find(file => file.primary) || template.files[0]
 
   if (!primaryFile) {
-    return NextResponse.json({ error: 'Template source is unavailable.' }, { status: 404 })
+    return NextResponse.json({ error: 'Template source is unavailable. Add a downloadUrl or githubUrl for linked templates.' }, { status: 404 })
   }
 
   const zip = new JSZip()

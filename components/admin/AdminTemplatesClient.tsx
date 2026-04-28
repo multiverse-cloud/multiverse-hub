@@ -99,6 +99,52 @@ function createBlankTemplate(categories: CategoryOption[], platforms: PlatformOp
   }
 }
 
+function createLinkedTemplate(categories: CategoryOption[], platforms: PlatformOption[]): TemplateEntry {
+  const category = categories[0]
+  const platform = platforms.find(entry => entry.id === 'responsive') || platforms[0]
+  const today = new Date().toISOString().slice(0, 10)
+
+  return {
+    id: `template-link-${Date.now()}`,
+    slug: '',
+    title: '',
+    seoTitle: '',
+    metaDescription: '',
+    summary: '',
+    description: '',
+    category: category?.id || 'landing',
+    categoryTitle: category?.title || 'Landing Pages',
+    platform: platform?.id || 'responsive',
+    platformLabel: platform?.title || 'Responsive',
+    framework: 'html-tailwind',
+    frameworkLabel: 'HTML + Tailwind CSS',
+    templateType: 'template',
+    industry: '',
+    style: '',
+    audience: '',
+    tags: [],
+    techStack: ['HTML', 'Tailwind CSS'],
+    prompt: '',
+    sections: [],
+    layoutNotes: [],
+    responsiveNotes: [],
+    bestFor: [],
+    files: [],
+    previewImage: '',
+    liveUrl: '',
+    githubUrl: '',
+    downloadUrl: '',
+    featured: false,
+    updatedAt: today,
+    license: 'Free download',
+    priceLabel: 'Free',
+  }
+}
+
+function hasLinkedTemplateAssets(template: TemplateEntry) {
+  return Boolean(template.previewImage || template.cloudinaryPublicId || template.liveUrl || template.githubUrl || template.downloadUrl)
+}
+
 function normalizeForSave(template: TemplateEntry, categories: CategoryOption[], platforms: PlatformOption[]) {
   const category = categories.find(entry => entry.id === template.category)
   const platform = platforms.find(entry => entry.id === template.platform)
@@ -222,6 +268,18 @@ export default function AdminTemplatesClient({
     setFeedback({ tone: 'info', title: 'New template draft', message: 'Edit the JSON on the right and save when the code bundle is ready.' })
   }
 
+  function createLinkedTemplateDraft() {
+    const nextTemplate = createLinkedTemplate(categories, platforms)
+    setTemplatesState(previous => [nextTemplate, ...previous])
+    setSelectedId(nextTemplate.id)
+    setCurrentPage(1)
+    setFeedback({
+      tone: 'info',
+      title: 'New linked template draft',
+      message: 'Use this for Cloudinary preview + Vercel live preview + GitHub/download link templates without uploading full source JSON.',
+    })
+  }
+
   async function refreshTemplates() {
     setBusyAction('refresh')
     try {
@@ -276,8 +334,12 @@ export default function AdminTemplatesClient({
       try {
         const parsed = JSON.parse(jsonEditor) as TemplateEntry
         const normalized = normalizeForSave(parsed, categories, platforms)
-        if (!normalized.title || normalized.files.length === 0) {
-          throw new Error('Title and at least one source file are required before saving.')
+        if (!normalized.title) {
+          throw new Error('Title is required before saving.')
+        }
+
+        if (normalized.files.length === 0 && !hasLinkedTemplateAssets(normalized)) {
+          throw new Error('Add source files, or add Cloudinary/Vercel/GitHub/download links for a linked template.')
         }
 
         const response = await fetch('/api/admin/templates', {
@@ -353,7 +415,8 @@ export default function AdminTemplatesClient({
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <button type="button" onClick={createTemplateDraft} className="btn-secondary gap-2 px-4 py-2 text-sm"><Plus className="h-4 w-4" />New Template</button>
+          <button type="button" onClick={createTemplateDraft} className="btn-secondary gap-2 px-4 py-2 text-sm"><Plus className="h-4 w-4" />New JSON Template</button>
+          <button type="button" onClick={createLinkedTemplateDraft} className="btn-secondary gap-2 px-4 py-2 text-sm"><Link2 className="h-4 w-4" />New Linked Template</button>
           <button type="button" onClick={refreshTemplates} className="btn-secondary gap-2 px-4 py-2 text-sm" disabled={busyAction === 'refresh'}><RefreshCw className={cn('h-4 w-4', busyAction === 'refresh' && 'animate-spin')} />Refresh</button>
           <button type="button" onClick={exportTemplates} className="btn-secondary gap-2 px-4 py-2 text-sm"><Download className="h-4 w-4" />Export JSON</button>
           <button type="button" onClick={saveCurrentTemplate} className="btn-primary gap-2 px-4 py-2 text-sm" disabled={!selectedTemplate || isPending || busyAction === 'save'}><Save className="h-4 w-4" />Save Template</button>
@@ -393,7 +456,9 @@ export default function AdminTemplatesClient({
           <textarea value={importJson} onChange={event => setImportJson(event.target.value)} placeholder='{"templates":[...]}' className="h-52 w-full rounded-2xl border border-border bg-background px-4 py-3 font-mono text-xs leading-6 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" />
           <div className="rounded-2xl border border-border bg-background p-4 text-sm text-muted-foreground">
             <label className="inline-flex items-center gap-2 font-semibold text-foreground"><input type="checkbox" checked={replaceExisting} onChange={event => setReplaceExisting(event.target.checked)} className="h-4 w-4 rounded border-border" />Replace existing matches</label>
-            <p className="mt-3 text-xs leading-6">Each imported template should include title, category, platform, framework, files, tags, notes, and prompt fields.</p>
+            <p className="mt-3 text-xs leading-6">
+              Full JSON imports can include files and previewHtml. Linked imports can skip files if they include a Cloudinary preview plus Vercel/GitHub/download links.
+            </p>
             {importSummary ? (
               <div className="mt-4 space-y-2">
                 <p>Received: <span className="font-semibold text-foreground">{importSummary.received}</span></p>
@@ -436,7 +501,7 @@ export default function AdminTemplatesClient({
               >
                 <p className="text-sm font-semibold leading-6">{template.title}</p>
                 <p className={cn('mt-1 text-xs leading-5', selectedId === template.id ? 'text-white/80 dark:text-slate-700' : 'text-muted-foreground')}>
-                  {template.categoryTitle} • {template.files.length} files
+                  {template.categoryTitle} • {template.files.length > 0 ? `${template.files.length} files` : 'linked template'}
                 </p>
               </button>
             ))}
@@ -459,7 +524,7 @@ export default function AdminTemplatesClient({
                   <p className="premium-kicker">Template editor</p>
                   <h2 className="mt-1 text-2xl font-bold text-foreground">{selectedTemplate.title || 'Untitled template draft'}</h2>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    {selectedTemplate.frameworkLabel} • {selectedTemplate.platformLabel} • {selectedTemplate.files.length} files
+                    {selectedTemplate.frameworkLabel} • {selectedTemplate.platformLabel} • {selectedTemplate.files.length > 0 ? `${selectedTemplate.files.length} files` : 'linked template'}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -477,6 +542,9 @@ export default function AdminTemplatesClient({
                 <div className="rounded-2xl border border-border bg-background p-4 text-sm">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Files</p>
                   <p className="mt-2 text-2xl font-black text-foreground">{selectedTemplate.files.length}</p>
+                  {selectedTemplate.files.length === 0 ? (
+                    <p className="mt-1 text-xs font-semibold text-emerald-600 dark:text-emerald-300">Link-only</p>
+                  ) : null}
                 </div>
                 <div className="rounded-2xl border border-border bg-background p-4 text-sm">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Framework</p>

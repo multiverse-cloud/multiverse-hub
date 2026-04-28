@@ -33,7 +33,16 @@ function asTemplateArray(payload: unknown) {
 function isValidTemplateEntry(value: unknown): value is TemplateEntry {
   if (!value || typeof value !== 'object') return false
   const entry = value as Partial<TemplateEntry>
-  return typeof entry.title === 'string' && typeof entry.category === 'string' && Array.isArray(entry.files)
+  const hasFiles = Array.isArray(entry.files)
+  const hasLinkedAssets = Boolean(
+    entry.previewImage ||
+    entry.cloudinaryPublicId ||
+    entry.liveUrl ||
+    entry.githubUrl ||
+    entry.downloadUrl
+  )
+
+  return typeof entry.title === 'string' && typeof entry.category === 'string' && (hasFiles || hasLinkedAssets)
 }
 
 export function parseTemplateImportPayload(
