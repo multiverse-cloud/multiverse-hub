@@ -50,7 +50,7 @@ const EXTRA_INPUT_CONFIG: Record<string, ExtraInputConfig> = {
   'pdf-watermark': { label: 'Watermark Text', placeholder: 'CONFIDENTIAL' },
   'protect-pdf': { label: 'Password', placeholder: 'Enter the password to set on this PDF' },
   'unlock-pdf': { label: 'Password', placeholder: 'Enter the current PDF password' },
-  'add-watermark-image': { label: 'Watermark Text', placeholder: 'Multiverse', helper: 'Short watermark text works best on mobile images.' },
+  'add-watermark-image': { label: 'Watermark Text', placeholder: 'mtverse', helper: 'Short watermark text works best on mobile images.' },
 }
 
 const IMAGE_QUALITY_PRESETS: QuickPreset[] = [

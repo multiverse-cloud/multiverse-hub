@@ -110,7 +110,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pageUrl = `${BASE_URL}/${route.routeSlug}`;
 
   return {
-    title: `${route.title} | Multiverse`,
+    title: `${route.title} | mtverse`,
     description: route.description,
     keywords: [
       ...route.keywords,
@@ -119,7 +119,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "mp4 downloader",
       "mp3 downloader",
       "reels downloader",
-      "shorts downloader",
+      "short video downloader",
       "fast media downloader",
     ],
     alternates: {

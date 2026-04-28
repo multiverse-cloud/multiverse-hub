@@ -21,7 +21,7 @@ function getPlaceholder(slug: string): string {
     'text-case-converter': 'Enter text to convert case...',
     'remove-duplicate-lines': 'apple\napple\norange\nbanana\norange',
     'lorem-ipsum-generator': '3',
-    'json-formatter': '{"name":"Multiverse","tools":150}',
+    'json-formatter': '{"name":"mtverse","tools":150}',
     'base64-encoder-decoder': 'Enter text to encode or base64 to decode...',
     'url-encoder-decoder': 'https://example.com/path?q=hello world',
     'jwt-decoder': 'Paste your JWT token here...',
@@ -30,7 +30,7 @@ function getPlaceholder(slug: string): string {
     'js-minifier': 'function hello(name) { console.log("Hello " + name); }',
     'meta-tag-generator': 'Title: My Site\nDescription: Best tools\nKeywords: tools, free',
     'keyword-extractor': 'Paste your article or content here...',
-    'qr-code-generator': 'https://multiverse-tools.vercel.app',
+    'qr-code-generator': 'https://mtverse.dev',
     'ai-image-generator': 'A breathtaking mountain landscape at sunset, photorealistic, 4K',
     'youtube-thumbnail-downloader': 'https://youtube.com/watch?v=dQw4w9WgXcQ',
     'gitignore-generator': 'node, nextjs, react, python',
@@ -237,7 +237,7 @@ export default function ToolDetailTextClient({ tool }: { tool: Tool }) {
       }
 
       if (slug === 'qr-code-generator') {
-        setImagePreview(`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(textInput || 'https://multiverse-tools.vercel.app')}&color=6366f1`)
+        setImagePreview(`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(textInput || 'https://mtverse.dev')}&color=6366f1`)
         setOutput('QR code generated')
         return
       }

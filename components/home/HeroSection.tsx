@@ -61,7 +61,7 @@ export default function HeroSection() {
             style={{ animationDelay: "0.08s", animationFillMode: "both" }}
           >
             <h1 className="font-display text-[2.05rem] font-black leading-[0.96] tracking-[-0.06em] text-slate-950 dark:text-slate-50 sm:text-[3.2rem] md:text-[4.2rem] lg:text-[4.7rem]">
-              Multiverse for
+              mtverse for
               <span className="mx-auto mt-1 block h-[1.1em] max-w-[12.5ch] overflow-hidden text-blue-600 dark:text-blue-400 sm:mt-1.5">
                 <span className="mv-flip-stack">
                   {FLIP_WORDS.map((word) => (

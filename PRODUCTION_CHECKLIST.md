@@ -1,6 +1,6 @@
-# Multiverse Production Checklist
+# mtverse Production Checklist
 
-Multiverse is currently a static-first public content platform with admin-only management. Keep the public site open: no public auth, no public accounts, no favorites, no user history, and no database requirement.
+mtverse is currently a static-first public content platform with admin-only management. Keep the public site open: no public auth, no public accounts, no favorites, no user history, and no database requirement.
 
 ## Release Gate
 

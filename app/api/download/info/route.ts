@@ -1,7 +1,6 @@
 import { NextRequest } from 'next/server'
 import { err, isCommandAvailable, withConcurrencyLimit, YTDLP_PATH } from '@/lib/server-utils'
 import {
-  buildThumbnailDownloads,
   fetchVideoInfo,
   isSupportedVideoUrl,
 } from '@/lib/video-downloader'
@@ -29,13 +28,12 @@ export async function GET(req: NextRequest) {
     return err('URL is too long for this downloader info route.', 413)
   }
   if (!isSupportedVideoUrl(videoUrl)) {
-    return err('URL not supported. Try a public YouTube, Instagram, TikTok, Facebook, X, Pinterest, Reddit, Vimeo, Dailymotion, Twitch, Telegram, or similar supported media link.')
+    return err('URL not supported. Try a public Instagram, TikTok, Facebook, X, Pinterest, Reddit, Vimeo, Dailymotion, Twitch, Telegram, or similar supported media link.')
   }
 
   const ytDlpAvailable = isCommandAvailable(YTDLP_PATH)
-  const ytMatch = videoUrl.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
 
-  if (!ytDlpAvailable && !ytMatch) {
+  if (!ytDlpAvailable) {
     return err('Advanced video format detection is temporarily unavailable on this server. Try another link or use thumbnail mode.', 503)
   }
 
@@ -48,34 +46,6 @@ export async function GET(req: NextRequest) {
     )
     return Response.json(info, { headers: INFO_CACHE_HEADERS })
   } catch (error) {
-    if (ytMatch) {
-      const thumbnailHD = `https://img.youtube.com/vi/${ytMatch[1]}/maxresdefault.jpg`
-      const thumbnail = `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`
-
-      return Response.json(
-        {
-          title: 'YouTube video',
-          safeTitle: 'youtube_video',
-          uploader: 'Unknown creator',
-          duration: 0,
-          thumbnail,
-          thumbnailHQ: thumbnailHD,
-          viewCount: 0,
-          likeCount: 0,
-          uploadDate: '',
-          webpage_url: videoUrl,
-          platform: 'YouTube',
-          quickDownloads: [],
-          videoFormats: [],
-          audioFormats: [],
-          thumbnailDownloads: buildThumbnailDownloads(thumbnail, thumbnailHD),
-          videoId: ytMatch[1],
-          error: 'Video formats are temporarily unavailable. Thumbnail-only mode is active for this link.',
-        },
-        { headers: INFO_CACHE_HEADERS }
-      )
-    }
-
     return err('This content is private, protected, or unsupported.', 422)
   }
 }

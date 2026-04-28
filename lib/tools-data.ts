@@ -2734,9 +2734,17 @@ const CATEGORY_ALLOWED_SLUGS: Partial<Record<string, Set<string>>> = {
 }
 
 function isAllowedCategoryTool(tool: Tool) {
+  if (DISABLED_PUBLIC_TOOL_SLUGS.has(tool.slug)) return false
+
   const allowed = CATEGORY_ALLOWED_SLUGS[tool.categorySlug]
   return allowed ? allowed.has(tool.slug) : true
 }
+
+export const DISABLED_PUBLIC_TOOL_SLUGS = new Set([
+  'youtube-shorts-downloader',
+  'youtube-playlist-downloader',
+  'youtube-video-downloader',
+])
 
 const ACTIVE_TOOL_SLUGS = new Set(
   ALL_TOOLS.filter(tool => tool.implemented && isAllowedCategoryTool(tool)).map(tool => tool.slug)
@@ -2749,9 +2757,6 @@ export const VIDEO_DOWNLOADER_TOOL_SLUGS = new Set([
   'instagram-video-downloader',
   'instagram-story-downloader',
   'instagram-post-downloader',
-  'youtube-shorts-downloader',
-  'youtube-playlist-downloader',
-  'youtube-video-downloader',
   'facebook-video-downloader',
   'facebook-reels-downloader',
   'twitter-video-downloader',
@@ -2781,9 +2786,6 @@ export const TOOL_SLUG_ALIASES: Record<string, string> = {
   'instagram-highlight-downloader': 'instagram-story-downloader',
   'reels-downloader': 'instagram-reels-downloader',
   'instagram-reel-downloader': 'instagram-reels-downloader',
-  'youtube-downloader': 'youtube-video-downloader',
-  'youtube-shorts': 'youtube-shorts-downloader',
-  'youtube-playlists-downloader': 'youtube-playlist-downloader',
   'facebook-downloader': 'facebook-video-downloader',
   'fb-video-downloader': 'facebook-video-downloader',
   'facebook-reel-downloader': 'facebook-reels-downloader',

@@ -12,7 +12,7 @@ import {
 import { absoluteUrl } from '@/lib/site-url'
 
 export const metadata: Metadata = {
-  title: 'Free Premium UI Templates for React, Next.js, Dashboards, Landing Pages | Multiverse',
+  title: 'Free Premium UI Templates for React, Next.js, Dashboards, Landing Pages | mtverse',
   description:
     'Browse free premium UI templates for React, Next.js, dashboards, landing pages, auth screens, ecommerce, and modern product launches.',
   keywords: [
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     'auth page templates',
   ],
   openGraph: {
-    title: 'Free Premium UI Templates for React, Next.js, Dashboards, Landing Pages | Multiverse',
+    title: 'Free Premium UI Templates for React, Next.js, Dashboards, Landing Pages | mtverse',
     description:
       'Browse free premium UI templates for React, Next.js, dashboards, landing pages, auth screens, ecommerce, and modern product launches.',
     url: absoluteUrl('/templates'),
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Free Premium UI Templates for React, Next.js, Dashboards, Landing Pages | Multiverse',
+    title: 'Free Premium UI Templates for React, Next.js, Dashboards, Landing Pages | mtverse',
     description:
       'Browse free premium UI templates for React, Next.js, dashboards, landing pages, auth screens, ecommerce, and modern product launches.',
   },

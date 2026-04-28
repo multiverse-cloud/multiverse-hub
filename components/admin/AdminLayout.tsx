@@ -323,7 +323,7 @@ export default function AdminLayout({
           {!collapsed && (
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-bold tracking-tight text-slate-900 dark:text-slate-50">
-                Multiverse Admin
+                mtverse Admin
               </p>
               <p className="text-[10px] font-medium text-indigo-500 dark:text-indigo-400 tracking-wide">
                 Control Panel
@@ -419,7 +419,7 @@ export default function AdminLayout({
                 </div>
                 <div>
                   <p className="text-sm font-bold tracking-tight text-slate-900 dark:text-slate-50">
-                    Multiverse Admin
+                    mtverse Admin
                   </p>
                   <p className="text-[10px] font-medium text-indigo-500 dark:text-indigo-400">
                     Control Panel

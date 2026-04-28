@@ -55,7 +55,7 @@ export default function WhyMultiverse() {
       <div className="absolute right-0 top-0 -z-10 h-[500px] w-[500px] translate-x-1/4 -translate-y-1/4 rounded-full bg-emerald-100/30 blur-[100px] dark:bg-emerald-900/8" />
       <div className="mx-auto max-w-screen-2xl px-4 lg:px-6">
         <div className="section-header">
-          <p className="section-label">Why Multiverse</p>
+          <p className="section-label">Why mtverse</p>
           <h2 className="section-title">Built different. Built better.</h2>
           <p className="section-sub">
             Other sites give you one tool. We give you the entire workshop —

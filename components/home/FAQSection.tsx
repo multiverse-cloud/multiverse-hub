@@ -8,7 +8,7 @@ import { SITE_METRICS } from "@/lib/site-metrics";
 
 const FAQS = [
   {
-    q: "Is Multiverse completely free to use?",
+    q: "Is mtverse completely free to use?",
     a: "Yes. Every tool in the library is free to use — no premium paywalls, no credit card required. The full public experience is completely free.",
   },
   {
@@ -24,11 +24,11 @@ const FAQS = [
     a: `Over ${SITE_METRICS.tools.label} tools across ten categories: PDF, image, video, audio, text, developer, SEO, calculators, file utilities, and more. New tools are added every week.`,
   },
   {
-    q: "What can I use on Multiverse?",
+    q: "What can I use on mtverse?",
     a: "You can use online tools, browse UI components, copy templates, explore AI prompts, read discover guides, and follow practical fix guides.",
   },
   {
-    q: "Does Multiverse work on mobile?",
+    q: "Does mtverse work on mobile?",
     a: "Absolutely. Every tool is responsive and built to work on phones, tablets, and desktops. The experience adapts to your screen size.",
   },
   {
@@ -55,7 +55,7 @@ export default function FAQSection() {
           <p className="section-label">FAQ</p>
           <h2 className="section-title">Frequently Asked Questions</h2>
           <p className="section-sub">
-            Quick answers to common questions about Multiverse.
+            Quick answers to common questions about mtverse.
           </p>
         </div>
 

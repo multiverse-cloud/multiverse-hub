@@ -152,7 +152,7 @@ export default function EffectDetailClient({ effect, relatedEffects }: EffectDet
 
   async function handleShare() {
     const url = typeof window !== 'undefined' ? window.location.href : ''
-    const title = `${effect.title} - Multiverse`
+    const title = `${effect.title} - mtverse`
 
     if (navigator.share) {
       try {

@@ -61,7 +61,7 @@ export default async function NewContentSection() {
           <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="section-label">Latest</p>
-              <h2 className="section-title">Fresh resources across Multiverse</h2>
+              <h2 className="section-title">Fresh resources across mtverse</h2>
               <p className="section-sub mt-2 max-w-2xl">
                 Recently added templates, prompts, and UI components for people who want useful assets without hunting.
               </p>

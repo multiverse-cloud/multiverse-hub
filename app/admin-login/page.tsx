@@ -50,7 +50,7 @@ export default function AdminLoginPage() {
     <AuthShell
       eyebrow="System Access"
       title="Admin Authentication"
-      description="Enter your secure credentials to access the Multiverse administration panel."
+      description="Enter your secure credentials to access the mtverse administration panel."
       footer={
         <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
           <Shield className="w-4 h-4 text-indigo-500" />

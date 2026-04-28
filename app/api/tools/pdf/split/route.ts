@@ -113,8 +113,8 @@ export async function POST(req: NextRequest) {
       const single = await PDFDocument.create()
       const pages = await single.copyPages(source, segment.pageIndices)
       pages.forEach(page => single.addPage(page))
-      single.setCreator('Multiverse Tools')
-      single.setProducer('Multiverse Tools')
+      single.setCreator('mtverse')
+      single.setProducer('mtverse')
       single.setTitle(`${baseName(pdf.filename)} ${segment.label}`)
 
       const bytes = await single.save({

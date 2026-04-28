@@ -146,7 +146,7 @@ function normalizeTemplateEntry(template: TemplateEntry): TemplateEntry {
     id: asString(template.id) || `template-${slug}`,
     slug,
     title,
-    seoTitle: asString(template.seoTitle) || `${title} - Downloadable Premium UI Template | Multiverse`,
+    seoTitle: asString(template.seoTitle) || `${title} - Downloadable Premium UI Template | mtverse`,
     metaDescription: asString(template.metaDescription) || asString(template.summary) || asString(template.description),
     summary: asString(template.summary) || asString(template.description) || 'Downloadable premium UI template.',
     description: asString(template.description) || asString(template.summary) || 'Downloadable premium UI template.',

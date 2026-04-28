@@ -193,7 +193,7 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
   const [result, setResult] = useState<FileProcessResult | null>(null)
   const [textInput, setTextInput] = useState(
     tool.slug === 'audio-text-to-speech'
-      ? 'Welcome to Multiverse. Your audio export is ready to review.'
+      ? 'Welcome to mtverse. Your audio export is ready to review.'
       : ''
   )
   const [audioFormat, setAudioFormat] = useState('mp3')
@@ -235,7 +235,7 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
     setProgress(0)
     setTextInput(
       tool.slug === 'audio-text-to-speech'
-        ? 'Welcome to Multiverse. Your audio export is ready to review.'
+        ? 'Welcome to mtverse. Your audio export is ready to review.'
         : ''
     )
     setAudioFormat('mp3')

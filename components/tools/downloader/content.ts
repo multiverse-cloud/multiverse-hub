@@ -12,7 +12,6 @@ import {
 } from 'lucide-react'
 
 export const SUPPORTED_SITES = [
-  'YouTube',
   'TikTok',
   'Instagram',
   'Facebook',
@@ -93,7 +92,7 @@ export const FEATURE_ITEMS: Array<{
 export const FAQ_ITEMS = [
   {
     question: 'Which platforms are supported?',
-    answer: 'Public links from YouTube, TikTok, Instagram, Facebook, Twitter/X, Pinterest, Reddit, Vimeo, Dailymotion, Snapchat, LinkedIn, Telegram, Twitch, Bilibili and similar supported sites can be analyzed.',
+    answer: 'Public links from TikTok, Instagram, Facebook, Twitter/X, Pinterest, Reddit, Vimeo, Dailymotion, Snapchat, LinkedIn, Telegram, Twitch, Bilibili and similar supported sites can be analyzed.',
   },
   {
     question: 'Which formats are available?',

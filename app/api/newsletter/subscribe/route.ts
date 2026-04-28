@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
           email,
           message,
           source: 'multiverse-footer',
-          site_name: 'Multiverse',
+          site_name: 'mtverse',
         },
       }),
       cache: 'no-store',

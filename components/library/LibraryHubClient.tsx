@@ -180,7 +180,7 @@ export default function LibraryHubClient({
               </h1>
 
               <p className="animate-in fade-in slide-in-from-bottom-4 mx-auto mb-6 mt-3 max-w-3xl text-xs leading-relaxed text-slate-600 duration-1000 delay-300 dark:text-slate-400 sm:text-sm sm:mb-8 sm:mt-4 sm:text-base md:text-xl">
-                The cleanest library inside Multiverse for professional HTML templates and reusable UI blocks.{' '}
+                The cleanest library inside mtverse for professional HTML templates and reusable UI blocks.{' '}
                 <span className="font-semibold text-slate-900 dark:text-slate-100">Live previews, copy-ready code, and better browsing.</span>
               </p>
 
@@ -239,7 +239,7 @@ export default function LibraryHubClient({
                 href="/templates"
                 icon={<LayoutTemplate className="h-6 w-6" />}
                 title="Source-backed templates"
-                description="Every template preview and downloadable code pack comes from real files already imported into Multiverse."
+                description="Every template preview and downloadable code pack comes from real files already imported into mtverse."
                 meta={`${templateItems.length}+ templates`}
               />
               <ResourceCard
@@ -254,7 +254,7 @@ export default function LibraryHubClient({
                 icon={<Zap className="h-6 w-6" />}
                 title="Faster discovery"
                 description="Same hub feel as the source project, but cleaner inside our site with better search, preview, and navigation flow."
-                meta="Multiverse-ready"
+                meta="mtverse-ready"
               />
             </div>
           </div>
@@ -336,7 +336,7 @@ export default function LibraryHubClient({
               <div className="max-w-2xl">
                 <h2 className="text-xl font-bold sm:text-2xl md:text-3xl lg:text-4xl">Production-Ready Web Templates</h2>
                 <p className="mt-2 text-xs text-slate-300 sm:text-sm sm:mt-3 sm:text-base md:text-xl">
-                  Preview-first template flows now live inside Multiverse with the same source feel and a cleaner code download path.
+                  Preview-first template flows now live inside mtverse with the same source feel and a cleaner code download path.
                 </p>
               </div>
               <Link
@@ -445,7 +445,7 @@ export default function LibraryHubClient({
             <div className="relative z-10">
               <h2 className="mb-3 text-lg font-black leading-tight sm:text-xl md:text-2xl lg:text-4xl">Ready to Build Your Next Project?</h2>
               <p className="mx-auto mb-4 max-w-2xl text-xs font-medium text-blue-100 sm:text-sm sm:mb-6 sm:text-base md:text-lg md:mb-8 md:text-xl">
-                Start with the imported source-hub flow, then keep building inside Multiverse with cleaner previews and code access.
+                Start with the imported source-hub flow, then keep building inside mtverse with cleaner previews and code access.
               </p>
 
               <div className="flex flex-col justify-center gap-2 sm:gap-3 sm:flex-row">

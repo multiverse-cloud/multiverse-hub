@@ -37,7 +37,6 @@ type RelatedDownloaderRoute = {
 }
 
 const SUPPORTED_VIDEO_PATTERNS = [
-  /(?:youtube\.com\/(?:watch|shorts|playlist|live)|youtu\.be\/)/i,
   /(?:tiktok\.com|vm\.tiktok\.com)\//i,
   /instagram\.com\/(?:reel|p|tv|stories|stories\/highlights|[a-z0-9._]+)\//i,
   /(?:twitter\.com|x\.com)\/.+\/status\//i,
@@ -93,7 +92,7 @@ function getDownloaderPageConfig(tool?: Tool, route?: DownloaderRouteEntry): Dow
       placeholder: route.placeholder,
       buttonLabel: 'Download',
       platforms: isAll
-        ? ['YouTube', 'TikTok', 'Instagram', 'Twitter / X', 'Facebook', 'Pinterest', 'Reddit']
+        ? ['TikTok', 'Instagram', 'Twitter / X', 'Facebook', 'Pinterest', 'Reddit', 'Vimeo']
         : [route.platform],
       contentTypes: route.contentTypes,
       categoryLabel: isAll ? 'Video Tools' : `${route.platform} Tools`,
@@ -150,36 +149,6 @@ function getDownloaderPageConfig(tool?: Tool, route?: DownloaderRouteEntry): Dow
         platforms: ['TikTok'],
         contentTypes: ['Videos', 'Shorts', 'Audio', 'Thumbnails'],
         categoryLabel: 'TikTok Tools',
-      }
-    case 'youtube-shorts-downloader':
-      return {
-        title: 'YouTube Shorts Downloader',
-        subtitle: 'Fast shorts downloads with MP4, MP3, and thumbnail options that work well on mobile.',
-        placeholder: 'Paste YouTube Shorts URL',
-        buttonLabel: 'Download',
-        platforms: ['YouTube'],
-        contentTypes: ['Shorts', 'Videos', 'Audio', 'Thumbnails'],
-        categoryLabel: 'YouTube Tools',
-      }
-    case 'youtube-playlist-downloader':
-      return {
-        title: 'YouTube Playlist Downloader',
-        subtitle: 'Open public playlist links and download available media when the source supports it.',
-        placeholder: 'Paste YouTube playlist URL',
-        buttonLabel: 'Download',
-        platforms: ['YouTube'],
-        contentTypes: ['Playlists', 'Videos', 'Audio', 'Thumbnails'],
-        categoryLabel: 'YouTube Tools',
-      }
-    case 'youtube-video-downloader':
-      return {
-        title: 'YouTube Video Downloader',
-        subtitle: 'Use one paste bar to grab YouTube video, audio, and thumbnail files with direct downloads.',
-        placeholder: 'Paste YouTube video URL',
-        buttonLabel: 'Download',
-        platforms: ['YouTube'],
-        contentTypes: ['Videos', 'Shorts', 'Live', 'Audio', 'Thumbnails'],
-        categoryLabel: 'YouTube Tools',
       }
     case 'facebook-video-downloader':
       return {
@@ -355,11 +324,11 @@ function getDownloaderPageConfig(tool?: Tool, route?: DownloaderRouteEntry): Dow
     default:
       return {
         title: 'All-in-One Video Downloader',
-        subtitle: 'Download public videos from YouTube, TikTok, Instagram, X, Facebook, Pinterest, Reddit, Vimeo, and more in one common downloader.',
+        subtitle: 'Download public videos from TikTok, Instagram, X, Facebook, Pinterest, Reddit, Vimeo, and more in one common downloader.',
         placeholder: 'Paste any supported video URL',
         buttonLabel: 'Download',
-        platforms: ['YouTube', 'TikTok', 'Instagram', 'Twitter / X', 'Facebook', 'Pinterest', 'Reddit'],
-        contentTypes: ['Videos', 'Photos', 'Reels', 'Shorts', 'Pins', 'GIFs', 'Audio'],
+        platforms: ['TikTok', 'Instagram', 'Twitter / X', 'Facebook', 'Pinterest', 'Reddit', 'Vimeo'],
+        contentTypes: ['Videos', 'Photos', 'Reels', 'Short videos', 'Pins', 'GIFs', 'Audio'],
         categoryLabel: 'Video Tools',
       }
   }

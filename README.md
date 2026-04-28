@@ -1,4 +1,4 @@
-# 🌌 Multiverse – Universe of Free Tools
+# mtverse - Universe of Free Tools
 
 > One platform. Multiple universes. 160+ free tools, UI libraries, templates, prompts, and practical guides — the ultimate mini internet.
 
@@ -208,4 +208,4 @@ MIT License — free to use, modify and distribute.
 
 ---
 
-Built with ❤️ by the Multiverse Team · [multiverse-tools.vercel.app](https://multiverse-tools.vercel.app)
+Built by the mtverse team · [mtverse.dev](https://mtverse.dev)

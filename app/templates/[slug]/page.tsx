@@ -82,7 +82,7 @@ export async function generateMetadata({ params }: TemplateSlugPageProps): Promi
     }
   }
 
-  const seoTitle = `${template.title} - Free ${template.categoryTitle} UI Template | Multiverse`
+  const seoTitle = `${template.title} - Free ${template.categoryTitle} UI Template | mtverse`
   const seoDescription = `${template.summary} Download this free ${template.categoryTitle.toLowerCase()} built for ${template.industry.toLowerCase()} and modern ${getFrameworkLabel(template.frameworkLabel).toLowerCase()} workflows.`
 
   return {

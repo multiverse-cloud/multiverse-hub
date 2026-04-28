@@ -1,4 +1,4 @@
-const FALLBACK_SITE_URL = 'https://multiverse-tools.vercel.app'
+const FALLBACK_SITE_URL = 'https://mtverse.dev'
 
 function normalizeSiteUrl(value: string | undefined) {
   const trimmed = value?.trim()

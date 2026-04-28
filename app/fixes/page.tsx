@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title:
-      "Fixes Universe - Problem Guides for Mobile, PC, Apps & Wi-Fi | Multiverse",
+      "Fixes Universe - Problem Guides for Mobile, PC, Apps & Wi-Fi | mtverse",
     description:
       "Fix battery drain, slow phones, Wi-Fi issues, crashing apps, gaming lag, and common device problems with simple step-by-step guides.",
     type: "website",

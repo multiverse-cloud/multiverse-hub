@@ -28,19 +28,19 @@ function getPlatformFaqs(toolName?: string, platforms?: string[], contentTypes: 
           `Use public links for ${supportedList} from supported platforms. Login-only, private, deleted, geo-blocked, or DRM-protected content is not supported.`,
       },
       {
-        question: "Does Multiverse save my download history?",
+        question: "Does mtverse save my download history?",
         answer:
           "No. The downloader is stateless: no public accounts, no saved history, no favorites, and no persistent user data.",
       },
       {
         question: "Why are some quality options missing?",
         answer:
-          "Available formats depend on the source upload and platform delivery. If the source only exposes a few variants, Multiverse only shows those available options.",
+          "Available formats depend on the source upload and platform delivery. If the source only exposes a few variants, mtverse only shows those available options.",
       },
       {
         question: "Can I download audio or thumbnails?",
         answer:
-          "When the source exposes them, Multiverse shows video, audio, and thumbnail options in the same result screen.",
+          "When the source exposes them, mtverse shows video, audio, and thumbnail options in the same result screen.",
       },
     ];
   }
@@ -59,7 +59,7 @@ function getPlatformFaqs(toolName?: string, platforms?: string[], contentTypes: 
     {
       question: `Why does ${platform} quality change by link?`,
       answer:
-        "Platforms expose different quality variants per upload. Multiverse shows the formats that are publicly available for that exact link.",
+        "Platforms expose different quality variants per upload. mtverse shows the formats that are publicly available for that exact link.",
     },
     {
       question: `Is ${name} mobile friendly?`,

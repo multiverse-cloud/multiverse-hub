@@ -245,7 +245,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const title = `${tool.name} - Free Online ${tool.category} | Multiverse`;
+  const title = `${tool.name} - Free Online ${tool.category} | mtverse`;
   const description = `${tool.description} Free, fast, no login required. Use ${tool.name} online instantly.`;
 
   return {
@@ -365,7 +365,7 @@ export default async function ToolPage({ params }: Props) {
         name: `Is this ${tool.name} tool free?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Yes, all tools on Multiverse are 100% free to use. No registration or credit card is required to access our professional utility features.`,
+          text: `Yes, all tools on mtverse are 100% free to use. No registration or credit card is required to access our professional utility features.`,
         },
       },
       {

@@ -360,13 +360,13 @@ export default async function Navbar({
         >
           <Image
             src="/SiteLogo.png"
-            alt="Multiverse"
+            alt="mtverse"
             width={36}
             height={36}
             className="h-8 w-8 transition-transform duration-200 group-hover:scale-105 sm:h-9 sm:w-9"
           />
           <span className="hidden font-display text-base font-extrabold tracking-tight sm:block sm:text-lg">
-            <span className="text-slate-950 dark:text-slate-50">Multi</span>
+            <span className="text-slate-950 dark:text-slate-50">mt</span>
             <span className="text-blue-600 dark:text-blue-400">verse</span>
           </span>
         </Link>
@@ -383,7 +383,7 @@ export default async function Navbar({
         {/* Desktop search */}
         <SiteSearchInput
           className="mx-auto hidden max-w-xl flex-1 lg:block"
-          placeholder="Search the Multiverse..."
+          placeholder="Search mtverse..."
           variant="navbar"
         />
 

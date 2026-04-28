@@ -121,7 +121,7 @@ export default function Footer({
             >
               <Image
                 src="/SiteLogo.png"
-                alt="Multiverse"
+                alt="mtverse"
                 width={36}
                 height={36}
                 className="h-9 w-9"
@@ -139,7 +139,7 @@ export default function Footer({
                       : "text-slate-950 dark:text-slate-50",
                   )}
                 >
-                  Multi
+                  mt
                 </span>
                 <span
                   className={cn(
@@ -219,7 +219,7 @@ export default function Footer({
               templateVariant ? "text-[#767575]" : "text-muted-foreground",
             )}
           >
-            © {year} Multiverse Tools. All rights reserved.
+            © {year} mtverse. All rights reserved.
           </p>
 
           <div

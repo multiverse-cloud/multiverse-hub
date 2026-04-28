@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "curated picks",
   ],
   openGraph: {
-    title: "Discover – Rankings & Curated Picks | Multiverse",
+    title: "Discover – Rankings & Curated Picks | mtverse",
     description: "Curated top-10 rankings, watch guides, and editorial picks.",
     type: "website",
     url: absoluteUrl("/discover"),

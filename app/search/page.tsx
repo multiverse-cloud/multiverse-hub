@@ -25,10 +25,10 @@ const TYPE_META: Record<
 };
 
 export const metadata: Metadata = {
-  title: "Search - Multiverse",
+  title: "Search - mtverse",
   description:
     "Search across tools, discover pages, fixes, prompts, and UI templates in one place.",
-  alternates: { canonical: "https://multiverse-tools.vercel.app/search" },
+  alternates: { canonical: "https://mtverse.dev/search" },
 };
 
 interface SearchPageProps {
@@ -84,7 +84,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             <div>
               <p className="section-label">Unified Search</p>
               <h1 className="text-xl font-bold sm:text-2xl md:text-3xl">
-                Search Across The Multiverse
+                Search Across mtverse
               </h1>
             </div>
           </div>

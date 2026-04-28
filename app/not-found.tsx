@@ -3,7 +3,7 @@ import ErrorExperience from "@/components/errors/ErrorExperience";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "404 – Page Not Found | Multiverse",
+  title: "404 – Page Not Found | mtverse",
   description: "The page you were looking for could not be found.",
 };
 

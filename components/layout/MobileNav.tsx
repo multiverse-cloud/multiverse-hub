@@ -165,13 +165,13 @@ export default function MobileNav({
             >
               <Image
                 src="/SiteLogo.png"
-                alt="Multiverse"
+                alt="mtverse"
                 width={32}
                 height={32}
                 className="h-8 w-8 rounded-lg"
               />
               <span className="font-display text-base font-extrabold tracking-tight leading-none">
-                <span className="text-slate-900 dark:text-slate-50">Multi</span>
+                <span className="text-slate-900 dark:text-slate-50">mt</span>
                 <span className="text-blue-600 dark:text-blue-400">verse</span>
               </span>
             </Link>
@@ -341,7 +341,7 @@ export default function MobileNav({
           <div className="flex items-center gap-1.5 pt-1">
             <Globe className="h-3 w-3 text-slate-300 dark:text-slate-600" />
             <p className="text-[11px] text-slate-400 dark:text-slate-600">
-              © {new Date().getFullYear()} Multiverse Tools
+              © {new Date().getFullYear()} mtverse
             </p>
           </div>
         </div>

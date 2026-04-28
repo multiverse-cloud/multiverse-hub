@@ -16,7 +16,6 @@ import {
   Twitch,
   Twitter,
   Video,
-  Youtube,
 } from "lucide-react";
 import {
   PremiumContainer,
@@ -33,7 +32,6 @@ type PlatformItem = {
 };
 
 const SUPPORTED_PLATFORMS: PlatformItem[] = [
-  { name: "YouTube", label: "YouTube", icon: Youtube, tone: "text-red-600 dark:text-red-300" },
   { name: "TikTok", label: "TikTok", icon: Music2, tone: "text-slate-950 dark:text-slate-100" },
   { name: "Instagram", label: "Instagram", icon: Instagram, tone: "text-pink-600 dark:text-pink-300" },
   { name: "Twitter / X", label: "X", icon: Twitter, tone: "text-sky-600 dark:text-sky-300" },

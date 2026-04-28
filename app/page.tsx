@@ -16,7 +16,7 @@ import { SITE_METRICS } from "@/lib/site-metrics";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Multiverse - Free Online Tools, UI Components, Templates, Prompts & Fixes",
+  title: "mtverse - Free Online Tools, UI Components, Templates, Prompts & Fixes",
   description:
     `Use ${SITE_METRICS.tools.label} free online tools, ${SITE_METRICS.ui.shortLabel}, website templates, AI prompts, discover guides, and troubleshooting fixes in one fast public platform. No public login required.`,
   keywords: [
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: "Multiverse - Free Online Tools, UI Components, Templates, Prompts & Fixes",
+    title: "mtverse - Free Online Tools, UI Components, Templates, Prompts & Fixes",
     description:
       "A fast public workspace for creators and developers: download media, process files, copy UI, launch templates, and find practical fixes without sign-in.",
     type: "website",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Multiverse - Free Online Tools and Creative Universes",
+    title: "mtverse - Free Online Tools and Creative Universes",
     description:
       "Free tools, UI components, templates, prompts, and fixes in one fast public platform.",
   },
@@ -55,7 +55,7 @@ const FAQ_SCHEMA = {
   mainEntity: [
     {
       "@type": "Question",
-      name: "Is Multiverse completely free to use?",
+      name: "Is mtverse completely free to use?",
       acceptedAnswer: {
         "@type": "Answer",
         text: "Yes. Every tool in the library is free to use with no premium paywalls and no credit card required.",
@@ -87,7 +87,7 @@ const FAQ_SCHEMA = {
     },
     {
       "@type": "Question",
-      name: "Does Multiverse work on mobile?",
+      name: "Does mtverse work on mobile?",
       acceptedAnswer: {
         "@type": "Answer",
         text: "Absolutely. Every tool is responsive and works on phones, tablets, and desktops.",
@@ -95,7 +95,7 @@ const FAQ_SCHEMA = {
     },
     {
       "@type": "Question",
-      name: "What can I use on Multiverse?",
+      name: "What can I use on mtverse?",
       acceptedAnswer: {
         "@type": "Answer",
         text: "You can use online tools, browse UI components, copy templates, explore AI prompts, read discover guides, and follow practical fix guides.",

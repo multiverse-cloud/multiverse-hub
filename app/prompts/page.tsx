@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     "AI writing prompts",
   ],
   openGraph: {
-    title: "Prompt Hub - Premium AI Prompts for ChatGPT & Claude | Multiverse",
+    title: "Prompt Hub - Premium AI Prompts for ChatGPT & Claude | mtverse",
     description:
       "Browse premium prompts for ChatGPT, Claude, coding, work, study, image generation, and image editing workflows.",
     type: "website",

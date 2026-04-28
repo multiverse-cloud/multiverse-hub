@@ -31,8 +31,8 @@ const googleAdsenseClient = getGoogleAdsenseClient()
 
 export const metadata: Metadata = {
   title: {
-    default: 'Multiverse - Free Tools, UI, Templates, Prompts & Fix Guides',
-    template: '%s | Multiverse',
+    default: 'mtverse - Free Tools, UI, Templates, Prompts & Fix Guides',
+    template: '%s | mtverse',
   },
   description:
     'Use free online tools, UI components, website templates, AI prompts, discover guides, and troubleshooting fixes in one fast public platform. No public account required.',
@@ -50,15 +50,15 @@ export const metadata: Metadata = {
     'calculator',
     'SEO tools',
     'file converter',
-    'multiverse tools',
+    'mtverse tools',
     'UI components',
     'website templates',
     'AI prompts',
     'fix guides',
   ],
-  authors: [{ name: 'Multiverse Team' }],
-  creator: 'Multiverse',
-  publisher: 'Multiverse Tools',
+  authors: [{ name: 'mtverse team' }],
+  creator: 'mtverse',
+  publisher: 'mtverse',
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: SITE_URL,
@@ -75,13 +75,13 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: SITE_URL,
-    title: 'Multiverse - Free Tools, UI, Templates, Prompts & Fix Guides',
+    title: 'mtverse - Free Tools, UI, Templates, Prompts & Fix Guides',
     description: 'Free tools, UI components, templates, AI prompts, discover guides, and fixes in one fast public platform.',
-    siteName: 'Multiverse Tools',
+    siteName: 'mtverse',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Multiverse - Free Tools, UI, Templates, Prompts & Fix Guides',
+    title: 'mtverse - Free Tools, UI, Templates, Prompts & Fix Guides',
     description: 'Use tools, components, templates, prompts, and fix guides instantly. No public login required.',
   },
   robots: {
@@ -106,7 +106,7 @@ const GLOBAL_SITE_SCHEMA = [
   {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Multiverse Tools',
+    name: 'mtverse',
     url: SITE_URL,
     description:
       'A public platform for free online tools, UI components, website templates, AI prompts, discover guides, and troubleshooting fixes.',
@@ -122,7 +122,7 @@ const GLOBAL_SITE_SCHEMA = [
   {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Multiverse Tools',
+    name: 'mtverse',
     url: SITE_URL,
     logo: absoluteUrl('/SiteLogo.png'),
     sameAs: [SITE_URL],

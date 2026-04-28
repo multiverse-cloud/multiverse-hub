@@ -16,7 +16,7 @@ export default function ToolActions({ name, className }: Props) {
 
   async function handleShare() {
     const url = window.location.href
-    const title = `${name} - Multiverse Tools`
+    const title = `${name} - mtverse`
 
     if (navigator.share) {
       try {
@@ -43,7 +43,7 @@ export default function ToolActions({ name, className }: Props) {
   }
 
   function shareTwitter() {
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out ${name} on Multiverse`)}&url=${encodeURIComponent(window.location.href)}`, '_blank', 'noopener')
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out ${name} on mtverse`)}&url=${encodeURIComponent(window.location.href)}`, '_blank', 'noopener')
     setShareOpen(false)
   }
 

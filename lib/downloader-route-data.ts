@@ -31,7 +31,7 @@ function makeFaq(platform: string, intentLabel: string, contentTypes: string[]) 
     {
       question: `Can I download private ${platform} ${intentLabel.toLowerCase()}?`,
       answer:
-        `No. Multiverse only supports public, accessible ${platform} links. Private, protected, deleted, login-required, geo-blocked, and DRM-protected media is not supported.`,
+        `No. mtverse only supports public, accessible ${platform} links. Private, protected, deleted, login-required, geo-blocked, and DRM-protected media is not supported.`,
     },
     {
       question: `What can this ${platform} downloader save?`,
@@ -41,10 +41,10 @@ function makeFaq(platform: string, intentLabel: string, contentTypes: string[]) 
     {
       question: `Does ${platform} download quality change by link?`,
       answer:
-        `Yes. Each public ${platform} post can expose different quality variants. Multiverse shows only the formats that are actually available for that exact URL.`,
+        `Yes. Each public ${platform} post can expose different quality variants. mtverse shows only the formats that are actually available for that exact URL.`,
     },
     {
-      question: 'Does Multiverse save my download history?',
+      question: 'Does mtverse save my download history?',
       answer:
         'No. Public downloader pages are stateless: no public accounts, no saved history, no favorites, and no persistent user download data.',
     },
@@ -114,71 +114,11 @@ export const DOWNLOADER_ROUTES: DownloaderRouteEntry[] = [
     platform: 'All Platforms',
     intentLabel: 'Video',
     tabGroup: 'all',
-    contentTypes: ['Videos', 'Shorts', 'Reels', 'Posts', 'Pins', 'GIFs', 'Audio', 'Thumbnails'],
+    contentTypes: ['Videos', 'Short videos', 'Reels', 'Posts', 'Pins', 'GIFs', 'Audio', 'Thumbnails'],
     placeholder: 'Paste any supported public video URL',
     description:
-      'Paste any supported public video URL and download videos, audio, GIFs, pins, reels, shorts, and thumbnails from major platforms in one clean downloader.',
+      'Paste any supported public video URL and download videos, audio, GIFs, pins, reels, short videos, and thumbnails from major platforms in one clean downloader.',
     keywords: ['video downloader', 'all in one video downloader', 'online video downloader'],
-  }),
-  makeRoute({
-    routeSlug: 'youtube-downloader',
-    toolSlug: 'youtube-video-downloader',
-    platform: 'YouTube',
-    intentLabel: 'Video',
-    tabGroup: 'youtube',
-    contentTypes: ['Videos', 'Shorts', 'Live', 'Audio', 'Thumbnails'],
-    placeholder: 'Paste YouTube video, shorts, live, or playlist URL',
-    description:
-      'Download public YouTube videos, shorts, live replays, audio, and thumbnails with a compact paste-first downloader.',
-    keywords: ['youtube downloader', 'youtube video downloader', 'download youtube video'],
-  }),
-  makeRoute({
-    routeSlug: 'youtube-video-downloader',
-    toolSlug: 'youtube-video-downloader',
-    platform: 'YouTube',
-    intentLabel: 'Video',
-    tabGroup: 'youtube',
-    contentTypes: ['Videos', 'Audio', 'Thumbnails'],
-    placeholder: 'Paste YouTube video URL',
-    description:
-      'Save public YouTube videos with available MP4, audio, and thumbnail formats in a clean mobile-friendly flow.',
-    keywords: ['youtube video downloader', 'download youtube video', 'youtube mp4 downloader'],
-  }),
-  makeRoute({
-    routeSlug: 'youtube-shorts-downloader',
-    toolSlug: 'youtube-shorts-downloader',
-    platform: 'YouTube',
-    intentLabel: 'Shorts',
-    tabGroup: 'youtube',
-    contentTypes: ['Shorts', 'Videos', 'Audio', 'Thumbnails'],
-    placeholder: 'Paste YouTube Shorts URL',
-    description:
-      'Paste a public YouTube Shorts link and download available shorts video, audio, and thumbnail formats quickly.',
-    keywords: ['youtube shorts downloader', 'download youtube shorts', 'shorts video downloader'],
-  }),
-  makeRoute({
-    routeSlug: 'youtube-playlist-downloader',
-    toolSlug: 'youtube-playlist-downloader',
-    platform: 'YouTube',
-    intentLabel: 'Playlist',
-    tabGroup: 'youtube',
-    contentTypes: ['Playlists', 'Videos', 'Audio', 'Thumbnails'],
-    placeholder: 'Paste YouTube playlist URL',
-    description:
-      'Analyze public YouTube playlists and download available media when the source exposes supported formats.',
-    keywords: ['youtube playlist downloader', 'download youtube playlist', 'playlist downloader'],
-  }),
-  makeRoute({
-    routeSlug: 'youtube-live-downloader',
-    toolSlug: 'youtube-video-downloader',
-    platform: 'YouTube',
-    intentLabel: 'Live',
-    tabGroup: 'youtube',
-    contentTypes: ['Live Replays', 'Videos', 'Audio', 'Thumbnails'],
-    placeholder: 'Paste YouTube live or replay URL',
-    description:
-      'Download public YouTube live replays and accessible stream media when formats are available.',
-    keywords: ['youtube live downloader', 'download youtube live', 'youtube replay downloader'],
   }),
   makeRoute({
     routeSlug: 'instagram-video-downloader',

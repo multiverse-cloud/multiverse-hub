@@ -36,7 +36,6 @@ const nextConfig = {
     "sharp",
     "tesseract.js",
     "fluent-ffmpeg",
-    "ytdl-core",
     "pdf-lib",
     "jszip",
   ],
@@ -70,6 +69,46 @@ const nextConfig = {
       {
         source: "/dashboard",
         destination: "/tools",
+        permanent: false,
+      },
+      {
+        source: "/youtube-downloader",
+        destination: "/tools/video",
+        permanent: false,
+      },
+      {
+        source: "/youtube-video-downloader",
+        destination: "/tools/video",
+        permanent: false,
+      },
+      {
+        source: "/youtube-shorts-downloader",
+        destination: "/tools/video",
+        permanent: false,
+      },
+      {
+        source: "/youtube-playlist-downloader",
+        destination: "/tools/video",
+        permanent: false,
+      },
+      {
+        source: "/youtube-live-downloader",
+        destination: "/tools/video",
+        permanent: false,
+      },
+      {
+        source: "/tools/video/youtube-video-downloader",
+        destination: "/tools/video",
+        permanent: false,
+      },
+      {
+        source: "/tools/video/youtube-shorts-downloader",
+        destination: "/tools/video",
+        permanent: false,
+      },
+      {
+        source: "/tools/video/youtube-playlist-downloader",
+        destination: "/tools/video",
         permanent: false,
       },
     ];

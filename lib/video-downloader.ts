@@ -88,7 +88,6 @@ interface VideoProfile {
 }
 
 const SUPPORTED_VIDEO_PATTERNS = [
-  /(?:youtube\.com\/(?:watch|shorts|playlist|live)|youtu\.be\/)/i,
   /(?:tiktok\.com|vm\.tiktok\.com)\//i,
   /instagram\.com\/(?:reel|p|tv|stories|stories\/highlights|[a-z0-9._]+)\//i,
   /(?:twitter\.com|x\.com)\/.+\/status\//i,
@@ -155,7 +154,6 @@ export function isSupportedVideoUrl(videoUrl: string): boolean {
 export function detectVideoPlatform(videoUrl: string, extractorKey?: string): string {
   const value = `${extractorKey || ''} ${videoUrl}`.toLowerCase()
 
-  if (value.includes('youtube') || value.includes('youtu.be')) return 'YouTube'
   if (value.includes('tiktok')) return 'TikTok'
   if (value.includes('instagram')) return 'Instagram'
   if (value.includes('twitter') || value.includes('x.com')) return 'Twitter/X'

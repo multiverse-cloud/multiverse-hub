@@ -21,7 +21,7 @@ export default function TemplatePreviewPanel({ template }: { template: TemplateE
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <div>
           <p className="text-sm font-semibold text-foreground">Live preview</p>
-          <p className="text-xs text-muted-foreground">Real template source rendered inside Multiverse.</p>
+          <p className="text-xs text-muted-foreground">Real template source rendered inside mtverse.</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 rounded-lg border border-border bg-background/70 p-1">

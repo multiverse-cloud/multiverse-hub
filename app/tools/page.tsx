@@ -8,13 +8,13 @@ import { absoluteUrl } from "@/lib/site-url";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Tools - Free Online Utilities | Multiverse",
+  title: "Tools - Free Online Utilities | mtverse",
   description: `Explore ${TOOLS.length}+ free online tools for PDF, image, video, audio, text, and developer workflows. No sign-up, no watermarks, no limits. Fast, private tools that run in your browser.`,
   alternates: {
     canonical: absoluteUrl("/tools"),
   },
   openGraph: {
-    title: "Tools - Free Online Utilities | Multiverse",
+    title: "Tools - Free Online Utilities | mtverse",
     description: `Explore ${TOOLS.length}+ free online tools for PDF, image, video, audio, text, and developer workflows. No sign-up, no watermarks, no limits.`,
     url: absoluteUrl("/tools"),
   },

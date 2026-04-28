@@ -99,7 +99,7 @@ export async function generateMetadata({ params }: UiSlugPageProps): Promise<Met
   }
 
   const collectionMeta = getUiCollectionMeta(effect.category)
-  const title = `${effect.title} - ${collectionMeta.label} UI with Preview, React and Tailwind Starter | Multiverse`
+  const title = `${effect.title} - ${collectionMeta.label} UI with Preview, React and Tailwind Starter | mtverse`
   const description = `${effect.description} View the live preview, copy the original HTML and CSS, and start faster with React and Tailwind-friendly code.`
 
   return {

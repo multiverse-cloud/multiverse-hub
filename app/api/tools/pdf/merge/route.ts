@@ -183,8 +183,8 @@ export async function POST(req: NextRequest) {
 
     merged.setTitle(`${formatTitle(sources[0]?.filename || 'Merged PDF')} Merge`)
     merged.setSubject(`Merged ${sources.length} PDF files`)
-    merged.setCreator('Multiverse Tools')
-    merged.setProducer('Multiverse Tools')
+    merged.setCreator('mtverse')
+    merged.setProducer('mtverse')
     merged.setCreationDate(new Date())
     merged.setModificationDate(new Date())
 

@@ -251,7 +251,7 @@ export async function handleImageTool({
   }
 
   if (slug === 'add-watermark-image') {
-    formData.append('text', textInput || 'Multiverse')
+    formData.append('text', textInput || 'mtverse')
     return fetchImageBlobResult(
       formData,
       '/api/tools/image?action=watermark',

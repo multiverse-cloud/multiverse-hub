@@ -33,7 +33,7 @@ export default function SEOContent({ tool }: { tool: Tool }) {
     },
     {
       q: `Is this ${tool.name} tool free?`,
-      a: `Yes, all tools on Multiverse are 100% free to use. No registration or credit card is required to access professional utility features.`
+      a: `Yes, all tools on mtverse are 100% free to use. No registration or credit card is required to access professional utility features.`
     },
     {
       q: `Is my data secure?`,
@@ -108,7 +108,7 @@ export default function SEOContent({ tool }: { tool: Tool }) {
             <CheckCircle2 className="h-10 w-10 text-emerald-400" />
             <h3 className="font-display text-xl font-bold">100% Free Forever</h3>
             <p className="text-sm text-slate-400 leading-relaxed">
-              No subscriptions, no hidden fees, and no limits. Multiverse provides professional-grade tools for everyone at zero cost.
+              No subscriptions, no hidden fees, and no limits. mtverse provides professional-grade tools for everyone at zero cost.
             </p>
           </div>
           <div className="space-y-4">

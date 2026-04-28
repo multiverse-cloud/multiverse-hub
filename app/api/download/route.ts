@@ -115,7 +115,7 @@ export async function GET(req: NextRequest) {
     return err('URL is too long for this downloader route.', 413)
   }
   if (!isSupportedVideoUrl(videoUrl)) {
-    return err('URL not supported. Try a public YouTube, Instagram, TikTok, Facebook, X, Pinterest, Reddit, Vimeo, Dailymotion, Twitch, Telegram, or similar supported media link.')
+    return err('URL not supported. Try a public Instagram, TikTok, Facebook, X, Pinterest, Reddit, Vimeo, Dailymotion, Twitch, Telegram, or similar supported media link.')
   }
   if (format !== 'thumbnail' && !isCommandAvailable(YTDLP_PATH)) {
     return err('Video downloads are temporarily unavailable on this server. Thumbnail downloads are still available.', 503)

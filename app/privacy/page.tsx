@@ -3,8 +3,8 @@ import PublicLayout from '@/components/layout/PublicLayout'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'Learn how Multiverse Tools handles your data. We process files locally in your browser whenever possible and avoid public tracking cookies.',
-  alternates: { canonical: 'https://multiverse-tools.vercel.app/privacy' },
+  description: 'Learn how mtverse handles your data. We process files locally in your browser whenever possible and avoid public tracking cookies.',
+  alternates: { canonical: 'https://mtverse.dev/privacy' },
 }
 
 const LAST_UPDATED = 'April 28, 2026'
@@ -13,7 +13,7 @@ export default function PrivacyPage() {
   const sections = [
     {
       title: 'Data We Collect',
-      content: 'Multiverse Tools is designed with privacy as a core principle. Most tools process files entirely in your browser using client-side JavaScript. For tools that require server processing, files are processed for the requested task and are not intentionally stored as user records.',
+      content: 'mtverse is designed with privacy as a core principle. Most tools process files entirely in your browser using client-side JavaScript. For tools that require server processing, files are processed for the requested task and are not intentionally stored as user records.',
     },
     {
       title: 'Local Storage',
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
             Last updated: {LAST_UPDATED}
           </p>
           <p className="mt-4 text-base leading-7 text-muted-foreground">
-            Your privacy matters. Multiverse Tools is built to process your files locally whenever possible because your data should stay yours.
+            Your privacy matters. mtverse is built to process your files locally whenever possible because your data should stay yours.
           </p>
         </div>
 
@@ -73,8 +73,8 @@ export default function PrivacyPage() {
         <div className="mt-10 rounded-2xl border border-indigo-200/60 bg-indigo-50/50 p-6 dark:border-indigo-800/30 dark:bg-indigo-950/20">
           <p className="text-sm text-muted-foreground">
             Questions about this policy? Email us at{' '}
-            <a href="mailto:hello@multiverse-tools.vercel.app" className="font-semibold text-indigo-600 hover:underline dark:text-indigo-300">
-              hello@multiverse-tools.vercel.app
+            <a href="mailto:hello@mtverse.dev" className="font-semibold text-indigo-600 hover:underline dark:text-indigo-300">
+              hello@mtverse.dev
             </a>
           </p>
         </div>

@@ -164,7 +164,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
     eyebrow: "Tool setup",
     title: tool.name,
     summary: "This image workflow is being set up. Check back soon.",
-    badges: ["Coming soon", "Image workflow", "Multiverse"],
+    badges: ["Coming soon", "Image workflow", "mtverse"],
     actionLabel: "Process image",
     emptyTitle: "Result appears here",
   };

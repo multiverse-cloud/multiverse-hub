@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
           email,
           message,
           source: 'multiverse-feedback',
-          site_name: 'Multiverse',
+          site_name: 'mtverse',
         },
       }),
       cache: 'no-store',

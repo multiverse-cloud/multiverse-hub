@@ -6,7 +6,7 @@ import { absoluteUrl } from '@/lib/site-url'
 export const metadata: Metadata = {
   title: 'Design AI Studio - Generate UI, Logos, Posters & Frontend Concepts',
   description:
-    'Use Multiverse Design AI Studio to generate UI concepts, React components, landing pages, logos, posters, thumbnails, and multilingual design prompts.',
+    'Use mtverse Design AI Studio to generate UI concepts, React components, landing pages, logos, posters, thumbnails, and multilingual design prompts.',
   alternates: { canonical: absoluteUrl('/design') },
   openGraph: {
     title: 'Design AI Studio - Generate UI, Logos & Design Assets',

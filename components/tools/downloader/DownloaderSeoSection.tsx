@@ -35,7 +35,7 @@ export default function DownloaderSeoSection({
               Download {route.platform === "All Platforms" ? "public media" : `${route.platform} ${route.intentLabel.toLowerCase()}`} without the clutter
             </h2>
             <p className="max-w-3xl text-sm leading-7 text-slate-600 dark:text-slate-400">
-              {route.description} Paste a public link, preview the detected media, and choose the available format. Multiverse keeps the page simple, fast, and built for mobile.
+              {route.description} Paste a public link, preview the detected media, and choose the available format. mtverse keeps the page simple, fast, and built for mobile.
             </p>
           </section>
 

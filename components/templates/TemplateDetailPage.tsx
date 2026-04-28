@@ -53,7 +53,7 @@ export default function TemplateDetailPage({
 
   async function handleShare() {
     const url = typeof window !== 'undefined' ? window.location.href : ''
-    const title = `${template.title} — Multiverse`
+    const title = `${template.title} — mtverse`
     if (navigator.share) {
       try { await navigator.share({ title, url }); return } catch {}
     }

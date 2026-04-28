@@ -184,7 +184,7 @@ function createTemplate(seed: TemplateSeed): TemplateEntry {
     ...seed,
     id: `template-${slug}`,
     slug,
-    seoTitle: `${seed.title} - Downloadable Premium UI Template | Multiverse`,
+    seoTitle: `${seed.title} - Downloadable Premium UI Template | mtverse`,
     metaDescription: seed.summary,
     categoryTitle: CATEGORY_META[seed.category]?.title || seed.category,
     platformLabel: PLATFORM_LABELS[seed.platform],

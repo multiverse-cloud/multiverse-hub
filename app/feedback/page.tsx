@@ -6,8 +6,8 @@ import FeedbackForm from "@/components/feedback/FeedbackForm"
 import { absoluteUrl } from "@/lib/site-url"
 
 export const metadata: Metadata = {
-  title: "Feedback - Help Improve Multiverse",
-  description: "Send simple feedback about Multiverse tools, templates, prompts, UI components, or site issues.",
+  title: "Feedback - Help Improve mtverse",
+  description: "Send simple feedback about mtverse tools, templates, prompts, UI components, or site issues.",
   alternates: { canonical: absoluteUrl("/feedback") },
   robots: {
     index: true,
@@ -25,7 +25,7 @@ export default function FeedbackPage() {
             className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-slate-950 dark:text-slate-400 dark:hover:text-slate-100"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Multiverse
+            Back to mtverse
           </Link>
 
           <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_18px_50px_-36px_rgba(15,23,42,0.35)] dark:border-slate-800 dark:bg-slate-950 sm:p-8">

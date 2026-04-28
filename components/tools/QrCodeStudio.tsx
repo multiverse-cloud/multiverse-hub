@@ -7,7 +7,7 @@ import type { Tool } from '@/lib/tools-data'
 import { downloadBlob } from '@/lib/utils'
 
 export default function QrCodeStudio({ tool: _tool }: { tool: Tool }) {
-  const [value, setValue] = useState('https://multiverse-tools.vercel.app')
+  const [value, setValue] = useState('https://mtverse.dev')
   const [foreground, setForeground] = useState('#24389C')
   const [background, setBackground] = useState('#FFFFFF')
   const [size, setSize] = useState('512')

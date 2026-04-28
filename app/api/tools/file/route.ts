@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
         type: 'nodebuffer',
         compression: 'DEFLATE',
         compressionOptions: { level: 6 },
-        comment: 'Created by Multiverse Tools',
+        comment: 'Created by mtverse',
       })
       const archiveFilename = `${archiveLabel || `archive-${Date.now()}`}.zip`
       return fileResponse(buf, archiveFilename, 'application/zip')

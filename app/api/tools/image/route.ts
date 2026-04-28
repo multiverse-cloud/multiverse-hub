@@ -330,7 +330,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === 'watermark') {
-      const text = fields.text || 'Multiverse'
+      const text = fields.text || 'mtverse'
       const opacity = parseFloat(fields.opacity || '0.4')
       const fontSize = parseInt(fields.fontSize || '48')
 
@@ -401,8 +401,8 @@ export async function POST(req: NextRequest) {
         'site.webmanifest',
         JSON.stringify(
           {
-            name: fields.name || 'Multiverse App',
-            short_name: fields.shortName || 'Multiverse',
+            name: fields.name || 'mtverse App',
+            short_name: fields.shortName || 'mtverse',
             icons: [
               { src: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
               { src: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },

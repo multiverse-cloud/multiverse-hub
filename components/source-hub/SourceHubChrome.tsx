@@ -12,13 +12,13 @@ function LoaderMarkup() {
           <div className="source-hub-loader-logo-icon">
             <Image
               src="/SiteLogo.png"
-              alt="Multiverse"
+              alt="mtverse"
               width={56}
               height={56}
               className="w-full h-full"
             />
           </div>
-          <span className="source-hub-loader-logo-text">Multiverse</span>
+          <span className="source-hub-loader-logo-text">mtverse</span>
         </div>
 
         <div className="source-hub-loader-spinner">

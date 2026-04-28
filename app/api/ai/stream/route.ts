@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`,
             'HTTP-Referer': SITE_URL,
-            'X-Title': 'Multiverse Tools',
+            'X-Title': 'mtverse',
           },
           body: JSON.stringify({
             model,

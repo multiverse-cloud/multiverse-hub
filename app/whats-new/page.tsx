@@ -9,20 +9,20 @@ import { absoluteUrl } from '@/lib/site-url'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: "What's New - Multiverse Updates, New Tools, UI Components & Templates",
+  title: "What's New - mtverse Updates, New Tools, UI Components & Templates",
   description:
-    'Track the latest Multiverse updates across tools, UI components, templates, prompts, SEO pages, and production launch readiness.',
+    'Track the latest mtverse updates across tools, UI components, templates, prompts, SEO pages, and production launch readiness.',
   alternates: { canonical: absoluteUrl('/whats-new') },
   openGraph: {
-    title: "What's New in Multiverse",
+    title: "What's New in mtverse",
     description:
-      'Latest Multiverse product updates, new content drops, launch readiness work, and SEO improvements.',
+      'Latest mtverse product updates, new content drops, launch readiness work, and SEO improvements.',
     url: absoluteUrl('/whats-new'),
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: "What's New in Multiverse",
+    title: "What's New in mtverse",
     description: 'Latest tools, UI, templates, prompts, and production updates.',
   },
 }
@@ -38,7 +38,7 @@ export default function WhatsNewPage() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: "What's New in Multiverse",
+    name: "What's New in mtverse",
     description: metadata.description,
     url: absoluteUrl('/whats-new'),
     mainEntity: WHATS_NEW_RELEASES.map(release => ({
@@ -73,7 +73,7 @@ export default function WhatsNewPage() {
                   New drops, fixes, and launch-ready upgrades.
                 </h1>
                 <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300">
-                  Follow the Multiverse update tree: new tools, UI blocks, templates, prompts, SEO surfaces, and production readiness work before the custom domain launch.
+                  Follow the mtverse update tree: new tools, UI blocks, templates, prompts, SEO surfaces, and production readiness work before the custom domain launch.
                 </p>
                 <div className="mt-7 flex flex-wrap gap-2">
                   <Link href="/tools" className="btn-primary">

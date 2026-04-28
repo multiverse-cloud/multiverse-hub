@@ -207,7 +207,7 @@ const DEV_TOOLS = [
 
 function JSONFormatter() {
   const [input, setInput] = useState(
-    '{"name":"Multiverse","version":"1.0","tools":150,"free":true}',
+    '{"name":"mtverse","version":"1.0","tools":150,"free":true}',
   );
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
@@ -342,7 +342,7 @@ function JSONFormatter() {
 }
 
 function Base64Tool() {
-  const [input, setInput] = useState("Hello, Multiverse!");
+  const [input, setInput] = useState("Hello, mtverse!");
   const [mode, setMode] = useState<"encode" | "decode">("encode");
   const [charset, setCharset] = useState<"utf-8" | "ascii">("utf-8");
 
