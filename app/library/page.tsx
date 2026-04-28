@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     description:
       "Browse premium UI components and website templates with live previews, code access, and direct downloads.",
     type: "website",
-    url: "https://mtverse.dev/library",
+    url: "https://www.mtverse.dev/library",
   },
   twitter: {
     card: "summary_large_image",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     description:
       "Browse premium UI components and website templates with live previews, code access, and direct downloads.",
   },
-  alternates: { canonical: "https://mtverse.dev/library" },
+  alternates: { canonical: "https://www.mtverse.dev/library" },
 };
 
 export default async function LibraryPage() {

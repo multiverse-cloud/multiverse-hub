@@ -247,7 +247,7 @@ ${urls.map((p: string) => `  <url>
       const target = await assertSafeRemoteUrl(input || options.url || '')
       const response = await fetch(target, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; mtverseBot/1.0; +https://mtverse.dev)',
+          'User-Agent': 'Mozilla/5.0 (compatible; mtverseBot/1.0; +https://www.mtverse.dev)',
           Accept: 'text/html,application/xhtml+xml',
         },
         redirect: 'follow',

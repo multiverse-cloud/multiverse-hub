@@ -4,7 +4,7 @@ import PublicLayout from '@/components/layout/PublicLayout'
 export const metadata: Metadata = {
   title: 'Terms of Service',
   description: 'Read the mtverse Terms of Service. Public tools, templates, prompts, and guides are free to use without a public account.',
-  alternates: { canonical: 'https://mtverse.dev/terms' },
+  alternates: { canonical: 'https://www.mtverse.dev/terms' },
 }
 
 const LAST_UPDATED = 'April 21, 2026'

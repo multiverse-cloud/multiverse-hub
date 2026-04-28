@@ -208,4 +208,4 @@ MIT License — free to use, modify and distribute.
 
 ---
 
-Built by the mtverse team · [mtverse.dev](https://mtverse.dev)
+Built by the mtverse team · [mtverse.dev](https://www.mtverse.dev)

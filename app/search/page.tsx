@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   title: "Search - mtverse",
   description:
     "Search across tools, discover pages, fixes, prompts, and UI templates in one place.",
-  alternates: { canonical: "https://mtverse.dev/search" },
+  alternates: { canonical: "https://www.mtverse.dev/search" },
 };
 
 interface SearchPageProps {

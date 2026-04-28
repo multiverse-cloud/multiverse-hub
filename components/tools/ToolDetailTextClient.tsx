@@ -30,7 +30,7 @@ function getPlaceholder(slug: string): string {
     'js-minifier': 'function hello(name) { console.log("Hello " + name); }',
     'meta-tag-generator': 'Title: My Site\nDescription: Best tools\nKeywords: tools, free',
     'keyword-extractor': 'Paste your article or content here...',
-    'qr-code-generator': 'https://mtverse.dev',
+    'qr-code-generator': 'https://www.mtverse.dev',
     'ai-image-generator': 'A breathtaking mountain landscape at sunset, photorealistic, 4K',
     'youtube-thumbnail-downloader': 'https://youtube.com/watch?v=dQw4w9WgXcQ',
     'gitignore-generator': 'node, nextjs, react, python',
@@ -237,7 +237,7 @@ export default function ToolDetailTextClient({ tool }: { tool: Tool }) {
       }
 
       if (slug === 'qr-code-generator') {
-        setImagePreview(`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(textInput || 'https://mtverse.dev')}&color=6366f1`)
+        setImagePreview(`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(textInput || 'https://www.mtverse.dev')}&color=6366f1`)
         setOutput('QR code generated')
         return
       }

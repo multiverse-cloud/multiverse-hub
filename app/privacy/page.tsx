@@ -4,7 +4,7 @@ import PublicLayout from '@/components/layout/PublicLayout'
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'Learn how mtverse handles your data. We process files locally in your browser whenever possible and avoid public tracking cookies.',
-  alternates: { canonical: 'https://mtverse.dev/privacy' },
+  alternates: { canonical: 'https://www.mtverse.dev/privacy' },
 }
 
 const LAST_UPDATED = 'April 28, 2026'
