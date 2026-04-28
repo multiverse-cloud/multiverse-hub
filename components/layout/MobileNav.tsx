@@ -13,6 +13,7 @@ import {
   Home,
   Layers3,
   Menu,
+  History,
   Paintbrush,
   Search,
   ShieldAlert,
@@ -34,7 +35,13 @@ const MOBILE_NAV_LINKS = [
     name: "Tools",
     href: "/tools",
     icon: Wrench,
-    subtitle: "150+ free tools",
+    subtitle: "160+ free tools",
+  },
+  {
+    name: "What's New",
+    href: "/whats-new",
+    icon: History,
+    subtitle: "Latest updates",
   },
   {
     name: "Design",
@@ -183,11 +190,11 @@ export default function MobileNav({
             </button>
           </div>
 
-          {/* "150+ free tools" pill */}
+          {/* "160+ free tools" pill */}
           <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/50 px-2.5 py-1">
             <Zap className="h-3 w-3 text-indigo-500 dark:text-indigo-400" />
             <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-              150+ free tools
+              160+ free tools
             </span>
           </div>
         </div>

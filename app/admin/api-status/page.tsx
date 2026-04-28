@@ -16,7 +16,7 @@ const APIS = [
   {
     name: "OpenRouter AI",
     desc: "Powers chat, writing, summarization, and AI generation tools",
-    key: "NEXT_PUBLIC_OPENROUTER_API_KEY",
+    key: "OPENROUTER_API_KEY",
     docs: "https://openrouter.ai",
     freeLimit: "10 requests/min on free models",
   },
@@ -105,7 +105,7 @@ export default function APIStatusPage() {
           </code>{" "}
           file in the project root and add:
         </p>
-        <pre className="mt-2 overflow-x-auto rounded-lg bg-amber-100 p-3 text-xs text-amber-900 dark:bg-amber-900/40 dark:text-amber-100">{`NEXT_PUBLIC_OPENROUTER_API_KEY=sk-or-xxxx
+        <pre className="mt-2 overflow-x-auto rounded-lg bg-amber-100 p-3 text-xs text-amber-900 dark:bg-amber-900/40 dark:text-amber-100">{`OPENROUTER_API_KEY=sk-or-xxxx
 NEXT_PUBLIC_TMDB_API_KEY=xxxx
 NEXT_PUBLIC_GNEWS_API_KEY=xxxx`}</pre>
       </div>

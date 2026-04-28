@@ -42,6 +42,7 @@ const FOOTER_LINKS = {
     { name: "Template Library", href: "/templates" },
     { name: "Discover", href: "/discover" },
     { name: "Feedback", href: "/feedback" },
+    { name: "What's New", href: "/whats-new" },
   ],
 };
 
@@ -85,7 +86,7 @@ export default function Footer({
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
                 </span>
-                Product Updates
+                Updates + Feedback
               </div>
             </div>
 
@@ -158,7 +159,7 @@ export default function Footer({
                 templateVariant ? "text-[#acabaa]" : "text-muted-foreground",
               )}
             >
-              150+ free online tools for PDF, image, video, text, and developer
+              160+ free online tools for PDF, image, video, text, and developer
               workflows. Fast, private, and always free.
             </p>
 

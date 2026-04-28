@@ -381,16 +381,16 @@ export default function TemplatesHubPage({
       {/* Background glow */}
       <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-96 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(59,130,246,0.10),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(59,130,246,0.08),transparent)]" />
 
-      <main className="relative mx-auto flex max-w-[1600px] flex-col gap-8 px-4 pb-20 pt-8 lg:flex-row lg:items-start lg:px-6">
+      <main className="relative mx-auto grid max-w-[1600px] gap-8 px-4 pb-20 pt-8 lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-start lg:px-6 xl:grid-cols-[18rem_minmax(0,1fr)]">
         {/* ─── Sidebar ─── */}
-        <aside className="hidden w-64 shrink-0 self-start lg:sticky lg:top-[88px] lg:block xl:w-72">
+        <aside className="hidden lg:sticky lg:top-[7.25rem] lg:block lg:max-h-[calc(100dvh-8.5rem)] lg:overflow-y-auto lg:pr-1">
           <div className="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             {filterPanel}
           </div>
         </aside>
 
         {/* ─── Main content ─── */}
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0">
           {/* Page heading */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50 md:text-4xl">

@@ -55,7 +55,9 @@ export async function POST(request: NextRequest) {
     }
 
     const serviceId = process.env.EMAILJS_SERVICE_ID
-    const templateId = process.env.EMAILJS_FEEDBACK_TEMPLATE_ID || process.env.EMAILJS_TEMPLATE_ID
+    const templateId =
+      process.env.EMAILJS_FEEDBACK_TEMPLATE_ID ||
+      process.env.EMAILJS_NEWSLETTER_TEMPLATE_ID
     const publicKey = process.env.EMAILJS_PUBLIC_KEY
 
     if (!serviceId || !templateId || !publicKey) {

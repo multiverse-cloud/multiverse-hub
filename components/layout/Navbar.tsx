@@ -8,6 +8,7 @@ import {
   Code2,
   Compass,
   FileText,
+  History,
   Home,
   House,
   Image as ImageIcon,
@@ -133,6 +134,12 @@ const NAV_LINKS: NavLink[] = [
         href: "/discover",
         icon: Compass,
         desc: "Curated lists and ranked picks",
+      },
+      {
+        name: "What's New",
+        href: "/whats-new",
+        icon: History,
+        desc: "Latest launches, content drops, and production updates",
       },
       {
         name: "Daily Tools",
@@ -261,7 +268,7 @@ function MegaMenu({ link, tools }: { link: NavLink; tools?: Tool[] }) {
               className="flex items-center gap-2 rounded-lg bg-slate-100 px-5 py-2.5 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
             >
               <Zap className="h-4 w-4 text-amber-500" />
-              Explore all 150+ free tools
+              Explore all 160+ free tools
             </Link>
           </div>
         </div>
@@ -439,7 +446,7 @@ export default async function Navbar({
           <div className="flex items-center justify-end">
             <span className="flex items-center gap-1 text-xs text-muted-foreground">
               <Star className="h-3 w-3 fill-indigo-500 text-indigo-500 dark:fill-indigo-300 dark:text-indigo-300" />
-              150+ tools
+              160+ tools
             </span>
           </div>
         </div>

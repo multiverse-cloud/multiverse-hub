@@ -25,6 +25,7 @@ declare global {
 }
 
 let translateReadyPromise: Promise<void> | null = null
+let translateInitialized = false
 
 function ensureTranslateElement() {
   if (typeof document === 'undefined') return
@@ -61,40 +62,95 @@ function getTranslateCombo() {
   return document.querySelector<HTMLSelectElement>('.goog-te-combo')
 }
 
-function loadGoogleTranslate() {
-  if (typeof window === 'undefined') return Promise.resolve()
-  if (window.google?.translate?.TranslateElement) return Promise.resolve()
+function initializeTranslateElement() {
+  ensureTranslateElement()
+  if (translateInitialized) return
+  if (!window.google?.translate?.TranslateElement) return
+
+  new window.google.translate.TranslateElement(
+    {
+      pageLanguage: 'en',
+      includedLanguages: TRANSLATE_LANGUAGES,
+      autoDisplay: false,
+    },
+    TRANSLATE_ELEMENT_ID
+  )
+  translateInitialized = true
+}
+
+function waitForTranslateCombo(timeoutMs = 5000) {
+  return new Promise<HTMLSelectElement | null>(resolve => {
+    const existingCombo = getTranslateCombo()
+    if (existingCombo) {
+      resolve(existingCombo)
+      return
+    }
+
+    const startedAt = Date.now()
+    const interval = window.setInterval(() => {
+      const combo = getTranslateCombo()
+      if (combo) {
+        window.clearInterval(interval)
+        resolve(combo)
+        return
+      }
+
+      if (Date.now() - startedAt >= timeoutMs) {
+        window.clearInterval(interval)
+        resolve(null)
+      }
+    }, 100)
+  })
+}
+
+async function loadGoogleTranslate() {
+  if (typeof window === 'undefined') return
+  if (getTranslateCombo()) return
+  if (window.google?.translate?.TranslateElement) {
+    initializeTranslateElement()
+    await waitForTranslateCombo()
+    return
+  }
   if (translateReadyPromise) return translateReadyPromise
 
   translateReadyPromise = new Promise(resolve => {
     ensureTranslateElement()
 
     window.googleTranslateElementInit = () => {
-      ensureTranslateElement()
-      if (window.google?.translate?.TranslateElement) {
-        new window.google.translate.TranslateElement(
-          {
-            pageLanguage: 'en',
-            includedLanguages: TRANSLATE_LANGUAGES,
-            autoDisplay: false,
-          },
-          TRANSLATE_ELEMENT_ID
-        )
-      }
-      resolve()
+      initializeTranslateElement()
+      waitForTranslateCombo().then(() => resolve())
     }
 
     const existingScript = document.getElementById(TRANSLATE_SCRIPT_ID)
-    if (existingScript) return
+    if (existingScript) {
+      const startedAt = Date.now()
+      const interval = window.setInterval(() => {
+        if (window.google?.translate?.TranslateElement || Date.now() - startedAt > 5000) {
+          window.clearInterval(interval)
+          initializeTranslateElement()
+          waitForTranslateCombo().then(() => resolve())
+        }
+      }, 100)
+      return
+    }
 
     const script = document.createElement('script')
     script.id = TRANSLATE_SCRIPT_ID
     script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'
     script.async = true
+    script.onerror = () => {
+      translateReadyPromise = null
+      resolve()
+    }
     document.body.appendChild(script)
   })
 
   return translateReadyPromise
+}
+
+function dispatchTranslateChange(combo: HTMLSelectElement, languageCode: string) {
+  combo.value = languageCode
+  combo.dispatchEvent(new Event('change', { bubbles: true }))
 }
 
 async function applyGoogleLanguage(languageCode: string) {
@@ -107,13 +163,15 @@ async function applyGoogleLanguage(languageCode: string) {
   }
 
   await loadGoogleTranslate()
+  const combo = await waitForTranslateCombo()
+  if (combo) {
+    dispatchTranslateChange(combo, languageCode)
+    return
+  }
 
-  window.setTimeout(() => {
-    const combo = getTranslateCombo()
-    if (!combo) return
-    combo.value = languageCode
-    combo.dispatchEvent(new Event('change'))
-  }, 120)
+  // Cookie fallback: after CSP allows the script, reload lets Google Translate
+  // initialize using the saved language if the combo was slow to appear.
+  window.location.reload()
 }
 
 export default function SiteLanguageSwitcher() {
@@ -126,11 +184,10 @@ export default function SiteLanguageSwitcher() {
     setCurrentLanguage(savedLanguage)
     if (savedLanguage !== 'en') {
       setGoogleTranslateCookie(savedLanguage)
-      loadGoogleTranslate().then(() => {
-        const combo = getTranslateCombo()
+      loadGoogleTranslate().then(async () => {
+        const combo = await waitForTranslateCombo()
         if (!combo) return
-        combo.value = savedLanguage
-        combo.dispatchEvent(new Event('change'))
+        dispatchTranslateChange(combo, savedLanguage)
       })
     }
   }, [])
@@ -196,16 +253,7 @@ export default function SiteLanguageSwitcher() {
       </button>
 
       {open ? (
-        <div className="absolute right-0 top-full z-[70] mt-2 w-[280px] overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_24px_54px_-30px_rgba(15,23,42,0.4)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-[0_24px_54px_-30px_rgba(2,6,23,0.8)]">
-          <div className="px-2.5 pb-2 pt-1.5">
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
-              Website language
-            </p>
-            <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
-              Translate the current page instantly.
-            </p>
-          </div>
-
+        <div className="absolute right-0 top-full z-[70] mt-2 w-[260px] overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_24px_54px_-30px_rgba(15,23,42,0.4)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-[0_24px_54px_-30px_rgba(2,6,23,0.8)]">
           <div className="grid max-h-[320px] grid-cols-2 gap-1 overflow-y-auto pr-1">
             {POPULAR_SITE_LANGUAGES.map(language => {
               const active = language.code === currentLanguage

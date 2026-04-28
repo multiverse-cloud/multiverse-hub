@@ -62,7 +62,7 @@ export default function UniversesSection() {
         <div className="mx-auto max-w-6xl">
           <div className="section-header">
             <p className="section-label">Explore</p>
-            <h2 className="section-title">Ten studios. One platform.</h2>
+            <h2 className="section-title">Every universe. One platform.</h2>
             <p className="section-sub">
               Each universe is its own workspace — tools, workflows, and
               resources designed for a single focus.

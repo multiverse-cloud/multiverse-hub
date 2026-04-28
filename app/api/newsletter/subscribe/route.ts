@@ -6,6 +6,10 @@ function normalizeEmail(value: unknown) {
   return typeof value === 'string' ? value.trim().toLowerCase() : ''
 }
 
+function normalizeText(value: unknown, fallback = '') {
+  return typeof value === 'string' ? value.trim() : fallback
+}
+
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
@@ -15,15 +19,19 @@ export async function POST(request: NextRequest) {
     const limited = await guardRateLimit(request, 'newsletter', API_RATE_LIMITS.toolJson, 'Too many newsletter requests. Please retry in a moment.')
     if (limited) return limited
 
-    const body = await readJsonBody<{ email?: string }>(request, API_BODY_LIMITS.jsonSmall).catch(() => null)
+    const body = await readJsonBody<{ name?: string; email?: string; message?: string }>(request, API_BODY_LIMITS.jsonSmall).catch(() => null)
+    const name = normalizeText(body?.name, 'Newsletter subscriber')
     const email = normalizeEmail(body?.email)
+    const message = normalizeText(body?.message, 'Newsletter signup from footer.')
 
     if (!isValidEmail(email)) {
       return NextResponse.json({ error: 'Enter a valid email address.' }, { status: 400 })
     }
 
     const serviceId = process.env.EMAILJS_SERVICE_ID
-    const templateId = process.env.EMAILJS_TEMPLATE_ID
+    const templateId =
+      process.env.EMAILJS_NEWSLETTER_TEMPLATE_ID ||
+      process.env.EMAILJS_FEEDBACK_TEMPLATE_ID
     const publicKey = process.env.EMAILJS_PUBLIC_KEY
 
     if (!serviceId || !templateId || !publicKey) {
@@ -44,8 +52,10 @@ export async function POST(request: NextRequest) {
         template_id: templateId,
         user_id: publicKey,
         template_params: {
+          name,
           subscriber_email: email,
           email,
+          message,
           source: 'multiverse-footer',
           site_name: 'Multiverse',
         },

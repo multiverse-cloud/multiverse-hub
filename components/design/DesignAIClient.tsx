@@ -181,7 +181,7 @@ export default function DesignAIClient() {
       }
     } catch {
       setOutput(
-        'Add NEXT_PUBLIC_OPENROUTER_API_KEY to .env.local for live AI generation.\n\nExample output:\n\nexport default function HeroSection() {\n  return (\n    <section className="min-h-screen bg-slate-950 text-white flex items-center justify-center">\n      <div className="text-center">\n        <h1 className="text-6xl font-black">Your Product</h1>\n        <p className="mt-4 text-xl text-slate-300">A clean, professional launch surface.</p>\n      </div>\n    </section>\n  )\n}',
+        'Add OPENROUTER_API_KEY to .env.local for server-side AI generation.\n\nExample output:\n\nexport default function HeroSection() {\n  return (\n    <section className="min-h-screen bg-slate-950 text-white flex items-center justify-center">\n      <div className="text-center">\n        <h1 className="text-6xl font-black">Your Product</h1>\n        <p className="mt-4 text-xl text-slate-300">A clean, professional launch surface.</p>\n      </div>\n    </section>\n  )\n}',
       );
     } finally {
       setLoading(false);

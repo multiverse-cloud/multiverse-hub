@@ -64,6 +64,42 @@
         }
     }
 
+    @keyframes mvHeroGrid {
+        0% {
+            background-position: 0 0, 0 0;
+        }
+        100% {
+            background-position: 76px 76px, 76px 76px;
+        }
+    }
+
+    @keyframes mvHeroOrbit {
+        0%,
+        100% {
+            transform: translateX(-50%) scale(1);
+            opacity: 0.7;
+        }
+        50% {
+            transform: translateX(-50%) scale(1.035);
+            opacity: 0.35;
+        }
+    }
+
+    @keyframes mvHeroSignal {
+        0% {
+            transform: translateX(-120%);
+            opacity: 0;
+        }
+        18%,
+        58% {
+            opacity: 0.85;
+        }
+        100% {
+            transform: translateX(120vw);
+            opacity: 0;
+        }
+    }
+
     @keyframes mvWorkflow {
         from {
             transform: translateX(0);
@@ -115,6 +151,18 @@
         transform-origin: center;
     }
 
+    .mv-hero-grid {
+        animation: mvHeroGrid 24s linear infinite;
+    }
+
+    .mv-hero-orbit {
+        animation: mvHeroOrbit 12s ease-in-out infinite;
+    }
+
+    .mv-hero-signal {
+        animation: mvHeroSignal 8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    }
+
     .mv-workflow-track {
         animation: mvWorkflow 18s linear infinite;
     }
@@ -122,6 +170,9 @@
     @media (prefers-reduced-motion: reduce) {
         .mv-flip-word,
         .mv-hero-beam,
+        .mv-hero-grid,
+        .mv-hero-orbit,
+        .mv-hero-signal,
         .mv-workflow-track {
             animation: none;
         }

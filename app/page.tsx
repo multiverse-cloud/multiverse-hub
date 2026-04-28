@@ -11,13 +11,14 @@ import WhyMultiverse from "@/components/home/WhyMultiverse";
 import PublicLayout from "@/components/layout/PublicLayout";
 import { getTools } from "@/lib/db";
 import { SITE_URL } from "@/lib/site-url";
+import { SITE_METRICS } from "@/lib/site-metrics";
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Multiverse - Free Online Tools, UI Components, Templates, Prompts & Fixes",
   description:
-    "Use 150+ free online tools, UI components, website templates, AI prompts, discover guides, and troubleshooting fixes in one fast public platform. No public login required.",
+    `Use ${SITE_METRICS.tools.label} free online tools, ${SITE_METRICS.ui.shortLabel}, website templates, AI prompts, discover guides, and troubleshooting fixes in one fast public platform. No public login required.`,
   keywords: [
     "free online tools",
     "video downloader",
@@ -81,7 +82,7 @@ const FAQ_SCHEMA = {
       name: "How many tools are available?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Over 150 tools across ten categories including PDF, image, video, audio, text, developer, SEO, calculators, and file utilities.",
+        text: `Over ${SITE_METRICS.tools.label} tools across ten categories including PDF, image, video, audio, text, developer, SEO, calculators, and file utilities.`,
       },
     },
     {

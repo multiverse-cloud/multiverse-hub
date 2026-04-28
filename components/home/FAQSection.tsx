@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronDown, MessageCircle, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { SITE_METRICS } from "@/lib/site-metrics";
 
 const FAQS = [
   {
@@ -20,7 +21,7 @@ const FAQS = [
   },
   {
     q: "How many tools are available?",
-    a: "Over 150 tools across ten categories: PDF, image, video, audio, text, developer, SEO, calculators, file utilities, and more. New tools are added every week.",
+    a: `Over ${SITE_METRICS.tools.label} tools across ten categories: PDF, image, video, audio, text, developer, SEO, calculators, file utilities, and more. New tools are added every week.`,
   },
   {
     q: "What can I use on Multiverse?",

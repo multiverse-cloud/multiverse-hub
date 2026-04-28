@@ -14,12 +14,12 @@ export const UNIVERSES: Universe[] = [
   {
     id: 'tools',
     name: 'Tools Universe',
-    description: '150+ free tools for every task',
+    description: '160+ free tools for every task',
     icon: 'Wrench',
     href: '/tools',
     gradient: 'from-blue-500 to-indigo-600',
     bgGradient: 'from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20',
-    count: '150+ Tools',
+    count: '160+ Tools',
     color: 'blue',
   },
   {
@@ -36,12 +36,12 @@ export const UNIVERSES: Universe[] = [
   {
     id: 'ui',
     name: 'UI Universe',
-    description: '541 reusable UI components, patterns, and foundations',
+    description: '600+ reusable UI components, patterns, and foundations',
     icon: 'Sparkles',
     href: '/ui',
     gradient: 'from-slate-700 to-slate-900',
     bgGradient: 'from-slate-50 to-zinc-50 dark:from-slate-950/20 dark:to-zinc-950/20',
-    count: '541 UI Items',
+    count: '600+ UI Items',
     color: 'slate',
   },
   {
@@ -74,7 +74,7 @@ export const UNIVERSES: Universe[] = [
     href: '/discover',
     gradient: 'from-cyan-500 to-teal-600',
     bgGradient: 'from-cyan-50 to-teal-50 dark:from-cyan-950/20 dark:to-teal-950/20',
-    count: '160 Discover Pages',
+    count: '400+ Discover Pages',
     color: 'cyan',
   },
   {
@@ -85,7 +85,7 @@ export const UNIVERSES: Universe[] = [
     href: '/prompts',
     gradient: 'from-fuchsia-500 to-pink-600',
     bgGradient: 'from-fuchsia-50 to-pink-50 dark:from-fuchsia-950/20 dark:to-pink-950/20',
-    count: '13 Prompt Pages',
+    count: '200 Prompts',
     color: 'pink',
   },
   {
@@ -96,7 +96,7 @@ export const UNIVERSES: Universe[] = [
     href: '/templates',
     gradient: 'from-cyan-500 to-sky-600',
     bgGradient: 'from-cyan-50 to-sky-50 dark:from-cyan-950/20 dark:to-sky-950/20',
-    count: '3 Downloadable UI Templates',
+    count: '100+ Templates',
     color: 'cyan',
   },
   {
@@ -107,7 +107,7 @@ export const UNIVERSES: Universe[] = [
     href: '/fixes',
     gradient: 'from-orange-500 to-rose-600',
     bgGradient: 'from-orange-50 to-rose-50 dark:from-orange-950/20 dark:to-rose-950/20',
-    count: '150 Fix Guides',
+    count: '150+ Fix Guides',
     color: 'orange',
   },
 ]

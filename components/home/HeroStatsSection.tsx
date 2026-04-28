@@ -1,32 +1,34 @@
+import { SITE_METRICS } from '@/lib/site-metrics'
+
 const STATS = [
   {
-    value: "150+",
-    label: "Tools Available",
-    category: "Library",
+    value: SITE_METRICS.tools.label,
+    label: "Free Tools",
+    category: "Tools",
     accent: "from-indigo-500 to-violet-500",
     badgeColor:
       "bg-indigo-100 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400",
   },
   {
-    value: "10",
-    label: "Tool Categories",
-    category: "Coverage",
+    value: SITE_METRICS.ui.label,
+    label: "UI Components",
+    category: "Library",
     accent: "from-violet-500 to-purple-500",
     badgeColor:
       "bg-violet-100 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400",
   },
   {
-    value: "0",
-    label: "Files We Store",
-    category: "Privacy",
+    value: SITE_METRICS.templates.label,
+    label: "Templates",
+    category: "Launch",
     accent: "from-emerald-500 to-teal-500",
     badgeColor:
       "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400",
   },
   {
-    value: "100%",
-    label: "Free Forever",
-    category: "Pricing",
+    value: SITE_METRICS.prompts.label,
+    label: "AI Prompts",
+    category: "Creative",
     accent: "from-amber-500 to-orange-500",
     badgeColor:
       "bg-amber-100 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400",

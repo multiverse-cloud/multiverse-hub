@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Banknote, Globe, Infinity, Lock, Sparkles, Zap } from "lucide-react";
+import { SITE_METRICS } from "@/lib/site-metrics";
 
 const FEATURES = [
   {
@@ -32,7 +33,7 @@ const FEATURES = [
   },
   {
     icon: Infinity,
-    title: "150+ & Growing",
+    title: `${SITE_METRICS.tools.label} & Growing`,
     desc: "PDF, image, video, audio, text, dev, SEO, calculator, and file tools — with more added weekly.",
     tone: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-300",
     borderHover: "hover:border-indigo-200 dark:hover:border-indigo-900",

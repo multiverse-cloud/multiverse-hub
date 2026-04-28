@@ -66,8 +66,8 @@ export default async function NewContentSection() {
                 Recently added templates, prompts, and UI components for people who want useful assets without hunting.
               </p>
             </div>
-            <Link href="/library" className="hidden items-center gap-2 text-sm font-bold text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white sm:flex">
-              View library <ArrowRight className="h-4 w-4" />
+            <Link href="/whats-new" className="hidden items-center gap-2 text-sm font-bold text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white sm:flex">
+              What's new <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 

@@ -1,10 +1,10 @@
 # 🌌 Multiverse – Universe of Free Tools
 
-> One platform. Multiple universes. 150+ free tools, AI, entertainment, news, and marketplace — the ultimate mini internet.
+> One platform. Multiple universes. 160+ free tools, UI libraries, templates, prompts, and practical guides — the ultimate mini internet.
 
 ## ✨ Features
 
-- **150+ Free Tools** across PDF, Image, Video, Audio, Text, Dev, SEO, Calculators, AI
+- **160+ Free Tools** across PDF, Image, Video, Audio, Text, Dev, SEO, Calculators, AI
 - **10 Universes**: Tools, AI Hub, Design AI, Entertainment, News, Learn, Daily, Dev, Discover, Marketplace
 - **AI-Powered**: Chat with GPT-4o, Claude, Gemini via OpenRouter
 - **Entertainment**: Movies & TV series via TMDB
@@ -37,10 +37,10 @@ Edit `.env.local` and add your API keys:
 
 | Key | Where to get | Required? |
 |-----|-------------|-----------|
-| `NEXT_PUBLIC_OPENROUTER_API_KEY` | [openrouter.ai](https://openrouter.ai) | For AI tools |
+| `OPENROUTER_API_KEY` | [openrouter.ai](https://openrouter.ai) | For AI tools |
 | `NEXT_PUBLIC_TMDB_API_KEY` | [developer.themoviedb.org](https://developer.themoviedb.org) | For entertainment |
 | `NEXT_PUBLIC_GNEWS_API_KEY` | [gnews.io](https://gnews.io) | For news |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | [clerk.com](https://clerk.com) | For auth (optional) |
+| `EMAILJS_SERVICE_ID` / `EMAILJS_FEEDBACK_TEMPLATE_ID` / `EMAILJS_PUBLIC_KEY` | [emailjs.com](https://www.emailjs.com) | For newsletter and feedback |
 
 **Note:** All free tier keys. The platform works in demo mode without any keys.
 
@@ -96,7 +96,7 @@ multiverse/
 │   ├── marketplace/        # Product cards & grid
 │   └── admin/              # Admin layout & components
 ├── lib/
-│   ├── tools-data.ts       # 150+ tool definitions
+│   ├── tools-data.ts       # 160+ tool definitions
 │   ├── marketplace-data.ts # Product catalogue
 │   ├── discover-data.ts    # Top-10 lists
 │   └── utils.ts            # Utilities & API helpers
@@ -111,7 +111,7 @@ multiverse/
 | Styling | Tailwind CSS |
 | Components | shadcn/ui + Radix UI |
 | Fonts | Outfit (display) + JetBrains Mono |
-| Auth | Clerk (optional) |
+| Auth | Custom admin-only session cookie |
 | AI | OpenRouter (GPT-4o, Claude, Gemini) |
 | Images | Pollinations AI (free) |
 | PDF Processing | pdf-lib |

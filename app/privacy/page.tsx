@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://multiverse-tools.vercel.app/privacy' },
 }
 
-const LAST_UPDATED = 'April 21, 2026'
+const LAST_UPDATED = 'April 28, 2026'
 
 export default function PrivacyPage() {
   const sections = [
@@ -17,7 +17,7 @@ export default function PrivacyPage() {
     },
     {
       title: 'Local Storage',
-      content: 'We use your browser localStorage only for essential interface preferences such as light or dark theme. This data never leaves your device and is not transmitted to any server.',
+      content: 'We use your browser localStorage only for essential interface preferences such as light or dark theme and your selected site language.',
     },
     {
       title: 'Analytics',
@@ -25,11 +25,11 @@ export default function PrivacyPage() {
     },
     {
       title: 'Cookies',
-      content: 'Public visitors do not need an account. We use a secure session cookie only for the protected admin panel and do not use tracking cookies, advertising cookies, public favorites cookies, or public history cookies.',
+      content: 'Public visitors do not need an account. We use a secure session cookie only for the protected admin panel. If you choose a non-English language, Google Translate may set a googtrans preference cookie so the site can stay translated across pages.',
     },
     {
       title: 'Third-Party Services',
-      content: 'Some tools optionally use third-party APIs: OpenRouter for AI features (when API key is configured), and QR Server for QR code generation (no personal data sent). These services have their own privacy policies.',
+      content: 'Some tools optionally use third-party APIs: OpenRouter for AI features (when API key is configured), EmailJS for newsletter and feedback messages, QR Server for QR code generation, and Google Translate only when you choose to translate the website. These services have their own privacy policies.',
     },
     {
       title: 'Your Rights',
