@@ -22,8 +22,6 @@ import {
   Wrench,
   Globe,
 } from "lucide-react";
-import { buildTranslateUrl, NAV_LANGUAGE_LINKS } from "@/lib/seo-languages";
-import { SITE_URL } from "@/lib/site-url";
 
 const MOBILE_NAV_LINKS = [
   {
@@ -87,11 +85,6 @@ const QUICK_LINKS_RIGHT = [
   { name: "Library", href: "/library" },
   { name: "Feedback", href: "/feedback" },
 ];
-
-const MOBILE_LANGUAGE_LINKS = NAV_LANGUAGE_LINKS.slice(0, 6).map(language => ({
-  ...language,
-  href: buildTranslateUrl(language.code, SITE_URL),
-}));
 
 export default function MobileNav({
   authSlot,
@@ -304,26 +297,6 @@ export default function MobileNav({
 
         {/* ── Footer ── */}
         <div className="flex-shrink-0 border-t border-slate-200/80 dark:border-slate-800/80 px-4 pt-3 pb-4 space-y-3">
-          <div>
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-              Languages
-            </p>
-            <div className="grid grid-cols-3 gap-1.5">
-              {MOBILE_LANGUAGE_LINKS.map(language => (
-                <a
-                  key={language.code}
-                  href={language.href}
-                  target={language.code === "en" ? undefined : "_blank"}
-                  rel={language.code === "en" ? undefined : "noreferrer"}
-                  onClick={close}
-                  className="rounded-lg bg-slate-100 px-2 py-1.5 text-center text-[11px] font-bold text-slate-600 transition-colors hover:bg-indigo-50 hover:text-indigo-600 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-indigo-950/40 dark:hover:text-indigo-300"
-                >
-                  {language.code.toUpperCase()}
-                </a>
-              ))}
-            </div>
-          </div>
-
           {/* Quick links heading */}
           <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
             Quick Links

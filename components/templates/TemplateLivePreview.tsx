@@ -268,10 +268,7 @@ export default function TemplateLivePreview({
             fill
             sizes="(min-width: 1536px) 25vw, (min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
             onLoad={() => setLoaded(true)}
-            className={cn(
-              compact ? 'object-cover object-top transition-opacity duration-200' : 'object-contain object-top transition-opacity duration-200',
-              loaded ? 'opacity-100' : 'opacity-0'
-            )}
+            className={cn('object-cover object-top transition-opacity duration-200', loaded ? 'opacity-100' : 'opacity-0')}
           />
         </div>
       </div>
@@ -347,7 +344,6 @@ export default function TemplateLivePreview({
     return (
       <div className={cn('relative overflow-hidden rounded-xl border border-border bg-card', frameClass, className)}>
         {!loaded ? <div className="absolute inset-0 z-[1] animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(148,163,184,0.18),transparent_55%)]" />
         <div className="absolute inset-0">
           <Image
             src={template.previewImage}
@@ -355,10 +351,7 @@ export default function TemplateLivePreview({
             fill
             sizes={compact ? '(min-width: 1536px) 25vw, (min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw' : '100vw'}
             onLoad={() => setLoaded(true)}
-            className={cn(
-              compact ? 'object-cover object-top transition-opacity duration-200' : 'object-contain object-top transition-opacity duration-200',
-              loaded ? 'opacity-100' : 'opacity-0'
-            )}
+            className={cn('object-cover object-top transition-opacity duration-200', loaded ? 'opacity-100' : 'opacity-0')}
           />
         </div>
       </div>

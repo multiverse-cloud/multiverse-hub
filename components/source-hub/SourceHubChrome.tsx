@@ -210,7 +210,7 @@ export default function SourceHubChrome() {
         .source-hub-loader {
           position: fixed;
           inset: 0;
-          z-index: 99999;
+          z-index: 45;
           display: flex;
           align-items: center;
           justify-content: center;
