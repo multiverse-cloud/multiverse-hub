@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     'compress PDF',
     'merge PDF',
     'image compressor',
-    'video downloader',
+    'video tools',
     'text tools',
     'developer tools',
     'JSON formatter',

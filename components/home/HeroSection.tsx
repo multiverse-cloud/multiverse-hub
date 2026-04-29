@@ -15,8 +15,8 @@ import { SITE_METRICS } from "@/lib/site-metrics";
 
 const SUGGESTION_CHIPS = [
   {
-    label: "Video Downloader",
-    href: "/tools/video/all-in-one-video-downloader",
+    label: "Video Tools",
+    href: "/tools/video",
     icon: Download,
   },
   { label: "Merge PDF", href: "/tools/pdf/merge-pdf", icon: FileText },
@@ -73,7 +73,7 @@ export default function HeroSection() {
               </span>
             </h1>
             <p className="mx-auto mt-2.5 max-w-2xl text-[13px] leading-6 text-slate-600 dark:text-slate-400 sm:mt-3 sm:text-base sm:leading-7 md:text-[1.05rem]">
-              Download media, process files, copy production-ready UI, browse
+              Process files, edit images, copy production-ready UI, browse
               templates, use AI prompts, and fix everyday tech issues from one
               clean public workspace.
             </p>

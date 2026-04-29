@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     `Use ${SITE_METRICS.tools.label} free online tools, ${SITE_METRICS.ui.shortLabel}, website templates, AI prompts, discover guides, and troubleshooting fixes in one fast public platform. No public login required.`,
   keywords: [
     "free online tools",
-    "video downloader",
+    "video tools",
     "PDF tools",
     "image tools",
     "UI components",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "mtverse - Free Online Tools, UI Components, Templates, Prompts & Fixes",
     description:
-      "A fast public workspace for creators and developers: download media, process files, copy UI, launch templates, and find practical fixes without sign-in.",
+      "A fast public workspace for creators and developers: process files, copy UI, launch templates, and find practical fixes without sign-in.",
     type: "website",
     url: SITE_URL,
   },

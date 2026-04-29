@@ -67,13 +67,13 @@ export const WHATS_NEW_RELEASES: WhatsNewRelease[] = [
     id: 'traffic-surfaces',
     date: 'April 2026',
     title: 'SEO surfaces for traffic',
-    summary: `More long-tail pages are now available across tools, downloaders, discover guides, and fixes.`,
+    summary: `More long-tail pages are now available across tools, templates, discover guides, and fixes.`,
     status: 'Ready',
     items: [
       {
-        title: 'Downloader page family',
-        detail: 'All-in-one and platform-specific downloader pages now have unique content structure and related links.',
-        href: '/downloader',
+        title: 'Tool page improvements',
+        detail: 'Tool pages now use tighter mobile workspaces, clearer action states, and stronger related-tool linking.',
+        href: '/tools',
       },
       {
         title: 'Discover and fixes growth',

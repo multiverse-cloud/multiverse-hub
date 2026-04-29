@@ -1,6 +1,7 @@
 import 'server-only'
 import { unstable_cache, revalidateTag } from 'next/cache'
-import { resolveToolSlug, TOOLS, type Tool, type ToolTag } from './tools-data'
+import { resolveToolSlug, TOOLS, VIDEO_DOWNLOADER_TOOL_SLUGS, type Tool, type ToolTag } from './tools-data'
+import { applyLocalToolOverrides, saveLocalToolUpdate } from './tool-local-store'
 
 const VALID_TOOL_TAGS = new Set<ToolTag>(['new', 'trending', 'beta', 'hot', 'free'])
 
@@ -59,17 +60,44 @@ function normalizeTool(rawTool: Partial<Tool> | null | undefined, fallbackId?: s
   }
 }
 
-function getNormalizedLocalTools() {
-  return TOOLS.map(tool => normalizeTool(tool, tool.id)).filter((tool): tool is Tool => Boolean(tool))
+function applyDefaultToolGuards(tool: Tool): Tool {
+  const videoDownloadersEnabled =
+    process.env.VIDEO_DOWNLOADERS_ENABLED === 'true' ||
+    process.env.NEXT_PUBLIC_VIDEO_DOWNLOADERS_ENABLED === 'true'
+
+  if (!videoDownloadersEnabled && VIDEO_DOWNLOADER_TOOL_SLUGS.has(tool.slug)) {
+    return {
+      ...tool,
+      enabled: false,
+    }
+  }
+
+  return tool
+}
+
+async function getNormalizedLocalTools() {
+  const normalizedTools = TOOLS.map(tool => normalizeTool(tool, tool.id))
+    .filter((tool): tool is Tool => Boolean(tool))
+    .map(applyDefaultToolGuards)
+  return applyLocalToolOverrides(normalizedTools)
 }
 
 const TOOL_CACHE_VERSION = `${TOOLS.length}:${TOOLS.map(tool => tool.slug).join('|')}`
 
-export const getTools = unstable_cache(
+export const getAdminTools = unstable_cache(
   async (): Promise<Tool[]> => {
     return getNormalizedLocalTools()
   },
-  ['all-tools-cache-v2', TOOL_CACHE_VERSION],
+  ['admin-all-tools-cache-v2', TOOL_CACHE_VERSION],
+  { revalidate: 3600, tags: ['tools'] }
+)
+
+export const getTools = unstable_cache(
+  async (): Promise<Tool[]> => {
+    const tools = await getNormalizedLocalTools()
+    return tools.filter(tool => tool.enabled !== false)
+  },
+  ['all-public-tools-cache-v2', TOOL_CACHE_VERSION],
   { revalidate: 3600, tags: ['tools'] }
 )
 
@@ -86,15 +114,16 @@ export const getToolBySlug = unstable_cache(
 export const getToolsByCategory = unstable_cache(
   async (categorySlug: string): Promise<Tool[]> => {
     const tools = await getTools()
-    return tools.filter(tool => tool.categorySlug === categorySlug)
+    return tools.filter(tool => tool.categorySlug === categorySlug && tool.enabled !== false)
   },
   ['tools-by-category-cache-v2', TOOL_CACHE_VERSION],
   { revalidate: 3600, tags: ['tools'] }
 )
 
-export async function updateTool(_id: string, _updates: Partial<Tool>) {
+export async function updateTool(id: string, updates: Partial<Tool>) {
+  await saveLocalToolUpdate(id, updates)
   revalidateTag('tools')
-  return false
+  return true
 }
 
 export async function seedExternalStoreWithLocalTools() {

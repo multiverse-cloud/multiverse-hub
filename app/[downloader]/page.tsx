@@ -22,6 +22,13 @@ const BASE_URL = SITE_URL;
 
 export const revalidate = 3600;
 
+function areDownloaderRoutesEnabled() {
+  return (
+    process.env.VIDEO_DOWNLOADERS_ENABLED === "true" ||
+    process.env.NEXT_PUBLIC_VIDEO_DOWNLOADERS_ENABLED === "true"
+  );
+}
+
 function buildDownloaderSchemas(route: DownloaderRouteEntry, tool: Tool) {
   const pageUrl = `${BASE_URL}/${route.routeSlug}`;
   const pageName = getDownloaderPageName(route);
@@ -97,6 +104,8 @@ function buildDownloaderSchemas(route: DownloaderRouteEntry, tool: Tool) {
 }
 
 export function generateStaticParams() {
+  if (!areDownloaderRoutesEnabled()) return [];
+
   return DOWNLOADER_ROUTES.map((route) => ({
     downloader: route.routeSlug,
   }));
@@ -106,6 +115,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { downloader } = await params;
   const route = getDownloaderRoute(downloader);
   if (!route) return {};
+
+  if (!areDownloaderRoutesEnabled()) {
+    return {
+      title: "Downloader unavailable | mtverse",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
 
   const pageUrl = `${BASE_URL}/${route.routeSlug}`;
 
@@ -161,6 +180,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function DownloaderRootPage({ params }: Props) {
   const { downloader } = await params;
+  if (!areDownloaderRoutesEnabled()) notFound();
+
   const route = getDownloaderRoute(downloader);
   if (!route) notFound();
 

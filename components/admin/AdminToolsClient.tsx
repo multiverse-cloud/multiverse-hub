@@ -71,6 +71,8 @@ export default function AdminToolsClient({
   const [search, setSearch] = useState("");
   const deferredSearch = useDeferredValue(search);
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusMessage, setStatusMessage] = useState<{ tone: "success" | "error"; text: string } | null>(null);
+  const [busyToolId, setBusyToolId] = useState<string | null>(null);
   const [toolStates, setToolStates] = useState<Record<string, ToolState>>(() =>
     Object.fromEntries(
       tools.map((tool) => [
@@ -106,6 +108,8 @@ export default function AdminToolsClient({
     const previousState = toolStates[id];
     const newState = { ...previousState, enabled: !previousState.enabled };
 
+    setBusyToolId(id);
+    setStatusMessage(null);
     setToolStates((previous) => ({
       ...previous,
       [id]: newState,
@@ -117,12 +121,17 @@ export default function AdminToolsClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, updates: { enabled: newState.enabled } }),
       });
-      if (!res.ok) throw new Error("Failed to save state to database");
-    } catch {
+      const result = (await res.json().catch(() => ({}))) as { error?: string; message?: string };
+      if (!res.ok) throw new Error(result.error || "Failed to save tool state");
+      setStatusMessage({ tone: "success", text: result.message || "Tool state saved." });
+    } catch (error) {
       setToolStates((previous) => ({
         ...previous,
         [id]: previousState,
       }));
+      setStatusMessage({ tone: "error", text: error instanceof Error ? error.message : "Failed to save tool state." });
+    } finally {
+      setBusyToolId(null);
     }
   }
 
@@ -135,6 +144,8 @@ export default function AdminToolsClient({
 
     const newState = { ...previousState, tags: newTags };
 
+    setBusyToolId(id);
+    setStatusMessage(null);
     setToolStates((previous) => ({
       ...previous,
       [id]: newState,
@@ -146,12 +157,17 @@ export default function AdminToolsClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, updates: { tags: newTags } }),
       });
-      if (!res.ok) throw new Error("Failed to update tags in database");
-    } catch {
+      const result = (await res.json().catch(() => ({}))) as { error?: string; message?: string };
+      if (!res.ok) throw new Error(result.error || "Failed to update tool tags");
+      setStatusMessage({ tone: "success", text: result.message || "Tool tags saved." });
+    } catch (error) {
       setToolStates((previous) => ({
         ...previous,
         [id]: previousState,
       }));
+      setStatusMessage({ tone: "error", text: error instanceof Error ? error.message : "Failed to update tool tags." });
+    } finally {
+      setBusyToolId(null);
     }
   }
 
@@ -219,6 +235,19 @@ export default function AdminToolsClient({
         </div>
       </div>
 
+      {statusMessage ? (
+        <div
+          className={cn(
+            "rounded-2xl border px-4 py-3 text-sm font-medium",
+            statusMessage.tone === "success"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/40 dark:bg-emerald-950/20 dark:text-emerald-200"
+              : "border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-900/40 dark:bg-rose-950/20 dark:text-rose-200",
+          )}
+        >
+          {statusMessage.text}
+        </div>
+      ) : null}
+
       <div className="overflow-hidden rounded-2xl border border-border bg-card">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -278,6 +307,7 @@ export default function AdminToolsClient({
                           <button
                             key={tag}
                             onClick={() => toggleTag(tool.id, tag)}
+                            disabled={busyToolId === tool.id}
                             className={cn(
                               "rounded-full px-1.5 py-0.5 text-xs transition-colors",
                               state.tags.includes(tag)
@@ -311,7 +341,8 @@ export default function AdminToolsClient({
                     <td className="px-4 py-3">
                       <button
                         onClick={() => toggleTool(tool.id)}
-                        className="text-muted-foreground transition-colors hover:text-foreground"
+                        disabled={busyToolId === tool.id}
+                        className="text-muted-foreground transition-colors hover:text-foreground disabled:cursor-wait disabled:opacity-50"
                       >
                         {state.enabled ? (
                           <ToggleRight className="h-6 w-6 text-emerald-500" />

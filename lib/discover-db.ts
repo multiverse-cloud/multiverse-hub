@@ -4,6 +4,7 @@ import { revalidateTag } from 'next/cache'
 import { type DiscoverFaq, type DiscoverItem, type DiscoverList, type DiscoverStep } from '@/lib/discover-data'
 import {
   getMergedLocalDiscoverLists,
+  hasRuntimeDiscoverStore,
   saveLocalDiscoverList,
   saveLocalDiscoverLists,
   seedLocalDiscoverStoreFromDataFiles,
@@ -103,9 +104,9 @@ async function getAllDiscoverLists() {
 }
 
 function assertWritableLocalDiscoverStore() {
-  if (process.env.VERCEL) {
+  if (!hasRuntimeDiscoverStore()) {
     throw new Error(
-      'Discover is currently in local-only mode. This deployment is read-only, so import/save works only in local development until a database is added.'
+      'Discover admin writes need UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN on Vercel, or must be run locally where data files are writable.'
     )
   }
 }

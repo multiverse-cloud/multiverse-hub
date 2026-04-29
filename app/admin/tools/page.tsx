@@ -2,10 +2,10 @@ export const dynamic = "force-dynamic";
 
 import AdminToolsClient from "@/components/admin/AdminToolsClient";
 import { ACTIVE_CATEGORIES } from "@/lib/tools-data";
-import { getTools } from "@/lib/db";
+import { getAdminTools } from "@/lib/db";
 
 export default async function AdminToolsPage() {
-  const allTools = await getTools();
+  const allTools = await getAdminTools();
 
   const categories = ACTIVE_CATEGORIES.map((category) => ({
     id: category.id,

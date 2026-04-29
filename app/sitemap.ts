@@ -3,7 +3,8 @@ import { FIX_GUIDES } from "@/lib/fixes-data";
 import { getPublishedPrompts } from "@/lib/prompt-db";
 import { getPublishedTemplates } from "@/lib/template-db";
 import { DOWNLOADER_ROUTES } from "@/lib/downloader-route-data";
-import { ACTIVE_CATEGORIES, TOOLS, VIDEO_DOWNLOADER_TOOL_SLUGS } from "@/lib/tools-data";
+import { ACTIVE_CATEGORIES, VIDEO_DOWNLOADER_TOOL_SLUGS } from "@/lib/tools-data";
+import { getTools } from "@/lib/db";
 import { getEffectSlug, uiEffects } from "@/lib/css-effects-library";
 import { SITE_URL } from "@/lib/site-url";
 
@@ -16,6 +17,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getPublishedPrompts(),
     getPublishedTemplates(),
   ]);
+  const tools = await getTools();
+  const downloaderRoutesEnabled =
+    process.env.VIDEO_DOWNLOADERS_ENABLED === "true" ||
+    process.env.NEXT_PUBLIC_VIDEO_DOWNLOADERS_ENABLED === "true";
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -101,7 +106,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   );
 
-  const toolRoutes: MetadataRoute.Sitemap = TOOLS.filter(
+  const toolRoutes: MetadataRoute.Sitemap = tools.filter(
     (t) =>
       t.implemented &&
       t.enabled !== false &&
@@ -113,14 +118,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: tool.tags.includes("trending") || tool.popular ? 0.8 : 0.6,
   }));
 
-  const downloaderRoutes: MetadataRoute.Sitemap = DOWNLOADER_ROUTES.map(
-    (route) => ({
-      url: `${baseUrl}/${route.routeSlug}`,
-      lastModified: staticDate,
-      changeFrequency: "weekly",
-      priority: route.routeSlug === "downloader" ? 0.9 : 0.82,
-    }),
-  );
+  const downloaderRoutes: MetadataRoute.Sitemap = downloaderRoutesEnabled
+    ? DOWNLOADER_ROUTES.map((route) => ({
+        url: `${baseUrl}/${route.routeSlug}`,
+        lastModified: staticDate,
+        changeFrequency: "weekly",
+        priority: route.routeSlug === "downloader" ? 0.9 : 0.82,
+      }))
+    : [];
 
   const fixRoutes: MetadataRoute.Sitemap = FIX_GUIDES.map((guide) => ({
     url: `${baseUrl}/fixes/${guide.slug}`,

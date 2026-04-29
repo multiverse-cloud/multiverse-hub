@@ -26,12 +26,15 @@ export async function PATCH(request: NextRequest) {
     const success = await updateTool(id, updates)
     
     if (success) {
-      return NextResponse.json({ success: true })
-    } else {
-      return NextResponse.json({ error: 'Tools are local-only in this deployment. Edit source data locally, then redeploy.' }, { status: 409 })
+      return NextResponse.json({
+        success: true,
+        message: 'Tool settings saved.',
+      })
     }
+
+    return NextResponse.json({ error: 'Unable to update this tool.' }, { status: 409 })
   } catch (error) {
     console.error('Admin tools PATCH failed:', error)
-    return NextResponse.json({ error: 'Unable to update the tool right now.' }, { status: 500 })
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Unable to update the tool right now.' }, { status: 500 })
   }
 }

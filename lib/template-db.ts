@@ -16,6 +16,7 @@ import {
   getLocalTemplateBySlugWithDetails,
   getMergedLocalTemplateEntries,
   getMergedLocalTemplateEntriesWithDetails,
+  hasRuntimeTemplateStore,
   saveLocalTemplate,
   saveLocalTemplates,
 } from '@/lib/template-local-store'
@@ -236,9 +237,9 @@ function resetTemplateCache() {
 }
 
 function assertWritableLocalTemplateStore() {
-  if (process.env.VERCEL) {
+  if (!hasRuntimeTemplateStore()) {
     throw new Error(
-      'UI Templates is currently in local-only mode. This deployment is read-only, so template import/save works only in local development until a database is enabled again.'
+      'UI Templates admin writes need UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN on Vercel, or must be run locally where data files are writable.'
     )
   }
 }

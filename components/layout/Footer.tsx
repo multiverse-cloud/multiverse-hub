@@ -16,8 +16,8 @@ const FOOTER_LINKS = {
   ],
   "Popular Tools": [
     {
-      name: "All-in-One Downloader",
-      href: "/tools/video/all-in-one-video-downloader",
+      name: "YouTube Thumbnail",
+      href: "/tools/video/youtube-thumbnail-downloader",
     },
     { name: "Merge PDF", href: "/tools/pdf/merge-pdf" },
     { name: "Compress PDF", href: "/tools/pdf/compress-pdf" },

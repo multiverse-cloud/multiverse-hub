@@ -2,12 +2,14 @@ import 'server-only'
 
 import { mkdir, readdir, readFile, writeFile } from 'fs/promises'
 import path from 'path'
+import { hasRuntimeKvStore, readRuntimeJson, writeRuntimeJson } from '@/lib/runtime-kv'
 import { DISCOVER_LISTS, type DiscoverList } from '@/lib/discover-data'
 import { parseDiscoverImportPayload } from '@/lib/discover-import'
 
 const DATA_DIR = path.join(process.cwd(), 'data')
 const LOCAL_DISCOVER_STORE_FILE = path.join(DATA_DIR, 'discover-local-store.json')
 const LOCAL_DISCOVER_TITLE_REGISTRY_FILE = path.join(DATA_DIR, 'discover-topic-titles.txt')
+const UPSTASH_DISCOVER_STORE_KEY = 'mtverse:discover-local-store:v1'
 
 type DiscoverLocalStoreFile = {
   lists: DiscoverList[]
@@ -50,8 +52,6 @@ async function writeTitleRegistry(lists: DiscoverList[]) {
 }
 
 async function writeLocalStore(lists: DiscoverList[], source: string, sourceFiles?: string[]) {
-  await ensureDataDirectory()
-
   const sortedLists = sortDiscoverLists(lists)
   const payload: DiscoverLocalStoreFile = {
     lists: sortedLists,
@@ -63,6 +63,19 @@ async function writeLocalStore(lists: DiscoverList[], source: string, sourceFile
     },
   }
 
+  if (hasRuntimeKvStore()) {
+    await writeRuntimeJson(UPSTASH_DISCOVER_STORE_KEY, payload)
+
+    if (process.env.VERCEL) {
+      return sortedLists
+    }
+  } else if (process.env.VERCEL) {
+    throw new Error(
+      'Discover admin writes need UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN on Vercel, or must be run locally where data files are writable.'
+    )
+  }
+
+  await ensureDataDirectory()
   await writeFile(LOCAL_DISCOVER_STORE_FILE, `${JSON.stringify(payload, null, 2)}\n`, 'utf8')
   await writeTitleRegistry(sortedLists)
 
@@ -70,6 +83,18 @@ async function writeLocalStore(lists: DiscoverList[], source: string, sourceFile
 }
 
 async function readLocalStore() {
+  if (hasRuntimeKvStore()) {
+    try {
+      const payload = await readRuntimeJson<Partial<DiscoverLocalStoreFile>>(UPSTASH_DISCOVER_STORE_KEY, ['discover'])
+      if (payload && Array.isArray(payload.lists)) {
+        return payload.lists as DiscoverList[]
+      }
+    } catch (error) {
+      console.error('Discover Upstash store read failed:', error)
+      if (process.env.VERCEL) return null
+    }
+  }
+
   try {
     const raw = await readFile(LOCAL_DISCOVER_STORE_FILE, 'utf8')
     const parsed = JSON.parse(raw) as Partial<DiscoverLocalStoreFile>
@@ -182,4 +207,8 @@ export function getLocalDiscoverStorePaths() {
     storeFile: LOCAL_DISCOVER_STORE_FILE,
     titleRegistryFile: LOCAL_DISCOVER_TITLE_REGISTRY_FILE,
   }
+}
+
+export function hasRuntimeDiscoverStore() {
+  return hasRuntimeKvStore() || !process.env.VERCEL
 }

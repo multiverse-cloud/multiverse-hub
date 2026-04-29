@@ -2,12 +2,14 @@ import 'server-only'
 
 import { mkdir, readFile, readdir, rm, writeFile } from 'fs/promises'
 import path from 'path'
+import { hasRuntimeKvStore, readRuntimeJson, writeRuntimeJson } from '@/lib/runtime-kv'
 import { BASE_TEMPLATES, type TemplateEntry } from '@/lib/template-library-data'
 
 const DATA_DIR = path.join(process.cwd(), 'data')
 const LOCAL_TEMPLATE_STORE_FILE = path.join(DATA_DIR, 'template-local-store.json')
 const LOCAL_TEMPLATE_TITLE_REGISTRY_FILE = path.join(DATA_DIR, 'template-topic-titles.txt')
 const LOCAL_TEMPLATE_DETAILS_DIR = path.join(DATA_DIR, 'template-details')
+const UPSTASH_TEMPLATE_STORE_KEY = 'mtverse:template-local-store:v1'
 
 type TemplateLocalStoreFile = {
   templates: TemplateEntry[]
@@ -84,9 +86,28 @@ async function writeTemplateDetailFiles(templates: TemplateEntry[]) {
 }
 
 async function writeLocalStore(templates: TemplateEntry[], source: string) {
-  await ensureDataDirectory()
-
   const sortedTemplates = sortTemplates(templates)
+
+  if (hasRuntimeKvStore()) {
+    await writeRuntimeJson(UPSTASH_TEMPLATE_STORE_KEY, {
+      templates: sortedTemplates,
+      meta: {
+        source,
+        generatedAt: new Date().toISOString(),
+        count: sortedTemplates.length,
+      },
+    } satisfies TemplateLocalStoreFile)
+
+    if (process.env.VERCEL) {
+      return sortedTemplates
+    }
+  } else if (process.env.VERCEL) {
+    throw new Error(
+      'UI Templates admin writes need UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN on Vercel, or must be run locally where data files are writable.'
+    )
+  }
+
+  await ensureDataDirectory()
   await writeTemplateDetailFiles(sortedTemplates)
   const payload: TemplateLocalStoreFile = {
     templates: sortedTemplates.map(stripTemplateForIndex),
@@ -104,6 +125,18 @@ async function writeLocalStore(templates: TemplateEntry[], source: string) {
 }
 
 async function readLocalStore() {
+  if (hasRuntimeKvStore()) {
+    try {
+      const payload = await readRuntimeJson<Partial<TemplateLocalStoreFile>>(UPSTASH_TEMPLATE_STORE_KEY, ['templates'])
+      if (payload && Array.isArray(payload.templates)) {
+        return payload.templates as TemplateEntry[]
+      }
+    } catch (error) {
+      console.error('Template Upstash store read failed:', error)
+      if (process.env.VERCEL) return []
+    }
+  }
+
   try {
     const raw = await readFile(LOCAL_TEMPLATE_STORE_FILE, 'utf8')
     const parsed = JSON.parse(stripUtf8Bom(raw)) as Partial<TemplateLocalStoreFile>
@@ -130,7 +163,7 @@ async function loadLocalTemplateEntries(detail = false) {
   const entries = await readLocalStore()
 
   if (!detail) {
-    return entries
+    return entries.map(stripTemplateForIndex)
   }
 
   return Promise.all(
@@ -222,4 +255,8 @@ export function getLocalTemplateStorePaths() {
     titleRegistryFile: LOCAL_TEMPLATE_TITLE_REGISTRY_FILE,
     detailsDir: LOCAL_TEMPLATE_DETAILS_DIR,
   }
+}
+
+export function hasRuntimeTemplateStore() {
+  return hasRuntimeKvStore() || !process.env.VERCEL
 }

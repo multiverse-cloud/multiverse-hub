@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { ACTIVE_CATEGORIES } from "@/lib/tools-data";
 import { UNIVERSES } from "@/lib/universes-data";
-import { getTools } from "@/lib/db";
+import { getAdminTools } from "@/lib/db";
 import { getAdminDiscoverLists } from "@/lib/discover-db";
 import { getLocalDiscoverStorePaths } from "@/lib/discover-local-store";
 import { getPublishedPrompts } from "@/lib/prompt-db";
@@ -76,7 +76,7 @@ const quickActions: QuickAction[] = [
 
 export default async function AdminDashboard() {
   const [tools, discoverLists, prompts, templates] = await Promise.all([
-    getTools(),
+    getAdminTools(),
     getAdminDiscoverLists(),
     getPublishedPrompts(),
     getPublishedTemplates(),

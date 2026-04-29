@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import {
   ChevronRight,
@@ -107,10 +107,60 @@ const DEFAULT_FLAGS = [
   },
 ];
 
-const GROUPS = Array.from(new Set(DEFAULT_FLAGS.map((f) => f.group)));
+type AdminFeatureFlag = (typeof DEFAULT_FLAGS)[number];
+
+async function parseFlagsResponse(response: Response) {
+  const text = await response.text();
+  if (!text.trim()) return {};
+
+  try {
+    return JSON.parse(text) as {
+      success?: boolean;
+      error?: string;
+      message?: string;
+      flags?: AdminFeatureFlag[];
+    };
+  } catch {
+    return {};
+  }
+}
 
 export default function FlagsPage() {
   const [flags, setFlags] = useState(DEFAULT_FLAGS);
+  const [isPending, startTransition] = useTransition();
+  const groups = useMemo(() => Array.from(new Set(flags.map((f) => f.group))), [flags]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSavedFlags() {
+      try {
+        const response = await fetch("/api/admin/flags", { cache: "no-store" });
+        const result = await parseFlagsResponse(response);
+        if (!response.ok) throw new Error(result.error || "Failed to load feature flags");
+
+        if (!cancelled && result.flags?.length) {
+          const savedById = new Map(result.flags.map((flag) => [flag.id, flag]));
+          setFlags((current) =>
+            current.map((flag) => ({
+              ...flag,
+              enabled: savedById.get(flag.id)?.enabled ?? flag.enabled,
+            })),
+          );
+        }
+      } catch (error) {
+        if (!cancelled) {
+          toast.error(error instanceof Error ? error.message : "Feature flags could not be loaded");
+        }
+      }
+    }
+
+    loadSavedFlags();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   function toggle(id: string) {
     setFlags((prev) =>
@@ -119,7 +169,21 @@ export default function FlagsPage() {
   }
 
   function save() {
-    toast.success("Feature flags saved! (JSON config updated)");
+    startTransition(async () => {
+      try {
+        const response = await fetch("/api/admin/flags", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ flags }),
+        });
+        const result = await parseFlagsResponse(response);
+        if (!response.ok) throw new Error(result.error || "Failed to save feature flags");
+        if (result.flags?.length) setFlags(result.flags);
+        toast.success(result.message || "Feature flags saved");
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Feature flags could not be saved");
+      }
+    });
   }
 
   return (
@@ -143,13 +207,14 @@ export default function FlagsPage() {
         </div>
         <button
           onClick={save}
+          disabled={isPending}
           className="btn-primary flex items-center gap-2 px-4 py-2 text-sm"
         >
-          <Save className="h-4 w-4" /> Save Changes
+          <Save className="h-4 w-4" /> {isPending ? "Saving..." : "Save Changes"}
         </button>
       </div>
 
-      {GROUPS.map((group) => (
+      {groups.map((group) => (
         <div
           key={group}
           className="overflow-hidden rounded-2xl border border-border bg-card"
