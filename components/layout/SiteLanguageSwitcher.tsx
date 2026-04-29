@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { Check, ChevronDown, Globe2 } from 'lucide-react'
 import { POPULAR_SITE_LANGUAGES } from '@/lib/seo-languages'
 import { cn } from '@/lib/utils'
@@ -175,6 +176,7 @@ function dispatchTranslateChange(combo: HTMLSelectElement, languageCode: string)
 async function applyGoogleLanguage(languageCode: string) {
   window.localStorage.setItem(STORAGE_KEY, languageCode)
   setGoogleTranslateCookie(languageCode)
+  document.documentElement.lang = languageCode
 
   if (languageCode === 'en') {
     window.location.reload()
@@ -202,6 +204,7 @@ async function applyGoogleLanguage(languageCode: string) {
 export default function SiteLanguageSwitcher() {
   const [open, setOpen] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState('en')
+  const pathname = usePathname()
   const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -216,6 +219,25 @@ export default function SiteLanguageSwitcher() {
       })
     }
   }, [])
+
+  useEffect(() => {
+    const savedLanguage = readSavedLanguage()
+    if (savedLanguage === 'en') return
+
+    setCurrentLanguage(savedLanguage)
+    setGoogleTranslateCookie(savedLanguage)
+    document.documentElement.lang = savedLanguage
+
+    const timeout = window.setTimeout(() => {
+      loadGoogleTranslate().then(async () => {
+        const combo = await waitForTranslateCombo()
+        if (!combo) return
+        dispatchTranslateChange(combo, savedLanguage)
+      })
+    }, 250)
+
+    return () => window.clearTimeout(timeout)
+  }, [pathname])
 
   useEffect(() => {
     function handlePointerDown(event: PointerEvent) {

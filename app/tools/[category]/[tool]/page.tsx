@@ -78,6 +78,8 @@ const VIDEO_STUDIO_SLUGS = new Set([
 
 const AUDIO_STUDIO_SLUGS = new Set([
   "compress-audio",
+  "audio-recorder",
+  "bpm-detector",
   "convert-audio",
   "trim-audio",
   "audio-equalizer",
@@ -95,6 +97,7 @@ const TEXT_STUDIO_SLUGS = new Set([
   "ai-text-generator",
   "text-case-converter",
   "remove-duplicate-lines",
+  "text-reverser",
   "text-grammar-checker",
   "paraphrasing-tool",
   "plagiarism-checker",
@@ -109,6 +112,12 @@ const TEXT_STUDIO_SLUGS = new Set([
   "emoji-copy-paste",
   "fancy-text-generator",
   "random-name-picker",
+  "markdown-to-html",
+  "csv-to-json",
+  "json-to-csv",
+  "string-extractor",
+  "readability-score",
+  "keyword-density",
 ]);
 
 const DEV_STUDIO_SLUGS = new Set([
@@ -134,6 +143,9 @@ const DEV_STUDIO_SLUGS = new Set([
   "json-to-csv-converter",
   "cron-expression-generator",
   "markdown-previewer",
+  "yaml-to-json-converter",
+  "xml-to-json-converter",
+  "timestamp-converter",
 ]);
 
 const SEO_STUDIO_SLUGS = new Set([
@@ -143,6 +155,7 @@ const SEO_STUDIO_SLUGS = new Set([
   "image-seo-checker",
   "keyword-generator",
   "meta-tag-generator",
+  "open-graph-generator",
   "page-speed-checker",
   "robots-txt-generator",
   "seo-analyzer",
@@ -152,6 +165,8 @@ const SEO_STUDIO_SLUGS = new Set([
   "og-image-generator",
   "schema-markup-generator",
   "redirect-checker",
+  "keyword-extractor",
+  "social-media-preview",
 ]);
 
 const CALCULATOR_STUDIO_SLUGS_SET = new Set(CALCULATOR_STUDIO_SLUGS);

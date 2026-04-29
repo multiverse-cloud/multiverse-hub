@@ -23,6 +23,7 @@ const SEO_COPY = {
   'image-seo-checker': { eyebrow: 'Asset SEO', title: 'Image SEO Checker', summary: 'Review alt-text, naming, and image-search readiness with a simpler optimization checklist.', badges: ['Alt text', 'File naming', 'Image readiness'], actionLabel: 'Check image SEO' },
   'keyword-generator': { eyebrow: 'Topic planning', title: 'Keyword Generator', summary: 'Turn one topic into seed keywords, long-tail phrases, and content angles you can reuse.', badges: ['Seed terms', 'Long-tail ideas', 'Content angles'], actionLabel: 'Generate keywords' },
   'meta-tag-generator': { eyebrow: 'Snippet builder', title: 'Meta Tag Generator', summary: 'Create a cleaner set of title, description, Open Graph, and canonical tags.', badges: ['SEO tags', 'OG tags', 'Copy ready'], actionLabel: 'Generate meta tags' },
+  'open-graph-generator': { eyebrow: 'Social metadata', title: 'Open Graph Generator', summary: 'Create clean Open Graph and Twitter card tags for share-ready pages.', badges: ['OG tags', 'Twitter card', 'Copy ready'], actionLabel: 'Generate OG tags' },
   'page-speed-checker': { eyebrow: 'Performance review', title: 'Page Speed Checker', summary: 'Review speed-oriented delivery signals and the main fixes worth prioritizing first.', badges: ['Speed signals', 'Quick fixes', 'Priority list'], actionLabel: 'Check page speed' },
   'robots-txt-generator': { eyebrow: 'Crawler rules', title: 'Robots.txt Generator', summary: 'Generate a clean robots.txt file with disallow rules and a sitemap entry.', badges: ['Crawler rules', 'Sitemap line', 'Copy ready'], actionLabel: 'Generate robots.txt' },
   'seo-analyzer': { eyebrow: 'Page audit', title: 'SEO Analyzer', summary: 'Review title, description, structure, keyword focus, and on-page SEO basics in one workspace.', badges: ['On-page score', 'Priority fixes', 'Content checks'], actionLabel: 'Analyze page SEO' },
@@ -32,6 +33,8 @@ const SEO_COPY = {
   'og-image-generator': { eyebrow: 'Social preview', title: 'Open Graph Image Generator', summary: 'Generate beautiful OG image meta tags and preview cards for social media sharing.', badges: ['OG tags', 'Social preview', 'Copy ready'], actionLabel: 'Generate OG tags' },
   'schema-markup-generator': { eyebrow: 'Structured data', title: 'Schema Markup Generator', summary: 'Generate JSON-LD structured data for rich Google search results and knowledge panels.', badges: ['JSON-LD', 'Rich results', 'Copy ready'], actionLabel: 'Generate schema' },
   'redirect-checker': { eyebrow: 'URL audit', title: 'Redirect Chain Checker', summary: 'Check URL redirect chains, identify 301/302 hops, and find redirect issues.', badges: ['Redirect chain', 'Status codes', 'Hop analysis'], actionLabel: 'Check redirects' },
+  'keyword-extractor': { eyebrow: 'Content extraction', title: 'Keyword Extractor', summary: 'Extract repeated keywords, phrase signals, and topic focus from pasted content.', badges: ['Keyword list', 'Frequency', 'Topic focus'], actionLabel: 'Extract keywords' },
+  'social-media-preview': { eyebrow: 'Share preview', title: 'Social Media Preview', summary: 'Preview title, description, and URL structure before sharing a page socially.', badges: ['Share card', 'Title check', 'Description check'], actionLabel: 'Build preview' },
 } as const
 
 type ResultState = {
@@ -117,7 +120,7 @@ export default function SeoStudio({ tool }: { tool: Tool }) {
         return
       }
 
-      if (tool.slug === 'meta-tag-generator') {
+      if (tool.slug === 'meta-tag-generator' || tool.slug === 'open-graph-generator') {
         const title = primaryInput
         const description = secondaryInput || 'Add a short page description here.'
         const pageUrl = tertiaryInput || 'https://example.com/page'
@@ -159,6 +162,35 @@ export default function SeoStudio({ tool }: { tool: Tool }) {
         const url = tertiaryInput || 'https://example.com/page'
         setResult({
           output: `${title}\n${url}\n${description}`,
+          metrics: [{ label: 'Title', value: `${title.length} chars` }, { label: 'Description', value: `${description.length} chars` }],
+        })
+        return
+      }
+
+      if (tool.slug === 'keyword-extractor') {
+        const words = primaryInput
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, ' ')
+          .split(/\s+/)
+          .filter(word => word.length > 3)
+        const frequency = new Map<string, number>()
+        words.forEach(word => frequency.set(word, (frequency.get(word) || 0) + 1))
+        const keywords = [...frequency.entries()]
+          .sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))
+          .slice(0, 20)
+        setResult({
+          output: keywords.map(([keyword, count], index) => `${index + 1}. ${keyword} - ${count}`).join('\n') || 'No strong keywords found.',
+          metrics: [{ label: 'Keywords', value: `${keywords.length}` }, { label: 'Words scanned', value: `${words.length}` }],
+        })
+        return
+      }
+
+      if (tool.slug === 'social-media-preview') {
+        const title = primaryInput
+        const description = secondaryInput || 'A concise social description helps more people understand the page before they click.'
+        const url = tertiaryInput || 'https://example.com/page'
+        setResult({
+          output: `Social preview\n\nTitle: ${title}\nDescription: ${description}\nURL: ${url}\n\nChecks:\n- Title length: ${title.length} chars\n- Description length: ${description.length} chars\n- URL looks ${/^https?:\/\//.test(url) ? 'valid' : 'incomplete'}`,
           metrics: [{ label: 'Title', value: `${title.length} chars` }, { label: 'Description', value: `${description.length} chars` }],
         })
         return

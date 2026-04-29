@@ -876,6 +876,15 @@ body {
         border-radius: 0.8rem !important;
     }
 
+    [data-tool-shell="true"] textarea {
+        min-height: 8rem !important;
+        border-radius: 0.8rem !important;
+    }
+
+    [data-tool-shell="true"] section {
+        scroll-margin-top: 4.75rem;
+    }
+
     [data-tool-shell="true"] .upload-zone {
         border-width: 1px;
         border-radius: 0.9rem;

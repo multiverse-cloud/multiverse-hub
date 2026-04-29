@@ -9,10 +9,10 @@ type StudioComponent = ComponentType<{ tool: Tool }>
 
 function StudioLoading() {
   return (
-    <div className="p-5 md:p-6">
-      <div className="grid gap-4 lg:grid-cols-[0.92fr_1.08fr]">
-        <div className="h-72 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-900" />
-        <div className="h-72 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-900" />
+    <div className="p-3 sm:p-5 md:p-6">
+      <div className="grid gap-3 sm:gap-4 lg:grid-cols-[0.92fr_1.08fr]">
+        <div className="h-40 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-900 sm:h-72" />
+        <div className="h-40 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-900 sm:h-72" />
       </div>
     </div>
   )
@@ -132,6 +132,7 @@ const TEXT_STUDIO_SLUGS = new Set([
   'emoji-copy-paste',
   'fancy-text-generator',
   'random-name-picker',
+  'markdown-to-html',
 ])
 
 const DEV_STUDIO_SLUGS = new Set([
@@ -157,6 +158,9 @@ const DEV_STUDIO_SLUGS = new Set([
   'json-to-csv-converter',
   'cron-expression-generator',
   'markdown-previewer',
+  'yaml-to-json-converter',
+  'xml-to-json-converter',
+  'timestamp-converter',
 ])
 
 const SEO_STUDIO_SLUGS = new Set([
@@ -166,6 +170,7 @@ const SEO_STUDIO_SLUGS = new Set([
   'image-seo-checker',
   'keyword-generator',
   'meta-tag-generator',
+  'open-graph-generator',
   'page-speed-checker',
   'robots-txt-generator',
   'seo-analyzer',
@@ -175,6 +180,8 @@ const SEO_STUDIO_SLUGS = new Set([
   'og-image-generator',
   'schema-markup-generator',
   'redirect-checker',
+  'keyword-extractor',
+  'social-media-preview',
 ])
 
 const FILE_STUDIO_SLUGS = new Set(['csv-viewer', 'json-file-viewer', 'zip-extractor'])

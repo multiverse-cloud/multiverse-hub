@@ -41,6 +41,9 @@ const DEV_COPY = {
   'json-to-csv-converter': { eyebrow: 'Data converter', title: 'JSON to CSV', summary: 'Transform JSON arrays into downloadable CSV spreadsheet format for analysis.', badges: ['Auto headers', 'CSV download', 'Fast convert'], actionLabel: 'Convert to CSV' },
   'cron-expression-generator': { eyebrow: 'Schedule builder', title: 'Cron Expression Generator', summary: 'Build cron expressions from plain English descriptions with instant preview.', badges: ['Visual builder', 'Schedule preview', 'Copy ready'], actionLabel: 'Generate cron' },
   'markdown-previewer': { eyebrow: 'Live render', title: 'Markdown Previewer', summary: 'Write Markdown and preview the rendered output in real time with syntax highlighting.', badges: ['Live preview', 'GitHub style', 'Export ready'], actionLabel: 'Render preview' },
+  'yaml-to-json-converter': { eyebrow: 'Data converter', title: 'YAML to JSON', summary: 'Convert simple YAML config into clean JSON for APIs, configs, and developer handoff.', badges: ['YAML input', 'JSON output', 'Copy ready'], actionLabel: 'Convert YAML' },
+  'xml-to-json-converter': { eyebrow: 'Data converter', title: 'XML to JSON', summary: 'Parse XML documents into readable JSON while preserving attributes and nested nodes.', badges: ['XML input', 'JSON output', 'Nested data'], actionLabel: 'Convert XML' },
+  'timestamp-converter': { eyebrow: 'Time utility', title: 'Timestamp Converter', summary: 'Convert Unix timestamps, milliseconds, ISO dates, and local dates in one compact tool.', badges: ['Unix seconds', 'ISO date', 'Local time'], actionLabel: 'Convert time' },
 } as const
 
 type StudioResult = FileProcessResult
@@ -52,6 +55,7 @@ const OPTIONAL_INPUT_DEV_SLUGS = new Set([
   'cron-generator',
   'css-gradient-generator',
   'cron-expression-generator',
+  'timestamp-converter',
 ])
 
 function formatCodeBlock(input: string) {
@@ -78,6 +82,114 @@ function formatSql(input: string) {
     output = output.replace(pattern, match => `\n${match.toUpperCase()}`)
   }
   return output.replace(/\n{2,}/g, '\n').trim()
+}
+
+type YamlValue = string | number | boolean | null | YamlValue[]
+
+function coerceYamlValue(value: string): YamlValue {
+  const cleaned = value.trim().replace(/^["']|["']$/g, '')
+  if (cleaned === 'true') return true
+  if (cleaned === 'false') return false
+  if (cleaned === 'null') return null
+  if (cleaned !== '' && Number.isFinite(Number(cleaned))) return Number(cleaned)
+  if (cleaned.includes(',') && !cleaned.includes('://')) {
+    return cleaned.split(',').map(item => coerceYamlValue(item.trim()))
+  }
+  return cleaned
+}
+
+function convertSimpleYamlToJson(input: string) {
+  const result: Record<string, unknown> = {}
+  const stack: Array<{ indent: number; value: Record<string, unknown> }> = [{ indent: -1, value: result }]
+
+  input.split('\n').forEach(rawLine => {
+    const trimmed = rawLine.trim()
+    if (!trimmed || trimmed.startsWith('#')) return
+
+    const indent = rawLine.search(/\S/)
+    const separator = trimmed.indexOf(':')
+    if (separator === -1) return
+
+    const key = trimmed.slice(0, separator).trim()
+    const rawValue = trimmed.slice(separator + 1).trim()
+    while (stack.length > 1 && indent <= stack[stack.length - 1].indent) stack.pop()
+
+    const parent = stack[stack.length - 1].value
+    if (!rawValue) {
+      const nested: Record<string, unknown> = {}
+      parent[key] = nested
+      stack.push({ indent, value: nested })
+      return
+    }
+
+    parent[key] = coerceYamlValue(rawValue)
+  })
+
+  return JSON.stringify(result, null, 2)
+}
+
+function elementToJson(element: Element): unknown {
+  const attributes = Array.from(element.attributes).reduce<Record<string, string>>((acc, attr) => {
+    acc[`@${attr.name}`] = attr.value
+    return acc
+  }, {})
+
+  const children = Array.from(element.children)
+  const text = Array.from(element.childNodes)
+    .filter(node => node.nodeType === Node.TEXT_NODE)
+    .map(node => node.textContent?.trim())
+    .filter(Boolean)
+    .join(' ')
+
+  if (children.length === 0) {
+    return Object.keys(attributes).length > 0
+      ? { ...attributes, ...(text ? { text } : {}) }
+      : text
+  }
+
+  const grouped: Record<string, unknown[]> = {}
+  children.forEach(child => {
+    grouped[child.nodeName] = grouped[child.nodeName] || []
+    grouped[child.nodeName].push(elementToJson(child))
+  })
+
+  const childJson = Object.fromEntries(
+    Object.entries(grouped).map(([key, values]) => [key, values.length === 1 ? values[0] : values])
+  )
+
+  return { ...attributes, ...(text ? { text } : {}), ...childJson }
+}
+
+function convertXmlToJson(input: string) {
+  const parser = new DOMParser()
+  const documentNode = parser.parseFromString(input, 'application/xml')
+  const parseError = documentNode.querySelector('parsererror')
+  if (parseError) throw new Error('Invalid XML input. Check for unclosed tags or malformed attributes.')
+
+  const root = documentNode.documentElement
+  return JSON.stringify({ [root.nodeName]: elementToJson(root) }, null, 2)
+}
+
+function convertTimestamp(input: string) {
+  const raw = input.trim()
+  const date = raw
+    ? /^\d+$/.test(raw)
+      ? new Date(raw.length <= 10 ? Number(raw) * 1000 : Number(raw))
+      : new Date(raw)
+    : new Date()
+
+  if (Number.isNaN(date.getTime())) {
+    throw new Error('Enter a valid Unix timestamp, millisecond timestamp, ISO date, or leave it empty for current time.')
+  }
+
+  const seconds = Math.floor(date.getTime() / 1000)
+  return [
+    `Unix seconds: ${seconds}`,
+    `Unix milliseconds: ${date.getTime()}`,
+    `ISO UTC: ${date.toISOString()}`,
+    `Local time: ${date.toLocaleString()}`,
+    `UTC date: ${date.toUTCString()}`,
+  ].join('\n')
 }
 
 function getDevInputValue(slug: string, input: string) {
@@ -260,6 +372,24 @@ export default function DevStudio({ tool }: { tool: Tool }) {
         return
       }
 
+      if (tool.slug === 'yaml-to-json-converter') {
+        const output = convertSimpleYamlToJson(inputText)
+        setResult({ output, metrics: [{ label: 'Mode', value: 'YAML to JSON' }, { label: 'Keys', value: `${Object.keys(JSON.parse(output)).length}` }] })
+        return
+      }
+
+      if (tool.slug === 'xml-to-json-converter') {
+        const output = convertXmlToJson(inputText)
+        setResult({ output, metrics: [{ label: 'Mode', value: 'XML to JSON' }, { label: 'Lines', value: `${output.split('\n').length}` }] })
+        return
+      }
+
+      if (tool.slug === 'timestamp-converter') {
+        const output = convertTimestamp(inputText)
+        setResult({ output, metrics: [{ label: 'Mode', value: inputText.trim() ? 'Converted' : 'Current time' }, { label: 'Formats', value: '5 outputs' }] })
+        return
+      }
+
       const next = await handleDevTool(tool.slug, getDevInputValue(tool.slug, inputText), {
         ...(tool.slug === 'regex-tester' ? { pattern: regexPattern, flags: regexFlags } : {}),
         ...(tool.slug === 'api-tester' ? { method: apiMethod, headers: apiHeaders.split('\n').filter(Boolean).reduce<Record<string, string>>((acc, line) => {
@@ -296,7 +426,7 @@ export default function DevStudio({ tool }: { tool: Tool }) {
     if (!result?.output) return
     downloadBlob(new Blob([result.output], { type: 'text/plain;charset=utf-8' }), `${tool.slug}.txt`)
   }
-  const canRunWithoutInput = ['uuid-generator', 'cron-generator', 'cron-expression-generator', 'gitignore-generator', 'gradient-generator', 'css-gradient-generator'].includes(tool.slug)
+  const canRunWithoutInput = ['uuid-generator', 'cron-generator', 'cron-expression-generator', 'gitignore-generator', 'gradient-generator', 'css-gradient-generator', 'timestamp-converter'].includes(tool.slug)
   const hasDevInput = inputText.trim().length > 0 || canRunWithoutInput
 
   return (

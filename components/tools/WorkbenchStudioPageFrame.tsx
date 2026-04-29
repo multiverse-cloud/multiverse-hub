@@ -53,9 +53,9 @@ export default function WorkbenchStudioPageFrame({
 
   return (
     <div className="premium-shell" data-tool-shell="true">
-      <div className="mx-auto w-full max-w-7xl px-3 pb-28 pt-4 sm:px-6 sm:py-8 lg:px-6 lg:py-10">
+      <div className="mx-auto w-full max-w-7xl px-3 pb-20 pt-3 sm:px-6 sm:py-8 lg:px-6 lg:py-10">
         {/* Header row: breadcrumb + actions */}
-        <div className="mb-5 flex items-start justify-between gap-3">
+        <div className="mb-3 flex items-start justify-between gap-3 sm:mb-5">
           <ToolBreadcrumb
             className="mb-0 flex-1"
             items={[

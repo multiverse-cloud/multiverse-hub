@@ -9,10 +9,10 @@ const ToolDetailBothClient = lazy(() => import('./ToolDetailBothClient'))
 
 function LoadingFallback() {
   return (
-    <div className="p-6 md:p-8">
-      <div className="space-y-4">
+    <div className="p-3 sm:p-6 md:p-8">
+      <div className="space-y-3 sm:space-y-4">
         <div className="h-5 w-40 animate-pulse rounded-full bg-slate-200 dark:bg-slate-800" />
-        <div className="h-32 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-900" />
+        <div className="h-24 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-900 sm:h-32" />
         <div className="h-12 w-36 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-800" />
       </div>
     </div>

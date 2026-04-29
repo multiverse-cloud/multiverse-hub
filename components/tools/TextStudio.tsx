@@ -44,6 +44,7 @@ const TEXT_COPY = {
   'emoji-copy-paste': { eyebrow: 'Emoji browser', title: 'Emoji Copy Paste', summary: 'Browse popular emoji categories and copy any emoji to your clipboard with one click.', badges: ['All categories', 'One-click copy', 'Search & browse'], actionLabel: 'Load emojis' },
   'fancy-text-generator': { eyebrow: 'Style converter', title: 'Fancy Text Generator', summary: 'Convert text into stylish Unicode fonts for Instagram bios, Twitter names, and social media.', badges: ['Fancy fonts', 'Unicode styles', 'Social ready'], actionLabel: 'Generate styles' },
   'random-name-picker': { eyebrow: 'Randomizer', title: 'Random Name Picker', summary: 'Enter a list of names and pick random winners for raffles, giveaways, or classroom activities.', badges: ['Random pick', 'Spin to win', 'Fair selection'], actionLabel: 'Pick a name' },
+  'markdown-to-html': { eyebrow: 'Format converter', title: 'Markdown to HTML', summary: 'Convert Markdown notes into clean HTML markup for docs, pages, and quick publishing.', badges: ['Markdown input', 'HTML output', 'Copy ready'], actionLabel: 'Convert to HTML' },
 } as const
 
 type StudioResult = FileProcessResult
@@ -388,6 +389,31 @@ export default function TextStudio({ tool }: { tool: Tool }) {
         const shuffled = [...names].sort(() => Math.random() - 0.5)
         const output = `🎉 Winner: ${winner}\n\nFull shuffle order:\n${shuffled.map((n, i) => `${i + 1}. ${n}`).join('\n')}`
         setResult(makeTextResult(output, [{ label: 'Entries', value: `${names.length}` }, { label: 'Winner', value: winner }]))
+        return
+      }
+
+      if (tool.slug === 'markdown-to-html') {
+        const escaped = primaryText
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+
+        const html = escaped
+          .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+          .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+          .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.+?)\*/g, '<em>$1</em>')
+          .replace(/`([^`]+)`/g, '<code>$1</code>')
+          .replace(/^\- (.+)$/gm, '<li>$1</li>')
+          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+          .replace(/\n{2,}/g, '\n\n')
+
+        const output = `<!doctype html>\n<html>\n<body>\n${html}\n</body>\n</html>`
+        setResult(makeTextResult(output, [
+          { label: 'Mode', value: 'Markdown to HTML' },
+          { label: 'Lines', value: `${output.split('\n').length}` },
+        ]))
         return
       }
     } catch (processError) {

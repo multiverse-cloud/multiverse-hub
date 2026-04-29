@@ -54,11 +54,6 @@ async function uploadImageToCloudinary(file: File, slug: string) {
       timestamp,
     }
 
-    if (config.uploadPreset) {
-      signedParams.upload_preset = config.uploadPreset
-      formData.append('upload_preset', config.uploadPreset)
-    }
-
     formData.append('api_key', config.apiKey)
     formData.append('timestamp', timestamp)
     formData.append('signature', createCloudinarySignature(signedParams, config.apiSecret))
