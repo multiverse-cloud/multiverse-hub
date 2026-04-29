@@ -173,6 +173,19 @@ function dispatchTranslateChange(combo: HTMLSelectElement, languageCode: string)
   combo.dispatchEvent(new Event('change', { bubbles: true }))
 }
 
+function isPageTranslated() {
+  return (
+    document.documentElement.classList.contains('translated-ltr') ||
+    document.documentElement.classList.contains('translated-rtl')
+  )
+}
+
+function dispatchTranslateWithRetries(combo: HTMLSelectElement, languageCode: string) {
+  dispatchTranslateChange(combo, languageCode)
+  window.setTimeout(() => dispatchTranslateChange(combo, languageCode), 350)
+  window.setTimeout(() => dispatchTranslateChange(combo, languageCode), 900)
+}
+
 async function applyGoogleLanguage(languageCode: string) {
   window.localStorage.setItem(STORAGE_KEY, languageCode)
   setGoogleTranslateCookie(languageCode)
@@ -186,13 +199,10 @@ async function applyGoogleLanguage(languageCode: string) {
   await loadGoogleTranslate()
   const combo = await waitForTranslateCombo()
   if (combo) {
-    dispatchTranslateChange(combo, languageCode)
+    dispatchTranslateWithRetries(combo, languageCode)
     window.setTimeout(() => {
-      const translated =
-        document.documentElement.classList.contains('translated-ltr') ||
-        document.documentElement.classList.contains('translated-rtl')
-      if (!translated) window.location.reload()
-    }, 650)
+      if (!isPageTranslated()) window.location.reload()
+    }, 1800)
     return
   }
 
@@ -215,7 +225,7 @@ export default function SiteLanguageSwitcher() {
       loadGoogleTranslate().then(async () => {
         const combo = await waitForTranslateCombo()
         if (!combo) return
-        dispatchTranslateChange(combo, savedLanguage)
+        dispatchTranslateWithRetries(combo, savedLanguage)
       })
     }
   }, [])
@@ -232,7 +242,7 @@ export default function SiteLanguageSwitcher() {
       loadGoogleTranslate().then(async () => {
         const combo = await waitForTranslateCombo()
         if (!combo) return
-        dispatchTranslateChange(combo, savedLanguage)
+        dispatchTranslateWithRetries(combo, savedLanguage)
       })
     }, 250)
 

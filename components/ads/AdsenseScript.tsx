@@ -1,4 +1,3 @@
-import Script from 'next/script'
 import { getGoogleAdsenseClient, isGoogleAdsenseEnabled } from '@/lib/adsense'
 
 export default function AdsenseScript() {
@@ -7,13 +6,11 @@ export default function AdsenseScript() {
   const client = getGoogleAdsenseClient()
 
   return (
-    <Script
+    <script
       id="google-adsense-auto-ads"
-      strategy="afterInteractive"
       async
       crossOrigin="anonymous"
       src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(client)}`}
     />
   )
 }
-
