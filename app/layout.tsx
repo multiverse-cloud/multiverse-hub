@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
 import AdsenseScript from '@/components/ads/AdsenseScript'
@@ -193,6 +194,7 @@ export default function RootLayout({
           <SourceHubChrome />
           {children}
         </AppProviders>
+        <Analytics />
         <SpeedInsights />
       </body>
     </html>

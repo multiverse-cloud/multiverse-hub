@@ -1,3 +1,5 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import { cssEffects, categories as rawCategories, type CSSEffect } from '@/lib/css-effects-data'
 import { sourceUiComponents, type UiCatalogItem } from '@/lib/ui-source-components'
 import importedUiStore from '@/data/ui-imported-store.json'
@@ -41,6 +43,43 @@ const TARGET_GENERATED_COUNT = Math.max(
   0,
   TARGET_TOTAL_ITEMS - sourceUiComponents.length - importedUiEffects.length - hyperuiEffects.length
 )
+let hyperuiCssCache: string | null | undefined
+let hyperuiJsCache: string | null | undefined
+
+function readPublicAsset(relativePath: string) {
+  try {
+    return fs.readFileSync(path.join(process.cwd(), 'public', relativePath), 'utf8')
+  } catch {
+    return ''
+  }
+}
+
+function getHyperuiCss() {
+  if (hyperuiCssCache === undefined) {
+    hyperuiCssCache = readPublicAsset('hyperui/component.css')
+  }
+
+  return hyperuiCssCache || ''
+}
+
+function getHyperuiJs() {
+  if (hyperuiJsCache === undefined) {
+    hyperuiJsCache = readPublicAsset('hyperui/component.js')
+  }
+
+  return hyperuiJsCache || ''
+}
+
+function inlineHyperuiAssets(markup: string) {
+  if (!markup.includes('/hyperui/component.')) return markup
+
+  const css = getHyperuiCss()
+  const js = getHyperuiJs()
+
+  return markup
+    .replace(/<link[^>]+href=["']\/hyperui\/component\.css["'][^>]*>/gi, css ? `<style>${css}</style>` : '')
+    .replace(/<script[^>]+src=["']\/hyperui\/component\.js["'][^>]*><\/script>/gi, js ? `<script>${js}</script>` : '')
+}
 
 export const generatedUiEffects = [...cssEffects]
   .sort((left, right) => {
@@ -462,7 +501,7 @@ function injectPreviewGuards(markup: string) {
 
 export function buildPreviewDoc(effect: UiCatalogItem) {
   if (effect.previewDocument) {
-    return injectPreviewGuards(effect.previewDocument)
+    return injectPreviewGuards(inlineHyperuiAssets(effect.previewDocument))
   }
 
   const isCompactControl = ['checkbox', 'radio', 'shape'].includes(effect.category)

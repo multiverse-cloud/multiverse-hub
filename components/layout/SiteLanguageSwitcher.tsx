@@ -39,8 +39,23 @@ function ensureTranslateElement() {
 
 function clearGoogleTranslateCookie() {
   const expires = 'expires=Thu, 01 Jan 1970 00:00:00 GMT'
-  document.cookie = `googtrans=;path=/;${expires}`
-  document.cookie = `googtrans=;path=/;domain=${window.location.hostname};${expires}`
+  const domains = getCookieDomains()
+  document.cookie = `googtrans=;path=/;${expires};SameSite=Lax`
+  domains.forEach(domain => {
+    document.cookie = `googtrans=;path=/;domain=${domain};${expires};SameSite=Lax`
+  })
+}
+
+function getCookieDomains() {
+  if (typeof window === 'undefined') return []
+  const hostname = window.location.hostname
+  if (!hostname || hostname === 'localhost' || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
+    return []
+  }
+
+  const parts = hostname.split('.').filter(Boolean)
+  const apex = parts.length > 2 ? `.${parts.slice(-2).join('.')}` : `.${hostname}`
+  return Array.from(new Set([hostname, `.${hostname}`, apex]))
 }
 
 function setGoogleTranslateCookie(languageCode: string) {
@@ -50,7 +65,11 @@ function setGoogleTranslateCookie(languageCode: string) {
   }
 
   const maxAge = 60 * 60 * 24 * 365
-  document.cookie = `googtrans=/en/${languageCode};path=/;max-age=${maxAge};SameSite=Lax`
+  const value = `/en/${languageCode}`
+  document.cookie = `googtrans=${value};path=/;max-age=${maxAge};SameSite=Lax`
+  getCookieDomains().forEach(domain => {
+    document.cookie = `googtrans=${value};path=/;domain=${domain};max-age=${maxAge};SameSite=Lax`
+  })
 }
 
 function readSavedLanguage() {
@@ -166,6 +185,12 @@ async function applyGoogleLanguage(languageCode: string) {
   const combo = await waitForTranslateCombo()
   if (combo) {
     dispatchTranslateChange(combo, languageCode)
+    window.setTimeout(() => {
+      const translated =
+        document.documentElement.classList.contains('translated-ltr') ||
+        document.documentElement.classList.contains('translated-rtl')
+      if (!translated) window.location.reload()
+    }, 650)
     return
   }
 
@@ -238,7 +263,7 @@ export default function SiteLanguageSwitcher() {
         type="button"
         onClick={() => setOpen(value => !value)}
         className={cn(
-          'flex h-9 items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-2.5 text-xs font-bold uppercase tracking-wide text-slate-700 transition-colors',
+          'flex h-8 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2 text-[11px] font-bold uppercase tracking-wide text-slate-700 transition-colors sm:h-9 sm:rounded-2xl sm:px-2.5 sm:text-xs',
           'hover:border-indigo-300 hover:bg-slate-50 hover:text-indigo-700',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40',
           'dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:bg-slate-900 dark:hover:text-indigo-300'
@@ -253,7 +278,7 @@ export default function SiteLanguageSwitcher() {
       </button>
 
       {open ? (
-        <div className="absolute right-0 top-full z-[70] mt-2 w-[260px] overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_24px_54px_-30px_rgba(15,23,42,0.4)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-[0_24px_54px_-30px_rgba(2,6,23,0.8)]">
+        <div className="absolute right-0 top-full z-[70] mt-2 w-[240px] overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-[0_24px_54px_-30px_rgba(15,23,42,0.4)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-[0_24px_54px_-30px_rgba(2,6,23,0.8)] sm:w-[260px] sm:rounded-2xl sm:p-2">
           <div className="grid max-h-[320px] grid-cols-2 gap-1 overflow-y-auto pr-1">
             {POPULAR_SITE_LANGUAGES.map(language => {
               const active = language.code === currentLanguage
@@ -267,7 +292,7 @@ export default function SiteLanguageSwitcher() {
                     void applyGoogleLanguage(language.code)
                   }}
                   className={cn(
-                    'flex items-center justify-between rounded-xl px-2.5 py-2 text-left text-xs font-semibold transition-colors',
+                    'flex items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-[11px] font-semibold transition-colors sm:rounded-xl sm:py-2 sm:text-xs',
                     active
                       ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950'
                       : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900'

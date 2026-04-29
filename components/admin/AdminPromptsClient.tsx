@@ -49,10 +49,11 @@ function normalizeForSave(prompt: PromptEntry, categories: PromptCategory[]) {
   const category = categories.find(entry => entry.id === prompt.category)
   const title = prompt.title.trim()
   const slug = slugify(prompt.slug || title)
+  const id = !prompt.id || prompt.id.startsWith('prompt-draft-') ? `prompt-${slug}` : prompt.id
 
   return {
     ...prompt,
-    id: prompt.id || `prompt-${slug}`,
+    id,
     title,
     slug,
     categoryTitle: category?.title || prompt.categoryTitle,
@@ -115,6 +116,7 @@ export default function AdminPromptsClient({
   const [replaceExisting, setReplaceExisting] = useState(false)
   const [importSummary, setImportSummary] = useState<PromptImportSummary | null>(null)
   const [jsonEditor, setJsonEditor] = useState('')
+  const [jsonEditorTouched, setJsonEditorTouched] = useState(false)
   const [busyAction, setBusyAction] = useState<null | 'save' | 'refresh' | 'import' | 'upload-image'>(null)
   const [isPending, startTransition] = useTransition()
   const deferredSearch = useDeferredValue(search)
@@ -146,10 +148,14 @@ export default function AdminPromptsClient({
   const paginatedPrompts = filteredPrompts.slice(pageStart, pageEnd)
 
   useEffect(() => {
-    if (selectedPrompt) {
+    setJsonEditorTouched(false)
+  }, [selectedId])
+
+  useEffect(() => {
+    if (selectedPrompt && !jsonEditorTouched) {
       setJsonEditor(JSON.stringify(selectedPrompt, null, 2))
     }
-  }, [selectedPrompt])
+  }, [jsonEditorTouched, selectedPrompt])
 
   useEffect(() => {
     setCurrentPage(1)
@@ -176,6 +182,7 @@ export default function AdminPromptsClient({
   function updateSelectedPrompt(patch: Partial<PromptEntry>) {
     if (!selectedPrompt) return
     const nextPrompt = { ...selectedPrompt, ...patch }
+    setJsonEditorTouched(false)
     setPromptsState(previous => previous.map(prompt => (prompt.id === selectedPrompt.id ? nextPrompt : prompt)))
   }
 
@@ -213,10 +220,13 @@ export default function AdminPromptsClient({
     startTransition(async () => {
       setBusyAction('save')
       try {
-        const parsed = JSON.parse(jsonEditor) as PromptEntry
+        const parsed = jsonEditorTouched ? (JSON.parse(jsonEditor) as PromptEntry) : selectedPrompt
         const normalized = normalizeForSave(parsed, categories)
         if (!normalized.title || !normalized.prompt) {
           throw new Error('Title and main prompt are required before saving.')
+        }
+        if (!normalized.slug) {
+          throw new Error('Add a title or slug before saving.')
         }
 
         const response = await fetch('/api/admin/prompts', {
@@ -226,7 +236,12 @@ export default function AdminPromptsClient({
         })
         const result = await parseResponse(response)
         if (!response.ok) throw new Error(result.error || 'Failed to save prompt.')
-        if (result.prompts) setPromptsState(result.prompts)
+        if (result.prompts) {
+          setPromptsState(result.prompts)
+          const savedPrompt = result.prompts.find(prompt => prompt.slug === normalized.slug)
+          if (savedPrompt) setSelectedId(savedPrompt.id)
+        }
+        setJsonEditorTouched(false)
         setFeedback({ tone: 'success', title: 'Prompt saved', message: result.message || `Saved "${normalized.title}" successfully.` })
       } catch (error) {
         setFeedback({ tone: 'error', title: 'Save failed', message: error instanceof Error ? error.message : 'Failed to save prompt.' })
@@ -520,7 +535,7 @@ export default function AdminPromptsClient({
 
               <label className="space-y-2 text-sm">
                 <span className="font-semibold text-foreground">Advanced JSON editor</span>
-                <textarea value={jsonEditor} onChange={event => setJsonEditor(event.target.value)} className="h-[28rem] w-full rounded-2xl border border-border bg-background px-4 py-3 font-mono text-xs leading-6 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" />
+                <textarea value={jsonEditor} onChange={event => { setJsonEditorTouched(true); setJsonEditor(event.target.value) }} className="h-[28rem] w-full rounded-2xl border border-border bg-background px-4 py-3 font-mono text-xs leading-6 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" />
               </label>
             </div>
           ) : (

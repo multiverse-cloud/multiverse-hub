@@ -9,7 +9,7 @@ import {
   type PromptModelId,
 } from '@/lib/prompt-library-data'
 import { getPromptPreviewDefault, isPromptPlaceholderPreview } from '@/lib/prompt-preview-images'
-import { getMergedLocalPromptEntries, saveLocalPrompt, saveLocalPrompts } from '@/lib/prompt-local-store'
+import { getMergedLocalPromptEntries, hasRuntimePromptStore, saveLocalPrompt, saveLocalPrompts } from '@/lib/prompt-local-store'
 
 const PROMPTS_TAG = 'prompts'
 const PROMPTS_MEMORY_CACHE_MS = 60 * 60 * 1000
@@ -186,9 +186,9 @@ function resetPromptCache() {
 }
 
 function assertWritableLocalPromptStore() {
-  if (process.env.VERCEL) {
+  if (!hasRuntimePromptStore()) {
     throw new Error(
-      'Prompt Hub is currently in local-only mode. This deployment is read-only, so prompt import/save works only in local development until a database is enabled again.'
+      'Prompt Hub admin writes need UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN on Vercel, or must be run locally where data files are writable.'
     )
   }
 }
@@ -240,7 +240,7 @@ export async function savePrompt(input: PromptEntry) {
   await saveLocalPrompt(prompt)
   resetPromptCache()
   revalidateTag(PROMPTS_TAG)
-  return true
+  return prompt
 }
 
 export async function savePrompts(inputs: PromptEntry[]) {

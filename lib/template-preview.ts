@@ -61,7 +61,21 @@ function injectPreviewGuards(markup: string) {
 
 export function buildTemplatePreviewHtml(template: TemplateEntry) {
   if (template.previewHtml?.trim()) {
-    return injectPreviewGuards(template.previewHtml)
+    const css = collectFiles(template, 'css')
+      .map(file => file.content)
+      .join('\n\n')
+    const js = collectFiles(template, 'js')
+      .map(file => file.content)
+      .join('\n\n')
+    const html = stripExternalFileTags(template.previewHtml)
+    const headInjection = `<meta name="robots" content="noindex" />${css ? `<style>${css}</style>` : ''}`
+    const bodyInjection = `${js ? `<script>${js}</script>` : ''}`
+
+    return injectPreviewGuards(
+      html
+        .replace('</head>', `${headInjection}</head>`)
+        .replace('</body>', `${bodyInjection}</body>`)
+    )
   }
 
   const htmlFile = findIndexFile(template)

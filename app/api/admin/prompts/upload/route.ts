@@ -46,26 +46,26 @@ async function uploadImageToCloudinary(file: File, slug: string) {
   formData.append('public_id', publicId)
   formData.append('overwrite', 'true')
 
-  if (config.uploadPreset) {
-    formData.append('upload_preset', config.uploadPreset)
-  } else {
-    if (!config.apiKey || !config.apiSecret) {
-      throw new Error('Cloudinary upload is not fully configured. Add an upload preset or API key and secret.')
+  if (config.apiKey && config.apiSecret) {
+    const timestamp = String(Math.floor(Date.now() / 1000))
+    const signedParams: Record<string, string> = {
+      overwrite: 'true',
+      public_id: publicId,
+      timestamp,
     }
 
-    const timestamp = String(Math.floor(Date.now() / 1000))
-    const signature = createCloudinarySignature(
-      {
-        overwrite: 'true',
-        public_id: publicId,
-        timestamp,
-      },
-      config.apiSecret
-    )
+    if (config.uploadPreset) {
+      signedParams.upload_preset = config.uploadPreset
+      formData.append('upload_preset', config.uploadPreset)
+    }
 
     formData.append('api_key', config.apiKey)
     formData.append('timestamp', timestamp)
-    formData.append('signature', signature)
+    formData.append('signature', createCloudinarySignature(signedParams, config.apiSecret))
+  } else if (config.uploadPreset) {
+    formData.append('upload_preset', config.uploadPreset)
+  } else {
+    throw new Error('Cloudinary upload is not fully configured. Add an upload preset or API key and secret.')
   }
 
   const response = await fetch(`https://api.cloudinary.com/v1_1/${config.cloudName}/image/upload`, {

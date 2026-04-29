@@ -17,7 +17,7 @@ export default function ThemeToggle() {
   if (!mounted) {
     return (
       <div
-        className="h-9 w-9 rounded-2xl border border-slate-200 dark:border-slate-800"
+        className="h-8 w-8 rounded-xl border border-slate-200 dark:border-slate-800 sm:h-9 sm:w-9 sm:rounded-2xl"
         aria-hidden="true"
       />
     );
@@ -36,7 +36,7 @@ export default function ThemeToggle() {
     <button
       onClick={handleToggle}
       className={cn(
-        "relative flex h-9 w-9 items-center justify-center rounded-2xl border",
+        "relative flex h-8 w-8 items-center justify-center rounded-xl border sm:h-9 sm:w-9 sm:rounded-2xl",
         "touch-manipulation select-none",
         "border-slate-200 transition-colors duration-200",
         "hover:border-indigo-300 hover:bg-slate-50",

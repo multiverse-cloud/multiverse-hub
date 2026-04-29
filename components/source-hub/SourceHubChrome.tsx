@@ -209,7 +209,7 @@ export default function SourceHubChrome() {
 
         .source-hub-loader {
           position: fixed;
-          inset: 0;
+          inset: 4rem 0 0;
           z-index: 45;
           display: flex;
           align-items: center;
@@ -224,6 +224,41 @@ export default function SourceHubChrome() {
             opacity 0.25s ease-out,
             visibility 0.25s ease-out;
           pointer-events: auto;
+        }
+
+        @media (min-width: 1024px) {
+          .source-hub-loader {
+            top: 7.15rem;
+          }
+        }
+
+        @media (max-width: 767px) {
+          .source-hub-loader {
+            bottom: calc(4.25rem + env(safe-area-inset-bottom));
+          }
+
+          .source-hub-loader-content {
+            gap: 1rem;
+            transform: translateY(-0.5rem);
+          }
+
+          .source-hub-loader-logo-icon {
+            width: 2.75rem;
+            height: 2.75rem;
+          }
+
+          .source-hub-loader-logo-text {
+            font-size: 1.35rem;
+          }
+
+          .source-hub-loader-spinner {
+            width: 3.75rem;
+            height: 3.75rem;
+          }
+
+          .source-hub-loader-progress-bar {
+            width: 11rem;
+          }
         }
 
         .source-hub-loader-hidden {

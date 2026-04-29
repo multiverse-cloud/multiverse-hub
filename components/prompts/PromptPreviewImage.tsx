@@ -67,10 +67,15 @@ export default function PromptPreviewImage({
             setLoaded(true)
           }
         }}
+        ref={node => {
+          if (node?.complete && node.naturalWidth > 0 && !loaded) {
+            setLoaded(true)
+          }
+        }}
         referrerPolicy={isRemoteUrl(currentSrc) ? 'no-referrer' : undefined}
         className={cn(
           'absolute inset-0 h-full w-full',
-          imageFit === 'contain' ? 'object-contain object-center p-1.5 md:p-2' : 'object-cover object-center',
+          imageFit === 'contain' ? 'object-contain object-center' : 'object-cover object-center',
           loaded ? 'opacity-100' : 'opacity-0',
           'transition-opacity duration-200',
           imgClassName

@@ -1,35 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { TemplateCategoryId, TemplateEntry } from '@/lib/template-library-data'
 import { cn } from '@/lib/utils'
-
-function getCompactPreviewScale(template: TemplateEntry) {
-  switch (template.category) {
-    case 'mobile':
-      return 0.58
-    case 'dashboard':
-    case 'saas':
-    case 'agency':
-    case 'education':
-    case 'healthcare':
-    case 'restaurant':
-    case 'real-estate':
-    case 'ecommerce':
-      return 0.34
-    case 'landing':
-    case 'auth':
-    case 'portfolio':
-    case 'pricing':
-    case 'onboarding':
-    case 'crypto':
-    case 'fitness':
-      return 0.42
-    default:
-      return 0.4
-  }
-}
 
 function escapeSvg(value: string) {
   return value
@@ -236,6 +210,90 @@ function toDataUrl(svg: string) {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" fill="none">${svg}</svg>`)}`
 }
 
+const COMPACT_DESKTOP_WIDTH = 1440
+const COMPACT_DESKTOP_HEIGHT = 1008
+
+function escapeClosingTags(value: string) {
+  return value.replace(/<\/script/gi, '<\\/script').replace(/<\/style/gi, '<\\/style')
+}
+
+function stripExternalAssetTags(markup: string) {
+  return markup
+    .replace(/<link[^>]+href=["'][^"']+\.css["'][^>]*>/gi, '')
+    .replace(/<script[^>]+src=["'][^"']+\.js["'][^>]*><\/script>/gi, '')
+}
+
+function injectBeforeClosingTag(markup: string, tag: 'head' | 'body', injection: string) {
+  const closingTag = new RegExp(`</${tag}>`, 'i')
+  if (closingTag.test(markup)) {
+    return markup.replace(closingTag, `${injection}</${tag}>`)
+  }
+
+  return tag === 'head'
+    ? markup.replace(/<body[^>]*>/i, match => `${injection}${match}`)
+    : `${markup}${injection}`
+}
+
+function buildTemplatePreviewDocument(template: TemplateEntry) {
+  const primaryFile =
+    template.files.find(file => file.primary) ||
+    template.files.find(file => file.path.toLowerCase() === 'index.html') ||
+    template.files.find(file => file.language === 'html')
+  const rawMarkup = template.previewHtml?.trim() || primaryFile?.content?.trim()
+
+  if (!rawMarkup) return ''
+
+  const css = template.files
+    .filter(file => file.language === 'css')
+    .map(file => file.content)
+    .join('\n\n')
+  const js = template.files
+    .filter(file => file.language === 'js')
+    .map(file => file.content)
+    .join('\n\n')
+
+  let markup = stripExternalAssetTags(rawMarkup)
+  if (!/<html[\s>]/i.test(markup)) {
+    markup = `<!doctype html><html lang="en"><head></head><body>${markup}</body></html>`
+  }
+
+  const headInjection = `
+<base target="_self" />
+<meta name="robots" content="noindex" />
+<style>
+  html, body { margin: 0; min-height: 100%; background: #ffffff; overscroll-behavior: none; }
+  * { box-sizing: border-box; }
+  img, svg, video, canvas { max-width: 100%; }
+  ${escapeClosingTags(css)}
+</style>`
+
+  const bodyInjection = `
+<script>
+  (function () {
+    document.addEventListener('click', function (event) {
+      var anchor = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+      if (!anchor) return;
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+    document.addEventListener('submit', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+    try {
+      window.open = function () { return null; };
+      history.pushState = function () {};
+      history.replaceState = function () {};
+    } catch (error) {}
+  })();
+</script>${js ? `<script>${escapeClosingTags(js)}</script>` : ''}`
+
+  markup = injectBeforeClosingTag(markup, 'head', headInjection)
+  markup = injectBeforeClosingTag(markup, 'body', bodyInjection)
+
+  return markup
+}
+
 export default function TemplateLivePreview({
   template,
   compact = false,
@@ -252,10 +310,33 @@ export default function TemplateLivePreview({
   const ratio = template.category === 'mobile' ? 'aspect-[10/16]' : compact ? 'aspect-[4/3]' : 'aspect-[16/10]'
   const frameClass = compact ? 'h-full w-full' : ratio
   const [loaded, setLoaded] = useState(false)
+  const compactFrameRef = useRef<HTMLDivElement>(null)
+  const [compactScale, setCompactScale] = useState(0.28)
+  const previewDocument = useMemo(() => buildTemplatePreviewDocument(template), [template])
 
   useEffect(() => {
     setLoaded(false)
-  }, [reloadToken, template.previewImage, template.slug, viewport])
+  }, [previewDocument, reloadToken, template.previewImage, template.slug, viewport])
+
+  useEffect(() => {
+    if (!compact || !previewDocument) return
+
+    const node = compactFrameRef.current
+    if (!node) return
+
+    const updateScale = () => {
+      const widthScale = node.clientWidth / COMPACT_DESKTOP_WIDTH
+      const heightScale = node.clientHeight / COMPACT_DESKTOP_HEIGHT
+      const nextScale = Math.max(widthScale, heightScale)
+      setCompactScale(Number.isFinite(nextScale) && nextScale > 0 ? nextScale : 0.28)
+    }
+
+    updateScale()
+
+    const observer = new ResizeObserver(updateScale)
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [compact, previewDocument])
 
   if (compact && template.previewImage) {
     return (
@@ -275,43 +356,31 @@ export default function TemplateLivePreview({
     )
   }
 
-  if (template.previewHtml) {
+  if (previewDocument) {
     const viewportWidth =
       viewport === 'mobile' ? 'w-[390px] max-w-full' : viewport === 'tablet' ? 'w-[820px] max-w-full' : 'w-full'
-    const compactScale = getCompactPreviewScale(template)
 
     if (compact) {
-      // Render a full-width desktop (1440px) preview scaled to fit the card
-      const DESKTOP_WIDTH = 1440
       return (
         <div className={cn('h-full w-full overflow-hidden bg-white', className)}>
-          <div className="relative h-full w-full overflow-hidden">
+          <div ref={compactFrameRef} className="relative h-full w-full overflow-hidden">
             {!loaded ? <div className="absolute inset-0 animate-pulse bg-slate-100 dark:bg-slate-900" /> : null}
             <iframe
               key={`${template.slug}-compact-${reloadToken}`}
               title={`${template.title} compact preview`}
-              srcDoc={template.previewHtml}
+              srcDoc={previewDocument}
               className="border-0 bg-white"
               loading="lazy"
               sandbox="allow-scripts"
               scrolling="no"
               onLoad={() => setLoaded(true)}
               style={{
-                width: `${DESKTOP_WIDTH}px`,
-                height: `${DESKTOP_WIDTH * 0.7}px`,
-                transform: `scale(var(--preview-scale, 1))`,
+                width: `${COMPACT_DESKTOP_WIDTH}px`,
+                height: `${COMPACT_DESKTOP_HEIGHT}px`,
+                transform: `scale(${compactScale})`,
                 transformOrigin: 'top left',
                 pointerEvents: 'none',
                 background: '#ffffff',
-                // scale set via container query fallback via inline var
-              }}
-              ref={(el) => {
-                if (!el) return
-                const parent = el.parentElement
-                if (!parent) return
-                const scale = parent.offsetWidth / DESKTOP_WIDTH
-                el.style.setProperty('--preview-scale', `${scale}`)
-                el.style.transform = `scale(${scale})`
               }}
             />
           </div>
@@ -327,7 +396,7 @@ export default function TemplateLivePreview({
             <iframe
               key={`${template.slug}-${viewport}-${reloadToken}`}
               title={`${template.title} live preview`}
-              srcDoc={template.previewHtml}
+              srcDoc={previewDocument}
               className="h-full w-full border-0 bg-white"
               loading="lazy"
               sandbox="allow-scripts"

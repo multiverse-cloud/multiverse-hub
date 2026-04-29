@@ -265,12 +265,13 @@ function ComponentPreviewRow({
           </div>
         </div>
       </div>
-      <div className={cn('relative h-[240px] overflow-hidden sm:h-[250px] md:h-[280px]', isDark ? 'bg-slate-950' : 'bg-white')}>
-        <div ref={stageRef} className="flex h-full w-full items-start justify-center overflow-hidden px-2 py-3 sm:px-3 sm:py-4">
+      <div className={cn('relative h-[260px] overflow-hidden sm:h-[290px] md:h-[320px]', isDark ? 'bg-slate-950' : 'bg-white')}>
+        <div ref={stageRef} className="flex h-full w-full items-start justify-center overflow-hidden">
           <div
-            className="h-full overflow-hidden rounded-[18px] ring-1 ring-slate-200/70 transition-transform duration-200 dark:ring-slate-800/80"
+            className="overflow-hidden transition-transform duration-200"
             style={{
               width: scaledWidth ? `${scaledWidth}px` : '100%',
+              height: activeSize.width && sizeScale < 1 ? `${100 / sizeScale}%` : '100%',
               maxWidth: activeSize.width ? 'none' : '100%',
               transform: `scale(${sizeScale})`,
               transformOrigin: 'top center',

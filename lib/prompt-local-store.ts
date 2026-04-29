@@ -7,6 +7,7 @@ import { PROMPTS, type PromptEntry } from '@/lib/prompt-library-data'
 const DATA_DIR = path.join(process.cwd(), 'data')
 const LOCAL_PROMPT_STORE_FILE = path.join(DATA_DIR, 'prompt-local-store.json')
 const LOCAL_PROMPT_TITLE_REGISTRY_FILE = path.join(DATA_DIR, 'prompt-topic-titles.txt')
+const UPSTASH_PROMPT_STORE_KEY = 'mtverse:prompt-local-store:v1'
 
 type PromptLocalStoreFile = {
   prompts: PromptEntry[]
@@ -39,14 +40,70 @@ async function ensureDataDirectory() {
   await mkdir(DATA_DIR, { recursive: true })
 }
 
+function getUpstashConfig() {
+  const url = process.env.UPSTASH_REDIS_REST_URL?.trim()
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim()
+
+  if (!url || !token) return null
+
+  return {
+    url: url.replace(/\/$/, ''),
+    token,
+  }
+}
+
+async function callUpstashPipeline(commands: Array<Array<string | number>>, mode: 'read' | 'write') {
+  const config = getUpstashConfig()
+  if (!config) return null
+  const init: RequestInit & { next?: { revalidate?: number; tags?: string[] } } = {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${config.token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(commands),
+  }
+
+  if (mode === 'read') {
+    init.next = {
+      revalidate: 300,
+      tags: ['prompts'],
+    }
+  } else {
+    init.cache = 'no-store'
+  }
+
+  const response = await fetch(`${config.url}/pipeline`, {
+    ...init,
+  })
+
+  if (!response.ok) {
+    throw new Error(`Prompt store failed with ${response.status}`)
+  }
+
+  return (await response.json()) as Array<{ result?: unknown; error?: string }>
+}
+
+async function readUpstashStore() {
+  const result = await callUpstashPipeline([['GET', UPSTASH_PROMPT_STORE_KEY]], 'read')
+  const raw = result?.[0]?.result
+
+  if (typeof raw !== 'string' || !raw.trim()) return null
+
+  const parsed = JSON.parse(raw) as Partial<PromptLocalStoreFile>
+  return Array.isArray(parsed.prompts) ? (parsed.prompts as PromptEntry[]) : []
+}
+
+async function writeUpstashStore(payload: PromptLocalStoreFile) {
+  await callUpstashPipeline([['SET', UPSTASH_PROMPT_STORE_KEY, JSON.stringify(payload)]], 'write')
+}
+
 async function writeTitleRegistry(prompts: PromptEntry[]) {
   const lines = sortPrompts(prompts).map(prompt => `${normalizeTopic(prompt.title)} | ${prompt.title} | ${prompt.slug}`)
   await writeFile(LOCAL_PROMPT_TITLE_REGISTRY_FILE, `${lines.join('\n')}\n`, 'utf8')
 }
 
 async function writeLocalStore(prompts: PromptEntry[], source: string) {
-  await ensureDataDirectory()
-
   const sortedPrompts = sortPrompts(prompts)
   const payload: PromptLocalStoreFile = {
     prompts: sortedPrompts,
@@ -57,6 +114,25 @@ async function writeLocalStore(prompts: PromptEntry[], source: string) {
     },
   }
 
+  if (getUpstashConfig()) {
+    await writeUpstashStore(payload)
+
+    if (!process.env.VERCEL) {
+      await ensureDataDirectory()
+      await writeFile(LOCAL_PROMPT_STORE_FILE, `${JSON.stringify(payload, null, 2)}\n`, 'utf8')
+      await writeTitleRegistry(sortedPrompts)
+    }
+
+    return sortedPrompts
+  }
+
+  if (process.env.VERCEL) {
+    throw new Error(
+      'Prompt Hub admin writes need UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN on Vercel, or must be run locally where data files are writable.'
+    )
+  }
+
+  await ensureDataDirectory()
   await writeFile(LOCAL_PROMPT_STORE_FILE, `${JSON.stringify(payload, null, 2)}\n`, 'utf8')
   await writeTitleRegistry(sortedPrompts)
 
@@ -64,6 +140,16 @@ async function writeLocalStore(prompts: PromptEntry[], source: string) {
 }
 
 async function readLocalStore() {
+  if (getUpstashConfig()) {
+    try {
+      const upstashPrompts = await readUpstashStore()
+      if (upstashPrompts) return upstashPrompts
+    } catch (error) {
+      console.error('Prompt Upstash store read failed:', error)
+      if (process.env.VERCEL) return []
+    }
+  }
+
   try {
     const raw = await readFile(LOCAL_PROMPT_STORE_FILE, 'utf8')
     const parsed = JSON.parse(raw) as Partial<PromptLocalStoreFile>
@@ -122,6 +208,10 @@ export async function saveLocalPrompts(prompts: PromptEntry[]) {
     success: true,
     count: prompts.length,
   }
+}
+
+export function hasRuntimePromptStore() {
+  return Boolean(getUpstashConfig()) || !process.env.VERCEL
 }
 
 export function getLocalPromptStorePaths() {

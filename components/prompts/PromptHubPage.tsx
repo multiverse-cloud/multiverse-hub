@@ -97,7 +97,7 @@ function PromptShowcaseCard({ prompt }: { prompt: PromptEntry }) {
       prefetch={false}
       className="group overflow-hidden rounded-lg border border-border/80 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_16px_40px_-24px_rgba(15,23,42,0.16)] dark:hover:border-slate-700"
     >
-      <div className="relative aspect-square overflow-hidden bg-slate-50 dark:bg-slate-950 sm:aspect-[4/3]">
+      <div className="relative aspect-[16/11] overflow-hidden bg-slate-50 dark:bg-slate-950">
         <PromptPreviewImage
           src={prompt.previewImage}
           alt={prompt.previewAlt}

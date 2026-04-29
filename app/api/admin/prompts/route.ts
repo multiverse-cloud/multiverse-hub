@@ -45,7 +45,7 @@ function getSafeErrorMessage(error: unknown, fallback: string) {
 }
 
 function isLocalPromptReadOnlyError(error: unknown) {
-  return error instanceof Error && /Prompt Hub is currently in local-only mode/i.test(error.message)
+  return error instanceof Error && /Prompt Hub admin writes need UPSTASH/i.test(error.message)
 }
 
 async function isAuthorizedRequest(request: NextRequest) {
@@ -137,13 +137,13 @@ export async function POST(request: NextRequest) {
       return jsonError('Missing prompt payload', 400, 'missing_prompt_payload')
     }
 
-    await savePrompt(prompt)
+    const savedPrompt = await savePrompt(prompt)
     const prompts = await getAdminPrompts()
 
     return NextResponse.json({
       success: true,
-      message: `Saved "${prompt.title}" successfully.`,
-      prompt,
+      message: `Saved "${savedPrompt.title}" successfully.`,
+      prompt: savedPrompt,
       prompts,
     } satisfies AdminPromptsResponse)
   } catch (error) {
