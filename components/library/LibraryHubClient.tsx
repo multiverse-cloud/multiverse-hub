@@ -26,12 +26,26 @@ function pickItems(items: LibraryHubItem[], count: number) {
 }
 
 function PreviewSurface({ item }: { item: LibraryHubItem }) {
-  if (item.previewDocument) {
+  if (item.previewImage) {
+    return (
+      <div className="relative h-full w-full overflow-hidden bg-white">
+        <Image
+          src={item.previewImage}
+          alt={`${item.title} preview`}
+          fill
+          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+          className="object-cover object-top"
+        />
+      </div>
+    )
+  }
+
+  if (item.previewUrl) {
     return (
       <div className="h-full w-full overflow-hidden bg-[#eef2f7]">
         <iframe
           title={`${item.title} preview`}
-          srcDoc={item.previewDocument}
+          src={item.previewUrl}
           className="border-0 bg-white"
           sandbox="allow-scripts"
           loading="lazy"
@@ -44,20 +58,6 @@ function PreviewSurface({ item }: { item: LibraryHubItem }) {
             pointerEvents: 'none',
             background: '#ffffff',
           }}
-        />
-      </div>
-    )
-  }
-
-  if (item.previewImage) {
-    return (
-      <div className="relative h-full w-full overflow-hidden bg-white">
-        <Image
-          src={item.previewImage}
-          alt={`${item.title} preview`}
-          fill
-          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
-          className="object-cover object-top"
         />
       </div>
     )
