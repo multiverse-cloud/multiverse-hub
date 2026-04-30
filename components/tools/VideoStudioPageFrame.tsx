@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import type { Tool } from '@/lib/tools-data'
 import ToolBreadcrumb from './ToolBreadcrumb'
 import ToolActions from './ToolActions'
-import ToolCard from './ToolCard'
+import RelatedToolsGrid from './RelatedToolsGrid'
 import SEOContent from './SEOContent'
 import ToolRuntimeBanner from './ToolRuntimeBanner'
 import type { ToolRuntimeStatus } from '@/lib/tool-runtime-status'
@@ -39,25 +39,7 @@ export default function VideoStudioPageFrame({
 
         <SEOContent tool={tool} />
 
-        {relatedTools.length > 0 && (
-          <section className="mt-10">
-            <div className="mb-5">
-              <p className="premium-kicker">More video workflows</p>
-              <h2 className="font-display text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
-                Related tools
-              </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
-                Continue with more video tools in the same compact editor flow.
-              </p>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              {relatedTools.map(item => (
-                <ToolCard key={item.id} tool={item} variant="full" />
-              ))}
-            </div>
-          </section>
-        )}
+        <RelatedToolsGrid tools={relatedTools} categorySlug={tool.categorySlug} />
       </div>
     </div>
   )

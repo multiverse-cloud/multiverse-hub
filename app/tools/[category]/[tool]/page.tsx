@@ -53,6 +53,10 @@ const IMAGE_STUDIO_SLUGS = new Set([
   "instagram-grid-maker",
   "svg-to-png",
   "meme-generator",
+  "flip-rotate-image",
+  "blur-image",
+  "pixelate-image",
+  "add-watermark-image",
 ]);
 
 const FILE_STUDIO_SLUGS = new Set([
@@ -304,6 +308,10 @@ export default async function ToolPage({ params }: Props) {
   const resolvedToolSlug = resolveToolSlug(toolSlug);
   const tools = await getTools();
   const tool = tools.find((item) => item.slug === resolvedToolSlug) || null;
+
+  if (!tool && category === "video" && VIDEO_DOWNLOADER_TOOL_SLUGS.has(resolvedToolSlug)) {
+    redirect("/tools/video");
+  }
 
   if (!tool || tool.categorySlug !== category || tool.enabled === false) {
     notFound();

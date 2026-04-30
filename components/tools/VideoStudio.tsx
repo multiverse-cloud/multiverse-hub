@@ -28,6 +28,7 @@ import type { Tool } from '@/lib/tools-data'
 import { cn, downloadBlob, formatBytes } from '@/lib/utils'
 import { buildDropzoneAccept, formatAcceptedFormats } from './file-accept'
 import { handleVideoTool } from './processors/file-media'
+import ToolOptionsSheet from './ToolOptionsSheet'
 import type { FilePreviewType, FileProcessResult, FileResultMetric } from './processors/types'
 
 type QueueItem = { id: string; file: File; previewUrl: string }
@@ -362,6 +363,22 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
     }
   }
 
+  function renderVideoOptions() {
+    return (
+      <div className="space-y-4">
+        {tool.slug === 'compress-video' && <div className="flex flex-wrap gap-2">{[['extreme', 'Extreme'], ['recommended', 'Recommended'], ['less', 'Less']].map(([value, label]) => <button key={value} type="button" onClick={() => setCompressPreset(value)} className={cn('premium-option-chip', compressPreset === value && 'premium-option-chip-active')}>{label}</button>)}</div>}
+        {tool.slug === 'video-to-mp3' && <div className="flex flex-wrap gap-2">{['128k', '192k', '256k', '320k'].map(value => <button key={value} type="button" onClick={() => setBitrate(value)} className={cn('premium-option-chip', bitrate === value && 'premium-option-chip-active')}>{value}</button>)}</div>}
+        {tool.slug === 'trim-video' && <div className="grid gap-4 sm:grid-cols-2"><input value={trimStart} onChange={event => setTrimStart(event.target.value)} className="premium-field" placeholder="Start seconds" /><input value={trimDuration} onChange={event => setTrimDuration(event.target.value)} className="premium-field" placeholder="Duration seconds" /></div>}
+        {tool.slug === 'video-to-gif' && <div className="grid gap-4 sm:grid-cols-2"><input value={gifStart} onChange={event => setGifStart(event.target.value)} className="premium-field" placeholder="Start seconds" /><input value={gifDuration} onChange={event => setGifDuration(event.target.value)} className="premium-field" placeholder="Duration seconds" /><input value={gifFps} onChange={event => setGifFps(event.target.value)} className="premium-field" placeholder="FPS" /><input value={gifScale} onChange={event => setGifScale(event.target.value)} className="premium-field" placeholder="Width" /></div>}
+        {tool.slug === 'change-video-speed' && <div className="flex flex-wrap gap-2">{['0.75', '1', '1.25', '1.5', '2'].map(value => <button key={value} type="button" onClick={() => setSpeedValue(value)} className={cn('premium-option-chip', speedValue === value && 'premium-option-chip-active')}>{value}x</button>)}</div>}
+        {tool.slug === 'mute-video' && <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950/30 dark:text-slate-300">The audio track will be removed from the final export.</div>}
+        {tool.slug === 'gif-maker' && <div className="grid gap-4 sm:grid-cols-3"><input value={frameDelay} onChange={event => setFrameDelay(event.target.value)} className="premium-field" placeholder="Frame delay" /><input value={gifFps} onChange={event => setGifFps(event.target.value)} className="premium-field" placeholder="FPS" /><input value={gifScale} onChange={event => setGifScale(event.target.value)} className="premium-field" placeholder="Width" /></div>}
+        {tool.slug === 'rotate-video' && <div className="space-y-4"><div className="flex flex-wrap gap-2">{[['90', '90 deg'], ['180', '180 deg'], ['270', '270 deg']].map(([value, label]) => <button key={value} type="button" onClick={() => setRotationValue(value)} className={cn('premium-option-chip', rotationValue === value && 'premium-option-chip-active')}>{label}</button>)}</div><div className="flex flex-wrap gap-2">{[['none', 'No flip'], ['horizontal', 'Horizontal'], ['vertical', 'Vertical']].map(([value, label]) => <button key={value} type="button" onClick={() => setFlipMode(value as 'none' | 'horizontal' | 'vertical')} className={cn('premium-option-chip', flipMode === value && 'premium-option-chip-active')}>{label}</button>)}</div></div>}
+        {tool.slug === 'add-subtitles' && <textarea value={subtitleText} onChange={event => setSubtitleText(event.target.value)} className="premium-textarea min-h-[180px] sm:min-h-[220px]" spellCheck={false} />}
+      </div>
+    )
+  }
+
   if (tool.slug === 'youtube-thumbnail-downloader') {
     const leadVariant = thumbnailVariants[0] || null
     const videoId = metricValue(result?.metrics, 'Video ID', '')
@@ -520,7 +537,7 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
 
       <div className={cn('grid gap-6', tool.slug === 'youtube-thumbnail-downloader' ? '' : 'xl:grid-cols-[minmax(0,1.15fr)_360px]')}>
         <div className="space-y-5">
-          <section className="premium-panel p-5 sm:p-6">
+          <section className={cn("premium-panel p-5 sm:p-6", tool.slug !== 'youtube-thumbnail-downloader' && "hidden sm:block", tool.slug !== 'youtube-thumbnail-downloader' && !hasVideoInput && "sm:hidden")}>
             {tool.slug === 'youtube-thumbnail-downloader' ? (
               <>
                 <p className="premium-kicker">Source link</p>
@@ -575,6 +592,9 @@ export default function VideoStudio({ tool }: { tool: Tool }) {
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
                 {copy.actionLabel}
               </button>
+              <ToolOptionsSheet title={`${copy.title} options`}>
+                {renderVideoOptions()}
+              </ToolOptionsSheet>
               <button
                 type="button"
                 onClick={resetAll}

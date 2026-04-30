@@ -250,6 +250,26 @@ export async function handleImageTool({
     )
   }
 
+  if (slug === 'blur-image') {
+    formData.append('blur', blurStrength || textInput || '16')
+    return fetchImageBlobResult(
+      formData,
+      '/api/tools/image?action=blur',
+      buildOutputFilename(file.name, 'blurred', getFileExtension(file.name, 'jpg')),
+      response => `Blurred with ${response.headers.get('X-Blur-Strength') || blurStrength || textInput || '16'}px radius`
+    )
+  }
+
+  if (slug === 'pixelate-image') {
+    formData.append('size', textInput || '12')
+    return fetchImageBlobResult(
+      formData,
+      '/api/tools/image?action=pixelate',
+      buildOutputFilename(file.name, 'pixelated', getFileExtension(file.name, 'jpg')),
+      response => `Pixelated with ${response.headers.get('X-Pixel-Size') || textInput || '12'}px blocks`
+    )
+  }
+
   if (slug === 'add-watermark-image') {
     formData.append('text', textInput || 'mtverse')
     return fetchImageBlobResult(

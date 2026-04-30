@@ -2,9 +2,9 @@ import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import { CircleHelp, Sparkles, CheckCircle2 } from "lucide-react";
 import type { Tool } from "@/lib/tools-data";
-import ToolCard from "./ToolCard";
 import ToolActions from "./ToolActions";
 import ToolBreadcrumb from "./ToolBreadcrumb";
+import RelatedToolsGrid from "./RelatedToolsGrid";
 import SEOContent from "./SEOContent";
 import ToolRuntimeBanner from "./ToolRuntimeBanner";
 import type { ToolRuntimeStatus } from "@/lib/tool-runtime-status";
@@ -173,27 +173,7 @@ export default function PdfStudioPageFrame({
         <SEOContent tool={tool} />
 
         {/* Related tools */}
-        {content.relatedTools.length > 0 && (
-          <section className="mt-8 sm:mt-10">
-            <div className="mb-4 flex items-end justify-between gap-4 sm:mb-5">
-              <div>
-                <p className="premium-kicker">Continue with</p>
-                <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-950 sm:text-2xl">
-                  Related tools
-                </h2>
-                <p className="mt-1.5 max-w-2xl text-sm leading-6 text-slate-600 sm:mt-2">
-                  More PDF tools for the same workflow.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
-              {content.relatedTools.map((item) => (
-                <ToolCard key={item.id} tool={item} variant="full" />
-              ))}
-            </div>
-          </section>
-        )}
+        <RelatedToolsGrid tools={[...content.relatedTools]} categorySlug={tool.categorySlug} />
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ import type { Tool } from "@/lib/tools-data";
 import { cn, downloadBlob, formatBytes } from "@/lib/utils";
 import { buildDropzoneAccept, formatAcceptedFormats } from "./file-accept";
 import { handleImageTool } from "./processors/file-image";
+import ToolOptionsSheet from "./ToolOptionsSheet";
 import type { FileProcessResult } from "./processors/types";
 
 const TRANSFORM_COPY = {
@@ -99,6 +100,38 @@ const TRANSFORM_COPY = {
     badges: ["2x and 4x", "Sharper output", "Compare quickly"],
     actionLabel: "Upscale image",
     emptyTitle: "Upscaled result appears here",
+  },
+  "flip-rotate-image": {
+    eyebrow: "Orientation cleanup",
+    title: "Rotate & Flip Image",
+    summary: "Fix sideways photos and screenshots with clean 90, 180, or 270 degree rotation.",
+    badges: ["Lossless feel", "Fast preview", "Clean export"],
+    actionLabel: "Rotate image",
+    emptyTitle: "Rotated result appears here",
+  },
+  "blur-image": {
+    eyebrow: "Privacy blur",
+    title: "Blur Image",
+    summary: "Soften an image for backgrounds, privacy edits, or subtle visual effects.",
+    badges: ["Privacy safe", "Soft blur", "Quick export"],
+    actionLabel: "Blur image",
+    emptyTitle: "Blurred result appears here",
+  },
+  "pixelate-image": {
+    eyebrow: "Pixel art editor",
+    title: "Pixelate Image",
+    summary: "Turn photos into pixel-style visuals or hide sensitive areas with blocky pixels.",
+    badges: ["Pixel effect", "Privacy edit", "Fast render"],
+    actionLabel: "Pixelate image",
+    emptyTitle: "Pixelated result appears here",
+  },
+  "add-watermark-image": {
+    eyebrow: "Brand protection",
+    title: "Add Watermark to Image",
+    summary: "Add a simple text watermark to product shots, previews, and creative assets.",
+    badges: ["Text watermark", "Brand-safe", "Download ready"],
+    actionLabel: "Add watermark",
+    emptyTitle: "Watermarked result appears here",
   },
   "favicon-generator": {
     eyebrow: "Web branding",
@@ -203,6 +236,10 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
   const [blurTint, setBlurTint] = useState("#E8EEFF");
   const [ocrLang, setOcrLang] = useState("eng");
   const [upscaleFactor, setUpscaleFactor] = useState("2");
+  const [rotationAngle, setRotationAngle] = useState("90");
+  const [pixelSize, setPixelSize] = useState("12");
+  const [watermarkText, setWatermarkText] = useState("mtverse");
+  const hasImageInput = Boolean(file);
 
   function clearSourcePreview() {
     if (sourcePreviewRef.current) {
@@ -274,10 +311,20 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
     resetResultState();
 
     try {
+      const imageTextInput =
+        tool.slug === "crop-image"
+          ? cropAspect
+          : tool.slug === "flip-rotate-image"
+            ? rotationAngle
+            : tool.slug === "pixelate-image"
+              ? pixelSize
+              : tool.slug === "add-watermark-image"
+                ? watermarkText
+                : "";
       const processed = await handleImageTool({
         slug: tool.slug,
         file,
-        textInput: tool.slug === "crop-image" ? cropAspect : "",
+        textInput: imageTextInput,
         ocrLang,
         imgQuality,
         imgConvertTo: convertTo,
@@ -316,6 +363,9 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
     setBlurTint("#E8EEFF");
     setOcrLang("eng");
     setUpscaleFactor("2");
+    setRotationAngle("90");
+    setPixelSize("12");
+    setWatermarkText("mtverse");
     setError("");
   }
 
@@ -605,6 +655,93 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
       );
     }
 
+    if (tool.slug === "flip-rotate-image") {
+      return (
+        <div className="space-y-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+            Rotation
+          </p>
+          <div className="grid gap-2 sm:grid-cols-3">
+            {[
+              ["90", "90 deg"],
+              ["180", "180 deg"],
+              ["270", "270 deg"],
+            ].map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setRotationAngle(value)}
+                className={cn(
+                  "rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors",
+                  rotationAngle === value
+                    ? "bg-indigo-600 text-white"
+                    : "bg-white text-slate-700 hover:bg-slate-100",
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (tool.slug === "blur-image") {
+      return (
+        <div className="space-y-5">
+          <div>
+            <div className="mb-2 flex items-center justify-between text-sm font-semibold text-slate-700">
+              <span>Blur radius</span>
+              <span>{blurStrength}px</span>
+            </div>
+            <input
+              type="range"
+              min="1"
+              max="60"
+              value={blurStrength}
+              onChange={(event) => setBlurStrength(event.target.value)}
+              className="w-full accent-indigo-600"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (tool.slug === "pixelate-image") {
+      return (
+        <div className="space-y-5">
+          <div>
+            <div className="mb-2 flex items-center justify-between text-sm font-semibold text-slate-700">
+              <span>Pixel block</span>
+              <span>{pixelSize}px</span>
+            </div>
+            <input
+              type="range"
+              min="2"
+              max="80"
+              value={pixelSize}
+              onChange={(event) => setPixelSize(event.target.value)}
+              className="w-full accent-indigo-600"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (tool.slug === "add-watermark-image") {
+      return (
+        <label className="block space-y-2 text-sm font-semibold text-slate-700">
+          <span>Watermark text</span>
+          <input
+            value={watermarkText}
+            onChange={(event) => setWatermarkText(event.target.value.slice(0, 80))}
+            placeholder="mtverse"
+            className="w-full rounded-2xl bg-white px-4 py-3 text-sm text-slate-900 outline-none"
+          />
+        </label>
+      );
+    }
+
     return (
       <div className="rounded-2xl bg-white px-4 py-3 text-sm text-slate-600">
         This workflow is tuned automatically. Upload the image and run the
@@ -618,7 +755,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
       <div className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr] sm:gap-6">
         <div className="space-y-4 sm:space-y-6">
           <div className="space-y-3 sm:space-y-4">
-            <div className="flex flex-wrap gap-1.5">
+            <div className="hidden flex-wrap gap-1.5 sm:flex">
               {copy.badges.map((badge) => (
                 <span
                   key={badge}
@@ -675,7 +812,7 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                 </div>
               ) : (
                 <div className="space-y-3 sm:space-y-4">
-                  <div className="relative h-[240px] overflow-hidden rounded-[1.25rem] bg-white sm:h-[320px] sm:rounded-[1.5rem]">
+                  <div className="relative h-[180px] overflow-hidden rounded-[1.25rem] bg-white sm:h-[320px] sm:rounded-[1.5rem]">
                     <Image
                       src={sourcePreview}
                       alt={file.name}
@@ -718,6 +855,9 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                 {copy.actionLabel}
               </button>
+              <ToolOptionsSheet title={`${copy.title} options`}>
+                {renderOptions()}
+              </ToolOptionsSheet>
               <button
                 type="button"
                 onClick={handleReset}
@@ -729,7 +869,8 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
             </div>
           )}
 
-          <div className="grid gap-3 lg:grid-cols-[1.12fr_0.88fr] sm:gap-4">
+          {hasImageInput && (
+          <div className="hidden gap-3 sm:grid sm:gap-4 lg:grid-cols-[1.12fr_0.88fr]">
             <section className="rounded-xl bg-slate-100/90 p-4 sm:rounded-[1.8rem] sm:p-5">
               <div className="mb-3 flex items-center gap-2.5 sm:mb-4 sm:gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-indigo-600 sm:h-11 sm:w-11 sm:rounded-2xl">
@@ -798,9 +939,10 @@ export default function ImageTransformStudio({ tool }: { tool: Tool }) {
               </div>
             </section>
           </div>
+          )}
         </div>
 
-        <div className="space-y-3 sm:space-y-4">
+        <div className={cn("space-y-3 sm:space-y-4", !hasImageInput && !result && !error && "hidden sm:block")}>
           <section className="rounded-xl bg-white p-4 shadow-[0_20px_44px_-32px_rgba(15,23,42,0.2)] sm:rounded-[1.8rem] sm:p-5">
             <div className="mb-3 flex items-center justify-between sm:mb-4">
               <h2 className="font-display text-base font-bold tracking-tight text-slate-950 sm:text-xl">

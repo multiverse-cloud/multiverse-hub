@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react'
 import type { Tool } from '@/lib/tools-data'
 import UploadZone from './UploadZone'
+import ToolOptionsSheet from './ToolOptionsSheet'
 import {
   AlertCircle,
   Archive,
@@ -414,6 +415,128 @@ export default function ToolDetailFileClient({ tool }: { tool: Tool }) {
   const showPreviewGrid = Boolean(sourcePreviewUrl || resultPreviewUrl)
   const hasFileInput = files.length > 0
 
+  function renderAdvancedOptions() {
+    return (
+      <div className="space-y-4">
+        {tool.slug === 'rotate-pdf' && (
+          <div className="flex flex-wrap gap-2">
+            {['90', '180', '270'].map(angle => (
+              <button
+                key={angle}
+                onClick={() => setPdfAngle(angle)}
+                className={cn('premium-option-chip', pdfAngle === angle && 'premium-option-chip-active')}
+              >
+                {angle} deg
+              </button>
+            ))}
+          </div>
+        )}
+
+        {(tool.slug === 'compress-image' || tool.slug === 'convert-image') && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="premium-label">Quality</label>
+              <span className="text-sm font-semibold text-slate-700">{imgQuality}%</span>
+            </div>
+            <input
+              type="range"
+              min="10"
+              max="100"
+              value={imgQuality}
+              onChange={event => setImgQuality(event.target.value)}
+              className="w-full accent-indigo-600"
+            />
+            <div className="flex flex-wrap gap-2">
+              {IMAGE_QUALITY_PRESETS.map(preset => (
+                <button
+                  key={preset.value}
+                  onClick={() => setImgQuality(preset.value)}
+                  className={cn('premium-option-chip', imgQuality === preset.value && 'premium-option-chip-active')}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {tool.slug === 'convert-image' && (
+          <div className="flex flex-wrap gap-2">
+            {['webp', 'jpeg', 'png', 'avif'].map(format => (
+              <button
+                key={format}
+                onClick={() => setImgConvertTo(format)}
+                className={cn('premium-option-chip uppercase', imgConvertTo === format && 'premium-option-chip-active')}
+              >
+                {format}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {tool.slug === 'convert-audio' && (
+          <div className="flex flex-wrap gap-2">
+            {['mp3', 'wav', 'ogg', 'aac', 'flac'].map(format => (
+              <button
+                key={format}
+                onClick={() => setAudioFmt(format)}
+                className={cn('premium-option-chip uppercase', audioFmt === format && 'premium-option-chip-active')}
+              >
+                {format}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {tool.slug === 'image-to-text' && (
+          <div className="flex flex-wrap gap-2">
+            {[
+              ['eng', 'English'],
+              ['hin', 'Hindi'],
+              ['tam', 'Tamil'],
+              ['spa', 'Spanish'],
+              ['fra', 'French'],
+            ].map(([code, name]) => (
+              <button
+                key={code}
+                onClick={() => setOcrLang(code)}
+                className={cn('premium-option-chip text-xs', ocrLang === code && 'premium-option-chip-active')}
+              >
+                {name}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {extraInput && (
+          <div className="space-y-2">
+            <label className="premium-label">{extraInput.label}</label>
+            <input
+              value={textInput}
+              onChange={event => setTextInput(event.target.value)}
+              placeholder={extraInput.placeholder}
+              className="premium-input"
+            />
+            {extraInput.helper && <p className="text-xs text-muted-foreground">{extraInput.helper}</p>}
+            {textPresets.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {textPresets.map(preset => (
+                  <button
+                    key={preset.label}
+                    onClick={() => setTextInput(preset.value)}
+                    className={cn('premium-option-chip', textInput === preset.value && 'premium-option-chip-active')}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-4 p-4 sm:space-y-6 sm:p-5 md:p-6">
       <div className="hidden gap-3 sm:grid sm:grid-cols-3">
@@ -445,6 +568,11 @@ export default function ToolDetailFileClient({ tool }: { tool: Tool }) {
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
             {btnLabel}
           </button>
+          {hasAdvancedOptions && (
+            <ToolOptionsSheet title={`${tool.name} options`}>
+              {renderAdvancedOptions()}
+            </ToolOptionsSheet>
+          )}
           <button
             type="button"
             onClick={resetAll}
@@ -456,149 +584,35 @@ export default function ToolDetailFileClient({ tool }: { tool: Tool }) {
         </div>
       )}
 
-      {hasAdvancedOptions && (
-        <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:rounded-2xl sm:p-4">
+      {hasFileInput && (
+        <div className="hidden flex-wrap gap-3 sm:flex">
+          <button
+            onClick={handleProcess}
+            disabled={loading || files.length === 0}
+            className="btn-primary flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+          >
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+            {btnLabel}
+          </button>
+          {(output || files.length > 0 || outputBlob) && (
+            <button onClick={resetAll} className="btn-secondary flex items-center gap-2 px-4 py-2.5 text-sm">
+              <RefreshCw className="h-4 w-4" />
+              Reset
+            </button>
+          )}
+        </div>
+      )}
+
+      {hasAdvancedOptions && hasFileInput && (
+        <div className="hidden rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:block sm:rounded-2xl sm:p-4">
           <div className="mb-4 flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-indigo-500" />
             <h3 className="font-display text-sm font-bold tracking-tight text-slate-950">Processing Options</h3>
           </div>
 
-          <div className="space-y-4">
-            {tool.slug === 'rotate-pdf' && (
-              <div className="flex flex-wrap gap-2">
-                {['90', '180', '270'].map(angle => (
-                  <button
-                    key={angle}
-                    onClick={() => setPdfAngle(angle)}
-                    className={cn('premium-option-chip', pdfAngle === angle && 'premium-option-chip-active')}
-                  >
-                    {angle} deg
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {(tool.slug === 'compress-image' || tool.slug === 'convert-image') && (
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="premium-label">Quality</label>
-                  <span className="text-sm font-semibold text-slate-700">{imgQuality}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="10"
-                  max="100"
-                  value={imgQuality}
-                  onChange={event => setImgQuality(event.target.value)}
-                  className="w-full accent-indigo-600"
-                />
-                <div className="flex flex-wrap gap-2">
-                  {IMAGE_QUALITY_PRESETS.map(preset => (
-                    <button
-                      key={preset.value}
-                      onClick={() => setImgQuality(preset.value)}
-                      className={cn('premium-option-chip', imgQuality === preset.value && 'premium-option-chip-active')}
-                    >
-                      {preset.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {tool.slug === 'convert-image' && (
-              <div className="flex flex-wrap gap-2">
-                {['webp', 'jpeg', 'png', 'avif'].map(format => (
-                  <button
-                    key={format}
-                    onClick={() => setImgConvertTo(format)}
-                    className={cn('premium-option-chip uppercase', imgConvertTo === format && 'premium-option-chip-active')}
-                  >
-                    {format}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {tool.slug === 'convert-audio' && (
-              <div className="flex flex-wrap gap-2">
-                {['mp3', 'wav', 'ogg', 'aac', 'flac'].map(format => (
-                  <button
-                    key={format}
-                    onClick={() => setAudioFmt(format)}
-                    className={cn('premium-option-chip uppercase', audioFmt === format && 'premium-option-chip-active')}
-                  >
-                    {format}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {tool.slug === 'image-to-text' && (
-              <div className="flex flex-wrap gap-2">
-                {[
-                  ['eng', 'English'],
-                  ['hin', 'Hindi'],
-                  ['tam', 'Tamil'],
-                  ['spa', 'Spanish'],
-                  ['fra', 'French'],
-                ].map(([code, name]) => (
-                  <button
-                    key={code}
-                    onClick={() => setOcrLang(code)}
-                    className={cn('premium-option-chip text-xs', ocrLang === code && 'premium-option-chip-active')}
-                  >
-                    {name}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {extraInput && (
-              <div className="space-y-2">
-                <label className="premium-label">{extraInput.label}</label>
-                <input
-                  value={textInput}
-                  onChange={event => setTextInput(event.target.value)}
-                  placeholder={extraInput.placeholder}
-                  className="premium-input"
-                />
-                {extraInput.helper && <p className="text-xs text-muted-foreground">{extraInput.helper}</p>}
-                {textPresets.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {textPresets.map(preset => (
-                      <button
-                        key={preset.label}
-                        onClick={() => setTextInput(preset.value)}
-                        className={cn('premium-option-chip', textInput === preset.value && 'premium-option-chip-active')}
-                      >
-                        {preset.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+          {renderAdvancedOptions()}
         </div>
       )}
-
-      <div className="hidden flex-wrap gap-3 sm:flex">
-        <button
-          onClick={handleProcess}
-          disabled={loading || files.length === 0}
-          className="btn-primary flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
-        >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
-          {btnLabel}
-        </button>
-        {(output || files.length > 0 || outputBlob) && (
-          <button onClick={resetAll} className="btn-secondary flex items-center gap-2 px-4 py-2.5 text-sm">
-            <RefreshCw className="h-4 w-4" />
-            Reset
-          </button>
-        )}
-      </div>
 
       {loading && (
         <div>

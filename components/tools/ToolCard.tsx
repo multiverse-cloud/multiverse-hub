@@ -8,7 +8,7 @@ import type { Tool } from "@/lib/tools-data";
 interface Props {
   tool: Tool;
   showNew?: boolean;
-  variant?: "compact" | "full";
+  variant?: "compact" | "full" | "related";
 }
 
 export default function ToolCard({
@@ -20,6 +20,29 @@ export default function ToolCard({
   const visibleTag = tool.tags.find(
     (tag) => tag !== "new" && tag !== "trending",
   );
+
+  if (variant === "related") {
+    return (
+      <Link
+        href={`/tools/${tool.categorySlug}/${tool.slug}`}
+        style={{ minHeight: 44 }}
+        className="group relative flex min-w-0 items-center gap-2 rounded-xl border border-slate-200/70 bg-white px-3 py-3 transition-all duration-200 touch-manipulation active:scale-[0.98] hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-500/[0.06] dark:border-slate-800/70 dark:bg-slate-900/80 dark:hover:border-indigo-800 sm:gap-3 sm:px-4 sm:py-3.5"
+      >
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-indigo-600 transition-colors group-hover:bg-indigo-600 group-hover:text-white dark:bg-slate-800 dark:text-indigo-300 sm:h-9 sm:w-9">
+          <ToolIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-display text-xs font-bold tracking-tight text-slate-950 dark:text-slate-50 sm:text-sm">
+            {tool.name}
+          </h3>
+          <p className="hidden truncate text-xs text-slate-500 dark:text-slate-400 sm:block">
+            {tool.category}
+          </p>
+        </div>
+        <ArrowRight className="hidden h-3.5 w-3.5 shrink-0 text-slate-400 transition-all group-hover:translate-x-0.5 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 sm:block" />
+      </Link>
+    );
+  }
 
   if (variant === "full") {
     return (

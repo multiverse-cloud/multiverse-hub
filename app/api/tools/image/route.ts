@@ -14,6 +14,8 @@ type Bounds = {
   height: number
 }
 
+type OutputImageFormat = 'jpeg' | 'png' | 'webp' | 'avif'
+
 async function blobToBuffer(blob: Blob): Promise<Buffer> {
   return Buffer.from(await blob.arrayBuffer())
 }
@@ -176,6 +178,48 @@ function createIco(pngImages: Array<{ size: number; data: Buffer }>): Buffer {
   return Buffer.concat([header, ...entries, ...payloads])
 }
 
+function pickOutputImageFormat(format?: string): OutputImageFormat {
+  if (format === 'png' || format === 'webp' || format === 'avif') return format
+  return 'jpeg'
+}
+
+function outputImageExtension(format: OutputImageFormat) {
+  return format === 'jpeg' ? 'jpg' : format
+}
+
+function outputImageMime(format: OutputImageFormat) {
+  return format === 'jpeg' ? 'image/jpeg' : `image/${format}`
+}
+
+async function encodeSharpImage(
+  image: sharp.Sharp,
+  format: OutputImageFormat,
+  quality = 92
+): Promise<Buffer> {
+  if (format === 'png') {
+    return image.png({ compressionLevel: 9, adaptiveFiltering: true }).toBuffer()
+  }
+
+  if (format === 'webp') {
+    return image.webp({ quality, effort: 4 }).toBuffer()
+  }
+
+  if (format === 'avif') {
+    return image.avif({ quality }).toBuffer()
+  }
+
+  return image.flatten({ background: '#ffffff' }).jpeg({ quality, mozjpeg: true }).toBuffer()
+}
+
+function escapeSvgText(text: string) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 export async function POST(req: NextRequest) {
   const url = new URL(req.url)
   const action = url.searchParams.get('action') || 'compress'
@@ -278,6 +322,44 @@ export async function POST(req: NextRequest) {
       return fileResponse(buf, `cropped.${meta.format || 'jpg'}`, `image/${meta.format || 'jpeg'}`)
     }
 
+    if (action === 'blur') {
+      const blur = Math.min(60, Math.max(1, parseInt(fields.blur || '16')))
+      const outputFormat = pickOutputImageFormat(meta.format)
+      const buf = await encodeSharpImage(sharp(imgFile.buffer).rotate().blur(blur), outputFormat)
+      const res = fileResponse(
+        buf,
+        `blurred.${outputImageExtension(outputFormat)}`,
+        outputImageMime(outputFormat)
+      )
+      res.headers.set('X-Blur-Strength', String(blur))
+      return res
+    }
+
+    if (action === 'pixelate') {
+      const pixelSize = Math.min(80, Math.max(2, parseInt(fields.size || '12')))
+      const outputFormat = pickOutputImageFormat(meta.format)
+      const width = Math.max(1, meta.width || 1)
+      const height = Math.max(1, meta.height || 1)
+      const tinyWidth = Math.max(1, Math.ceil(width / pixelSize))
+      const tinyHeight = Math.max(1, Math.ceil(height / pixelSize))
+      const tiny = await sharp(imgFile.buffer)
+        .rotate()
+        .resize(tinyWidth, tinyHeight, { fit: 'fill', kernel: sharp.kernel.nearest })
+        .png()
+        .toBuffer()
+      const buf = await encodeSharpImage(
+        sharp(tiny).resize(width, height, { fit: 'fill', kernel: sharp.kernel.nearest }),
+        outputFormat
+      )
+      const res = fileResponse(
+        buf,
+        `pixelated.${outputImageExtension(outputFormat)}`,
+        outputImageMime(outputFormat)
+      )
+      res.headers.set('X-Pixel-Size', String(pixelSize))
+      return res
+    }
+
     if (action === 'remove-bg') {
       const buf = await removeBackgroundBuffer(imgFile.buffer, imgFile.mimetype || 'image/png')
       return fileResponse(buf, 'no-bg.png', 'image/png')
@@ -330,7 +412,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === 'watermark') {
-      const text = fields.text || 'mtverse'
+      const text = escapeSvgText((fields.text || 'mtverse').slice(0, 80))
       const opacity = parseFloat(fields.opacity || '0.4')
       const fontSize = parseInt(fields.fontSize || '48')
 
