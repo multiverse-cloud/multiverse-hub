@@ -112,7 +112,112 @@ const CATEGORY_META: Record<
   },
 }
 
-export const PROMPTS: PromptEntry[] = []
+export const PROMPTS: PromptEntry[] = [
+  {
+    id: 'prompt-childhood-then-and-now-ai-photo',
+    slug: 'childhood-then-and-now-ai-photo-prompt',
+    title: 'Childhood Then and Now AI Photo Prompt',
+    seoTitle: 'Childhood Then and Now AI Photo Prompt - Viral Younger Self Edit',
+    metaDescription:
+      'Copy a viral childhood then-and-now AI photo prompt for Gemini, ChatGPT, and Photoshop AI. Create a safe nostalgic younger-self split photo edit.',
+    summary:
+      'Create the viral childhood vs present AI photo edit with a clean split-frame, soft nostalgia, and safe age-appropriate direction.',
+    description:
+      'A high-signal prompt for the trending childhood then-and-now AI image style. It helps creators turn a current portrait and childhood photo into an emotional split-frame memory edit without unsafe or suggestive framing.',
+    category: 'image-editing',
+    categoryTitle: 'Image Editing Prompts',
+    subcategory: 'Viral AI Photo Trends',
+    models: ['Gemini', 'ChatGPT', 'Photoshop AI'],
+    tags: [
+      'childhood ai prompt',
+      'childhood now ai image prompt',
+      'then and now photo',
+      'childhood vs now ai edit',
+      'younger self',
+      'viral ai photo',
+      'gemini prompt',
+      'ai image editing',
+      'nostalgia edit',
+      'instagram trend',
+    ],
+    audience: 'creators, students, influencers, editors, and social media users',
+    visualStyle: 'Black-and-white nostalgic editorial diptych with emotional storytelling',
+    previewImage: '/prompt-previews/viral-childhood-now-ai-photo-prompt.webp',
+    previewAlt: 'Childhood then and now AI photo prompt preview with a split nostalgic portrait',
+    featured: true,
+    prompt: `Create a tasteful viral "childhood then and now" AI photo edit using my uploaded current photo and my own childhood photo.
+
+Composition:
+- Make a clean vertical split-frame image.
+- Left side: my childhood version from [CHILDHOOD_PHOTO_YEAR], looking toward my present self with an innocent natural expression.
+- Right side: my current adult version from [CURRENT_PHOTO_YEAR], looking back with a calm, proud, emotional expression.
+- Add small year labels above each side: "[CHILDHOOD_PHOTO_YEAR]" and "[CURRENT_PHOTO_YEAR]".
+- Optional short text overlay: "[SHORT_QUOTE]" in a minimal handwritten or soft serif style.
+
+Style:
+- Realistic photo edit, black-and-white or soft warm monochrome.
+- Nostalgic studio portrait mood, gentle lighting, subtle film grain, clean background.
+- Keep facial identity consistent with both reference photos.
+- Natural skin texture, realistic hair, realistic clothing, no plastic AI look.
+- Emotional but not dramatic, like a meaningful memory captured in a studio.
+
+Safety and quality rules:
+- Use only the provided childhood reference of the same person.
+- Keep the child version age-appropriate, modest, and non-romantic.
+- No sensual posing, no body focus, no exaggerated beauty edits.
+- Do not change ethnicity, gender presentation, or core facial identity.
+- Preserve a respectful family-memory tone.
+
+Output:
+- High-resolution social media image, 4:5 portrait ratio.
+- Clean enough for Instagram, WhatsApp status, YouTube Shorts thumbnail, or personal memory post.`,
+    variables: [
+      {
+        name: 'CHILDHOOD_PHOTO_YEAR',
+        hint: 'Example: 2003, 2006, 2010',
+      },
+      {
+        name: 'CURRENT_PHOTO_YEAR',
+        hint: 'Example: 2026',
+      },
+      {
+        name: 'SHORT_QUOTE',
+        hint: 'Example: Stronger than we thought, Proud of how far we came, Still us',
+      },
+    ],
+    bestFor: [
+      'Instagram childhood trend edits',
+      'Gemini AI photo editing prompts',
+      'Then and now photo reels',
+      'Personal memory posts',
+      'Emotional social media content',
+    ],
+    workflow: [
+      'Upload one clear current photo and one childhood photo of the same person.',
+      'Paste the prompt and replace the year and quote variables.',
+      'Ask for 4:5 portrait output if the tool supports aspect ratio control.',
+      'Check the face, hands, text labels, and age-appropriate framing before posting.',
+    ],
+    tips: [
+      'Use a childhood photo with clear face visibility for better identity matching.',
+      'Keep the quote under five words so the image stays clean.',
+      'If text renders poorly, generate without text and add the year labels manually.',
+      'Use monochrome or soft warm tones for a more emotional viral look.',
+    ],
+    examples: [
+      {
+        label: 'Input',
+        value: 'Childhood year: 2003, current year: 2026, quote: Stronger than we thought.',
+      },
+      {
+        label: 'Output',
+        value: 'A nostalgic split-frame portrait showing childhood and current versions looking at each other with soft studio lighting.',
+      },
+    ],
+    relatedSlugs: [],
+    updatedAt: '2026-04-30',
+  },
+]
 
 export const FEATURED_PROMPTS = PROMPTS.filter(entry => entry.featured)
 

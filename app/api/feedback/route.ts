@@ -67,6 +67,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const subject = 'New mtverse feedback message'
+    const submittedAt = new Date().toISOString()
+
     const emailJsResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
@@ -79,10 +82,20 @@ export async function POST(request: NextRequest) {
         user_id: publicKey,
         template_params: {
           name,
+          from_name: name,
+          user_name: name,
           email,
+          from_email: email,
+          user_email: email,
+          reply_to: email,
           message,
-          source: 'multiverse-feedback',
+          feedback: message,
+          subject,
+          title: subject,
+          source: 'mtverse-feedback',
           site_name: 'mtverse',
+          website: SITE_URL,
+          submitted_at: submittedAt,
         },
       }),
       cache: 'no-store',
