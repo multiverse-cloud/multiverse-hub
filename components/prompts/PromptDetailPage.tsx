@@ -14,10 +14,10 @@ export default function PromptDetailPage({
   return (
     <div className="min-h-screen premium-shell">
       <div className="page-hero border-b border-border bg-background">
-        <div className="page-hero-inner py-7 md:py-9">
-          <div className="grid gap-8 xl:grid-cols-[minmax(0,1.05fr)_420px] xl:items-start">
+        <div className="page-hero-inner py-4 sm:py-7 md:py-9">
+          <div className="grid gap-5 sm:gap-8 xl:grid-cols-[minmax(0,1.05fr)_420px] xl:items-start">
             <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:gap-2 sm:text-[11px] sm:tracking-[0.16em]">
                 <span>{prompt.categoryTitle}</span>
                 <span className="h-1 w-1 rounded-full bg-border" />
                 <span>{prompt.subcategory}</span>
@@ -29,18 +29,18 @@ export default function PromptDetailPage({
                 ) : null}
               </div>
 
-              <h1 className="mt-4 max-w-4xl text-3xl font-bold tracking-tight text-foreground md:text-5xl">
+              <h1 className="mt-3 max-w-4xl text-2xl font-bold tracking-tight text-foreground sm:mt-4 sm:text-3xl md:text-5xl">
                 {prompt.title}
               </h1>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-muted-foreground md:text-base">
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground sm:mt-4 md:text-base md:leading-7">
                 {prompt.summary}
               </p>
 
-              <div className="mt-5 flex flex-wrap gap-2">
+              <div className="mt-4 flex flex-wrap gap-1.5 sm:mt-5 sm:gap-2">
                 {prompt.models.map(model => (
                   <span
                     key={model}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground"
+                    className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-[11px] font-semibold text-muted-foreground sm:gap-1.5 sm:px-3 sm:py-1.5 sm:text-xs"
                   >
                     <Bot className="h-3.5 w-3.5" />
                     {model}
@@ -51,7 +51,7 @@ export default function PromptDetailPage({
 
             <div className="min-w-0 xl:sticky xl:top-24">
               <div className="overflow-hidden rounded-xl border border-border bg-card">
-                <div className="relative aspect-[16/10] bg-slate-50 dark:bg-slate-950">
+                <div className="relative aspect-[4/3] bg-slate-50 dark:bg-slate-950 sm:aspect-[16/10]">
                   <PromptPreviewImage
                     src={prompt.previewImage}
                     alt={prompt.previewAlt}
@@ -60,7 +60,7 @@ export default function PromptDetailPage({
                     priority
                   />
                 </div>
-                <div className="flex flex-wrap items-center gap-3 px-4 py-4">
+                <div className="flex flex-wrap items-center gap-2.5 px-3 py-3 sm:gap-3 sm:px-4 sm:py-4">
                   <CopyPromptButton prompt={prompt.prompt} />
                   <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground">
                     <Copy className="h-4 w-4" />
@@ -73,28 +73,28 @@ export default function PromptDetailPage({
         </div>
       </div>
 
-      <div className="page-content space-y-8 py-6">
-        <section className="grid gap-8 xl:grid-cols-[minmax(0,1.05fr)_360px]">
+      <div className="page-content space-y-6 py-5 sm:space-y-8 sm:py-6">
+        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_360px] xl:gap-8">
           <div className="min-w-0">
             <div className="mb-3 flex items-center justify-between gap-3">
-              <h2 className="text-xl font-bold text-foreground">Prompt</h2>
+              <h2 className="text-lg font-bold text-foreground sm:text-xl">Prompt</h2>
               <CopyPromptButton prompt={prompt.prompt} />
             </div>
-            <pre className="max-w-full overflow-x-auto whitespace-pre-wrap break-words rounded-xl bg-slate-950 p-4 text-sm leading-7 text-white dark:bg-black/60">
+            <pre className="max-h-[420px] max-w-full overflow-auto whitespace-pre-wrap break-words rounded-xl bg-slate-950 p-3 text-xs leading-6 text-white dark:bg-black/60 sm:p-4 sm:text-sm sm:leading-7">
               <code className="whitespace-pre-wrap break-words">{prompt.prompt}</code>
             </pre>
           </div>
 
-          <aside className="min-w-0 space-y-6">
+          <aside className="min-w-0 space-y-5 sm:space-y-6">
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:text-sm sm:tracking-[0.16em]">
                 Best for
               </h3>
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-2.5 flex flex-wrap gap-1.5 sm:mt-3 sm:gap-2">
                 {prompt.bestFor.map(item => (
                   <span
                     key={item}
-                    className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground"
+                    className="rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-muted-foreground sm:px-3 sm:py-1.5 sm:text-xs"
                   >
                     {item}
                   </span>
@@ -103,10 +103,10 @@ export default function PromptDetailPage({
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:text-sm sm:tracking-[0.16em]">
                 Use it well
               </h3>
-              <ul className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
+              <ul className="mt-2.5 space-y-1.5 text-sm leading-6 text-muted-foreground sm:mt-3 sm:space-y-2">
                 {prompt.workflow.map(item => (
                   <li key={item} className="flex items-start gap-2">
                     <span className="mt-2 h-1.5 w-1.5 rounded-full bg-slate-500" />
@@ -117,10 +117,10 @@ export default function PromptDetailPage({
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:text-sm sm:tracking-[0.16em]">
                 Quick tips
               </h3>
-              <ul className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
+              <ul className="mt-2.5 space-y-1.5 text-sm leading-6 text-muted-foreground sm:mt-3 sm:space-y-2">
                 {prompt.tips.map(item => (
                   <li key={item} className="flex items-start gap-2">
                     <span className="mt-2 h-1.5 w-1.5 rounded-full bg-slate-500" />
@@ -132,16 +132,16 @@ export default function PromptDetailPage({
           </aside>
         </section>
 
-        <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-8">
           <div>
-            <h2 className="text-lg font-bold text-foreground">Why it works</h2>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">{prompt.description}</p>
+            <h2 className="text-base font-bold text-foreground sm:text-lg">Why it works</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:mt-3 sm:leading-7">{prompt.description}</p>
           </div>
 
           {prompt.examples.length > 0 ? (
             <div>
-              <h2 className="text-lg font-bold text-foreground">Examples</h2>
-              <div className="mt-3 space-y-3">
+              <h2 className="text-base font-bold text-foreground sm:text-lg">Examples</h2>
+              <div className="mt-2 space-y-2.5 sm:mt-3 sm:space-y-3">
                 {prompt.examples.map(example => (
                   <div key={example.label}>
                     <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
@@ -161,9 +161,9 @@ export default function PromptDetailPage({
               <Sparkles className="h-3.5 w-3.5" />
               Related prompts
             </div>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground">More prompts to try</h2>
+            <h2 className="mt-2 text-xl font-bold tracking-tight text-foreground sm:text-2xl">More prompts to try</h2>
 
-            <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-4 grid grid-cols-2 gap-2.5 sm:mt-5 sm:gap-4 md:grid-cols-2 xl:grid-cols-4">
               {relatedPrompts.map(related => (
                 <Link
                   key={related.slug}
@@ -178,12 +178,12 @@ export default function PromptDetailPage({
                       imageFit="cover"
                     />
                   </div>
-                  <div className="space-y-2 px-4 py-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  <div className="space-y-1.5 px-2.5 py-2.5 sm:space-y-2 sm:px-4 sm:py-3">
+                    <p className="line-clamp-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-[10px] sm:tracking-[0.16em]">
                       {related.subcategory || related.categoryTitle}
                     </p>
-                    <h3 className="text-sm font-semibold text-foreground">{related.title}</h3>
-                    <div className="inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground">
+                    <h3 className="line-clamp-2 text-xs font-semibold text-foreground sm:text-sm">{related.title}</h3>
+                    <div className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground sm:text-sm">
                       Open
                       <ArrowRight className="h-4 w-4" />
                     </div>

@@ -139,17 +139,7 @@ async function writeLocalStore(prompts: PromptEntry[], source: string) {
   return sortedPrompts
 }
 
-async function readLocalStore() {
-  if (getUpstashConfig()) {
-    try {
-      const upstashPrompts = await readUpstashStore()
-      if (upstashPrompts) return upstashPrompts
-    } catch (error) {
-      console.error('Prompt Upstash store read failed:', error)
-      if (process.env.VERCEL) return []
-    }
-  }
-
+async function readBundledLocalStore() {
   try {
     const raw = await readFile(LOCAL_PROMPT_STORE_FILE, 'utf8')
     const parsed = JSON.parse(raw) as Partial<PromptLocalStoreFile>
@@ -157,6 +147,25 @@ async function readLocalStore() {
   } catch {
     return []
   }
+}
+
+async function readLocalStore() {
+  const bundledPrompts = await readBundledLocalStore()
+
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return bundledPrompts
+  }
+
+  if (getUpstashConfig()) {
+    try {
+      const upstashPrompts = await readUpstashStore()
+      if (upstashPrompts) return mergePromptEntries(bundledPrompts, upstashPrompts)
+    } catch (error) {
+      console.error('Prompt Upstash store read failed:', error)
+    }
+  }
+
+  return bundledPrompts
 }
 
 function mergePromptEntries(basePrompts: PromptEntry[], overridePrompts: PromptEntry[]) {

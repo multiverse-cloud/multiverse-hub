@@ -1,6 +1,6 @@
 ﻿'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { PromptCategoryId } from '@/lib/prompt-library-data'
 import { getPromptPreviewFallback } from '@/lib/prompt-preview-images'
 import { cn } from '@/lib/utils'
@@ -29,6 +29,11 @@ export default function PromptPreviewImage({
   const fallbackSrc = useMemo(() => getPromptPreviewFallback(category), [category])
   const [currentSrc, setCurrentSrc] = useState(src || fallbackSrc)
   const [loaded, setLoaded] = useState(false)
+  const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null)
+
+  const imageRef = useCallback((node: HTMLImageElement | null) => {
+    setImageElement(node)
+  }, [])
 
   useEffect(() => {
     setLoaded(false)
@@ -36,11 +41,18 @@ export default function PromptPreviewImage({
   }, [fallbackSrc, src])
 
   useEffect(() => {
+    if (!imageElement) return
+    if (imageElement.complete && imageElement.naturalWidth > 0) {
+      setLoaded(true)
+    }
+  }, [currentSrc, imageElement])
+
+  useEffect(() => {
     if (!currentSrc || currentSrc === fallbackSrc || loaded) return
 
     const timer = window.setTimeout(() => {
       setCurrentSrc(fallbackSrc)
-    }, 9000)
+    }, 16000)
 
     return () => window.clearTimeout(timer)
   }, [currentSrc, fallbackSrc, loaded])
@@ -67,11 +79,7 @@ export default function PromptPreviewImage({
             setLoaded(true)
           }
         }}
-        ref={node => {
-          if (node?.complete && node.naturalWidth > 0 && !loaded) {
-            setLoaded(true)
-          }
-        }}
+        ref={imageRef}
         referrerPolicy={isRemoteUrl(currentSrc) ? 'no-referrer' : undefined}
         className={cn(
           'absolute inset-0 h-full w-full',

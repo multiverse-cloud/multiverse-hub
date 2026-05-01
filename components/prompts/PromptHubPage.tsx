@@ -244,7 +244,7 @@ function FilterMenu({
       <button
         type="button"
         onClick={() => setOpen(value => !value)}
-        className="inline-flex h-9 items-center gap-1.5 rounded-full bg-white px-3 text-xs font-semibold text-slate-900 shadow-[0_8px_28px_-22px_rgba(15,23,42,0.35)] ring-1 ring-slate-200 transition hover:bg-slate-50 dark:bg-slate-950 dark:text-slate-100 dark:ring-slate-800 dark:hover:bg-slate-900 sm:h-10 sm:gap-2 sm:px-4 sm:text-sm"
+        className="inline-flex h-8 items-center gap-1.5 rounded-full bg-white px-2.5 text-[11px] font-semibold text-slate-900 shadow-[0_8px_28px_-22px_rgba(15,23,42,0.35)] ring-1 ring-slate-200 transition hover:bg-slate-50 dark:bg-slate-950 dark:text-slate-100 dark:ring-slate-800 dark:hover:bg-slate-900 sm:h-10 sm:gap-2 sm:px-4 sm:text-sm"
       >
         {icon}
         {label}
@@ -276,8 +276,8 @@ function FilterMenu({
 function FilterSearchHeader({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-2 border-b border-slate-100 px-3 py-2 dark:border-slate-800">
-      <Search className="h-4 w-4 text-slate-400" />
-      <span className="text-sm font-medium text-slate-500">{label}</span>
+      <Search className="h-3.5 w-3.5 text-slate-400 sm:h-4 sm:w-4" />
+      <span className="text-xs font-medium text-slate-500 sm:text-sm">{label}</span>
     </div>
   )
 }
@@ -296,13 +296,13 @@ function FilterOption({
       href={href}
       prefetch={false}
       className={cn(
-        'flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-900',
+        'flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-900 sm:gap-3 sm:py-2.5 sm:text-sm',
         active && 'bg-slate-100 text-slate-950 dark:bg-slate-900 dark:text-white'
       )}
     >
       <span
         className={cn(
-          'h-4 w-4 rounded-[5px] ring-1 ring-slate-300 dark:ring-slate-700',
+          'h-3.5 w-3.5 rounded-[5px] ring-1 ring-slate-300 dark:ring-slate-700 sm:h-4 sm:w-4',
           active && 'bg-slate-950 ring-slate-950 dark:bg-white dark:ring-white'
         )}
       />
@@ -390,7 +390,7 @@ export default function PromptHubPage({
         <div className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.12),transparent_62%)] dark:bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.18),transparent_62%)]" />
 
         <div className="relative mx-auto max-w-5xl px-4 pb-6 pt-5 text-center sm:px-6 sm:pb-8 sm:pt-6 md:pb-10 md:pt-8">
-          <h1 className="text-4xl font-black tracking-[-0.06em] text-slate-900 dark:text-white sm:text-6xl sm:tracking-[-0.07em] md:text-7xl">
+          <h1 className="text-[34px] font-black leading-none tracking-[-0.055em] text-slate-900 dark:text-white sm:text-6xl sm:tracking-[-0.07em] md:text-7xl">
             AI Prompts
           </h1>
           <p className="mx-auto mt-3 max-w-3xl text-sm font-medium leading-6 text-slate-500 sm:mt-4 sm:text-xl sm:leading-8 dark:text-slate-400">
@@ -408,7 +408,7 @@ export default function PromptHubPage({
               name="q"
               defaultValue={searchQuery}
               placeholder="Search AI prompts..."
-              className="h-11 min-w-0 flex-1 border-0 bg-transparent text-sm font-medium text-slate-950 outline-none placeholder:text-slate-400 dark:text-white sm:h-12 sm:text-lg"
+              className="h-10 min-w-0 flex-1 border-0 bg-transparent text-[13px] font-medium text-slate-950 outline-none placeholder:text-slate-400 dark:text-white sm:h-12 sm:text-lg"
             />
             {activeCategory !== 'all' ? <input type="hidden" name="category" value={activeCategory} /> : null}
             {activeModel !== 'all' ? <input type="hidden" name="model" value={activeModel} /> : null}
@@ -416,7 +416,7 @@ export default function PromptHubPage({
             {currentShuffleSeed ? <input type="hidden" name="seed" value={currentShuffleSeed} /> : null}
             <button
               type="submit"
-              className="inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-slate-950 px-4 text-sm font-extrabold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 sm:h-12 sm:px-8 sm:text-base"
+              className="inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-slate-950 px-3.5 text-xs font-extrabold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 sm:h-12 sm:px-8 sm:text-base"
             >
               Search
             </button>

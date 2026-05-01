@@ -21,9 +21,9 @@ export const SITE_METRICS = {
     shortLabel: '100+ templates',
   },
   prompts: {
-    count: 200,
-    label: '200',
-    shortLabel: '200 prompts',
+    count: 1200,
+    label: '1.2K+',
+    shortLabel: '1.2K+ prompts',
   },
   discover: {
     count: 409,
@@ -37,4 +37,4 @@ export const SITE_METRICS = {
   },
 } as const
 
-export const PLATFORM_TOTAL_LABEL = '1,600+'
+export const PLATFORM_TOTAL_LABEL = '2,600+'

@@ -12,11 +12,12 @@ type PromptSlugPageProps = {
 
 export const revalidate = 3600;
 export const dynamicParams = true;
+const PROMPT_STATIC_PARAMS_LIMIT = 260;
 
 export async function generateStaticParams() {
   const prompts = await getPublishedPrompts()
 
-  return prompts.map(prompt => ({
+  return prompts.slice(0, PROMPT_STATIC_PARAMS_LIMIT).map(prompt => ({
     slug: prompt.slug,
   }))
 }
