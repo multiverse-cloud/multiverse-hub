@@ -596,7 +596,7 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
             </div>
           )}
 
-          <section className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
+          <section className={cn("grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]", !hasAudioInput && "hidden")}>
             <div className="premium-card p-5 sm:p-6">
               <div className="mb-5 flex items-center justify-between gap-3">
                 <div>
@@ -847,7 +847,7 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
           </section>
         </div>
 
-        <div className="space-y-5">
+        <div className={cn("space-y-5", !hasAudioInput && !result && "hidden sm:block")}>
           <section className="premium-card p-5">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
@@ -1024,6 +1024,7 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
         </section>
       </div>
 
+      {hasAudioInput && (
       <div className="hidden flex-wrap gap-3 sm:flex">
         <button
           type="button"
@@ -1043,6 +1044,7 @@ export default function AudioStudio({ tool }: { tool: Tool }) {
           Reset workspace
         </button>
       </div>
+      )}
     </div>
   )
 }

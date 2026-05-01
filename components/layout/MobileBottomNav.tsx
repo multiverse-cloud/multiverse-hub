@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -17,7 +17,7 @@ const BOTTOM_NAV_ITEMS = [
 export default function MobileBottomNav() {
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollYRef = useRef(0);
   const hideOnRoute =
     !!pathname &&
     (/^\/templates\/[^/]+$/.test(pathname) ||
@@ -35,14 +35,14 @@ export default function MobileBottomNav() {
       if (currentScrollY < 60) {
         setIsVisible(true);
       } else {
-        setIsVisible(currentScrollY < lastScrollY);
+        setIsVisible(currentScrollY < lastScrollYRef.current);
       }
-      setLastScrollY(currentScrollY);
+      lastScrollYRef.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [hideOnRoute, lastScrollY]);
+  }, [hideOnRoute]);
 
   if (hideOnRoute) return null;
 

@@ -295,7 +295,7 @@ export default function SiteLanguageSwitcher() {
         type="button"
         onClick={() => setOpen(value => !value)}
         className={cn(
-          'flex h-8 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2 text-[11px] font-bold uppercase tracking-wide text-slate-700 transition-colors sm:h-9 sm:rounded-2xl sm:px-2.5 sm:text-xs',
+          'flex h-8 w-8 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white text-[11px] font-bold uppercase tracking-wide text-slate-700 transition-colors sm:h-9 sm:w-auto sm:rounded-2xl sm:px-2.5 sm:text-xs',
           'hover:border-indigo-300 hover:bg-slate-50 hover:text-indigo-700',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40',
           'dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:bg-slate-900 dark:hover:text-indigo-300'
@@ -305,8 +305,8 @@ export default function SiteLanguageSwitcher() {
         title="Change website language"
       >
         <Globe2 className="h-3.5 w-3.5" />
-        {selectedLanguage.code}
-        <ChevronDown className={cn('h-3 w-3 transition-transform', open && 'rotate-180')} />
+        <span className="hidden sm:inline">{selectedLanguage.code}</span>
+        <ChevronDown className={cn('hidden h-3 w-3 transition-transform sm:block', open && 'rotate-180')} />
       </button>
 
       {open ? (

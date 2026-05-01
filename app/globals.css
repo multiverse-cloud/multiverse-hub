@@ -253,6 +253,9 @@
 
 @layer base {
     :root {
+        --mtverse-header-height: 3.5rem;
+        --mtverse-desktop-header-height: 7.15rem;
+        --mtverse-mobile-bottom-nav-height: 4.35rem;
         --background: 0 0% 100%;
         --foreground: 224 71% 4%;
         --card: 0 0% 100%;
@@ -897,6 +900,29 @@ body {
     [data-tool-shell="true"] .btn-secondary {
         min-height: 2.6rem;
         border-radius: 0.75rem;
+    }
+
+    [data-tool-shell="true"] .grid {
+        gap: 0.8rem;
+    }
+
+    [data-tool-shell="true"] [class*="min-h-[280px]"],
+    [data-tool-shell="true"] [class*="min-h-[300px]"],
+    [data-tool-shell="true"] [class*="min-h-[320px]"] {
+        min-height: 8.5rem !important;
+    }
+
+    [data-tool-shell="true"] [class*="h-[320px]"],
+    [data-tool-shell="true"] [class*="h-[360px]"],
+    [data-tool-shell="true"] [class*="h-[380px]"],
+    [data-tool-shell="true"] [class*="h-[420px]"] {
+        height: 13rem !important;
+    }
+
+    [data-tool-shell="true"] [class*="rounded-[28px]"],
+    [data-tool-shell="true"] [class*="rounded-[2rem]"],
+    [data-tool-shell="true"] [class*="rounded-3xl"] {
+        border-radius: 0.95rem !important;
     }
 
     .file-item-chip {

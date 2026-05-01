@@ -24,6 +24,7 @@ import { handleAudioTextTool } from './processors/text-audio'
 import { handleAudioTool } from './processors/file-media'
 import { handleDevTool } from './processors/text-dev'
 import { handleTextTool } from './processors/text-tools'
+import ToolOptionsSheet from './ToolOptionsSheet'
 import type { FileProcessResult } from './processors/types'
 
 const TEXT_COPY = {
@@ -439,6 +440,75 @@ export default function TextStudio({ tool }: { tool: Tool }) {
   const canRunWithoutText = ['password-generator', 'lorem-ipsum-generator', 'emoji-copy-paste'].includes(tool.slug)
   const hasTextInput = acceptsAudioUpload ? Boolean(audioFile) : primaryText.trim().length > 0 || canRunWithoutText
 
+  function renderTextOptions() {
+    return (
+      <div className="space-y-4">
+        {['ai-text-generator', 'text-grammar-checker', 'paraphrasing-tool'].includes(tool.slug) && (
+          <div className="flex flex-wrap gap-2">
+            {['clear', 'professional', 'persuasive'].map(tone => (
+              <button
+                key={tone}
+                type="button"
+                onClick={() => setWritingTone(tone)}
+                className={cn(
+                  'rounded-full px-3 py-1.5 text-[11px] font-semibold capitalize transition sm:px-4 sm:py-2 sm:text-sm',
+                  writingTone === tone
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
+                )}
+              >
+                {tone}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {['ai-text-generator', 'text-summarizer'].includes(tool.slug) && (
+          <div className="flex flex-wrap gap-2 sm:gap-3">
+            {['short', 'medium', 'long', 'bullet'].map(mode => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setSummaryMode(mode)}
+                className={cn(
+                  'rounded-full px-4 py-2 text-sm font-semibold capitalize transition',
+                  summaryMode === mode
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
+                )}
+              >
+                {mode}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {tool.slug === 'text-to-speech' && (
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-2">
+              {['0.9', '1', '1.1', '1.25'].map(speed => (
+                <button
+                  key={speed}
+                  type="button"
+                  onClick={() => setSpeechSpeed(speed)}
+                  className={cn(
+                    'rounded-full px-3 py-1.5 text-[11px] font-semibold transition sm:px-4 sm:py-2 sm:text-sm',
+                    speechSpeed === speed
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
+                  )}
+                >
+                  {speed}x
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 sm:text-sm">Voice: Alloy - Output: MP3</p>
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-4 sm:space-y-5" data-tool-shell="true">
       <header className="max-w-3xl">
@@ -547,6 +617,9 @@ export default function TextStudio({ tool }: { tool: Tool }) {
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
                 {copy.actionLabel}
               </button>
+              <ToolOptionsSheet title={`${copy.title} options`}>
+                {renderTextOptions()}
+              </ToolOptionsSheet>
               <button
                 type="button"
                 onClick={resetAll}
@@ -558,7 +631,8 @@ export default function TextStudio({ tool }: { tool: Tool }) {
             </div>
           )}
 
-          <section className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_280px] sm:gap-5">
+          {hasTextInput && (
+          <section className="hidden gap-3 sm:grid sm:gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
             <div className="premium-card p-4 sm:p-5 sm:p-6">
               <div className="mb-4 flex items-center justify-between gap-2.5 sm:mb-5 sm:gap-3">
                 <div>
@@ -570,6 +644,7 @@ export default function TextStudio({ tool }: { tool: Tool }) {
                 <Sparkles className="h-4 w-4 text-indigo-500 sm:h-5 sm:w-5" />
               </div>
 
+              <div className="hidden">
               {['ai-text-generator', 'text-grammar-checker', 'paraphrasing-tool'].includes(tool.slug) && (
                 <div className="flex flex-wrap gap-2">
                   {['clear', 'professional', 'persuasive'].map(tone => (
@@ -632,6 +707,8 @@ export default function TextStudio({ tool }: { tool: Tool }) {
                   <p className="text-xs text-slate-500 dark:text-slate-400 sm:text-sm">Voice: Alloy • Output: MP3</p>
                 </div>
               )}
+              </div>
+              {renderTextOptions()}
             </div>
 
             <div className="premium-card p-4 sm:p-5">
@@ -646,6 +723,7 @@ export default function TextStudio({ tool }: { tool: Tool }) {
               </div>
             </div>
           </section>
+          )}
         </div>
 
         <div className={cn("space-y-4 sm:space-y-5", !hasTextInput && !result && "hidden sm:block")}>
@@ -752,6 +830,7 @@ export default function TextStudio({ tool }: { tool: Tool }) {
         </div>
       </div>
 
+      {hasTextInput && (
       <div className="hidden flex-wrap gap-2 sm:flex">
         <button
           type="button"
@@ -771,6 +850,7 @@ export default function TextStudio({ tool }: { tool: Tool }) {
           Reset workspace
         </button>
       </div>
+      )}
     </div>
   )
 }

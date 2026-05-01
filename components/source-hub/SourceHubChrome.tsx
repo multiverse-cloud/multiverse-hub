@@ -4,9 +4,28 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-function LoaderMarkup() {
+function shouldReserveMobileBottomNav(pathname: string | null) {
+  if (!pathname) return true;
+  return !(
+    /^\/templates\/[^/]+$/.test(pathname) ||
+    /^\/ui\/[^/]+$/.test(pathname) ||
+    /^\/tools\/[^/]+\/[^/]+$/.test(pathname) ||
+    /^\/prompts\/[^/]+$/.test(pathname) ||
+    /^\/fixes\/[^/]+$/.test(pathname) ||
+    /^\/discover\/[^/]+$/.test(pathname)
+  );
+}
+
+function LoaderMarkup({ reserveMobileBottomNav }: { reserveMobileBottomNav: boolean }) {
   return (
-    <div id="source-hub-loader" className="source-hub-loader">
+    <div
+      id="source-hub-loader"
+      className={
+        reserveMobileBottomNav
+          ? "source-hub-loader source-hub-loader-with-mobile-nav"
+          : "source-hub-loader"
+      }
+    >
       <div className="source-hub-loader-content">
         <div className="source-hub-loader-logo">
           <div className="source-hub-loader-logo-icon">
@@ -209,7 +228,11 @@ export default function SourceHubChrome() {
 
         .source-hub-loader {
           position: fixed;
-          inset: 4rem 0 0;
+          top: var(--mtverse-header-height, 3.5rem);
+          right: 0;
+          bottom: 0;
+          left: 0;
+          min-height: calc(100dvh - var(--mtverse-header-height, 3.5rem));
           z-index: 45;
           display: flex;
           align-items: center;
@@ -228,13 +251,19 @@ export default function SourceHubChrome() {
 
         @media (min-width: 1024px) {
           .source-hub-loader {
-            top: 7.15rem;
+            top: var(--mtverse-desktop-header-height, 7.15rem);
+            min-height: calc(100dvh - var(--mtverse-desktop-header-height, 7.15rem));
           }
         }
 
         @media (max-width: 767px) {
-          .source-hub-loader {
-            bottom: calc(4.25rem + env(safe-area-inset-bottom));
+          .source-hub-loader-with-mobile-nav {
+            bottom: calc(var(--mtverse-mobile-bottom-nav-height, 4.35rem) + env(safe-area-inset-bottom));
+            min-height: calc(
+              100dvh - var(--mtverse-header-height, 3.5rem) -
+                var(--mtverse-mobile-bottom-nav-height, 4.35rem) -
+                env(safe-area-inset-bottom)
+            );
           }
 
           .source-hub-loader-content {
@@ -456,7 +485,11 @@ export default function SourceHubChrome() {
           }
         }
       `}</style>
-      {mounted && visible ? <LoaderMarkup /> : null}
+      {mounted && visible ? (
+        <LoaderMarkup
+          reserveMobileBottomNav={shouldReserveMobileBottomNav(pathname)}
+        />
+      ) : null}
     </>
   );
 }

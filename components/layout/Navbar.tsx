@@ -352,7 +352,7 @@ export default async function Navbar({
           : "border-slate-200/80 bg-white shadow-[0_10px_24px_-20px_rgba(15,23,42,0.35)] dark:border-slate-800/80 dark:bg-slate-950 dark:shadow-[0_12px_26px_-20px_rgba(2,6,23,0.55)]",
       )}
     >
-      <div className="mx-auto flex max-w-7xl items-center gap-3 px-3 py-3 sm:gap-4 sm:px-4 lg:px-6 lg:py-3.5">
+      <div className="mx-auto flex max-w-7xl items-center gap-2 px-2.5 py-2.5 sm:gap-4 sm:px-4 sm:py-3 lg:px-6 lg:py-3.5">
         {/* Logo — subtle scale + opacity hover */}
         <Link
           href="/"
@@ -372,10 +372,10 @@ export default async function Navbar({
         </Link>
 
         {/* Mobile search — shorter placeholder */}
-        <div className="flex-1 sm:hidden">
+        <div className="min-w-0 flex-1 sm:hidden">
           <SiteSearchInput
             className="w-full"
-            placeholder="Search tools..."
+            placeholder="Search..."
             variant="mobile"
           />
         </div>
@@ -387,7 +387,7 @@ export default async function Navbar({
           variant="navbar"
         />
 
-        <div className="ml-auto flex shrink-0 items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
           <SiteLanguageSwitcher />
           {/* ThemeToggle — slightly more visible border handled via wrapper */}
           <div>
