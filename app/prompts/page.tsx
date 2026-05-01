@@ -47,7 +47,22 @@ interface PromptsPageProps {
     category?: string | string[];
     model?: string | string[];
     q?: string | string[];
+    sort?: string | string[];
+    seed?: string | string[];
   }>;
+}
+
+function resolvePromptSort(value?: string): "featured" | "hot" | "new" | "top" | "shuffle" {
+  if (value === "hot" || value === "new" || value === "top" || value === "shuffle") {
+    return value;
+  }
+
+  return "featured";
+}
+
+function resolveShuffleSeed(value?: string) {
+  const normalized = value?.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 32);
+  return normalized || "mtverse";
 }
 
 export default async function PromptsPage({ searchParams }: PromptsPageProps) {
@@ -60,6 +75,12 @@ export default async function PromptsPage({ searchParams }: PromptsPageProps) {
     normalizePromptSearchParam(resolvedSearchParams?.model),
   );
   const searchQuery = normalizePromptQuery(resolvedSearchParams?.q);
+  const sortMode = resolvePromptSort(
+    normalizePromptSearchParam(resolvedSearchParams?.sort),
+  );
+  const shuffleSeed = resolveShuffleSeed(
+    normalizePromptSearchParam(resolvedSearchParams?.seed),
+  );
   const filteredPrompts = filterPrompts(library.prompts, {
     category: activeCategory,
     model: activeModel,
@@ -81,6 +102,8 @@ export default async function PromptsPage({ searchParams }: PromptsPageProps) {
         activeCategory={activeCategory}
         activeModel={activeModel}
         searchQuery={searchQuery}
+        sortMode={sortMode}
+        shuffleSeed={shuffleSeed}
         totalResults={filteredPrompts.length}
         totalPrompts={library.stats.totalPrompts}
         imagePrompts={library.stats.imagePrompts}

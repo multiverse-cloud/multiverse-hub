@@ -45,6 +45,7 @@
     "lib/admin-auth.ts",
     "hyperui-main/**/*",
     "projects/**/*",
+    "tmp/**/*",
     "template-repo-export/**/*"
   ]
 }
