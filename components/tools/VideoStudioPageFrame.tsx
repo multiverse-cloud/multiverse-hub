@@ -20,8 +20,8 @@ export default function VideoStudioPageFrame({
 }) {
   return (
     <div className="premium-shell" data-tool-shell="true">
-      <div className="mx-auto w-full max-w-7xl px-3 pb-28 pt-4 sm:px-6 lg:px-6 md:py-10">
-        <div className="mb-6 flex items-start justify-between gap-3">
+      <div className="tool-mobile-frame mx-auto w-full max-w-7xl px-4 pb-24 pt-3 sm:px-6 lg:px-6 md:py-10">
+        <div className="mb-4 flex items-start justify-between gap-3 sm:mb-6">
           <ToolBreadcrumb
             className="mb-0 flex-1"
             items={[
@@ -35,7 +35,7 @@ export default function VideoStudioPageFrame({
         </div>
         <ToolRuntimeBanner status={runtimeStatus || null} />
 
-        {children}
+        <div className="mobile-section-stack">{children}</div>
 
         <SEOContent tool={tool} />
 

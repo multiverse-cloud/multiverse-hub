@@ -208,13 +208,13 @@ export default function DiscoverClient({
     <div className="min-h-screen">
       <div className="page-hero">
         <div className="page-hero-inner">
-          <div className="mb-3 flex items-center gap-3">
+          <div className="mb-3 flex items-center gap-2.5 sm:gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 shadow-lg shadow-slate-900/15 dark:bg-slate-100">
               <Compass className="h-5 w-5 text-white dark:text-slate-950" />
             </div>
             <span className="section-label">Discover</span>
           </div>
-          <h1 className="text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
+          <h1 className="text-2xl font-bold leading-tight tracking-tight sm:text-3xl md:text-4xl">
             Curated Rankings And Guides
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground sm:text-base">
@@ -315,7 +315,7 @@ export default function DiscoverClient({
         </div>
 
         {featuredLists.length > 0 ? (
-          <section className="mb-6 rounded-2xl border border-border bg-card p-4 sm:p-6">
+          <section className="mb-5 rounded-xl border border-border bg-card p-4 sm:mb-6 sm:rounded-2xl sm:p-6">
             <div className="mb-4 flex items-center gap-2 text-sm font-semibold">
               <Award className="h-4 w-4 text-yellow-500" />
               Featured editorial picks
@@ -353,7 +353,7 @@ export default function DiscoverClient({
           </section>
         ) : null}
 
-        <section className="rounded-2xl border border-border bg-card p-4 sm:p-5">
+        <section className="rounded-xl border border-border bg-card p-4 sm:rounded-2xl sm:p-5">
           <div className="flex flex-col gap-3 border-b border-border pb-3 sm:pb-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs font-semibold text-foreground sm:text-sm">

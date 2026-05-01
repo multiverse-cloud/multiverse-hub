@@ -162,7 +162,7 @@ export default function FixesUniversePage({
     <div className="min-h-screen premium-shell">
       <section className="page-hero overflow-hidden border-b border-border bg-slate-50/70 dark:bg-slate-950">
         <div className="page-hero-inner py-5 md:py-10">
-          <div className="rounded-2xl border border-slate-200/80 bg-white/92 p-4 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.35)] dark:border-slate-800/80 dark:bg-slate-950/88 md:rounded-[30px] md:p-8">
+          <div className="rounded-xl border border-slate-200/80 bg-white/92 p-4 shadow-[0_18px_44px_-34px_rgba(15,23,42,0.28)] dark:border-slate-800/80 dark:bg-slate-950/88 md:rounded-[30px] md:p-8">
             <div className="max-w-4xl">
               <div className="page-badge border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-900/50 dark:bg-orange-950/30 dark:text-orange-300">
                 <ShieldAlert className="h-4 w-4" />
@@ -171,7 +171,7 @@ export default function FixesUniversePage({
               <h1 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50 md:mt-4 md:text-5xl">
                 150 easy fixes for phones, PCs, apps, games, and Wi-Fi.
               </h1>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base">
+              <p className="mt-2.5 max-w-2xl text-sm leading-6 text-muted-foreground md:mt-3 md:text-base md:leading-7">
                 Short steps. Clear symptoms. Less guesswork.
               </p>
             </div>
@@ -224,7 +224,7 @@ export default function FixesUniversePage({
         </div>
       </section>
 
-      <div className="page-content space-y-6 md:space-y-8">
+      <div className="page-content space-y-5 md:space-y-8">
         <section className="hidden gap-3 md:grid md:grid-cols-3">
           {FIXES_SIGNAL_BLOCKS.map(block => (
             <div key={block.title} className="rounded-2xl border border-border bg-card p-4">
@@ -240,22 +240,22 @@ export default function FixesUniversePage({
           ))}
         </section>
 
-        <section className="space-y-4">
+        <section className="space-y-3.5 sm:space-y-4">
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="premium-kicker">Featured</p>
-              <h2 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
+              <h2 className="mt-1.5 font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:mt-2 sm:text-2xl">
                 Start with the highest-frequency problems
               </h2>
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-4">
             {featuredGuides.map(guide => (
               <Link
                 key={guide.slug}
                 href={`/fixes/${guide.slug}`}
-                className="rounded-2xl border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-900/5 dark:hover:border-slate-700"
+                className="rounded-xl border border-border bg-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-900/5 dark:hover:border-slate-700 sm:rounded-2xl sm:p-5"
               >
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                   {guide.platformLabel}
@@ -271,15 +271,15 @@ export default function FixesUniversePage({
           </div>
         </section>
 
-        <section className="space-y-4">
+        <section className="space-y-3.5 sm:space-y-4">
           <div>
             <p className="premium-kicker">Clusters</p>
-            <h2 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
+            <h2 className="mt-1.5 font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:mt-2 sm:text-2xl">
               Browse by the problem area
             </h2>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-3">
             {clusters.map(cluster => {
               const Icon = CLUSTER_ICON_MAP[cluster.id]
               const tone = CLUSTER_TONE_MAP[cluster.id]
@@ -289,7 +289,7 @@ export default function FixesUniversePage({
                   key={cluster.id}
                   href={buildFixesHref(cluster.id)}
                   prefetch={false}
-                  className="rounded-2xl border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-900/5 dark:hover:border-slate-700"
+                  className="rounded-xl border border-border bg-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-900/5 dark:hover:border-slate-700 sm:rounded-2xl sm:p-5"
                 >
                   <div className={cn('flex h-11 w-11 items-center justify-center rounded-2xl', tone)}>
                     <Icon className="h-5 w-5" />
@@ -314,7 +314,7 @@ export default function FixesUniversePage({
           </div>
         </section>
 
-        <section className="rounded-2xl border border-border bg-card p-5">
+        <section className="rounded-xl border border-border bg-card p-4 sm:rounded-2xl sm:p-5">
           <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold text-foreground">
@@ -326,12 +326,12 @@ export default function FixesUniversePage({
             </div>
           </div>
 
-          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-4 grid gap-3 sm:mt-5 sm:gap-4 md:grid-cols-2 xl:grid-cols-3">
             {guides.map(guide => (
               <Link
                 key={guide.slug}
                 href={`/fixes/${guide.slug}`}
-                className="rounded-2xl border border-border p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-900/5 dark:hover:border-slate-700"
+                className="rounded-xl border border-border p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-900/5 dark:hover:border-slate-700 sm:rounded-2xl sm:p-5"
               >
                 <div className="flex items-center gap-2">
                   <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">

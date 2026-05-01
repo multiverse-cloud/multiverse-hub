@@ -4,28 +4,9 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-function shouldReserveMobileBottomNav(pathname: string | null) {
-  if (!pathname) return true;
-  return !(
-    /^\/templates\/[^/]+$/.test(pathname) ||
-    /^\/ui\/[^/]+$/.test(pathname) ||
-    /^\/tools\/[^/]+\/[^/]+$/.test(pathname) ||
-    /^\/prompts\/[^/]+$/.test(pathname) ||
-    /^\/fixes\/[^/]+$/.test(pathname) ||
-    /^\/discover\/[^/]+$/.test(pathname)
-  );
-}
-
-function LoaderMarkup({ reserveMobileBottomNav }: { reserveMobileBottomNav: boolean }) {
+function LoaderMarkup() {
   return (
-    <div
-      id="source-hub-loader"
-      className={
-        reserveMobileBottomNav
-          ? "source-hub-loader source-hub-loader-with-mobile-nav"
-          : "source-hub-loader"
-      }
-    >
+    <div id="source-hub-loader" className="source-hub-loader">
       <div className="source-hub-loader-content">
         <div className="source-hub-loader-logo">
           <div className="source-hub-loader-logo-icon">
@@ -233,7 +214,7 @@ export default function SourceHubChrome() {
           bottom: 0;
           left: 0;
           min-height: calc(100dvh - var(--mtverse-header-height, 3.5rem));
-          z-index: 45;
+          z-index: 35;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -257,15 +238,6 @@ export default function SourceHubChrome() {
         }
 
         @media (max-width: 767px) {
-          .source-hub-loader-with-mobile-nav {
-            bottom: calc(var(--mtverse-mobile-bottom-nav-height, 4.35rem) + env(safe-area-inset-bottom));
-            min-height: calc(
-              100dvh - var(--mtverse-header-height, 3.5rem) -
-                var(--mtverse-mobile-bottom-nav-height, 4.35rem) -
-                env(safe-area-inset-bottom)
-            );
-          }
-
           .source-hub-loader-content {
             gap: 1rem;
             transform: translateY(-0.5rem);
@@ -485,11 +457,7 @@ export default function SourceHubChrome() {
           }
         }
       `}</style>
-      {mounted && visible ? (
-        <LoaderMarkup
-          reserveMobileBottomNav={shouldReserveMobileBottomNav(pathname)}
-        />
-      ) : null}
+      {mounted && visible ? <LoaderMarkup /> : null}
     </>
   );
 }

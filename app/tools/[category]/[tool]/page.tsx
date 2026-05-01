@@ -689,23 +689,23 @@ export default async function ToolPage({ params }: Props) {
   return (
     <PublicLayout>
       <div className="premium-shell" data-tool-shell="true">
-        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-6 md:py-10">
+        <div className="tool-mobile-frame mx-auto w-full max-w-7xl px-4 pb-24 pt-3 sm:px-6 sm:py-8 lg:px-6 md:py-10">
           {/* Tool Hero */}
-          <div className="tool-hero-glow mb-8">
+          <div className="tool-hero-glow mb-5 sm:mb-8">
             <div className="relative z-10 flex items-start gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-100 to-indigo-50 text-indigo-600 shadow-sm dark:from-indigo-900/30 dark:to-indigo-950/30 dark:text-indigo-400">
-                <CategoryIcon className="h-6 w-6" />
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-100 to-indigo-50 text-indigo-600 shadow-sm dark:from-indigo-900/30 dark:to-indigo-950/30 dark:text-indigo-400 sm:h-14 sm:w-14">
+                <CategoryIcon className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <div>
                 <div className="mb-1 flex items-center gap-2.5">
-                  <h1 className="font-display text-2xl font-extrabold tracking-tight md:text-3xl">
+                  <h1 className="font-display text-xl font-extrabold tracking-tight sm:text-2xl md:text-3xl">
                     {tool.name}
                   </h1>
                   {tool.tags.includes("beta") && (
                     <span className="tag-beta">Beta</span>
                   )}
                 </div>
-                <p className="text-muted-foreground leading-relaxed line-clamp-2 sm:line-clamp-none">
+                <p className="text-sm leading-6 text-muted-foreground line-clamp-2 sm:line-clamp-none sm:text-base">
                   {tool.description}
                 </p>
               </div>
@@ -714,13 +714,13 @@ export default async function ToolPage({ params }: Props) {
 
           <ToolRuntimeBanner status={runtimeStatus} />
 
-          <div className="premium-panel mb-8 overflow-hidden">
+          <div className="premium-panel mb-5 overflow-hidden sm:mb-8">
             <ToolStudioSlot tool={tool} />
           </div>
 
           {/* How it works + Features */}
-          <div className="mb-8 grid gap-6 md:grid-cols-2">
-            <div className="premium-card p-6">
+          <div className="mb-6 grid gap-4 md:grid-cols-2 sm:mb-8 sm:gap-6">
+            <div className="premium-card p-4 sm:p-6">
               <h2 className="mb-5 font-display text-lg font-bold flex items-center gap-2">
                 <div className="h-1 w-6 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" />
                 How it works
@@ -784,7 +784,7 @@ export default async function ToolPage({ params }: Props) {
               </ol>
             </div>
 
-            <div className="premium-card p-6">
+            <div className="premium-card p-4 sm:p-6">
               <h2 className="mb-5 font-display text-lg font-bold flex items-center gap-2">
                 <div className="h-1 w-6 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500" />
                 Key features
@@ -914,7 +914,7 @@ export default async function ToolPage({ params }: Props) {
                 <p className="premium-kicker">
                   More {tool.category.toLowerCase()} workflows
                 </p>
-                <h2 className="font-display text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
+                <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:text-2xl">
                   Related tools
                 </h2>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
@@ -922,10 +922,14 @@ export default async function ToolPage({ params }: Props) {
                   in the same premium workspace.
                 </p>
               </div>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+              <div className="-mx-4 overflow-x-auto px-4 scrollbar-hide sm:mx-0 sm:overflow-visible sm:px-0">
+                <div className="flex min-w-max gap-2.5 sm:grid sm:min-w-0 sm:grid-cols-3 sm:gap-3 lg:grid-cols-6">
                 {related.map((item) => (
-                  <ToolCard key={item.id} tool={item} />
+                  <div key={item.id} className="w-[42vw] max-w-[12rem] shrink-0 sm:w-auto sm:max-w-none">
+                    <ToolCard tool={item} />
+                  </div>
                 ))}
+                </div>
               </div>
             </section>
           )}

@@ -68,7 +68,7 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
   return (
     <div>
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden border-b border-slate-200/60 bg-white py-8 sm:py-12 md:py-16 dark:border-slate-800/60 dark:bg-slate-950">
+      <section className="relative overflow-hidden border-b border-slate-200/60 bg-white py-6 sm:py-12 md:py-16 dark:border-slate-800/60 dark:bg-slate-950">
         {/* Background decoration */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,rgba(99,102,241,0.07),transparent)] dark:bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,rgba(99,102,241,0.12),transparent)]" />
@@ -76,7 +76,7 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
         </div>
 
         <div className="relative page-frame text-center">
-          <p className="section-label">{TOOLS.length} Tools</p>
+          <p className="section-label text-xs">{TOOLS.length} Tools</p>
 
           <h1 className="mt-1.5 font-display text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl">
             Every tool, one workspace
@@ -85,7 +85,7 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
           {/* Colorful gradient accent line */}
           <div className="mx-auto mt-3 h-1 w-16 rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-sky-500 sm:mt-4 sm:w-20" />
 
-          <p className="mt-3 mx-auto max-w-lg text-sm text-muted-foreground sm:mt-4 sm:text-base">
+          <p className="mx-auto mt-2 max-w-lg text-sm text-muted-foreground sm:mt-4 sm:text-base">
             Browse, filter, and jump into any tool&nbsp;&mdash; no tabs, no
             switching.
           </p>
@@ -105,8 +105,8 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
             <input
               name="q"
               defaultValue={search}
-              placeholder="Search tools by name or category..."
-              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-9 text-xs font-medium shadow-sm transition-all focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-800 dark:bg-slate-900 dark:focus:border-indigo-500 sm:py-3 sm:pl-10 sm:pr-10 sm:text-sm"
+              placeholder="Search tools..."
+              className="h-11 w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-9 text-sm font-medium shadow-sm transition-all focus:border-slate-300 focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-slate-900 dark:focus:border-slate-700 sm:h-auto sm:py-3 sm:pl-10 sm:pr-10"
             />
             {activeCategory !== "all" && (
               <input type="hidden" name="category" value={activeCategory} />
@@ -142,7 +142,7 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
         </div>
 
         {/* ── Category tabs — horizontally scrollable on mobile with fade mask ── */}
-        <div className="relative mb-4 sm:mb-5">
+        <div className="relative mb-5 sm:mb-6">
           {/* Right fade gradient — only visible on mobile to hint scrollability */}
           <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-10 bg-gradient-to-l from-white dark:from-slate-950 sm:hidden" />
 
@@ -227,7 +227,7 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
             </div>
 
             {/* ── Tool grid ── */}
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {filtered.map((tool) => {
                 const Icon = getLucideIcon(tool.icon);
                 const visibleTag = tool.tags.find(
@@ -238,7 +238,7 @@ export default function ToolsListing({ filters }: ToolsListingProps) {
                   <Link
                     key={tool.id}
                     href={`/tools/${tool.categorySlug}/${tool.slug}`}
-                    className="group relative flex flex-col gap-2 rounded-xl border border-slate-200/70 bg-white p-2.5 transition-all duration-200 touch-manipulation active:scale-[0.97] hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-500/[0.06] dark:border-slate-800/70 dark:bg-slate-900/80 dark:hover:border-indigo-800 dark:hover:shadow-indigo-500/[0.06] sm:p-3.5 sm:gap-2.5"
+                    className="group relative flex flex-col gap-2 rounded-xl border border-slate-200/70 bg-white p-3 transition-all duration-200 touch-manipulation active:scale-[0.97] hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-500/[0.06] dark:border-slate-800/70 dark:bg-slate-900/80 dark:hover:border-indigo-800 dark:hover:shadow-indigo-500/[0.06] sm:p-3.5 sm:gap-2.5"
                     style={{ minHeight: 44 }}
                   >
                     {/* Icon row */}

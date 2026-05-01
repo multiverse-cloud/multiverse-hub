@@ -134,7 +134,7 @@ function PromptSection({
   if (prompts.length === 0) return null
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-3.5 sm:space-y-4">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-lg font-bold tracking-tight text-foreground md:text-xl">{title}</h2>
       </div>
@@ -189,7 +189,7 @@ export default function PromptHubPage({
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-72 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.12),transparent_58%)] dark:bg-[radial-gradient(circle_at_top,rgba(96,165,250,0.14),transparent_58%)]" />
         <div className="page-content py-5 md:py-8">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+            <div className="mb-2.5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground sm:mb-3 sm:px-3 sm:text-[11px]">
               <Sparkles className="h-3.5 w-3.5" />
               Prompt Hub
             </div>
@@ -201,7 +201,7 @@ export default function PromptHubPage({
             </p>
           </div>
 
-          <form action="/prompts" method="get" className="mx-auto mt-6 flex max-w-2xl items-center gap-2 rounded-xl border border-border bg-card p-2">
+          <form action="/prompts" method="get" className="mx-auto mt-5 flex max-w-2xl items-center gap-1.5 rounded-xl border border-border bg-card p-1.5 sm:mt-6 sm:gap-2 sm:p-2">
             <div className="relative min-w-0 flex-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
@@ -209,21 +209,21 @@ export default function PromptHubPage({
                 name="q"
                 defaultValue={searchQuery}
                 placeholder="Search prompts..."
-                className="h-10 w-full rounded-lg border-0 bg-transparent pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground"
+                className="h-10 w-full rounded-lg border-0 bg-transparent pl-9 pr-2 text-sm text-foreground outline-none placeholder:text-muted-foreground"
               />
             </div>
             {activeCategory !== 'all' ? <input type="hidden" name="category" value={activeCategory} /> : null}
             {activeModel !== 'all' ? <input type="hidden" name="model" value={activeModel} /> : null}
             <button
               type="submit"
-              className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg bg-slate-900 px-3.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-950 dark:hover:bg-slate-200 sm:px-4"
+              className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg bg-slate-900 px-3 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-950 dark:hover:bg-slate-200 sm:px-4"
             >
               Search
             </button>
           </form>
 
           <div className="-mx-4 mt-4 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <div className="mx-auto flex w-max min-w-full justify-start gap-2 sm:w-auto sm:min-w-0 sm:flex-wrap sm:justify-center">
+            <div className="mx-auto flex w-max min-w-full justify-start gap-1.5 sm:w-auto sm:min-w-0 sm:flex-wrap sm:justify-center sm:gap-2">
               <Link
                 href={buildPromptHref({ category: 'all', model: activeModel, query: searchQuery })}
                 prefetch={false}
@@ -260,7 +260,7 @@ export default function PromptHubPage({
           </div>
 
           <div className="-mx-4 mt-2 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <div className="mx-auto flex w-max min-w-full justify-start gap-2 sm:w-auto sm:min-w-0 sm:flex-wrap sm:justify-center">
+            <div className="mx-auto flex w-max min-w-full justify-start gap-1.5 sm:w-auto sm:min-w-0 sm:flex-wrap sm:justify-center sm:gap-2">
               <Link
                 href={buildPromptHref({ category: activeCategory, model: 'all', query: searchQuery })}
                 prefetch={false}
@@ -307,10 +307,10 @@ export default function PromptHubPage({
         </div>
       </div>
 
-      <div className="page-content space-y-8 py-6">
+      <div className="page-content space-y-6 py-5 sm:space-y-8 sm:py-6">
         {!isFilteredView ? <PromptSection title="Featured prompts" prompts={heroPrompts} /> : null}
 
-        <section className="space-y-4">
+        <section className="space-y-3.5 sm:space-y-4">
           <div className="flex items-end justify-between gap-4">
             <div>
               <h2 className="text-lg font-bold tracking-tight text-foreground md:text-xl">

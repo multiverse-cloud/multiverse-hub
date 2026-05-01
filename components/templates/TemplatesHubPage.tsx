@@ -57,12 +57,12 @@ function TemplateCard({ template, large = false }: { template: TemplateEntry; la
   return (
     <article className={cn(
       'group overflow-hidden border border-slate-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-400/60 hover:shadow-xl hover:shadow-blue-500/10 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-500/40',
-      'rounded-2xl',
+      'rounded-xl sm:rounded-2xl',
     )}>
       {/* Full-width desktop preview — scaled iframe */}
       <div className={cn(
         'relative overflow-hidden bg-white dark:bg-slate-950',
-        large ? 'h-96' : 'h-64',
+        large ? 'h-56 sm:h-80 lg:h-96' : 'h-48 sm:h-60 lg:h-64',
       )}>
         <TemplateLivePreview template={template} compact className="rounded-none border-0 bg-transparent" />
         {/* Hover reveal overlay */}
@@ -78,7 +78,7 @@ function TemplateCard({ template, large = false }: { template: TemplateEntry; la
 
       <Link
         href={`/templates/${template.slug}`}
-        className="block border-t border-slate-100 px-4 py-3.5 transition-colors hover:bg-slate-50/60 dark:border-slate-800 dark:hover:bg-slate-800/40"
+        className="block border-t border-slate-100 px-4 py-3 transition-colors hover:bg-slate-50/60 dark:border-slate-800 dark:hover:bg-slate-800/40 sm:py-3.5"
       >
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
           {template.industry}
@@ -381,7 +381,7 @@ export default function TemplatesHubPage({
       {/* Background glow */}
       <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-96 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(59,130,246,0.10),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(59,130,246,0.08),transparent)]" />
 
-      <main className="relative mx-auto grid max-w-[1600px] gap-8 px-4 pb-20 pt-8 lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-start lg:px-6 xl:grid-cols-[18rem_minmax(0,1fr)]">
+      <main className="relative mx-auto grid max-w-[1600px] gap-5 px-4 pb-20 pt-4 sm:gap-8 sm:pt-8 lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-start lg:px-6 xl:grid-cols-[18rem_minmax(0,1fr)]">
         {/* ─── Sidebar ─── */}
         <aside className="hidden lg:sticky lg:top-[7.25rem] lg:block lg:max-h-[calc(100dvh-8.5rem)] lg:overflow-y-auto lg:pr-1">
           <div className="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
@@ -392,13 +392,13 @@ export default function TemplatesHubPage({
         {/* ─── Main content ─── */}
         <div className="min-w-0">
           {/* Page heading */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50 md:text-4xl">
+          <div className="mb-5 sm:mb-8">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 sm:text-3xl md:text-4xl">
               {category !== 'all'
                 ? categories.find(c => c.id === category)?.title ?? 'Templates'
                 : 'Templates Library'}
             </h1>
-            <p className="mt-2 max-w-2xl text-base text-slate-500 dark:text-slate-400">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400 sm:text-base">
               {category !== 'all'
                 ? categories.find(c => c.id === category)?.description ?? 'Browse templates filtered by category.'
                 : 'Source-backed website templates with live preview flow and clean code download.'}
@@ -406,19 +406,19 @@ export default function TemplatesHubPage({
           </div>
 
           {/* ─── Sticky toolbar ─── */}
-          <div className="sticky top-[72px] z-30 mb-6 -mx-4 bg-slate-50/90 px-4 py-3 backdrop-blur-md dark:bg-slate-950/90 lg:-mx-0 lg:rounded-xl lg:border lg:border-slate-200/60 lg:px-4 lg:shadow-sm dark:lg:border-slate-800">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="sticky top-[var(--mtverse-header-height)] z-30 mb-5 -mx-4 bg-slate-50/95 px-4 py-2.5 backdrop-blur-md dark:bg-slate-950/95 sm:mb-6 sm:py-3 lg:-mx-0 lg:top-[var(--mtverse-desktop-header-height)] lg:rounded-xl lg:border lg:border-slate-200/60 lg:px-4 lg:shadow-sm dark:lg:border-slate-800">
+            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
               {/* Tab switcher */}
               <div className="flex w-full items-center gap-1 rounded-xl border border-slate-200/80 bg-white p-1 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:w-auto">
                 <Link
                   href="/templates"
-                  className="flex-1 rounded-lg bg-blue-600 px-5 py-2 text-center text-sm font-bold text-white sm:flex-none"
+                  className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-center text-sm font-bold text-white sm:flex-none sm:px-5"
                 >
                   Templates
                 </Link>
                 <Link
                   href="/ui"
-                  className="flex-1 rounded-lg px-5 py-2 text-center text-sm font-bold text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-50 sm:flex-none"
+                  className="flex-1 rounded-lg px-4 py-2 text-center text-sm font-bold text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-50 sm:flex-none sm:px-5"
                 >
                   Components
                 </Link>
@@ -426,13 +426,13 @@ export default function TemplatesHubPage({
 
               <div className="flex items-center gap-2">
                 {/* Mobile search */}
-                <div className="relative flex-1 lg:hidden">
+                <div className="relative min-w-0 flex-1 lg:hidden">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <input
                     value={query}
                     onChange={event => startTransition(() => { setQuery(event.target.value); setCurrentPage(1) })}
                     placeholder="Search..."
-                    className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800"
+                    className="h-10 w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm outline-none focus:border-slate-300 focus:ring-0 dark:border-slate-700 dark:bg-slate-800"
                   />
                 </div>
 
@@ -440,7 +440,7 @@ export default function TemplatesHubPage({
                 <button
                   type="button"
                   onClick={() => setMobileFiltersOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 lg:hidden"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 lg:hidden"
                 >
                   <Filter className="h-4 w-4" />
                   Filters
@@ -482,7 +482,7 @@ export default function TemplatesHubPage({
           </div>
 
           {/* Results count */}
-          <div className="mb-5 flex items-center justify-between">
+          <div className="mb-4 flex items-center justify-between gap-3 sm:mb-5">
             <p className="text-sm text-slate-500 dark:text-slate-400">
               <span className="font-bold text-slate-900 dark:text-slate-100">{filteredTemplates.length}</span> results
               {totalPages > 1 && (
@@ -499,7 +499,7 @@ export default function TemplatesHubPage({
 
           {/* ─── Grid ─── */}
           {!hydrated || isFiltering ? (
-            <div className={cn('grid gap-5', viewMode === 'large' ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4')}>
+            <div className={cn('grid gap-4 sm:gap-5', viewMode === 'large' ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4')}>
               {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
             </div>
           ) : filteredTemplates.length === 0 ? (
@@ -521,7 +521,7 @@ export default function TemplatesHubPage({
             </div>
           ) : (
             <>
-              <div className={cn('grid gap-5', viewMode === 'large' ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4')}>
+              <div className={cn('grid gap-4 sm:gap-5', viewMode === 'large' ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4')}>
                 {paginatedTemplates.map(template => (
                   <TemplateCard key={template.slug} template={template} large={viewMode === 'large'} />
                 ))}
@@ -529,12 +529,12 @@ export default function TemplatesHubPage({
 
               {/* ─── Pagination ─── */}
               {totalPages > 1 && (
-                <div className="mt-10 flex items-center justify-center gap-2">
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:mt-10">
                   <button
                     type="button"
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage <= 1}
-                    className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                    className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 sm:px-4"
                   >
                     <ChevronLeft className="h-4 w-4" />
                     Previous
@@ -582,7 +582,7 @@ export default function TemplatesHubPage({
                     type="button"
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage >= totalPages}
-                    className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                    className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 sm:px-4"
                   >
                     Next
                     <ChevronRight className="h-4 w-4" />

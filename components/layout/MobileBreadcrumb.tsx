@@ -119,16 +119,16 @@ export default function MobileBreadcrumb({
         className,
       )}
     >
-      <ol className="mx-auto flex max-w-7xl items-center gap-0.5 px-3 py-1.5 overflow-x-auto scrollbar-none">
+      <ol className="mx-auto flex max-w-7xl items-center gap-1 overflow-x-auto px-4 py-2 scrollbar-hide">
         {visibleCrumbs.map((crumb, index) => {
           const isLast = index === visibleCrumbs.length - 1;
           const isFirst = index === 0;
           const isEllipsis = "ellipsis" in crumb && crumb.ellipsis;
 
           return (
-            <li key={index} className="flex items-center gap-0.5 shrink-0">
+            <li key={index} className="flex shrink-0 items-center gap-1">
               {index > 0 && (
-                <ChevronRight className="h-2.5 w-2.5 text-muted-foreground/40 shrink-0" />
+                <ChevronRight className="h-2.5 w-2.5 shrink-0 text-muted-foreground/40" />
               )}
 
               {isEllipsis ? (
@@ -141,14 +141,14 @@ export default function MobileBreadcrumb({
               ) : isLast ? (
                 <span
                   aria-current="page"
-                  className="text-[11px] font-semibold text-foreground truncate max-w-[120px]"
+                  className="max-w-[56vw] truncate text-[11px] font-semibold text-foreground"
                 >
                   {crumb.label}
                 </span>
               ) : crumb.href ? (
                 <Link
                   href={crumb.href}
-                  className="flex items-center gap-0.5 text-[11px] text-muted-foreground transition-colors hover:text-foreground rounded px-0.5 py-0.5"
+                  className="flex items-center gap-1 rounded px-0.5 py-0.5 text-[11px] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {isFirst ? (
                     <>
@@ -156,11 +156,11 @@ export default function MobileBreadcrumb({
                       <span className="sr-only">Home</span>
                     </>
                   ) : (
-                    <span className="truncate max-w-[80px]">{crumb.label}</span>
+                    <span className="max-w-[6rem] truncate">{crumb.label}</span>
                   )}
                 </Link>
               ) : (
-                <span className="text-[11px] text-muted-foreground truncate max-w-[80px]">
+                <span className="max-w-[6rem] truncate text-[11px] text-muted-foreground">
                   {crumb.label}
                 </span>
               )}

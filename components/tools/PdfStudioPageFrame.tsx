@@ -39,7 +39,7 @@ export default function PdfStudioPageFrame({
 }) {
   return (
     <div className="premium-shell" data-tool-shell="true">
-      <div className="mx-auto w-full max-w-7xl px-3 pb-28 pt-4 sm:px-6 sm:py-8 lg:px-6 lg:py-10">
+      <div className="tool-mobile-frame mx-auto w-full max-w-7xl px-4 pb-24 pt-3 sm:px-6 sm:py-8 lg:px-6 lg:py-10">
         {/* Header row: breadcrumb + actions */}
         <div className="mb-4 flex items-start justify-between gap-3 sm:mb-6">
           <ToolBreadcrumb
@@ -61,10 +61,10 @@ export default function PdfStudioPageFrame({
         <ToolRuntimeBanner status={runtimeStatus || null} />
 
         {/* Main tool UI (upload zone + result panel injected here) */}
-        {children}
+        <div className="mobile-section-stack">{children}</div>
 
         {/* Info sections: How it works + Key features */}
-        <div className="mt-8 grid gap-5 sm:mt-10 xl:grid-cols-[1.05fr_0.95fr]">
+        <div className="mt-6 grid gap-4 sm:mt-10 sm:gap-5 xl:grid-cols-[1.05fr_0.95fr]">
           {/* How it works */}
           <section className="premium-card p-4 sm:p-6 md:p-7">
             <div className="mb-4 flex items-center gap-3 sm:mb-6">
@@ -83,7 +83,7 @@ export default function PdfStudioPageFrame({
               {content.howItWorks.map((item, index) => (
                 <div
                   key={item.title}
-                  className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:gap-4 sm:p-4"
+                  className="flex gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 sm:gap-4 sm:rounded-2xl sm:p-4"
                 >
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl bg-white font-display text-sm font-extrabold text-indigo-600 shadow-sm sm:h-9 sm:w-9">
                     {index + 1}
@@ -121,7 +121,7 @@ export default function PdfStudioPageFrame({
                 return (
                   <div
                     key={item.title}
-                    className="rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-4"
+                    className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:rounded-2xl sm:p-4"
                   >
                     <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm sm:h-10 sm:w-10">
                       <Icon className="h-4 w-4" />
@@ -140,7 +140,7 @@ export default function PdfStudioPageFrame({
         </div>
 
         {/* FAQ */}
-        <section className="premium-card mt-5 p-4 sm:mt-6 sm:p-6 md:p-7">
+        <section className="premium-card mt-4 p-4 sm:mt-6 sm:p-6 md:p-7">
           <div className="mb-4 flex items-center gap-3 sm:mb-6">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 sm:h-11 sm:w-11">
               <CircleHelp className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -157,7 +157,7 @@ export default function PdfStudioPageFrame({
             {content.faq.map((item) => (
               <details
                 key={item.question}
-                className="group rounded-2xl border border-slate-200 bg-slate-50 p-3 open:bg-white sm:p-4"
+                className="group rounded-xl border border-slate-200 bg-slate-50 p-3 open:bg-white sm:rounded-2xl sm:p-4"
               >
                 <summary className="cursor-pointer list-none font-display text-sm font-bold tracking-tight text-slate-950">
                   {item.question}

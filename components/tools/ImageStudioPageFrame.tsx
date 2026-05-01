@@ -20,9 +20,9 @@ export default function ImageStudioPageFrame({
 }) {
   return (
     <div className="premium-shell" data-tool-shell="true">
-      <div className="mx-auto w-full max-w-7xl px-3 pb-28 pt-4 sm:px-6 sm:py-8 lg:px-6 lg:py-10">
+      <div className="tool-mobile-frame mx-auto w-full max-w-7xl px-4 pb-24 pt-3 sm:px-6 sm:py-8 lg:px-6 lg:py-10">
         {/* Header row: breadcrumb + actions */}
-        <div className="mb-5 flex items-start justify-between gap-3 sm:mb-6">
+        <div className="mb-4 flex items-start justify-between gap-3 sm:mb-6">
           <ToolBreadcrumb
             className="mb-0 flex-1"
             items={[
@@ -44,7 +44,7 @@ export default function ImageStudioPageFrame({
         {/* Main tool UI — children are responsible for their own layout.
             On mobile the child panels should stack; on desktop they go side-by-side.
             We wrap in a block so consumers that render a single card still look tidy. */}
-        <div className="w-full">{children}</div>
+        <div className="w-full mobile-section-stack">{children}</div>
 
         <SEOContent tool={tool} />
 

@@ -20,9 +20,9 @@ export default function WorkbenchStudioPageFrame({
 }) {
   return (
     <div className="premium-shell" data-tool-shell="true">
-      <div className="mx-auto w-full max-w-7xl px-3 pb-20 pt-3 sm:px-6 sm:py-8 lg:px-6 lg:py-10">
+      <div className="tool-mobile-frame mx-auto w-full max-w-7xl px-4 pb-20 pt-3 sm:px-6 sm:py-8 lg:px-6 lg:py-10">
         {/* Header row: breadcrumb + actions */}
-        <div className="mb-3 flex items-start justify-between gap-3 sm:mb-5">
+        <div className="mb-4 flex items-start justify-between gap-3 sm:mb-5">
           <ToolBreadcrumb
             className="mb-0 flex-1"
             items={[
@@ -43,7 +43,7 @@ export default function WorkbenchStudioPageFrame({
 
         {/* Main workbench content — children are responsible for their own panel layout,
             but we wrap in a block that defaults to stacked on mobile */}
-        <div className="w-full">{children}</div>
+        <div className="w-full mobile-section-stack">{children}</div>
 
         <SEOContent tool={tool} />
 
