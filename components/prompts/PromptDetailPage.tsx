@@ -11,8 +11,12 @@ export default function PromptDetailPage({
   prompt: PromptEntry
   relatedPrompts: PromptEntry[]
 }) {
+  const keywords = Array.from(new Set(prompt.tags)).slice(0, 14)
+  const bestFor = prompt.bestFor.slice(0, 5)
+  const workflow = prompt.workflow.slice(0, 3)
+
   return (
-    <div className="min-h-screen pb-24 premium-shell sm:pb-0">
+    <div className="min-h-screen premium-shell">
       <div className="page-hero border-b border-border bg-background">
         <div className="page-hero-inner py-4 sm:py-7 md:py-9">
           <div className="grid gap-5 sm:gap-8 xl:grid-cols-[minmax(0,0.96fr)_minmax(380px,0.54fr)] xl:items-start">
@@ -58,7 +62,7 @@ export default function PromptDetailPage({
                     src={prompt.previewImage}
                     alt={prompt.previewAlt}
                     category={prompt.category}
-                    imageFit="cover"
+                    imageFit="contain"
                     priority
                   />
                 </div>
@@ -94,12 +98,32 @@ export default function PromptDetailPage({
           </div>
 
           <aside className="min-w-0 space-y-5 sm:space-y-6">
+            {keywords.length > 0 ? (
+              <div>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:text-sm sm:tracking-[0.16em]">
+                  Keywords
+                </h3>
+                <div className="mt-2.5 flex flex-wrap gap-1.5 sm:mt-3 sm:gap-2">
+                  {keywords.map(keyword => (
+                    <Link
+                      key={keyword}
+                      href={`/prompts?q=${encodeURIComponent(keyword)}`}
+                      prefetch={false}
+                      className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600 transition hover:bg-slate-200 hover:text-slate-950 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white sm:px-3 sm:py-1.5 sm:text-xs"
+                    >
+                      #{keyword.replace(/^#/, '')}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:text-sm sm:tracking-[0.16em]">
                 Best for
               </h3>
               <div className="mt-2.5 flex flex-wrap gap-1.5 sm:mt-3 sm:gap-2">
-                {prompt.bestFor.map(item => (
+                {bestFor.map(item => (
                   <span
                     key={item}
                     className="rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-muted-foreground sm:px-3 sm:py-1.5 sm:text-xs"
@@ -112,10 +136,10 @@ export default function PromptDetailPage({
 
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:text-sm sm:tracking-[0.16em]">
-                Use it well
+                How to use
               </h3>
               <ul className="mt-2.5 space-y-1.5 text-sm leading-6 text-muted-foreground sm:mt-3 sm:space-y-2">
-                {prompt.workflow.map(item => (
+                {workflow.map(item => (
                   <li key={item} className="flex items-start gap-2">
                     <span className="mt-2 h-1.5 w-1.5 rounded-full bg-slate-500" />
                     <span>{item}</span>
@@ -124,19 +148,6 @@ export default function PromptDetailPage({
               </ul>
             </div>
 
-            <div>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:text-sm sm:tracking-[0.16em]">
-                Quick tips
-              </h3>
-              <ul className="mt-2.5 space-y-1.5 text-sm leading-6 text-muted-foreground sm:mt-3 sm:space-y-2">
-                {prompt.tips.map(item => (
-                  <li key={item} className="flex items-start gap-2">
-                    <span className="mt-2 h-1.5 w-1.5 rounded-full bg-slate-500" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
           </aside>
         </section>
 
@@ -203,13 +214,6 @@ export default function PromptDetailPage({
         ) : null}
       </div>
 
-      <div className="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+76px)] z-40 sm:hidden">
-        <CopyPromptButton
-          prompt={prompt.prompt}
-          eventProperties={{ slug: prompt.slug, source: 'mobile_sticky' }}
-          className="w-full justify-center border-slate-900 bg-slate-950 py-3 text-white shadow-[0_18px_48px_-24px_rgba(15,23,42,0.65)] hover:border-slate-900 hover:text-white dark:border-white dark:bg-white dark:text-slate-950 dark:hover:text-slate-950"
-        />
-      </div>
     </div>
   )
 }

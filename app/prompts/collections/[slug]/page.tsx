@@ -77,16 +77,10 @@ function CollectionPromptCard({ prompt, priority }: { prompt: PromptEntry; prior
           imgClassName="transition-transform duration-500 group-hover:scale-[1.025]"
         />
       </div>
-      <div className="space-y-2 p-3 sm:p-4">
-        <p className="line-clamp-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45 sm:text-slate-400 dark:sm:text-slate-500">
-          {prompt.subcategory || prompt.categoryTitle}
-        </p>
+      <div className="p-3 sm:p-4">
         <h2 className="line-clamp-2 text-sm font-bold leading-tight tracking-[-0.02em] text-white sm:text-base sm:text-slate-950 dark:sm:text-white">
           {prompt.title}
         </h2>
-        <p className="line-clamp-2 text-xs leading-5 text-white/60 sm:text-slate-500 dark:sm:text-slate-400">
-          {prompt.summary}
-        </p>
       </div>
     </Link>
   )

@@ -57,7 +57,6 @@ const topTabs: Array<{
   { label: 'Hot', sort: 'hot' },
   { label: 'New', sort: 'new' },
   { label: 'Top', sort: 'top' },
-  { label: 'Shuffle', sort: 'shuffle' },
   { label: 'Video', query: 'video' },
   { label: 'ChatGPT Image', model: 'ChatGPT', category: 'image-generation' },
   { label: 'Midjourney', model: 'Midjourney' },
@@ -201,7 +200,6 @@ function isVideoPrompt(prompt: PromptEntry) {
 function PromptShowcaseCard({ prompt }: { prompt: PromptEntry }) {
   const aspect = masonryAspects[getStableIndex(prompt.slug, masonryAspects.length)]
   const featuredLabel = prompt.featured ? 'Featured' : prompt.updatedAt >= '2026-04-25' ? 'New' : ''
-  const visibleTags = prompt.tags.slice(0, 3)
 
   return (
     <Link
@@ -214,7 +212,7 @@ function PromptShowcaseCard({ prompt }: { prompt: PromptEntry }) {
           source: 'prompt_grid',
         })
       }}
-      className="group mb-3 block break-inside-avoid overflow-hidden rounded-2xl bg-slate-950 text-white shadow-none ring-1 ring-slate-200/70 transition duration-200 hover:-translate-y-0.5 hover:ring-slate-300 dark:bg-slate-900 dark:ring-slate-800 dark:hover:ring-slate-700 sm:mb-4 sm:rounded-[15px] sm:bg-slate-100 sm:text-slate-950 dark:sm:bg-slate-900 dark:sm:text-white"
+      className="group mb-3 block break-inside-avoid overflow-hidden rounded-[18px] bg-white text-slate-950 shadow-none ring-1 ring-slate-200/70 transition duration-200 hover:-translate-y-0.5 hover:ring-slate-300 dark:bg-slate-900 dark:text-white dark:ring-slate-800 dark:hover:ring-slate-700 sm:mb-4 sm:rounded-[15px]"
       aria-label={`Open ${prompt.title}`}
     >
       <div className={cn('relative overflow-hidden bg-white dark:bg-slate-950', aspect)}>
@@ -243,23 +241,10 @@ function PromptShowcaseCard({ prompt }: { prompt: PromptEntry }) {
           <p className="mt-1 line-clamp-1 text-[11px] font-medium text-white/75">{prompt.subcategory}</p>
         </div>
       </div>
-      <div className="space-y-2.5 p-3 sm:hidden">
-        <h3 className="line-clamp-2 text-base font-bold leading-tight tracking-[-0.02em] text-white">
+      <div className="p-3 sm:hidden">
+        <h3 className="line-clamp-2 text-[15px] font-bold leading-tight tracking-[-0.02em] text-slate-950 dark:text-white">
           {prompt.title}
         </h3>
-        <p className="line-clamp-3 text-xs leading-5 text-white/60">{prompt.summary}</p>
-        {visibleTags.length > 0 ? (
-          <div className="flex flex-wrap gap-1.5">
-            {visibleTags.map(tag => (
-              <span
-                key={tag}
-                className="rounded-full bg-white/10 px-2 py-1 text-[10px] font-semibold text-white/70"
-              >
-                #{tag.replace(/^#/, '')}
-              </span>
-            ))}
-          </div>
-        ) : null}
       </div>
     </Link>
   )
@@ -300,7 +285,7 @@ function FilterMenu({
           />
           <div
             className={cn(
-              'fixed left-3 right-3 top-28 z-[110] max-h-[70vh] w-auto overflow-hidden rounded-xl bg-white shadow-[0_22px_70px_-34px_rgba(15,23,42,0.55)] ring-1 ring-slate-200 dark:bg-slate-950 dark:ring-slate-800 sm:absolute sm:inset-auto sm:top-12 sm:max-h-none sm:w-64',
+              'fixed left-3 right-3 top-28 z-[110] max-h-[calc(100dvh-160px)] w-auto overflow-y-auto rounded-xl bg-white shadow-[0_22px_70px_-34px_rgba(15,23,42,0.55)] ring-1 ring-slate-200 dark:bg-slate-950 dark:ring-slate-800 sm:absolute sm:inset-auto sm:top-12 sm:max-h-none sm:w-64 sm:overflow-visible',
               align === 'right' ? 'sm:right-0' : 'sm:left-1/2 sm:-translate-x-1/2'
             )}
           >
@@ -516,7 +501,7 @@ export default function PromptHubPage({
           <div className="-mx-4 relative z-[80] mt-6 flex flex-nowrap items-center justify-start gap-2 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:mt-8 sm:flex-wrap sm:justify-center sm:gap-3 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden">
             <FilterMenu label="Type" icon={<PlusCircle className="h-4 w-4" />}>
               <FilterSearchHeader label="Type" />
-              <div className="max-h-80 overflow-y-auto py-1">
+              <div className="py-1">
                 <FilterOption
                   href={buildPromptHref({ category: 'all', model: activeModel, query: searchQuery, sort: sortMode, seed: currentShuffleSeed })}
                   label="All prompts"
@@ -540,7 +525,7 @@ export default function PromptHubPage({
 
             <FilterMenu label="Model" icon={<Bot className="h-4 w-4" />}>
               <FilterSearchHeader label="Model" />
-              <div className="max-h-80 overflow-y-auto py-1">
+              <div className="py-1">
                 <FilterOption
                   href={buildPromptHref({ category: activeCategory, model: 'all', query: searchQuery, sort: sortMode, seed: currentShuffleSeed })}
                   label="All models"
@@ -561,7 +546,7 @@ export default function PromptHubPage({
 
             <FilterMenu label="Category" icon={<PlusCircle className="h-4 w-4" />}>
               <FilterSearchHeader label="Category" />
-              <div className="max-h-96 overflow-y-auto py-1">
+              <div className="py-1">
                 <FilterOption
                   href={buildPromptHref({ category: 'all', model: activeModel, query: searchQuery, sort: sortMode, seed: currentShuffleSeed })}
                   label="All categories"
@@ -601,6 +586,9 @@ export default function PromptHubPage({
               </div>
             </FilterMenu>
 
+          </div>
+
+          <div className="mt-3 flex justify-center sm:mt-4">
             <Link
               href={shuffleHref}
               prefetch={false}
@@ -611,10 +599,10 @@ export default function PromptHubPage({
                   query: searchQuery || 'none',
                 })
               }}
-              className="inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-full bg-slate-950 px-3 text-[11px] font-bold text-white shadow-sm transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 sm:h-10 sm:px-4 sm:text-sm"
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-full bg-slate-950 px-5 text-xs font-bold text-white shadow-sm transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 sm:h-10 sm:px-6 sm:text-sm"
             >
               <Shuffle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              Shuffle
+              Shuffle prompts
             </Link>
           </div>
 
