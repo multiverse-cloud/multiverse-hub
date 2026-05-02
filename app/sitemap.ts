@@ -6,6 +6,7 @@ import { DOWNLOADER_ROUTES } from "@/lib/downloader-route-data";
 import { ACTIVE_CATEGORIES, VIDEO_DOWNLOADER_TOOL_SLUGS } from "@/lib/tools-data";
 import { getTools } from "@/lib/db";
 import { getEffectSlug, uiEffects } from "@/lib/css-effects-library";
+import { getPromptCollectionHref, PROMPT_COLLECTIONS } from "@/lib/prompt-collections";
 import { SITE_URL } from "@/lib/site-url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -141,6 +142,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  const promptCollectionRoutes: MetadataRoute.Sitemap = PROMPT_COLLECTIONS.map((collection) => ({
+    url: `${baseUrl}${getPromptCollectionHref(collection.slug)}`,
+    lastModified: contentDate,
+    changeFrequency: "weekly",
+    priority: 0.78,
+  }));
+
   const templateRoutes: MetadataRoute.Sitemap = templates.map((template) => ({
     url: `${baseUrl}/templates/${template.slug}`,
     lastModified: new Date(template.updatedAt).toISOString(),
@@ -161,6 +169,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...toolRoutes,
     ...downloaderRoutes,
     ...fixRoutes,
+    ...promptCollectionRoutes,
     ...promptRoutes,
     ...templateRoutes,
     ...uiRoutes,

@@ -14,27 +14,30 @@ import { absoluteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
   title:
-    "Prompt Hub - Premium AI Prompts for ChatGPT, Claude, Images, and Editing",
+    "Free AI Prompts - ChatGPT, Image, Nano Banana & Editing Prompts",
   description:
-    "Browse premium prompts for ChatGPT, Claude, coding, work, study, image generation, and image editing workflows.",
+    "Browse free AI prompts for ChatGPT, image generation, Nano Banana, photo editing, coding, work, study, and creative workflows.",
   keywords: [
+    "free AI prompts",
     "AI prompts",
     "ChatGPT prompts",
+    "free image prompts",
+    "Nano Banana prompts",
     "prompt templates",
     "AI writing prompts",
   ],
   openGraph: {
-    title: "Prompt Hub - Premium AI Prompts for ChatGPT & Claude | mtverse",
+    title: "Free AI Prompts for ChatGPT, Images & Nano Banana | mtverse",
     description:
-      "Browse premium prompts for ChatGPT, Claude, coding, work, study, image generation, and image editing workflows.",
+      "Browse free copy-ready AI prompts for ChatGPT, image generation, Nano Banana, photo editing, coding, and creative workflows.",
     type: "website",
     url: absoluteUrl("/prompts"),
   },
   twitter: {
     card: "summary_large_image",
-    title: "Prompt Hub - Premium AI Prompts for ChatGPT & Claude",
+    title: "Free AI Prompts for ChatGPT, Images & Editing",
     description:
-      "Browse premium prompts for ChatGPT, Claude, coding, work, study, image generation, and image editing workflows.",
+      "Browse free copy-ready AI prompts for ChatGPT, images, Nano Banana, and editing workflows.",
   },
   alternates: { canonical: absoluteUrl("/prompts") },
 };

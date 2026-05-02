@@ -56,12 +56,14 @@ async function buildPromptStructuredData(baseUrl: string, slug: string) {
       },
       {
         '@type': 'Article',
-        headline: prompt.seoTitle,
-        description: prompt.metaDescription,
+        headline: `${prompt.seoTitle} | Free AI Prompt`,
+        description: prompt.metaDescription.toLowerCase().includes('free')
+          ? prompt.metaDescription
+          : `Free AI prompt: ${prompt.metaDescription}`,
         url: pageUrl,
         dateModified: prompt.updatedAt,
         articleSection: prompt.categoryTitle,
-        keywords: prompt.tags,
+        keywords: ['free AI prompt', 'free AI prompts', ...prompt.tags],
       },
     ],
   }
@@ -77,13 +79,30 @@ export async function generateMetadata({ params }: PromptSlugPageProps): Promise
     }
   }
 
+  const seoTitle = `${prompt.seoTitle} | Free AI Prompt`
+  const seoDescription = prompt.metaDescription.toLowerCase().includes('free')
+    ? prompt.metaDescription
+    : `Free AI prompt: ${prompt.metaDescription}`
+  const seoKeywords = Array.from(
+    new Set([
+      'free AI prompt',
+      'free AI prompts',
+      'copy AI prompt',
+      'AI image prompt',
+      prompt.categoryTitle,
+      prompt.subcategory,
+      ...prompt.models,
+      ...prompt.tags,
+    ])
+  )
+
   return {
-    title: prompt.seoTitle,
-    description: prompt.metaDescription,
-    keywords: Array.from(new Set([prompt.categoryTitle, prompt.subcategory, ...prompt.models, ...prompt.tags])),
+    title: seoTitle,
+    description: seoDescription,
+    keywords: seoKeywords,
     openGraph: {
-      title: prompt.seoTitle,
-      description: prompt.metaDescription,
+      title: seoTitle,
+      description: seoDescription,
       url: absoluteUrl(`/prompts/${prompt.slug}`),
       type: 'article',
       images: [
@@ -95,8 +114,8 @@ export async function generateMetadata({ params }: PromptSlugPageProps): Promise
     },
     twitter: {
       card: 'summary_large_image',
-      title: prompt.seoTitle,
-      description: prompt.metaDescription,
+      title: seoTitle,
+      description: seoDescription,
     },
     alternates: {
       canonical: absoluteUrl(`/prompts/${prompt.slug}`),

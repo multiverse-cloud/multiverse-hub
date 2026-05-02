@@ -9,6 +9,22 @@ function isRemoteUrl(value: string) {
   return /^https?:\/\//i.test(value)
 }
 
+const PROXIED_IMAGE_HOSTS = new Set(['promptimg.ionicerrrrscode.com', 'res.cloudinary.com'])
+
+function shouldProxyImage(value: string) {
+  try {
+    const url = new URL(value)
+    return PROXIED_IMAGE_HOSTS.has(url.hostname)
+  } catch {
+    return false
+  }
+}
+
+function getDisplaySrc(value: string) {
+  if (!isRemoteUrl(value) || !shouldProxyImage(value)) return value
+  return `/api/prompt-image?url=${encodeURIComponent(value)}`
+}
+
 export default function PromptPreviewImage({
   src,
   alt,
@@ -30,6 +46,7 @@ export default function PromptPreviewImage({
   const [currentSrc, setCurrentSrc] = useState(src || fallbackSrc)
   const [loaded, setLoaded] = useState(false)
   const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null)
+  const displaySrc = useMemo(() => getDisplaySrc(currentSrc || fallbackSrc), [currentSrc, fallbackSrc])
 
   const imageRef = useCallback((node: HTMLImageElement | null) => {
     setImageElement(node)
@@ -64,8 +81,8 @@ export default function PromptPreviewImage({
       ) : null}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        key={currentSrc || fallbackSrc}
-        src={currentSrc || fallbackSrc}
+        key={displaySrc}
+        src={displaySrc}
         alt={alt}
         loading={priority ? 'eager' : 'lazy'}
         fetchPriority={priority ? 'high' : 'auto'}
@@ -80,7 +97,6 @@ export default function PromptPreviewImage({
           }
         }}
         ref={imageRef}
-        referrerPolicy={isRemoteUrl(currentSrc) ? 'no-referrer' : undefined}
         className={cn(
           'absolute inset-0 h-full w-full',
           imageFit === 'contain' ? 'object-contain object-center' : 'object-cover object-center',
