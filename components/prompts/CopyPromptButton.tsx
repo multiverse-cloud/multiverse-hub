@@ -18,9 +18,8 @@ export default function CopyPromptButton({
 
   useEffect(() => {
     if (!copied) return
-
-    const timeoutId = window.setTimeout(() => setCopied(false), 1800)
-    return () => window.clearTimeout(timeoutId)
+    const id = window.setTimeout(() => setCopied(false), 1800)
+    return () => window.clearTimeout(id)
   }, [copied])
 
   return (
@@ -32,11 +31,11 @@ export default function CopyPromptButton({
         setCopied(true)
       }}
       className={cn(
-        'inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-slate-300 hover:text-slate-950 dark:hover:border-slate-700 dark:hover:text-slate-50',
+        'inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800',
         className
       )}
     >
-      {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
+      {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4 text-slate-500" />}
       {copied ? 'Copied' : 'Copy Prompt'}
     </button>
   )

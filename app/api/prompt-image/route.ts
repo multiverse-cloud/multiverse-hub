@@ -27,25 +27,42 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Image host is not allowed.' }, { status: 400 })
   }
 
-  const upstream = await fetch(target.toString(), {
-    headers: {
-      Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
-      'User-Agent': 'mtverse-image-proxy/1.0',
-    },
-    next: {
-      revalidate: 60 * 60 * 24 * 30,
-    },
-  })
+  // 8-second timeout — prevents hanging on dead image hosts
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 8000)
 
-  if (!upstream.ok || !upstream.body) {
-    return NextResponse.json({ error: 'Image could not be loaded.' }, { status: 502 })
+  try {
+    const upstream = await fetch(target.toString(), {
+      signal: controller.signal,
+      headers: {
+        Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+        'User-Agent': 'mtverse-image-proxy/1.0',
+        'Referer': 'https://mtverse.com/',
+      },
+      next: {
+        revalidate: 60 * 60 * 24 * 30,
+      },
+    })
+
+    clearTimeout(timeout)
+
+    if (!upstream.ok || !upstream.body) {
+      return NextResponse.json({ error: 'Image could not be loaded.' }, { status: 502 })
+    }
+
+    return new Response(upstream.body, {
+      status: 200,
+      headers: {
+        'Content-Type': upstream.headers.get('content-type') || 'image/jpeg',
+        'Cache-Control': 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=604800',
+      },
+    })
+  } catch (err: unknown) {
+    clearTimeout(timeout)
+    const isAbort = err instanceof Error && err.name === 'AbortError'
+    return NextResponse.json(
+      { error: isAbort ? 'Image request timed out.' : 'Image could not be loaded.' },
+      { status: 504 }
+    )
   }
-
-  return new Response(upstream.body, {
-    status: 200,
-    headers: {
-      'Content-Type': upstream.headers.get('content-type') || 'image/jpeg',
-      'Cache-Control': 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=604800',
-    },
-  })
 }

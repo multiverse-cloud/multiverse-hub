@@ -1,6 +1,7 @@
-﻿'use client'
+'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import Image from 'next/image'
+import { useEffect, useMemo, useState } from 'react'
 import type { PromptCategoryId } from '@/lib/prompt-library-data'
 import { getPromptPreviewFallback } from '@/lib/prompt-preview-images'
 import { cn } from '@/lib/utils'
@@ -9,7 +10,7 @@ function isRemoteUrl(value: string) {
   return /^https?:\/\//i.test(value)
 }
 
-const PROXIED_IMAGE_HOSTS = new Set(['promptimg.ionicerrrrscode.com', 'res.cloudinary.com'])
+const PROXIED_IMAGE_HOSTS = new Set(['promptimg.ionicerrrrscode.com'])
 
 function shouldProxyImage(value: string) {
   try {
@@ -31,8 +32,9 @@ export default function PromptPreviewImage({
   category,
   className,
   imgClassName,
-  imageFit = 'contain',
+  imageFit = 'cover',
   priority = false,
+  sizes,
 }: {
   src: string
   alt: string
@@ -41,52 +43,44 @@ export default function PromptPreviewImage({
   imgClassName?: string
   imageFit?: 'cover' | 'contain'
   priority?: boolean
+  sizes?: string
 }) {
   const fallbackSrc = useMemo(() => getPromptPreviewFallback(category), [category])
   const [currentSrc, setCurrentSrc] = useState(src || fallbackSrc)
   const [loaded, setLoaded] = useState(false)
-  const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null)
   const displaySrc = useMemo(() => getDisplaySrc(currentSrc || fallbackSrc), [currentSrc, fallbackSrc])
-
-  const imageRef = useCallback((node: HTMLImageElement | null) => {
-    setImageElement(node)
-  }, [])
 
   useEffect(() => {
     setLoaded(false)
     setCurrentSrc(src || fallbackSrc)
   }, [fallbackSrc, src])
 
-  useEffect(() => {
-    if (!imageElement) return
-    if (imageElement.complete && imageElement.naturalWidth > 0) {
-      setLoaded(true)
-    }
-  }, [currentSrc, imageElement])
-
+  // Reduced timeout: 4s instead of 16s for much faster fallback on slow networks
   useEffect(() => {
     if (!currentSrc || currentSrc === fallbackSrc || loaded) return
 
     const timer = window.setTimeout(() => {
       setCurrentSrc(fallbackSrc)
-    }, 16000)
+    }, 4000)
 
     return () => window.clearTimeout(timer)
   }, [currentSrc, fallbackSrc, loaded])
 
   return (
-    <div className={cn('relative h-full w-full overflow-hidden bg-white dark:bg-slate-950', className)}>
+    <div className={cn('relative h-full w-full overflow-hidden', className)}>
+      {/* Clean skeleton — no gradient, just a flat pulse */}
       {!loaded ? (
-        <div className="absolute inset-0 animate-pulse bg-[linear-gradient(110deg,#f8fafc_8%,#e2e8f0_18%,#f8fafc_33%)] bg-[length:200%_100%] dark:bg-[linear-gradient(110deg,#0f172a_8%,#1e293b_18%,#0f172a_33%)]" />
+        <div className="absolute inset-0 animate-pulse bg-slate-100 dark:bg-slate-800" />
       ) : null}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         key={displaySrc}
         src={displaySrc}
         alt={alt}
-        loading={priority ? 'eager' : 'lazy'}
+        fill
+        loading={priority ? undefined : 'lazy'}
+        priority={priority}
         fetchPriority={priority ? 'high' : 'auto'}
-        decoding="async"
+        sizes={sizes ?? '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw'}
         onLoad={() => setLoaded(true)}
         onError={() => {
           if (currentSrc !== fallbackSrc) {
@@ -96,12 +90,11 @@ export default function PromptPreviewImage({
             setLoaded(true)
           }
         }}
-        ref={imageRef}
         className={cn(
           'absolute inset-0 h-full w-full',
           imageFit === 'contain' ? 'object-contain object-center' : 'object-cover object-center',
           loaded ? 'opacity-100' : 'opacity-0',
-          'transition-opacity duration-200',
+          'transition-opacity duration-150',
           imgClassName
         )}
       />

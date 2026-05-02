@@ -13,31 +13,35 @@ import {
 import { absoluteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
-  title:
-    "Free AI Prompts - ChatGPT, Image, Nano Banana & Editing Prompts",
+  title: "Free AI Prompts — ChatGPT, Midjourney, Nano Banana, Image & Editing",
   description:
-    "Browse free AI prompts for ChatGPT, image generation, Nano Banana, photo editing, coding, work, study, and creative workflows.",
+    "Browse 1,000+ free copy-ready AI prompts for ChatGPT, Midjourney, Flux, Gemini, Nano Banana, photo editing, coding, writing, and creative workflows. No signup required.",
   keywords: [
     "free AI prompts",
     "AI prompts",
     "ChatGPT prompts",
     "free image prompts",
     "Nano Banana prompts",
-    "prompt templates",
+    "Midjourney prompts",
+    "Flux prompts",
+    "AI photo editing prompts",
+    "free prompt templates",
     "AI writing prompts",
+    "viral AI prompts",
+    "Gemini prompts",
   ],
   openGraph: {
-    title: "Free AI Prompts for ChatGPT, Images & Nano Banana | mtverse",
+    title: "Free AI Prompts — ChatGPT, Midjourney, Nano Banana | mtverse",
     description:
-      "Browse free copy-ready AI prompts for ChatGPT, image generation, Nano Banana, photo editing, coding, and creative workflows.",
+      "1,000+ free copy-ready AI prompts for ChatGPT, Midjourney, Flux, Gemini, Nano Banana, photo editing, coding, and creative workflows.",
     type: "website",
     url: absoluteUrl("/prompts"),
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free AI Prompts for ChatGPT, Images & Editing",
+    title: "Free AI Prompts — ChatGPT, Images & Editing | mtverse",
     description:
-      "Browse free copy-ready AI prompts for ChatGPT, images, Nano Banana, and editing workflows.",
+      "1,000+ free copy-ready AI prompts for ChatGPT, Midjourney, Nano Banana, and photo editing workflows.",
   },
   alternates: { canonical: absoluteUrl("/prompts") },
 };
