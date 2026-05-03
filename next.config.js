@@ -11,7 +11,7 @@ const CONTENT_SECURITY_POLICY = [
   "img-src 'self' data: blob: https://images.unsplash.com https://img.youtube.com https://via.placeholder.com https://api.dicebear.com https://image.pollinations.ai https://api.qrserver.com https://res.cloudinary.com https://*.cloudinary.com https://promptimg.ionicerrrrscode.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://www.gstatic.com https://fonts.gstatic.com https://translate.google.com https://translate.googleapis.com https://www.google.com https://translate.googleusercontent.com",
   "media-src 'self' blob: data:",
   "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com https://cdnjs.cloudflare.com https://unpkg.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://adtrafficquality.google https://*.adtrafficquality.google https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://www.google.com https://translate.googleusercontent.com",
-  "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://translate.google.com https://translate.googleapis.com https://www.google.com https://translate.googleusercontent.com",
+  "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://adtrafficquality.google https://*.adtrafficquality.google https://translate.google.com https://translate.googleapis.com https://www.google.com https://translate.googleusercontent.com",
   "worker-src 'self' blob: https://cdnjs.cloudflare.com",
 ].join('; ')
 

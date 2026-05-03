@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, ArrowRight, Search, Sparkles } from 'lucide-react'
+import { ArrowRight, Search } from 'lucide-react'
 import PublicLayout from '@/components/layout/PublicLayout'
 import UniverseTopBar from '@/components/public/UniverseTopBar'
 import PromptPreviewImage from '@/components/prompts/PromptPreviewImage'
@@ -28,6 +28,7 @@ const COLLECTION_CARD_ASPECT_CLASSES = [
   'aspect-[5/7]',
   'aspect-[1/1]',
   'aspect-[4/6]',
+  'aspect-[9/12]',
 ] as const
 
 function getCollectionCardAspectClass(prompt: PromptEntry) {
@@ -72,9 +73,9 @@ function CollectionPromptCard({ prompt, priority }: { prompt: PromptEntry; prior
     <Link
       href={`/prompts/${prompt.slug}`}
       prefetch={false}
-      className="group mb-2 inline-block w-full break-inside-avoid overflow-hidden rounded-xl bg-white ring-1 ring-slate-200 transition-all duration-200 hover:-translate-y-0.5 hover:ring-slate-400 dark:bg-slate-900 dark:ring-slate-800 dark:hover:ring-slate-600 sm:mb-3"
+      className="group mb-3 inline-block w-full break-inside-avoid transition-transform duration-200 hover:-translate-y-0.5 sm:mb-4"
     >
-      <div className={`relative w-full overflow-hidden bg-slate-100 dark:bg-slate-900 ${getCollectionCardAspectClass(prompt)}`}>
+      <div className={`relative w-full overflow-hidden rounded-xl bg-slate-100 shadow-[0_1px_0_rgba(15,23,42,0.05)] ring-1 ring-slate-200 transition duration-200 group-hover:ring-slate-400 dark:bg-slate-900 dark:ring-slate-800 dark:group-hover:ring-slate-600 ${getCollectionCardAspectClass(prompt)}`}>
         <PromptPreviewImage
           src={prompt.previewImage}
           alt={prompt.previewAlt}
@@ -84,9 +85,14 @@ function CollectionPromptCard({ prompt, priority }: { prompt: PromptEntry; prior
           imgClassName="transition-transform duration-500 group-hover:scale-[1.04]"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
         />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden translate-y-1 p-3 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 sm:block">
+          <h2 className="line-clamp-2 text-sm font-medium leading-5 text-white [text-shadow:0_1px_14px_rgba(0,0,0,0.78)]">
+            {prompt.title}
+          </h2>
+        </div>
       </div>
-      <div className="px-2.5 py-2.5 sm:px-3 sm:py-3">
-        <h2 className="line-clamp-2 text-[13px] font-semibold leading-4 text-slate-900 dark:text-white sm:text-sm sm:leading-5">{prompt.title}</h2>
+      <div className="px-0.5 pt-1.5 sm:hidden">
+        <h2 className="line-clamp-2 text-[12px] font-medium leading-4 tracking-[-0.01em] text-slate-800 dark:text-slate-100">{prompt.title}</h2>
       </div>
     </Link>
   )
@@ -139,41 +145,37 @@ export default async function PromptCollectionPage({ params }: PromptCollectionP
 
       <main className="min-h-screen bg-white text-slate-950 dark:bg-slate-950 dark:text-white">
 
-        {/* ── Header ── */}
         <section className="border-b border-slate-200 dark:border-slate-800">
-          <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-10">
-            <div className="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-700 dark:bg-slate-900 dark:text-slate-300">
-              <Sparkles className="h-3.5 w-3.5" />
+          <div className="mx-auto max-w-4xl px-4 py-6 text-center sm:px-6 sm:py-12">
+            <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">
               {prompts.length.toLocaleString()} free prompts
-            </div>
+            </p>
 
-            <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-5xl">
+            <h1 className="mt-2 text-[32px] font-black leading-none tracking-[-0.055em] text-slate-950 dark:text-white sm:text-6xl">
               {collection.h1}
             </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-500 dark:text-slate-400 sm:text-base">
+            <p className="mx-auto mt-3 hidden max-w-2xl text-base leading-7 text-slate-500 dark:text-slate-400 sm:block">
               {collection.description}
             </p>
 
-            {/* Search */}
-            <form action="/prompts" method="get" className="mt-5 flex items-center gap-2 rounded-xl bg-slate-50 p-1.5 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 sm:max-w-md">
-              <Search className="ml-2 h-4 w-4 shrink-0 text-slate-400" />
-              <input type="search" name="q" defaultValue={collection.terms[0]} className="h-9 min-w-0 flex-1 bg-transparent text-sm font-medium outline-none placeholder:text-slate-400" placeholder="Search prompts" />
-              <button type="submit" className="inline-flex h-9 shrink-0 items-center rounded-lg bg-slate-950 px-4 text-sm font-bold text-white dark:bg-white dark:text-slate-950">
+            <form action="/prompts" method="get" className="mx-auto mt-5 flex max-w-2xl items-center gap-2 rounded-full bg-white p-1.5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 sm:mt-7">
+              <Search className="ml-2.5 h-4 w-4 shrink-0 text-slate-400" />
+              <input type="search" name="q" defaultValue={collection.terms[0]} className="h-10 min-w-0 flex-1 bg-transparent text-sm font-medium outline-none placeholder:text-slate-400 sm:h-11" placeholder="Search prompts" />
+              <button type="submit" className="inline-flex h-10 shrink-0 items-center rounded-full bg-slate-950 px-4 text-sm font-bold text-white dark:bg-white dark:text-slate-950 sm:h-11 sm:px-5">
                 Search
               </button>
             </form>
 
-            {/* Collection switcher */}
-            <div className="mt-5 flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="mx-auto mt-4 flex max-w-3xl gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] sm:justify-center [&::-webkit-scrollbar]:hidden">
               {PROMPT_COLLECTIONS.map(item => (
                 <Link
                   key={item.slug}
                   href={getPromptCollectionHref(item.slug)}
                   prefetch={false}
-                  className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-bold ring-1 transition ${
+                  className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold ring-1 transition ${
                     item.slug === collection.slug
                       ? 'bg-slate-950 text-white ring-slate-950 dark:bg-white dark:text-slate-950 dark:ring-white'
-                      : 'bg-white text-slate-600 ring-slate-200 hover:text-slate-950 dark:bg-slate-950 dark:text-slate-400 dark:ring-slate-800 dark:hover:text-white'
+                      : 'bg-slate-100 text-slate-600 ring-slate-200 hover:bg-slate-200 hover:text-slate-950 dark:bg-slate-900 dark:text-slate-400 dark:ring-slate-800 dark:hover:text-white'
                   }`}
                 >
                   {item.shortTitle}
@@ -183,8 +185,7 @@ export default async function PromptCollectionPage({ params }: PromptCollectionP
           </div>
         </section>
 
-        {/* ── Grid ── */}
-        <section className="mx-auto max-w-[1880px] px-2 py-5 sm:px-4 lg:px-5">
+        <section className="mx-auto max-w-[1880px] px-2 py-3 sm:px-4 sm:py-6 lg:px-5">
           {visiblePrompts.length > 0 ? (
             <div className="columns-2 gap-2 sm:columns-3 sm:gap-3 lg:columns-4 xl:columns-5 2xl:columns-6">
               {visiblePrompts.map((prompt, i) => (
@@ -202,7 +203,6 @@ export default async function PromptCollectionPage({ params }: PromptCollectionP
           )}
         </section>
 
-        {/* ── How to use ── */}
         <section className="border-t border-slate-200 dark:border-slate-800">
           <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
             <h2 className="text-lg font-bold text-slate-900 dark:text-white">How to use these free AI prompts</h2>
@@ -215,7 +215,6 @@ export default async function PromptCollectionPage({ params }: PromptCollectionP
               ))}
             </ol>
 
-            {/* FAQ */}
             <div className="mt-6 divide-y divide-slate-200 dark:divide-slate-800">
               {collection.faq.map(item => (
                 <details key={item.question} className="py-3">

@@ -34,6 +34,7 @@ const CARD_ASPECT_CLASSES = [
   'aspect-[5/7]',
   'aspect-[1/1]',
   'aspect-[4/6]',
+  'aspect-[9/12]',
 ] as const
 
 const topTabs: Array<{
@@ -139,10 +140,10 @@ const PromptCard = memo(function PromptCard({ prompt }: { prompt: PromptEntry })
       href={`/prompts/${prompt.slug}`}
       prefetch={false}
       onClick={() => track('Prompt Opened', { slug: prompt.slug, category: prompt.category, source: 'prompt_grid' })}
-      className="group mb-2 inline-block w-full break-inside-avoid overflow-hidden rounded-xl bg-white ring-1 ring-slate-200 transition-all duration-200 hover:-translate-y-0.5 hover:ring-slate-400 dark:bg-slate-900 dark:ring-slate-800 dark:hover:ring-slate-600 sm:mb-3"
+      className="group mb-3 inline-block w-full break-inside-avoid transition-transform duration-200 hover:-translate-y-0.5 sm:mb-4"
       aria-label={`Open ${prompt.title}`}
     >
-      <div className={cn('relative w-full overflow-hidden bg-slate-100 dark:bg-slate-900', getPromptCardAspectClass(prompt))}>
+      <div className={cn('relative w-full overflow-hidden rounded-xl bg-slate-100 shadow-[0_1px_0_rgba(15,23,42,0.05)] ring-1 ring-slate-200 transition duration-200 group-hover:ring-slate-400 dark:bg-slate-900 dark:ring-slate-800 dark:group-hover:ring-slate-600', getPromptCardAspectClass(prompt))}>
         <PromptPreviewImage
           src={prompt.previewImage}
           alt={prompt.previewAlt}
@@ -154,11 +155,11 @@ const PromptCard = memo(function PromptCard({ prompt }: { prompt: PromptEntry })
 
         {/* Badge */}
         {prompt.featured ? (
-          <span className="absolute left-2 top-2 rounded-md bg-white dark:bg-slate-950 px-1.5 py-0.5 text-[9px] font-bold text-slate-800 dark:text-slate-100 ring-1 ring-slate-200 dark:ring-slate-700">
+          <span className="absolute left-2 top-2 rounded-md bg-white/95 px-1.5 py-0.5 text-[9px] font-semibold text-slate-800 shadow-sm ring-1 ring-slate-200 dark:bg-slate-950/90 dark:text-slate-100 dark:ring-slate-700">
             Featured
           </span>
         ) : isNew ? (
-          <span className="absolute left-2 top-2 rounded-md bg-white dark:bg-slate-950 px-1.5 py-0.5 text-[9px] font-bold text-slate-800 dark:text-slate-100 ring-1 ring-slate-200 dark:ring-slate-700">
+          <span className="absolute left-2 top-2 rounded-md bg-white/95 px-1.5 py-0.5 text-[9px] font-semibold text-slate-800 shadow-sm ring-1 ring-slate-200 dark:bg-slate-950/90 dark:text-slate-100 dark:ring-slate-700">
             New
           </span>
         ) : null}
@@ -170,11 +171,15 @@ const PromptCard = memo(function PromptCard({ prompt }: { prompt: PromptEntry })
           </span>
         ) : null}
 
-        {/* Title overlay — always visible on mobile, hover on desktop */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden translate-y-1 p-3 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 sm:block">
+          <h3 className="line-clamp-2 text-sm font-medium leading-5 text-white [text-shadow:0_1px_14px_rgba(0,0,0,0.78)]">
+            {prompt.title}
+          </h3>
+        </div>
       </div>
 
-      <div className="px-2.5 py-2.5 sm:px-3 sm:py-3">
-        <h3 className="line-clamp-2 text-[13px] font-semibold leading-4 text-slate-900 dark:text-white sm:text-sm sm:leading-5">{prompt.title}</h3>
+      <div className="px-0.5 pt-1.5 sm:hidden">
+        <h3 className="line-clamp-2 text-[12px] font-medium leading-4 tracking-[-0.01em] text-slate-800 dark:text-slate-100">{prompt.title}</h3>
       </div>
     </Link>
   )
@@ -193,8 +198,8 @@ function FilterMenu({ label, icon, children, align = 'left' }: {
         type="button"
         onClick={() => setOpen(v => !v)}
         className={cn(
-          'inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition ring-1',
-          'bg-white text-slate-800 ring-slate-200 hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-800 dark:hover:bg-slate-800'
+          'inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-semibold transition ring-1 sm:h-9 sm:px-3 sm:text-xs',
+          'bg-white text-slate-800 ring-slate-200 hover:bg-slate-50 dark:bg-slate-950 dark:text-slate-200 dark:ring-slate-800 dark:hover:bg-slate-900'
         )}
       >
         {icon}
@@ -206,8 +211,8 @@ function FilterMenu({ label, icon, children, align = 'left' }: {
         <>
           <button type="button" aria-label="Close" className="fixed inset-0 z-[90] cursor-default" onClick={() => setOpen(false)} />
           <div className={cn(
-            'fixed left-3 right-3 top-36 z-[110] max-h-[60dvh] overflow-y-auto rounded-xl bg-white ring-1 ring-slate-200 shadow-xl dark:bg-slate-950 dark:ring-slate-800',
-            'sm:absolute sm:inset-auto sm:top-11 sm:max-h-none sm:w-56 sm:overflow-visible',
+            'fixed left-3 right-3 top-32 z-[110] max-h-[58dvh] overflow-y-auto rounded-xl bg-white ring-1 ring-slate-200 shadow-2xl [scrollbar-width:thin] dark:bg-slate-950 dark:ring-slate-800',
+            'sm:absolute sm:inset-auto sm:top-11 sm:max-h-[420px] sm:w-60 sm:overflow-y-auto',
             align === 'right' ? 'sm:right-0 sm:left-auto' : 'sm:left-0'
           )}>
             {children}
@@ -227,7 +232,7 @@ function FilterOption({ href, label, active, analyticsLabel }: {
       prefetch={false}
       onClick={() => { if (analyticsLabel) track('Prompt Filter Changed', { filter: analyticsLabel, label }) }}
       className={cn(
-        'flex items-center gap-2.5 px-3 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors',
+        'flex items-center gap-2.5 px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-900',
         active && 'bg-slate-100 text-slate-950 font-semibold dark:bg-slate-900 dark:text-white'
       )}
     >
@@ -282,9 +287,8 @@ export default function PromptHubPage({
   return (
     <div className="min-h-screen bg-white text-slate-950 dark:bg-slate-950 dark:text-slate-50">
 
-      {/* ── Horizontal top tabs ── */}
       <div className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-950/95">
-        <div className="mx-auto flex w-full max-w-[1880px] gap-5 overflow-x-auto px-4 py-2.5 [scrollbar-width:none] sm:gap-6 sm:px-6 [&::-webkit-scrollbar]:hidden">
+        <div className="mx-auto flex w-full max-w-[1880px] gap-5 overflow-x-auto px-3 py-2 [scrollbar-width:none] sm:gap-6 sm:px-6 sm:py-2.5 [&::-webkit-scrollbar]:hidden">
           {topTabs.map(tab => {
             const href = buildPromptHref({
               category: tab.category || 'all', model: tab.model || 'all',
@@ -309,18 +313,15 @@ export default function PromptHubPage({
         </div>
       </div>
 
-      {/* ── Hero search section ── */}
       <section className="border-b border-slate-200 dark:border-slate-800">
-        <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
-          {/* H1 — mobile compact, desktop full */}
-          <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-5xl">
+        <div className="mx-auto max-w-4xl px-4 py-6 text-center sm:px-6 sm:py-12">
+          <h1 className="text-[32px] font-black leading-none tracking-[-0.055em] text-slate-950 dark:text-white sm:text-6xl">
             Free AI Prompts
           </h1>
-          <p className="mt-2 hidden text-base text-slate-500 dark:text-slate-400 sm:block">
-            Copy-ready prompts for ChatGPT, Midjourney, Flux, Gemini, Nano Banana, and photo editing workflows.
+          <p className="mx-auto mt-3 hidden max-w-2xl text-base leading-7 text-slate-500 dark:text-slate-400 sm:block">
+            Browse free copy-ready AI prompts for images, edits, ChatGPT, Nano Banana, Midjourney, Flux, and creative workflows.
           </p>
 
-          {/* Search */}
           <form
             action="/prompts"
             method="get"
@@ -328,15 +329,15 @@ export default function PromptHubPage({
               const data = new FormData(e.currentTarget)
               track('Prompt Search Submitted', { query: String(data.get('q') || '').slice(0, 80) })
             }}
-            className="mt-4 flex items-center gap-2 rounded-xl bg-slate-50 p-1.5 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 sm:mt-6"
+            className="mx-auto mt-5 flex max-w-2xl items-center gap-2 rounded-full bg-white p-1.5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 sm:mt-7"
           >
-            <Search className="ml-2 h-4 w-4 shrink-0 text-slate-400" />
+            <Search className="ml-2.5 h-4 w-4 shrink-0 text-slate-400" />
             <input
               type="search"
               name="q"
               defaultValue={searchQuery}
               placeholder="Search AI prompts..."
-              className="h-10 min-w-0 flex-1 bg-transparent text-sm font-medium text-slate-950 outline-none placeholder:text-slate-400 dark:text-white"
+              className="h-10 min-w-0 flex-1 bg-transparent text-sm font-medium text-slate-950 outline-none placeholder:text-slate-400 dark:text-white sm:h-11"
             />
             {activeCategory !== 'all' ? <input type="hidden" name="category" value={activeCategory} /> : null}
             {activeModel !== 'all' ? <input type="hidden" name="model" value={activeModel} /> : null}
@@ -344,30 +345,28 @@ export default function PromptHubPage({
             {currentShuffleSeed ? <input type="hidden" name="seed" value={currentShuffleSeed} /> : null}
             <button
               type="submit"
-              className="inline-flex h-10 shrink-0 items-center rounded-lg bg-slate-950 px-4 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"
+              className="inline-flex h-10 shrink-0 items-center rounded-full bg-slate-950 px-4 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 sm:h-11 sm:px-5"
             >
               Search
             </button>
           </form>
 
-          {/* Collections pills — horizontal scroll */}
-          <div className="mt-4 flex gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="mx-auto mt-4 flex max-w-3xl gap-1.5 overflow-x-auto [scrollbar-width:none] sm:justify-center [&::-webkit-scrollbar]:hidden">
             {PROMPT_COLLECTIONS.map(c => (
               <Link
                 key={c.slug}
                 href={getPromptCollectionHref(c.slug)}
                 prefetch={false}
                 onClick={() => track('Prompt Collection Clicked', { collection: c.slug })}
-                className="shrink-0 rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600 ring-1 ring-slate-200 transition hover:bg-slate-200 hover:text-slate-950 dark:bg-slate-900 dark:text-slate-400 dark:ring-slate-800 dark:hover:text-white"
+                className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600 ring-1 ring-slate-200 transition hover:bg-slate-200 hover:text-slate-950 dark:bg-slate-900 dark:text-slate-400 dark:ring-slate-800 dark:hover:text-white"
               >
                 {c.shortTitle}
               </Link>
             ))}
           </div>
 
-          {/* Stats + shuffle row */}
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs font-medium text-slate-400 dark:text-slate-500">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+            <p className="hidden text-xs font-medium text-slate-400 dark:text-slate-500 sm:block">
               {totalPrompts.toLocaleString()} prompts · {imagePrompts.toLocaleString()} visual
               {searchQuery || activeCategory !== 'all' || activeModel !== 'all'
                 ? ` · ${totalResults.toLocaleString()} results` : ''}
@@ -376,7 +375,7 @@ export default function PromptHubPage({
               href={shuffleHref}
               prefetch={false}
               onClick={() => track('Prompt Shuffle Clicked', { category: activeCategory, model: activeModel, query: searchQuery || 'none' })}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
             >
               <Shuffle className="h-3.5 w-3.5" />
               Shuffle
@@ -385,9 +384,8 @@ export default function PromptHubPage({
         </div>
       </section>
 
-      {/* ── Filter bar ── */}
-      <div className="sticky top-[44px] z-30 border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
-        <div className="mx-auto flex w-full max-w-[1880px] items-center gap-2 overflow-x-auto px-4 py-2 [scrollbar-width:none] sm:px-6 [&::-webkit-scrollbar]:hidden">
+      <div className="sticky top-[38px] z-30 border-b border-slate-200 bg-white/95 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-950/95 sm:top-[43px]">
+        <div className="mx-auto flex w-full max-w-[1880px] items-center gap-1.5 overflow-x-auto px-3 py-2 [scrollbar-width:none] sm:gap-2 sm:px-6 [&::-webkit-scrollbar]:hidden">
           <FilterMenu label="Type" icon={<PlusCircle className="h-3.5 w-3.5" />}>
             <div className="py-1">
               <FilterOption href={buildPromptHref({ category: 'all', model: activeModel, query: searchQuery, sort: sortMode, seed: currentShuffleSeed })} label="All types" active={activeCategory === 'all'} analyticsLabel="type" />
@@ -428,7 +426,6 @@ export default function PromptHubPage({
             </div>
           </FilterMenu>
 
-          {/* Active filter chips */}
           {searchQuery ? (
             <Link href={buildPromptHref({ category: activeCategory, model: activeModel, sort: sortMode })} className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-full bg-slate-950 px-2.5 py-1 text-xs font-semibold text-white dark:bg-white dark:text-slate-950">
               &ldquo;{searchQuery}&rdquo; <X className="h-3 w-3" />
@@ -437,8 +434,7 @@ export default function PromptHubPage({
         </div>
       </div>
 
-      {/* ── Prompt grid ── */}
-      <main className="mx-auto w-full max-w-[1880px] px-2 pb-16 pt-3 sm:px-4 sm:pt-5 lg:px-5">
+      <main className="mx-auto w-full max-w-[1880px] px-2 pb-16 pt-3 sm:px-4 sm:pt-6 lg:px-5">
         {visiblePrompts.length > 0 ? (
           <>
             <div className="columns-2 gap-2 sm:columns-3 sm:gap-3 lg:columns-4 xl:columns-5 2xl:columns-6">
@@ -447,7 +443,6 @@ export default function PromptHubPage({
               ))}
             </div>
 
-            {/* Infinite scroll sentinel */}
             <div ref={loaderRef} className="flex justify-center py-8">
               {hasMore ? (
                 <div className="h-1 w-1 opacity-0" aria-hidden="true" />
@@ -470,7 +465,6 @@ export default function PromptHubPage({
         )}
       </main>
 
-      {/* ── FAQ section ── */}
       <section className="border-t border-slate-200 dark:border-slate-800">
         <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
           <h2 className="text-base font-bold text-slate-900 dark:text-white sm:text-lg">Common questions</h2>

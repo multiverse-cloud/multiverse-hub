@@ -26,6 +26,15 @@ function getDisplaySrc(value: string) {
   return `/api/prompt-image?url=${encodeURIComponent(value)}`
 }
 
+function shouldBypassOptimizer(value: string) {
+  try {
+    const url = new URL(value)
+    return url.hostname === 'promptimg.ionicerrrrscode.com' || url.hostname === 'res.cloudinary.com'
+  } catch {
+    return false
+  }
+}
+
 export default function PromptPreviewImage({
   src,
   alt,
@@ -47,15 +56,24 @@ export default function PromptPreviewImage({
 }) {
   const fallbackSrc = useMemo(() => getPromptPreviewFallback(category), [category])
   const [currentSrc, setCurrentSrc] = useState(src || fallbackSrc)
+  const [useProxyFallback, setUseProxyFallback] = useState(false)
   const [loaded, setLoaded] = useState(false)
-  const displaySrc = useMemo(() => getDisplaySrc(currentSrc || fallbackSrc), [currentSrc, fallbackSrc])
+  const displaySrc = useMemo(
+    () => useProxyFallback ? getDisplaySrc(currentSrc || fallbackSrc) : (currentSrc || fallbackSrc),
+    [currentSrc, fallbackSrc, useProxyFallback]
+  )
+  const unoptimized = useMemo(
+    () => useProxyFallback || shouldBypassOptimizer(currentSrc || fallbackSrc),
+    [currentSrc, fallbackSrc, useProxyFallback]
+  )
 
   useEffect(() => {
     setLoaded(false)
+    setUseProxyFallback(false)
     setCurrentSrc(src || fallbackSrc)
   }, [fallbackSrc, src])
 
-  // Reduced timeout: 4s instead of 16s for much faster fallback on slow networks
+  // Keep broken remote previews from leaving blank cards for too long.
   useEffect(() => {
     if (!currentSrc || currentSrc === fallbackSrc || loaded) return
 
@@ -68,7 +86,6 @@ export default function PromptPreviewImage({
 
   return (
     <div className={cn('relative h-full w-full overflow-hidden', className)}>
-      {/* Clean skeleton — no gradient, just a flat pulse */}
       {!loaded ? (
         <div className="absolute inset-0 animate-pulse bg-slate-100 dark:bg-slate-800" />
       ) : null}
@@ -80,11 +97,16 @@ export default function PromptPreviewImage({
         loading={priority ? undefined : 'lazy'}
         priority={priority}
         fetchPriority={priority ? 'high' : 'auto'}
+        unoptimized={unoptimized}
         sizes={sizes ?? '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw'}
         onLoad={() => setLoaded(true)}
         onError={() => {
-          if (currentSrc !== fallbackSrc) {
+          if (!useProxyFallback && shouldProxyImage(currentSrc)) {
             setLoaded(false)
+            setUseProxyFallback(true)
+          } else if (currentSrc !== fallbackSrc) {
+            setLoaded(false)
+            setUseProxyFallback(false)
             setCurrentSrc(fallbackSrc)
           } else {
             setLoaded(true)
