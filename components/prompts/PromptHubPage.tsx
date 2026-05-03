@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { track } from '@vercel/analytics'
 import { ArrowUpDown, Bot, ChevronDown, ImageIcon, PlusCircle, Search, Shuffle, X } from 'lucide-react'
 import PromptPreviewImage from '@/components/prompts/PromptPreviewImage'
@@ -192,11 +192,48 @@ function FilterMenu({ label, icon, children, align = 'left' }: {
   align?: 'left' | 'right'
 }) {
   const [open, setOpen] = useState(false)
+  const [menuStyle, setMenuStyle] = useState({ left: 12, top: 96, width: 240 })
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
+  const positionMenu = useCallback(() => {
+    const rect = buttonRef.current?.getBoundingClientRect()
+    if (!rect) return
+
+    const gutter = 12
+    const viewportWidth = window.innerWidth
+    const isMobile = viewportWidth < 640
+    const width = isMobile ? Math.min(viewportWidth - gutter * 2, 360) : 240
+    const preferredLeft = isMobile ? gutter : align === 'right' ? rect.right - width : rect.left
+    const left = Math.min(Math.max(preferredLeft, gutter), viewportWidth - width - gutter)
+
+    setMenuStyle({
+      left,
+      top: rect.bottom + 8,
+      width,
+    })
+  }, [align])
+
+  useEffect(() => {
+    if (!open) return
+    positionMenu()
+
+    window.addEventListener('resize', positionMenu)
+    window.addEventListener('scroll', positionMenu, true)
+    return () => {
+      window.removeEventListener('resize', positionMenu)
+      window.removeEventListener('scroll', positionMenu, true)
+    }
+  }, [open, positionMenu])
+
   return (
     <div className="relative shrink-0">
       <button
+        ref={buttonRef}
         type="button"
-        onClick={() => setOpen(v => !v)}
+        onClick={() => {
+          positionMenu()
+          setOpen(v => !v)
+        }}
         className={cn(
           'inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-semibold transition ring-1 sm:h-9 sm:px-3 sm:text-xs',
           'bg-white text-slate-800 ring-slate-200 hover:bg-slate-50 dark:bg-slate-950 dark:text-slate-200 dark:ring-slate-800 dark:hover:bg-slate-900'
@@ -209,12 +246,11 @@ function FilterMenu({ label, icon, children, align = 'left' }: {
 
       {open ? (
         <>
-          <button type="button" aria-label="Close" className="fixed inset-0 z-[90] cursor-default" onClick={() => setOpen(false)} />
-          <div className={cn(
-            'fixed left-3 right-3 top-32 z-[110] max-h-[58dvh] overflow-y-auto rounded-xl bg-white ring-1 ring-slate-200 shadow-2xl [scrollbar-width:thin] dark:bg-slate-950 dark:ring-slate-800',
-            'sm:absolute sm:inset-auto sm:top-11 sm:max-h-[420px] sm:w-60 sm:overflow-y-auto',
-            align === 'right' ? 'sm:right-0 sm:left-auto' : 'sm:left-0'
-          )}>
+          <button type="button" aria-label="Close" className="fixed inset-0 z-[900] cursor-default" onClick={() => setOpen(false)} />
+          <div
+            className="fixed z-[920] max-h-[min(420px,58dvh)] overflow-y-auto rounded-xl bg-white shadow-2xl ring-1 ring-slate-200 [scrollbar-width:thin] dark:bg-slate-950 dark:ring-slate-800"
+            style={{ left: menuStyle.left, top: menuStyle.top, width: menuStyle.width }}
+          >
             {children}
           </div>
         </>
@@ -249,7 +285,6 @@ export default function PromptHubPage({
 }: PromptHubPageProps) {
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT)
   const [nextShuffleSeed, setNextShuffleSeed] = useState(shuffleSeed)
-  const loaderRef = useRef<HTMLDivElement>(null)
   const activeTopTab = getActiveTopTab({ searchQuery, activeModel, activeCategory, sortMode })
 
   useEffect(() => {
@@ -268,21 +303,6 @@ export default function PromptHubPage({
   const hasMore = visibleCount < libraryPrompts.length
   const currentShuffleSeed = sortMode === 'shuffle' ? shuffleSeed : undefined
   const shuffleHref = buildPromptHref({ category: activeCategory, model: activeModel, query: searchQuery, sort: 'shuffle', seed: nextShuffleSeed })
-
-  // Infinite scroll via IntersectionObserver
-  useEffect(() => {
-    if (!loaderRef.current || !hasMore) return
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setVisibleCount(c => Math.min(c + LOAD_MORE_COUNT, libraryPrompts.length))
-        }
-      },
-      { rootMargin: '400px' }
-    )
-    observer.observe(loaderRef.current)
-    return () => observer.disconnect()
-  }, [hasMore, libraryPrompts.length])
 
   return (
     <div className="min-h-screen bg-white text-slate-950 dark:bg-slate-950 dark:text-slate-50">
@@ -385,7 +405,7 @@ export default function PromptHubPage({
       </section>
 
       <div className="sticky top-[38px] z-30 border-b border-slate-200 bg-white/95 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-950/95 sm:top-[43px]">
-        <div className="mx-auto flex w-full max-w-[1880px] items-center gap-1.5 overflow-x-auto px-3 py-2 [scrollbar-width:none] sm:gap-2 sm:px-6 [&::-webkit-scrollbar]:hidden">
+        <div className="mx-auto flex w-full max-w-[1880px] items-center justify-center gap-1.5 overflow-x-auto px-3 py-2 [scrollbar-width:none] sm:gap-2 sm:px-6 [&::-webkit-scrollbar]:hidden">
           <FilterMenu label="Type" icon={<PlusCircle className="h-3.5 w-3.5" />}>
             <div className="py-1">
               <FilterOption href={buildPromptHref({ category: 'all', model: activeModel, query: searchQuery, sort: sortMode, seed: currentShuffleSeed })} label="All types" active={activeCategory === 'all'} analyticsLabel="type" />
@@ -427,7 +447,7 @@ export default function PromptHubPage({
           </FilterMenu>
 
           {searchQuery ? (
-            <Link href={buildPromptHref({ category: activeCategory, model: activeModel, sort: sortMode })} className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-full bg-slate-950 px-2.5 py-1 text-xs font-semibold text-white dark:bg-white dark:text-slate-950">
+            <Link href={buildPromptHref({ category: activeCategory, model: activeModel, sort: sortMode })} className="inline-flex shrink-0 items-center gap-1 rounded-full bg-slate-950 px-2.5 py-1 text-xs font-semibold text-white dark:bg-white dark:text-slate-950">
               &ldquo;{searchQuery}&rdquo; <X className="h-3 w-3" />
             </Link>
           ) : null}
@@ -443,9 +463,24 @@ export default function PromptHubPage({
               ))}
             </div>
 
-            <div ref={loaderRef} className="flex justify-center py-8">
+            <div className="flex flex-col items-center justify-center gap-3 py-8">
               {hasMore ? (
-                <div className="h-1 w-1 opacity-0" aria-hidden="true" />
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextCount = Math.min(visibleCount + LOAD_MORE_COUNT, libraryPrompts.length)
+                      setVisibleCount(nextCount)
+                      track('Prompt Load More Clicked', { visible: nextCount, total: libraryPrompts.length })
+                    }}
+                    className="inline-flex h-10 items-center justify-center rounded-full bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98] dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"
+                  >
+                    Load more
+                  </button>
+                  <p className="text-xs font-medium text-slate-400 dark:text-slate-600">
+                    Showing {visiblePrompts.length.toLocaleString()} of {libraryPrompts.length.toLocaleString()}
+                  </p>
+                </>
               ) : (
                 <p className="text-xs font-medium text-slate-400 dark:text-slate-600">
                   All {libraryPrompts.length.toLocaleString()} prompts shown

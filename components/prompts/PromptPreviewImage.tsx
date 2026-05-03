@@ -11,6 +11,7 @@ function isRemoteUrl(value: string) {
 }
 
 const PROXIED_IMAGE_HOSTS = new Set(['promptimg.ionicerrrrscode.com'])
+const FALLBACK_DELAY_MS = 15000
 
 function shouldProxyImage(value: string) {
   try {
@@ -79,7 +80,7 @@ export default function PromptPreviewImage({
 
     const timer = window.setTimeout(() => {
       setCurrentSrc(fallbackSrc)
-    }, 4000)
+    }, FALLBACK_DELAY_MS)
 
     return () => window.clearTimeout(timer)
   }, [currentSrc, fallbackSrc, loaded])

@@ -57,8 +57,6 @@ export default function PromptDetailPage({
   const keywords = Array.from(new Set(prompt.tags)).slice(0, 8)
   const bestFor = prompt.bestFor.slice(0, 4)
   const workflow = prompt.workflow.slice(0, 3)
-  const isImageCategory = prompt.category === 'image-generation' || prompt.category === 'image-editing'
-
   return (
     <div className="min-h-screen bg-white text-slate-950 dark:bg-slate-950 dark:text-slate-50">
 
@@ -168,8 +166,8 @@ export default function PromptDetailPage({
             {/* Keywords */}
             {keywords.length > 0 ? (
               <div className="mt-6">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Keywords</h3>
-                <div className="mt-3 flex flex-wrap gap-1.5">
+                <h3 className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Keywords</h3>
+                <div className="mt-3 flex flex-wrap justify-center gap-1.5">
                   {keywords.map(k => (
                     <Link
                       key={k}
@@ -188,12 +186,12 @@ export default function PromptDetailPage({
           {/* Right — Image card sticky */}
           <div className="order-1 xl:order-2 xl:sticky xl:top-20">
             <div className="overflow-hidden rounded-2xl ring-1 ring-slate-200 dark:ring-slate-800">
-              <div className="relative h-[52vw] min-h-[260px] max-h-[520px] bg-slate-100 dark:bg-slate-900 sm:h-[380px] xl:h-[440px]">
+              <div className="relative h-[72vw] min-h-[300px] max-h-[620px] bg-white dark:bg-slate-950 sm:h-[520px] xl:h-[560px]">
                 <PromptPreviewImage
                   src={prompt.previewImage}
                   alt={prompt.previewAlt}
                   category={prompt.category}
-                  imageFit={isImageCategory ? 'cover' : 'contain'}
+                  imageFit="contain"
                   priority
                   sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 360px"
                 />
@@ -230,12 +228,12 @@ export default function PromptDetailPage({
                   href={`/prompts/${r.slug}`}
                   className="group w-[160px] shrink-0 overflow-hidden rounded-xl ring-1 ring-slate-200 transition-all hover:ring-slate-400 hover:-translate-y-0.5 dark:ring-slate-800 dark:hover:ring-slate-600 sm:w-auto"
                 >
-                  <div className="relative aspect-[4/3] bg-slate-100 dark:bg-slate-900">
+                  <div className="relative aspect-[4/5] bg-white dark:bg-slate-950">
                     <PromptPreviewImage
                       src={r.previewImage}
                       alt={r.previewAlt}
                       category={r.category}
-                      imageFit="cover"
+                      imageFit="contain"
                       sizes="(max-width: 640px) 160px, (max-width: 768px) 50vw, 25vw"
                       imgClassName="transition-transform duration-500 group-hover:scale-[1.04]"
                     />
