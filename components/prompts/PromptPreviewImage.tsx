@@ -107,8 +107,6 @@ export default function PromptPreviewImage({
             setUseProxyFallback(true)
           } else if (currentSrc !== fallbackSrc) {
             setLoaded(false)
-            setUseProxyFallback(false)
-            setCurrentSrc(fallbackSrc)
           } else {
             setLoaded(true)
           }
