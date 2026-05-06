@@ -10,7 +10,7 @@ import type { PromptEntry } from '@/lib/prompt-library-data'
 function StickyMobileCopyButton({ prompt, slug }: { prompt: string; slug: string }) {
   const [copied, setCopied] = useState(false)
   return (
-    <div className="fixed bottom-20 left-0 right-0 z-40 px-4 md:hidden">
+    <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-0 right-0 z-40 px-3 md:hidden">
       <button
         type="button"
         onClick={async () => {
@@ -19,7 +19,7 @@ function StickyMobileCopyButton({ prompt, slug }: { prompt: string; slug: string
           setCopied(true)
           setTimeout(() => setCopied(false), 1800)
         }}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-950 py-3.5 text-sm font-bold text-white shadow-lg transition active:scale-[0.98] dark:bg-white dark:text-slate-950"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-950 py-3.5 text-sm font-bold text-white shadow-lg transition active:scale-[0.98] dark:bg-white dark:text-slate-950"
       >
         {copied ? <Check className="h-4 w-4 text-emerald-400 dark:text-emerald-600" /> : <Copy className="h-4 w-4" />}
         {copied ? 'Copied!' : 'Copy Prompt'}
@@ -75,7 +75,7 @@ export default function PromptDetailPage({
       </div>
 
       {/* ── Main content ── */}
-      <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6 sm:py-8">
+      <div className="mx-auto max-w-6xl px-3 py-4 sm:px-6 sm:py-8">
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-10 xl:items-start">
 
           {/* Left — Meta info */}
@@ -94,7 +94,7 @@ export default function PromptDetailPage({
             </h1>
 
             {/* Summary */}
-            <p className="mt-3 text-sm leading-7 text-slate-500 dark:text-slate-400 sm:text-base">
+            <p className="mt-3 text-sm leading-6 text-slate-500 dark:text-slate-400 sm:text-base sm:leading-7">
               {prompt.summary}
             </p>
 
@@ -121,7 +121,7 @@ export default function PromptDetailPage({
                   <InlineCopyButton prompt={prompt.prompt} slug={prompt.slug} source="detail_prompt_panel" />
                 </div>
               </div>
-              <pre className="max-h-[320px] overflow-auto rounded-xl bg-slate-950 p-4 text-xs leading-6 text-slate-100 dark:bg-black/50 sm:text-sm sm:leading-7">
+              <pre className="max-h-[300px] overflow-auto rounded-xl bg-slate-950 p-3.5 text-xs leading-6 text-slate-100 dark:bg-black/50 sm:max-h-[320px] sm:p-4 sm:text-sm sm:leading-7">
                 <code className="whitespace-pre-wrap break-words">{prompt.prompt}</code>
               </pre>
             </div>
@@ -186,7 +186,7 @@ export default function PromptDetailPage({
           {/* Right — Image card sticky */}
           <div className="order-1 xl:order-2 xl:sticky xl:top-20">
             <div className="overflow-hidden rounded-2xl ring-1 ring-slate-200 dark:ring-slate-800">
-              <div className="relative h-[72vw] min-h-[300px] max-h-[620px] bg-white dark:bg-slate-950 sm:h-[520px] xl:h-[560px]">
+              <div className="relative h-[80vw] min-h-[340px] max-h-[620px] bg-white dark:bg-slate-950 sm:h-[520px] xl:h-[560px]">
                 <PromptPreviewImage
                   src={prompt.previewImage}
                   alt={prompt.previewAlt}
@@ -226,7 +226,7 @@ export default function PromptDetailPage({
                 <Link
                   key={r.slug}
                   href={`/prompts/${r.slug}`}
-                  className="group w-[160px] shrink-0 overflow-hidden rounded-xl ring-1 ring-slate-200 transition-all hover:ring-slate-400 hover:-translate-y-0.5 dark:ring-slate-800 dark:hover:ring-slate-600 sm:w-auto"
+                  className="group w-[46vw] max-w-[190px] shrink-0 overflow-hidden rounded-xl ring-1 ring-slate-200 transition-all hover:-translate-y-0.5 hover:ring-slate-400 dark:ring-slate-800 dark:hover:ring-slate-600 sm:w-auto sm:max-w-none"
                 >
                   <div className="relative aspect-[4/5] bg-white dark:bg-slate-950">
                     <PromptPreviewImage
