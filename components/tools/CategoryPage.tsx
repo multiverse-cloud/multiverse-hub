@@ -76,6 +76,7 @@ export default function CategoryPage({
               <Link
                 key={tool.id}
                 href={`/tools/${tool.categorySlug}/${tool.slug}`}
+                prefetch={false}
                 className="group rounded-xl border border-slate-200/70 bg-white p-3 transition-all duration-200 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-500/[0.06] sm:p-5 dark:border-slate-800/70 dark:bg-slate-900/80 dark:hover:border-indigo-800 animate-fade-in"
                 style={{
                   animationDelay: `${index * 0.03}s`,
@@ -138,6 +139,7 @@ export default function CategoryPage({
                     <Link
                       key={tool.id}
                       href={`/tools/${tool.categorySlug}/${tool.slug}`}
+                      prefetch={false}
                       className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"
                     >
                       {tool.name}
@@ -156,6 +158,7 @@ export default function CategoryPage({
                   <Link
                     key={item.slug}
                     href={`/tools/${item.slug}`}
+                    prefetch={false}
                     className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"
                   >
                     {item.name}

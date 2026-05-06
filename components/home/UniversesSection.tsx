@@ -78,6 +78,7 @@ export default function UniversesSection() {
                   <Link
                     key={universe.id}
                     href={universe.href}
+                    prefetch={false}
                     className={cn(
                       "universe-card group bg-card transition-all duration-300 hover:shadow-lg animate-fade-in !p-0",
                       BORDER_HOVER_TONES[universe.color] ??

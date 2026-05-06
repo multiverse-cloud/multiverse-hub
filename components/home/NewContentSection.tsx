@@ -66,7 +66,7 @@ export default async function NewContentSection() {
                 Recently added templates, prompts, and UI components for people who want useful assets without hunting.
               </p>
             </div>
-            <Link href="/whats-new" className="hidden items-center gap-2 text-sm font-bold text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white sm:flex">
+            <Link href="/whats-new" prefetch={false} className="hidden items-center gap-2 text-sm font-bold text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white sm:flex">
               What's new <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -83,7 +83,7 @@ export default async function NewContentSection() {
                       </span>
                       <h3 className="text-sm font-bold text-foreground">{group.title}</h3>
                     </div>
-                    <Link href={group.href} className="text-xs font-bold text-muted-foreground hover:text-foreground">
+                    <Link href={group.href} prefetch={false} className="text-xs font-bold text-muted-foreground hover:text-foreground">
                       All
                     </Link>
                   </div>
@@ -92,6 +92,7 @@ export default async function NewContentSection() {
                       <Link
                         key={item.href}
                         href={item.href}
+                        prefetch={false}
                         className="group flex items-center justify-between gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-muted/60"
                       >
                         <span className="min-w-0">

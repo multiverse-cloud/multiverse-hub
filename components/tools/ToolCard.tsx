@@ -23,6 +23,7 @@ export default function ToolCard({
     return (
       <Link
         href={`/tools/${tool.categorySlug}/${tool.slug}`}
+        prefetch={false}
         style={{ minHeight: 44 }}
         className="group relative flex min-w-0 items-center gap-2 rounded-xl border border-slate-200/70 bg-white px-3 py-3 transition-all duration-200 touch-manipulation active:scale-[0.98] hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-500/[0.06] dark:border-slate-800/70 dark:bg-slate-900/80 dark:hover:border-indigo-800 sm:gap-3 sm:px-4 sm:py-3.5"
       >
@@ -46,6 +47,7 @@ export default function ToolCard({
     return (
       <Link
         href={`/tools/${tool.categorySlug}/${tool.slug}`}
+        prefetch={false}
         style={{ minHeight: 44 }}
         className="card-enter group relative rounded-xl border border-slate-200/70 bg-white p-4 transition-all duration-300 touch-manipulation active:scale-[0.97] hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/[0.07] dark:border-slate-800/70 dark:bg-slate-900/80 dark:hover:border-indigo-800"
       >
@@ -89,6 +91,7 @@ export default function ToolCard({
   return (
     <Link
       href={`/tools/${tool.categorySlug}/${tool.slug}`}
+      prefetch={false}
       style={{ minHeight: 44 }}
       className="card-enter group relative flex flex-col gap-2.5 rounded-xl border border-slate-200/70 bg-white p-3 transition-all duration-300 touch-manipulation active:scale-[0.97] hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/[0.07] dark:border-slate-800/70 dark:bg-slate-900/80 dark:hover:border-indigo-800 sm:p-4"
     >

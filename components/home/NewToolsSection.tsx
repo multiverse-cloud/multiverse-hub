@@ -40,6 +40,7 @@ export default function NewToolsSection({ tools: allTools }: { tools: Tool[] }) 
 
             <Link
               href="/tools?tag=new"
+              prefetch={false}
               className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:border-indigo-200 hover:text-indigo-700 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-indigo-800 dark:hover:text-indigo-300 sm:flex"
             >
               See all new <ArrowRight className="h-3.5 w-3.5" />
@@ -54,6 +55,7 @@ export default function NewToolsSection({ tools: allTools }: { tools: Tool[] }) 
                 <Link
                   key={tool.id}
                   href={`/tools/${tool.categorySlug}/${tool.slug}`}
+                  prefetch={false}
                   className="group flex items-start gap-3 sm:gap-4 rounded-2xl border border-border bg-card p-4 sm:p-5 transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-900/5 dark:hover:border-slate-700 animate-fade-in"
                   style={{
                     animationDelay: `${index * 0.06}s`,
@@ -83,6 +85,7 @@ export default function NewToolsSection({ tools: allTools }: { tools: Tool[] }) 
           <div className="mt-6 flex justify-center sm:hidden">
             <Link
               href="/tools?tag=new"
+              prefetch={false}
               className="btn-secondary flex items-center gap-2 text-sm"
             >
               See all new tools <ArrowRight className="h-4 w-4" />
