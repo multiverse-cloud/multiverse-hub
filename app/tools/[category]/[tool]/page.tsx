@@ -12,7 +12,7 @@ import SEOContent from "@/components/tools/SEOContent";
 import ToolActions from "@/components/tools/ToolActions";
 import ToolRuntimeBanner from "@/components/tools/ToolRuntimeBanner";
 import ToolStudioSlot from "@/components/tools/ToolStudioSlot";
-import VideoDownloaderClient from "@/components/tools/VideoDownloaderClient";
+import VideoDownloaderPageSlot from "@/components/tools/VideoDownloaderPageSlot";
 import { getLucideIcon } from "@/lib/icons";
 import { CALCULATOR_STUDIO_SLUGS } from "@/lib/calculator-studio";
 import { PDF_STUDIO_STATIC_CONTENT } from "@/lib/pdf-studio-content";
@@ -478,7 +478,7 @@ export default async function ToolPage({ params }: Props) {
             </div>
           </div>
         ) : null}
-        <VideoDownloaderClient
+        <VideoDownloaderPageSlot
           tool={tool}
           route={downloaderRoute || undefined}
           routeTabs={routeTabs}

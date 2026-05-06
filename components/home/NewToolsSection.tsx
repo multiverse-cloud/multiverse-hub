@@ -1,19 +1,9 @@
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { getLucideIcon } from "@/lib/icons";
-import { getTools } from "@/lib/db";
+import type { Tool } from "@/lib/tools-data";
 
-export default async function NewToolsSection() {
-  let allTools = await Promise.resolve(
-    [] as Awaited<ReturnType<typeof getTools>>,
-  );
-
-  try {
-    allTools = await getTools();
-  } catch (error) {
-    console.error("New tools fetch failed:", error);
-  }
-
+export default function NewToolsSection({ tools: allTools }: { tools: Tool[] }) {
   const NEW_TOOLS = allTools
     .filter((tool) => tool.enabled !== false && tool.tags.includes("new"))
     .slice(0, 6);

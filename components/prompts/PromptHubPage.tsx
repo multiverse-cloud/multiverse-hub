@@ -2,20 +2,34 @@
 
 import Link from 'next/link'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { track } from '@vercel/analytics'
 import { ArrowUpDown, Bot, ChevronDown, ImageIcon, PlusCircle, Search, Shuffle, X } from 'lucide-react'
 import PromptPreviewImage from '@/components/prompts/PromptPreviewImage'
+import { trackPromptEvent } from '@/components/prompts/promptAnalytics'
 import { getPromptCollectionHref, PROMPT_COLLECTIONS } from '@/lib/prompt-collections'
 import type { PromptCategory, PromptCategoryId, PromptEntry, PromptModelId } from '@/lib/prompt-library-data'
 import { cn } from '@/lib/utils'
 
 type PromptSortMode = 'featured' | 'hot' | 'new' | 'top' | 'shuffle'
+type PromptHubEntry = Pick<
+  PromptEntry,
+  | 'slug'
+  | 'title'
+  | 'previewImage'
+  | 'previewAlt'
+  | 'category'
+  | 'subcategory'
+  | 'visualStyle'
+  | 'tags'
+  | 'bestFor'
+  | 'models'
+  | 'featured'
+  | 'updatedAt'
+>
 
 type PromptHubPageProps = {
   categories: PromptCategory[]
   models: PromptModelId[]
-  featuredPrompts: PromptEntry[]
-  filteredPrompts: PromptEntry[]
+  filteredPrompts: PromptHubEntry[]
   activeCategory: 'all' | PromptCategoryId
   activeModel: 'all' | PromptModelId
   searchQuery: string
@@ -26,8 +40,8 @@ type PromptHubPageProps = {
   imagePrompts: number
 }
 
-const INITIAL_VISIBLE_COUNT = 24
-const LOAD_MORE_COUNT = 24
+const INITIAL_VISIBLE_COUNT = 18
+const LOAD_MORE_COUNT = 30
 const CARD_ASPECT_CLASSES = [
   'aspect-[4/5]',
   'aspect-[3/4]',
@@ -96,7 +110,7 @@ function getActiveTopTab({ searchQuery, activeModel, activeCategory, sortMode }:
   return matched?.label || ''
 }
 
-function getShuffleScore(prompt: PromptEntry, seed: string) {
+function getShuffleScore(prompt: PromptHubEntry, seed: string) {
   let hash = 2166136261
   const input = `${seed}:${prompt.slug}:${prompt.title}`
   for (let i = 0; i < input.length; i++) {
@@ -106,7 +120,7 @@ function getShuffleScore(prompt: PromptEntry, seed: string) {
   return hash >>> 0
 }
 
-function sortPromptsForMode(prompts: PromptEntry[], sortMode: PromptSortMode, shuffleSeed: string) {
+function sortPromptsForMode(prompts: PromptHubEntry[], sortMode: PromptSortMode, shuffleSeed: string) {
   const sorted = [...prompts]
   if (sortMode === 'shuffle') return sorted.sort((a, b) => getShuffleScore(a, shuffleSeed) - getShuffleScore(b, shuffleSeed))
   if (sortMode === 'new') return sorted.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt) || a.title.localeCompare(b.title))
@@ -119,12 +133,12 @@ function sortPromptsForMode(prompts: PromptEntry[], sortMode: PromptSortMode, sh
   return sorted.sort((a, b) => Number(b.featured) - Number(a.featured) || a.title.localeCompare(b.title))
 }
 
-function isVideoPrompt(prompt: PromptEntry) {
+function isVideoPrompt(prompt: PromptHubEntry) {
   const h = [prompt.title, prompt.subcategory, prompt.visualStyle, ...prompt.tags, ...prompt.bestFor].join(' ').toLowerCase()
   return h.includes('video') || h.includes('veo') || h.includes('sora')
 }
 
-function getPromptCardAspectClass(prompt: PromptEntry) {
+function getPromptCardAspectClass(prompt: PromptHubEntry) {
   let hash = 0
   const input = prompt.slug || prompt.title
   for (let i = 0; i < input.length; i++) {
@@ -133,13 +147,13 @@ function getPromptCardAspectClass(prompt: PromptEntry) {
   return CARD_ASPECT_CLASSES[hash % CARD_ASPECT_CLASSES.length]
 }
 
-const PromptCard = memo(function PromptCard({ prompt }: { prompt: PromptEntry }) {
+const PromptCard = memo(function PromptCard({ prompt, priority = false }: { prompt: PromptHubEntry; priority?: boolean }) {
   const isNew = !prompt.featured && prompt.updatedAt >= '2026-04-25'
   return (
     <Link
       href={`/prompts/${prompt.slug}`}
       prefetch={false}
-      onClick={() => track('Prompt Opened', { slug: prompt.slug, category: prompt.category, source: 'prompt_grid' })}
+      onClick={() => trackPromptEvent('Prompt Opened', { slug: prompt.slug, category: prompt.category, source: 'prompt_grid' })}
       className="group mb-2 inline-block w-full break-inside-avoid transition-transform duration-200 hover:-translate-y-0.5 sm:mb-4"
       aria-label={`Open ${prompt.title}`}
     >
@@ -151,6 +165,7 @@ const PromptCard = memo(function PromptCard({ prompt }: { prompt: PromptEntry })
           imageFit="cover"
           imgClassName="transition-transform duration-500 group-hover:scale-[1.04]"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
+          priority={priority}
         />
 
         {/* Badge */}
@@ -268,7 +283,7 @@ function FilterOption({ href, label, active, analyticsLabel }: {
     <Link
       href={href}
       prefetch={false}
-      onClick={() => { if (analyticsLabel) track('Prompt Filter Changed', { filter: analyticsLabel, label }) }}
+      onClick={() => { if (analyticsLabel) trackPromptEvent('Prompt Filter Changed', { filter: analyticsLabel, label }) }}
       className={cn(
         'flex items-center gap-2.5 px-3 py-2.5 text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-900 sm:text-sm',
         active && 'bg-slate-100 text-slate-950 font-semibold dark:bg-slate-900 dark:text-white'
@@ -355,7 +370,7 @@ export default function PromptHubPage({
             method="get"
             onSubmit={e => {
               const data = new FormData(e.currentTarget)
-              track('Prompt Search Submitted', { query: String(data.get('q') || '').slice(0, 80) })
+              trackPromptEvent('Prompt Search Submitted', { query: String(data.get('q') || '').slice(0, 80) })
             }}
             className="mx-auto mt-3 flex max-w-2xl items-center gap-1.5 rounded-2xl bg-white p-1.5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 sm:mt-7 sm:gap-2 sm:rounded-full"
           >
@@ -386,7 +401,7 @@ export default function PromptHubPage({
                 key={c.slug}
                 href={getPromptCollectionHref(c.slug)}
                 prefetch={false}
-                onClick={() => track('Prompt Collection Clicked', { collection: c.slug })}
+                onClick={() => trackPromptEvent('Prompt Collection Clicked', { collection: c.slug })}
                 className="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600 ring-1 ring-slate-200 transition hover:bg-slate-200 hover:text-slate-950 dark:bg-slate-900 dark:text-slate-400 dark:ring-slate-800 dark:hover:text-white sm:px-3 sm:py-1.5 sm:text-xs"
               >
                 {c.shortTitle}
@@ -396,14 +411,15 @@ export default function PromptHubPage({
 
           <div className="mt-3 flex flex-wrap items-center justify-start gap-2 sm:mt-4 sm:justify-center sm:gap-4">
             <p className="hidden text-xs font-medium text-slate-400 dark:text-slate-500 sm:block">
-              {totalPrompts.toLocaleString()} prompts · {imagePrompts.toLocaleString()} visual
-              {searchQuery || activeCategory !== 'all' || activeModel !== 'all'
-                ? ` · ${totalResults.toLocaleString()} results` : ''}
+              {totalPrompts.toLocaleString()} prompts {' · '} {imagePrompts.toLocaleString()} visual
+              {searchQuery || activeCategory !== 'all' || activeModel !== 'all' ? (
+                <> {' · '} {totalResults.toLocaleString()} results</>
+              ) : null}
             </p>
             <Link
               href={shuffleHref}
               prefetch={false}
-              onClick={() => track('Prompt Shuffle Clicked', { category: activeCategory, model: activeModel, query: searchQuery || 'none' })}
+              onClick={() => trackPromptEvent('Prompt Shuffle Clicked', { category: activeCategory, model: activeModel, query: searchQuery || 'none' })}
               className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-[11.5px] font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 sm:rounded-full sm:text-xs"
             >
               <Shuffle className="h-3.5 w-3.5" />
@@ -467,8 +483,8 @@ export default function PromptHubPage({
         {visiblePrompts.length > 0 ? (
           <>
             <div className="columns-2 gap-2 sm:columns-3 sm:gap-3 lg:columns-4 xl:columns-5 2xl:columns-6">
-              {visiblePrompts.map(prompt => (
-                <PromptCard key={prompt.slug} prompt={prompt} />
+              {visiblePrompts.map((prompt, index) => (
+                <PromptCard key={prompt.slug} prompt={prompt} priority={index < 4} />
               ))}
             </div>
 
@@ -480,7 +496,7 @@ export default function PromptHubPage({
                     onClick={() => {
                       const nextCount = Math.min(visibleCount + LOAD_MORE_COUNT, libraryPrompts.length)
                       setVisibleCount(nextCount)
-                      track('Prompt Load More Clicked', { visible: nextCount, total: libraryPrompts.length })
+                      trackPromptEvent('Prompt Load More Clicked', { visible: nextCount, total: libraryPrompts.length })
                     }}
                     className="inline-flex h-10 w-full max-w-xs items-center justify-center rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98] dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 sm:w-auto sm:rounded-full"
                   >

@@ -72,6 +72,23 @@ function resolveShuffleSeed(value?: string) {
   return normalized || "mtverse";
 }
 
+function toPromptHubEntry(prompt: (Awaited<ReturnType<typeof getPromptLibraryData>>)["prompts"][number]) {
+  return {
+    slug: prompt.slug,
+    title: prompt.title,
+    previewImage: prompt.previewImage,
+    previewAlt: prompt.previewAlt,
+    category: prompt.category,
+    subcategory: prompt.subcategory,
+    visualStyle: prompt.visualStyle,
+    tags: prompt.tags,
+    bestFor: prompt.bestFor,
+    models: prompt.models,
+    featured: prompt.featured,
+    updatedAt: prompt.updatedAt,
+  };
+}
+
 export default async function PromptsPage({ searchParams }: PromptsPageProps) {
   const resolvedSearchParams = await searchParams;
   const library = await getPromptLibraryData();
@@ -93,6 +110,7 @@ export default async function PromptsPage({ searchParams }: PromptsPageProps) {
     model: activeModel,
     query: searchQuery,
   });
+  const promptHubEntries = filteredPrompts.map(toPromptHubEntry);
 
   return (
     <PublicLayout>
@@ -104,8 +122,7 @@ export default async function PromptsPage({ searchParams }: PromptsPageProps) {
       <PromptHubPage
         categories={library.categories}
         models={library.models}
-        featuredPrompts={library.featuredPrompts}
-        filteredPrompts={filteredPrompts}
+        filteredPrompts={promptHubEntries}
         activeCategory={activeCategory}
         activeModel={activeModel}
         searchQuery={searchQuery}

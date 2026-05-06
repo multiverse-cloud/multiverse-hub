@@ -154,7 +154,7 @@ export default async function HomePage() {
         <TrendingToolsSection tools={tools} />
       </Suspense>
       <Suspense fallback={<ToolGridSkeleton />}>
-        <NewToolsSection />
+        <NewToolsSection tools={tools} />
       </Suspense>
       <Suspense fallback={<ToolGridSkeleton />}>
         <NewContentSection />

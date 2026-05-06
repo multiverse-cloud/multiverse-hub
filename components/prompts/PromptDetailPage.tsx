@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { ArrowLeft, ArrowRight, Bot, Check, Copy, Sparkles } from 'lucide-react'
-import { track } from '@vercel/analytics'
 import PromptPreviewImage from '@/components/prompts/PromptPreviewImage'
+import { trackPromptEvent } from '@/components/prompts/promptAnalytics'
 import type { PromptEntry } from '@/lib/prompt-library-data'
 
 function StickyMobileCopyButton({ prompt, slug }: { prompt: string; slug: string }) {
@@ -15,7 +15,7 @@ function StickyMobileCopyButton({ prompt, slug }: { prompt: string; slug: string
         type="button"
         onClick={async () => {
           await navigator.clipboard.writeText(prompt)
-          track('Prompt Copied', { slug, source: 'detail_sticky_mobile' })
+          trackPromptEvent('Prompt Copied', { slug, source: 'detail_sticky_mobile' })
           setCopied(true)
           setTimeout(() => setCopied(false), 1800)
         }}
@@ -35,7 +35,7 @@ function InlineCopyButton({ prompt, slug, source }: { prompt: string; slug: stri
       type="button"
       onClick={async () => {
         await navigator.clipboard.writeText(prompt)
-        track('Prompt Copied', { slug, source })
+        trackPromptEvent('Prompt Copied', { slug, source })
         setCopied(true)
         setTimeout(() => setCopied(false), 1800)
       }}

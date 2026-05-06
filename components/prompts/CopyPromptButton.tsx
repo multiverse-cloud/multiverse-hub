@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { track } from '@vercel/analytics'
 import { Check, Copy } from 'lucide-react'
+import { trackPromptEvent } from '@/components/prompts/promptAnalytics'
 import { cn } from '@/lib/utils'
 
 export default function CopyPromptButton({
@@ -27,7 +27,7 @@ export default function CopyPromptButton({
       type="button"
       onClick={async () => {
         await navigator.clipboard.writeText(prompt)
-        track('Prompt Copied', eventProperties)
+        trackPromptEvent('Prompt Copied', eventProperties)
         setCopied(true)
       }}
       className={cn(
