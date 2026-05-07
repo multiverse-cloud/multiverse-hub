@@ -40,8 +40,8 @@ type PromptHubPageProps = {
   imagePrompts: number
 }
 
-const INITIAL_VISIBLE_COUNT = 18
-const LOAD_MORE_COUNT = 30
+const INITIAL_VISIBLE_COUNT = 12
+const LOAD_MORE_COUNT = 24
 const CARD_ASPECT_CLASSES = [
   'aspect-[4/5]',
   'aspect-[3/4]',
@@ -484,7 +484,7 @@ export default function PromptHubPage({
           <>
             <div className="columns-2 gap-2 sm:columns-3 sm:gap-3 lg:columns-4 xl:columns-5 2xl:columns-6">
               {visiblePrompts.map((prompt, index) => (
-                <PromptCard key={prompt.slug} prompt={prompt} priority={index < 4} />
+                <PromptCard key={prompt.slug} prompt={prompt} priority={index < 2} />
               ))}
             </div>
 

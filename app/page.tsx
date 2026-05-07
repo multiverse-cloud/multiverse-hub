@@ -148,19 +148,21 @@ export default async function HomePage() {
       schemaMarkup={FAQ_SCHEMA as unknown as Record<string, any>}
     >
       <HeroSection />
-      <HeroStatsSection />
-      <UniversesSection />
-      <Suspense fallback={<ToolGridSkeleton />}>
-        <TrendingToolsSection tools={tools} />
-      </Suspense>
-      <Suspense fallback={<ToolGridSkeleton />}>
-        <NewToolsSection tools={tools} />
-      </Suspense>
-      <Suspense fallback={<ToolGridSkeleton />}>
-        <NewContentSection />
-      </Suspense>
-      <WhyMultiverse />
-      <FAQSection />
+      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_2800px]">
+        <HeroStatsSection />
+        <UniversesSection />
+        <Suspense fallback={<ToolGridSkeleton />}>
+          <TrendingToolsSection tools={tools} />
+        </Suspense>
+        <Suspense fallback={<ToolGridSkeleton />}>
+          <NewToolsSection tools={tools} />
+        </Suspense>
+        <Suspense fallback={<ToolGridSkeleton />}>
+          <NewContentSection />
+        </Suspense>
+        <WhyMultiverse />
+        <FAQSection />
+      </div>
     </PublicLayout>
   );
 }

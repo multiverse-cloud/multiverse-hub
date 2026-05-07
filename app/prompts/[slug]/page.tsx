@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation'
 import PublicLayout from '@/components/layout/PublicLayout'
 import UniverseTopBar from '@/components/public/UniverseTopBar'
 import PromptDetailPage from '@/components/prompts/PromptDetailPage'
-import { getPromptBySlug, getPublishedPrompts, getRelatedPrompts } from '@/lib/prompt-db'
+import { getPublishedPrompts } from '@/lib/prompt-db'
+import type { PromptEntry } from '@/lib/prompt-library-data'
 import { SITE_URL, absoluteUrl } from '@/lib/site-url'
 
 type PromptSlugPageProps = {
@@ -12,7 +13,7 @@ type PromptSlugPageProps = {
 
 export const revalidate = 3600;
 export const dynamicParams = true;
-const PROMPT_STATIC_PARAMS_LIMIT = 260;
+const PROMPT_STATIC_PARAMS_LIMIT = 1200;
 
 export async function generateStaticParams() {
   const prompts = await getPublishedPrompts()
@@ -22,10 +23,29 @@ export async function generateStaticParams() {
   }))
 }
 
-async function buildPromptStructuredData(baseUrl: string, slug: string) {
-  const prompt = await getPromptBySlug(slug)
-  if (!prompt) return null
+async function getPromptPageData(slug: string) {
+  const prompts = await getPublishedPrompts()
+  const prompt = prompts.find(entry => entry.slug === slug) || null
 
+  if (!prompt) {
+    return {
+      prompt: null,
+      relatedPrompts: [],
+    }
+  }
+
+  const relatedPrompts = prompt.relatedSlugs
+    .map(relatedSlug => prompts.find(entry => entry.slug === relatedSlug) || null)
+    .filter((entry): entry is PromptEntry => Boolean(entry))
+    .slice(0, 4)
+
+  return {
+    prompt,
+    relatedPrompts,
+  }
+}
+
+function buildPromptStructuredData(baseUrl: string, prompt: PromptEntry) {
   const pageUrl = `${baseUrl}/prompts/${prompt.slug}`
 
   return {
@@ -71,7 +91,7 @@ async function buildPromptStructuredData(baseUrl: string, slug: string) {
 
 export async function generateMetadata({ params }: PromptSlugPageProps): Promise<Metadata> {
   const { slug } = await params
-  const prompt = await getPromptBySlug(slug)
+  const { prompt } = await getPromptPageData(slug)
 
   if (!prompt) {
     return {
@@ -125,14 +145,13 @@ export async function generateMetadata({ params }: PromptSlugPageProps): Promise
 
 export default async function PromptSlugPage({ params }: PromptSlugPageProps) {
   const { slug } = await params
-  const prompt = await getPromptBySlug(slug)
+  const { prompt, relatedPrompts } = await getPromptPageData(slug)
 
   if (!prompt) {
     notFound()
   }
 
-  const relatedPrompts = await getRelatedPrompts(slug, 4)
-  const jsonLd = await buildPromptStructuredData(SITE_URL, slug)
+  const jsonLd = buildPromptStructuredData(SITE_URL, prompt)
 
   return (
     <PublicLayout>

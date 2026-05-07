@@ -1,51 +1,8 @@
-'use client'
-
 import Link from 'next/link'
-import { useState } from 'react'
-import { ArrowLeft, ArrowRight, Bot, Check, Copy, Sparkles } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Bot, Sparkles } from 'lucide-react'
+import CopyPromptButton from '@/components/prompts/CopyPromptButton'
 import PromptPreviewImage from '@/components/prompts/PromptPreviewImage'
-import { trackPromptEvent } from '@/components/prompts/promptAnalytics'
 import type { PromptEntry } from '@/lib/prompt-library-data'
-
-function StickyMobileCopyButton({ prompt, slug }: { prompt: string; slug: string }) {
-  const [copied, setCopied] = useState(false)
-  return (
-    <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-0 right-0 z-40 px-3 md:hidden">
-      <button
-        type="button"
-        onClick={async () => {
-          await navigator.clipboard.writeText(prompt)
-          trackPromptEvent('Prompt Copied', { slug, source: 'detail_sticky_mobile' })
-          setCopied(true)
-          setTimeout(() => setCopied(false), 1800)
-        }}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-950 py-3.5 text-sm font-bold text-white shadow-lg transition active:scale-[0.98] dark:bg-white dark:text-slate-950"
-      >
-        {copied ? <Check className="h-4 w-4 text-emerald-400 dark:text-emerald-600" /> : <Copy className="h-4 w-4" />}
-        {copied ? 'Copied!' : 'Copy Prompt'}
-      </button>
-    </div>
-  )
-}
-
-function InlineCopyButton({ prompt, slug, source }: { prompt: string; slug: string; source: string }) {
-  const [copied, setCopied] = useState(false)
-  return (
-    <button
-      type="button"
-      onClick={async () => {
-        await navigator.clipboard.writeText(prompt)
-        trackPromptEvent('Prompt Copied', { slug, source })
-        setCopied(true)
-        setTimeout(() => setCopied(false), 1800)
-      }}
-      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
-    >
-      {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4 text-slate-500" />}
-      {copied ? 'Copied' : 'Copy Prompt'}
-    </button>
-  )
-}
 
 export default function PromptDetailPage({
   prompt,
@@ -110,7 +67,7 @@ export default function PromptDetailPage({
 
             {/* Copy button — desktop inline */}
             <div className="mt-5 hidden md:block">
-              <InlineCopyButton prompt={prompt.prompt} slug={prompt.slug} source="detail_header_desktop" />
+              <CopyPromptButton prompt={prompt.prompt} eventProperties={{ slug: prompt.slug, source: 'detail_header_desktop' }} />
             </div>
 
             {/* Prompt text */}
@@ -118,7 +75,7 @@ export default function PromptDetailPage({
               <div className="mb-2 flex items-center justify-between gap-3">
                 <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Prompt</h2>
                 <div className="hidden md:block">
-                  <InlineCopyButton prompt={prompt.prompt} slug={prompt.slug} source="detail_prompt_panel" />
+                  <CopyPromptButton prompt={prompt.prompt} eventProperties={{ slug: prompt.slug, source: 'detail_prompt_panel' }} />
                 </div>
               </div>
               <pre className="max-h-[300px] overflow-auto rounded-xl bg-slate-950 p-3.5 text-xs leading-6 text-slate-100 dark:bg-black/50 sm:max-h-[320px] sm:p-4 sm:text-sm sm:leading-7">
@@ -198,7 +155,7 @@ export default function PromptDetailPage({
               </div>
               {/* Copy button under image */}
               <div className="hidden border-t border-slate-200 px-4 py-3 dark:border-slate-800 md:block">
-                <InlineCopyButton prompt={prompt.prompt} slug={prompt.slug} source="detail_image_card" />
+                <CopyPromptButton prompt={prompt.prompt} eventProperties={{ slug: prompt.slug, source: 'detail_image_card' }} />
               </div>
             </div>
           </div>
@@ -253,7 +210,13 @@ export default function PromptDetailPage({
       </div>
 
       {/* Sticky mobile copy button */}
-      <StickyMobileCopyButton prompt={prompt.prompt} slug={prompt.slug} />
+      <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-0 right-0 z-40 px-3 md:hidden">
+        <CopyPromptButton
+          prompt={prompt.prompt}
+          eventProperties={{ slug: prompt.slug, source: 'detail_sticky_mobile' }}
+          className="flex w-full justify-center rounded-2xl border-slate-950 bg-slate-950 py-3.5 text-sm font-bold text-white shadow-lg active:scale-[0.98] dark:border-white dark:bg-white dark:text-slate-950"
+        />
+      </div>
     </div>
   )
 }
