@@ -202,7 +202,7 @@ async function run() {
   }
 
   await assertPage('/', {
-    contains: ['Free Online Tools', 'Multiverse'],
+    contains: ['Free Online Tools', 'mtverse'],
   })
 
   await assertPage('/tools', {
@@ -284,7 +284,7 @@ async function run() {
   })
 
   await assertPage('/search?q=pdf', {
-    contains: ['Search Across The Multiverse', 'pdf'],
+    contains: ['Search Across mtverse', 'pdf'],
   })
 
   await assertPage('/privacy', {
@@ -294,7 +294,7 @@ async function run() {
   await assertJson('/api/health', {
     checks: [
       payload => payload?.ok === true,
-      payload => payload?.service === 'multiverse',
+      payload => payload?.service === 'mtverse',
     ],
   })
 

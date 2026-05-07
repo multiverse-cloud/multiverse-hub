@@ -29,6 +29,7 @@ const jetbrains = JetBrains_Mono({
 })
 
 const googleAdsenseClient = getGoogleAdsenseClient()
+const shouldInjectLocalhostRecovery = process.env.NODE_ENV !== 'production'
 
 export const metadata: Metadata = {
   title: {
@@ -181,7 +182,9 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: LOCALHOST_RECOVERY_SCRIPT }} />
+        {shouldInjectLocalhostRecovery ? (
+          <script dangerouslySetInnerHTML={{ __html: LOCALHOST_RECOVERY_SCRIPT }} />
+        ) : null}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(GLOBAL_SITE_SCHEMA) }}

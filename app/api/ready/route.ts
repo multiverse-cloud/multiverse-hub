@@ -1,4 +1,4 @@
-import { getCloudinaryConfig, isCloudinaryConfigured } from '@/lib/cloudinary'
+import { isCloudinaryConfigured } from '@/lib/cloudinary'
 import { FFMPEG_PATH, isCommandAvailable, YTDLP_PATH } from '@/lib/server-utils'
 
 export const runtime = 'nodejs'
@@ -21,18 +21,21 @@ export async function GET() {
 
   const required = ['adminEmail', 'adminPassword', 'adminSessionSecret', 'siteUrl'] as const
   const ready = required.every(key => checks[key])
-  const cloudinary = getCloudinaryConfig()
+  const mediaProcessingReady = checks.ytDlp && checks.ffmpeg
+
+  const publicChecks = {
+    core: ready,
+    uploads: checks.cloudinary,
+    mediaProcessing: mediaProcessingReady,
+    ai: checks.openRouter,
+  }
 
   return Response.json(
     {
       ok: ready,
-      service: 'multiverse',
+      service: 'mtverse',
       environment: process.env.NODE_ENV || 'development',
-      checks,
-      optional: {
-        cloudinaryPromptFolder: cloudinary.promptPreviewFolder,
-        cloudinaryTemplateFolder: cloudinary.templatePreviewFolder,
-      },
+      checks: publicChecks,
       timestamp: new Date().toISOString(),
     },
     {
@@ -43,4 +46,3 @@ export async function GET() {
     }
   )
 }
-

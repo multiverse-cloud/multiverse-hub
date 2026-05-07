@@ -4,7 +4,7 @@ export async function GET() {
   return Response.json(
     {
       ok: true,
-      service: 'multiverse',
+      service: 'mtverse',
       timestamp: new Date().toISOString(),
     },
     {
@@ -14,4 +14,3 @@ export async function GET() {
     }
   )
 }
-

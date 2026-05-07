@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PublicLayout from "@/components/layout/PublicLayout";
-import VideoDownloaderClient from "@/components/tools/VideoDownloaderClient";
+import VideoDownloaderPageSlot from "@/components/tools/VideoDownloaderPageSlot";
 import {
   DOWNLOADER_ROUTES,
   getDownloaderPageName,
@@ -201,7 +201,7 @@ export default async function DownloaderRootPage({ params }: Props) {
 
   return (
     <PublicLayout schemaMarkup={buildDownloaderSchemas(route, tool)}>
-      <VideoDownloaderClient tool={tool} route={route} routeTabs={routeTabs} relatedRoutes={relatedRoutes} />
+      <VideoDownloaderPageSlot tool={tool} route={route} routeTabs={routeTabs} relatedRoutes={relatedRoutes} />
     </PublicLayout>
   );
 }
