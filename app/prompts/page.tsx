@@ -3,6 +3,7 @@ import PublicLayout from "@/components/layout/PublicLayout";
 import UniverseTopBar from "@/components/public/UniverseTopBar";
 import PromptHubPage from "@/components/prompts/PromptHubPage";
 import { getPromptLibraryData } from "@/lib/prompt-db";
+import { sortPromptsForMode } from "@/lib/prompt-hub-ranking";
 import {
   filterPrompts,
   normalizePromptQuery,
@@ -47,6 +48,8 @@ export const metadata: Metadata = {
 };
 
 export const revalidate = 3600;
+const DEFAULT_PROMPT_TAKE = 48;
+const MAX_PROMPT_TAKE = 1200;
 
 interface PromptsPageProps {
   searchParams?: Promise<{
@@ -56,6 +59,7 @@ interface PromptsPageProps {
     q?: string | string[];
     sort?: string | string[];
     seed?: string | string[];
+    take?: string | string[];
   }>;
 }
 
@@ -70,6 +74,12 @@ function resolvePromptSort(value?: string): "featured" | "hot" | "new" | "top" |
 function resolveShuffleSeed(value?: string) {
   const normalized = value?.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 32);
   return normalized || "mtverse";
+}
+
+function resolvePromptTake(value?: string) {
+  const parsed = Number.parseInt(value || "", 10);
+  if (!Number.isFinite(parsed)) return DEFAULT_PROMPT_TAKE;
+  return Math.min(Math.max(parsed, DEFAULT_PROMPT_TAKE), MAX_PROMPT_TAKE);
 }
 
 function toPromptHubEntry(prompt: (Awaited<ReturnType<typeof getPromptLibraryData>>)["prompts"][number]) {
@@ -105,12 +115,24 @@ export default async function PromptsPage({ searchParams }: PromptsPageProps) {
   const shuffleSeed = resolveShuffleSeed(
     normalizePromptSearchParam(resolvedSearchParams?.seed),
   );
+  const visibleLimit = resolvePromptTake(
+    normalizePromptSearchParam(resolvedSearchParams?.take),
+  );
   const filteredPrompts = filterPrompts(library.prompts, {
     category: activeCategory,
     model: activeModel,
     query: searchQuery,
   });
-  const promptHubEntries = filteredPrompts.map(toPromptHubEntry);
+  const promptHubEntries = sortPromptsForMode(
+    filteredPrompts.map(toPromptHubEntry),
+    sortMode,
+    shuffleSeed,
+  );
+  const visiblePromptEntries = promptHubEntries.slice(0, visibleLimit);
+  const nextTake =
+    visiblePromptEntries.length < promptHubEntries.length
+      ? Math.min(visibleLimit + DEFAULT_PROMPT_TAKE, MAX_PROMPT_TAKE, promptHubEntries.length)
+      : null;
 
   return (
     <PublicLayout>
@@ -122,7 +144,7 @@ export default async function PromptsPage({ searchParams }: PromptsPageProps) {
       <PromptHubPage
         categories={library.categories}
         models={library.models}
-        filteredPrompts={promptHubEntries}
+        filteredPrompts={visiblePromptEntries}
         activeCategory={activeCategory}
         activeModel={activeModel}
         searchQuery={searchQuery}
@@ -131,6 +153,8 @@ export default async function PromptsPage({ searchParams }: PromptsPageProps) {
         totalResults={filteredPrompts.length}
         totalPrompts={library.stats.totalPrompts}
         imagePrompts={library.stats.imagePrompts}
+        loadedResults={visiblePromptEntries.length}
+        nextTake={nextTake}
       />
     </PublicLayout>
   );

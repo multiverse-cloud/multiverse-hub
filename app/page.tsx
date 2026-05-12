@@ -140,9 +140,18 @@ function ToolGridSkeleton() {
   );
 }
 
-export default async function HomePage() {
+async function HomeToolSections() {
   const tools = await getTools().catch(() => []);
 
+  return (
+    <>
+      <TrendingToolsSection tools={tools} />
+      <NewToolsSection tools={tools} />
+    </>
+  );
+}
+
+export default function HomePage() {
   return (
     <PublicLayout
       schemaMarkup={FAQ_SCHEMA as unknown as Record<string, any>}
@@ -152,10 +161,7 @@ export default async function HomePage() {
         <HeroStatsSection />
         <UniversesSection />
         <Suspense fallback={<ToolGridSkeleton />}>
-          <TrendingToolsSection tools={tools} />
-        </Suspense>
-        <Suspense fallback={<ToolGridSkeleton />}>
-          <NewToolsSection tools={tools} />
+          <HomeToolSections />
         </Suspense>
         <Suspense fallback={<ToolGridSkeleton />}>
           <NewContentSection />

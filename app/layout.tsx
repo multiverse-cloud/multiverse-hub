@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import AdsenseScript from '@/components/ads/AdsenseScript'
 import SourceHubChrome from '@/components/source-hub/SourceHubChrome'
 import AppProviders from '@/components/providers/AppProviders'
@@ -13,18 +13,6 @@ import './globals.css'
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   variable: '--font-plus-jakarta',
-  display: 'swap',
-})
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-})
-
-const jetbrains = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-jetbrains',
   display: 'swap',
 })
 
@@ -178,7 +166,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${plusJakarta.variable} ${inter.variable} ${jetbrains.variable}`}
+      className={plusJakarta.variable}
       data-scroll-behavior="smooth"
     >
       <head>

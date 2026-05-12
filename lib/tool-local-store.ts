@@ -56,7 +56,9 @@ function mergeToolOverrides(overrides: ToolOverride[]) {
 }
 
 async function readLocalStore() {
-  if (hasRuntimeKvStore()) {
+  const useBundledStoreOnly = process.env.NEXT_PHASE === 'phase-production-build'
+
+  if (hasRuntimeKvStore() && !useBundledStoreOnly) {
     try {
       const payload = await readRuntimeJson<Partial<ToolLocalStoreFile>>(UPSTASH_TOOL_STORE_KEY, ['tools'])
       if (payload && Array.isArray(payload.tools)) {

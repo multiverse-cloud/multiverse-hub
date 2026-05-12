@@ -6,10 +6,10 @@ import { ArrowUpDown, Bot, ChevronDown, ImageIcon, PlusCircle, Search, Shuffle, 
 import PromptPreviewImage from '@/components/prompts/PromptPreviewImage'
 import { trackPromptEvent } from '@/components/prompts/promptAnalytics'
 import { getPromptCollectionHref, PROMPT_COLLECTIONS } from '@/lib/prompt-collections'
+import { buildPromptHref, sortPromptsForMode, type PromptSortMode } from '@/lib/prompt-hub-ranking'
 import type { PromptCategory, PromptCategoryId, PromptEntry, PromptModelId } from '@/lib/prompt-library-data'
 import { cn } from '@/lib/utils'
 
-type PromptSortMode = 'featured' | 'hot' | 'new' | 'top' | 'shuffle'
 type PromptHubEntry = Pick<
   PromptEntry,
   | 'slug'
@@ -38,6 +38,8 @@ type PromptHubPageProps = {
   totalResults: number
   totalPrompts: number
   imagePrompts: number
+  loadedResults: number
+  nextTake: number | null
 }
 
 const INITIAL_VISIBLE_COUNT = 12
@@ -73,25 +75,6 @@ const topTabs: Array<{
   { label: 'Fashion', query: 'fashion' },
 ]
 
-function buildPromptHref({
-  category, model, query, sort, seed,
-}: {
-  category?: 'all' | PromptCategoryId
-  model?: 'all' | PromptModelId
-  query?: string
-  sort?: PromptSortMode
-  seed?: string
-}) {
-  const params = new URLSearchParams()
-  if (query?.trim()) params.set('q', query.trim())
-  if (category && category !== 'all') params.set('category', category)
-  if (model && model !== 'all') params.set('model', model)
-  if (sort && sort !== 'featured') params.set('sort', sort)
-  if (sort === 'shuffle' && seed) params.set('seed', seed)
-  const s = params.toString()
-  return s ? `/prompts?${s}` : '/prompts'
-}
-
 function getActiveTopTab({ searchQuery, activeModel, activeCategory, sortMode }: {
   searchQuery: string
   activeModel: 'all' | PromptModelId
@@ -108,29 +91,6 @@ function getActiveTopTab({ searchQuery, activeModel, activeCategory, sortMode }:
     return false
   })
   return matched?.label || ''
-}
-
-function getShuffleScore(prompt: PromptHubEntry, seed: string) {
-  let hash = 2166136261
-  const input = `${seed}:${prompt.slug}:${prompt.title}`
-  for (let i = 0; i < input.length; i++) {
-    hash ^= input.charCodeAt(i)
-    hash = Math.imul(hash, 16777619)
-  }
-  return hash >>> 0
-}
-
-function sortPromptsForMode(prompts: PromptHubEntry[], sortMode: PromptSortMode, shuffleSeed: string) {
-  const sorted = [...prompts]
-  if (sortMode === 'shuffle') return sorted.sort((a, b) => getShuffleScore(a, shuffleSeed) - getShuffleScore(b, shuffleSeed))
-  if (sortMode === 'new') return sorted.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt) || a.title.localeCompare(b.title))
-  if (sortMode === 'top') return sorted.sort((a, b) => b.tags.length - a.tags.length || a.title.localeCompare(b.title))
-  if (sortMode === 'hot') return sorted.sort((a, b) => {
-    const as = Number(a.featured) * 4 + Number(a.previewImage.startsWith('http')) * 2 + a.models.length
-    const bs = Number(b.featured) * 4 + Number(b.previewImage.startsWith('http')) * 2 + b.models.length
-    return bs - as || a.title.localeCompare(b.title)
-  })
-  return sorted.sort((a, b) => Number(b.featured) - Number(a.featured) || a.title.localeCompare(b.title))
 }
 
 function isVideoPrompt(prompt: PromptHubEntry) {
@@ -298,7 +258,7 @@ function FilterOption({ href, label, active, analyticsLabel }: {
 export default function PromptHubPage({
   categories, models, filteredPrompts,
   activeCategory, activeModel, searchQuery,
-  sortMode, shuffleSeed, totalResults, totalPrompts, imagePrompts,
+  sortMode, shuffleSeed, totalResults, totalPrompts, imagePrompts, loadedResults, nextTake,
 }: PromptHubPageProps) {
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT)
   const [nextShuffleSeed, setNextShuffleSeed] = useState(shuffleSeed)
@@ -317,9 +277,14 @@ export default function PromptHubPage({
     [filteredPrompts, sortMode, shuffleSeed]
   )
   const visiblePrompts = useMemo(() => libraryPrompts.slice(0, visibleCount), [libraryPrompts, visibleCount])
-  const hasMore = visibleCount < libraryPrompts.length
+  const hasMoreInClientBatch = visibleCount < libraryPrompts.length
+  const hasMoreOnServer = Boolean(nextTake && loadedResults < totalResults)
+  const hasMore = hasMoreInClientBatch || hasMoreOnServer
   const currentShuffleSeed = sortMode === 'shuffle' ? shuffleSeed : undefined
   const shuffleHref = buildPromptHref({ category: activeCategory, model: activeModel, query: searchQuery, sort: 'shuffle', seed: nextShuffleSeed })
+  const loadMoreHref = nextTake
+    ? buildPromptHref({ category: activeCategory, model: activeModel, query: searchQuery, sort: sortMode, seed: currentShuffleSeed, take: nextTake })
+    : null
 
   return (
     <div className="min-h-screen bg-white text-slate-950 dark:bg-slate-950 dark:text-slate-50">
@@ -491,24 +456,35 @@ export default function PromptHubPage({
             <div className="flex flex-col items-center justify-center gap-3 py-8">
               {hasMore ? (
                 <>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const nextCount = Math.min(visibleCount + LOAD_MORE_COUNT, libraryPrompts.length)
-                      setVisibleCount(nextCount)
-                      trackPromptEvent('Prompt Load More Clicked', { visible: nextCount, total: libraryPrompts.length })
-                    }}
-                    className="inline-flex h-10 w-full max-w-xs items-center justify-center rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98] dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 sm:w-auto sm:rounded-full"
-                  >
-                    Load more prompts
-                  </button>
+                  {hasMoreInClientBatch ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const nextCount = Math.min(visibleCount + LOAD_MORE_COUNT, libraryPrompts.length)
+                        setVisibleCount(nextCount)
+                        trackPromptEvent('Prompt Load More Clicked', { visible: nextCount, total: totalResults })
+                      }}
+                      className="inline-flex h-10 w-full max-w-xs items-center justify-center rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98] dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 sm:w-auto sm:rounded-full"
+                    >
+                      Load more prompts
+                    </button>
+                  ) : loadMoreHref ? (
+                    <Link
+                      href={loadMoreHref}
+                      prefetch={false}
+                      onClick={() => trackPromptEvent('Prompt Load More Clicked', { visible: loadedResults, total: totalResults })}
+                      className="inline-flex h-10 w-full max-w-xs items-center justify-center rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98] dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 sm:w-auto sm:rounded-full"
+                    >
+                      Load more prompts
+                    </Link>
+                  ) : null}
                   <p className="text-xs font-medium text-slate-400 dark:text-slate-600">
-                    Showing {visiblePrompts.length.toLocaleString()} of {libraryPrompts.length.toLocaleString()}
+                    Showing {visiblePrompts.length.toLocaleString()} of {totalResults.toLocaleString()}
                   </p>
                 </>
               ) : (
                 <p className="text-xs font-medium text-slate-400 dark:text-slate-600">
-                  All {libraryPrompts.length.toLocaleString()} prompts shown
+                  All {totalResults.toLocaleString()} prompts shown
                 </p>
               )}
             </div>
