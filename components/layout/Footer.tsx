@@ -44,6 +44,16 @@ const FOOTER_LINKS = {
     { name: "Feedback", href: "/feedback" },
     { name: "What's New", href: "/whats-new" },
   ],
+  "Free Resources": [
+    { name: "Free Tools", href: "/free-tools" },
+    { name: "Free AI Prompts", href: "/free-ai-prompts" },
+    { name: "Free Website Templates", href: "/free-website-templates" },
+    { name: "Free UI Components", href: "/free-ui-components" },
+    { name: "Free PDF Tools", href: "/free-pdf-tools" },
+    { name: "Free Image Tools", href: "/free-image-tools" },
+    { name: "Free Developer Tools", href: "/free-developer-tools" },
+    { name: "Free SEO Tools", href: "/free-seo-tools" },
+  ],
 };
 
 export default function Footer({
@@ -112,7 +122,7 @@ export default function Footer({
 
       {/* Footer Links Grid */}
       <div className="mx-auto max-w-7xl px-4 py-12 lg:px-6">
-        <div className="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-3 lg:grid-cols-7">
           {/* Brand Column */}
           <div className="col-span-2 space-y-4 lg:col-span-2">
             <Link

@@ -7,6 +7,7 @@ import { ACTIVE_CATEGORIES, VIDEO_DOWNLOADER_TOOL_SLUGS } from "@/lib/tools-data
 import { getTools } from "@/lib/db";
 import { getEffectSlug, uiEffects } from "@/lib/css-effects-library";
 import { getPromptCollectionHref, PROMPT_COLLECTIONS } from "@/lib/prompt-collections";
+import { SEO_LANDING_PAGES } from "@/lib/seo-landing-pages";
 import { SITE_URL } from "@/lib/site-url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -107,6 +108,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   );
 
+  const seoLandingRoutes: MetadataRoute.Sitemap = SEO_LANDING_PAGES.map((page) => ({
+    url: `${baseUrl}/${page.slug}`,
+    lastModified: contentDate,
+    changeFrequency: "weekly",
+    priority:
+      page.slug === "free-tools" ||
+      page.slug === "free-ai-prompts" ||
+      page.slug === "free-website-templates"
+        ? 0.92
+        : 0.86,
+  }));
+
   const toolRoutes: MetadataRoute.Sitemap = tools.filter(
     (t) =>
       t.implemented &&
@@ -165,6 +178,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticRoutes,
+    ...seoLandingRoutes,
     ...categoryRoutes,
     ...toolRoutes,
     ...downloaderRoutes,
