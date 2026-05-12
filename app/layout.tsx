@@ -6,6 +6,7 @@ import AdsenseScript from '@/components/ads/AdsenseScript'
 import SourceHubChrome from '@/components/source-hub/SourceHubChrome'
 import AppProviders from '@/components/providers/AppProviders'
 import { getGoogleAdsenseClient } from '@/lib/adsense'
+import { SEO_LANDING_PAGES } from '@/lib/seo-landing-pages'
 import { LANGUAGE_DISCOVERY_META } from '@/lib/seo-languages'
 import { SITE_URL, absoluteUrl } from '@/lib/site-url'
 import './globals.css'
@@ -20,6 +21,7 @@ const googleAdsenseClient = getGoogleAdsenseClient()
 const shouldInjectLocalhostRecovery = process.env.NODE_ENV !== 'production'
 
 export const metadata: Metadata = {
+  applicationName: 'mtverse',
   title: {
     default: 'mtverse - Free Tools, UI, Templates, Prompts & Fix Guides',
     template: '%s | mtverse',
@@ -49,6 +51,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'mtverse team' }],
   creator: 'mtverse',
   publisher: 'mtverse',
+  category: 'technology',
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: SITE_URL,
@@ -68,11 +71,20 @@ export const metadata: Metadata = {
     title: 'mtverse - Free Tools, UI, Templates, Prompts & Fix Guides',
     description: 'Free tools, UI components, templates, AI prompts, discover guides, and fixes in one fast public platform.',
     siteName: 'mtverse',
+    images: [
+      {
+        url: absoluteUrl('/opengraph-image'),
+        width: 1200,
+        height: 630,
+        alt: 'mtverse free tools, prompts, templates, and UI components',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'mtverse - Free Tools, UI, Templates, Prompts & Fix Guides',
     description: 'Use tools, components, templates, prompts, and fix guides instantly. No public login required.',
+    images: [absoluteUrl('/opengraph-image')],
   },
   robots: {
     index: true,
@@ -84,6 +96,11 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  },
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
   },
   other: {
     'content-language': 'en',
@@ -108,6 +125,16 @@ const GLOBAL_SITE_SCHEMA = [
       },
       'query-input': 'required name=search_term_string',
     },
+    hasPart: [
+      { '@type': 'WebPage', name: 'Free Tools', url: absoluteUrl('/free-tools') },
+      { '@type': 'WebPage', name: 'Free AI Prompts', url: absoluteUrl('/free-ai-prompts') },
+      { '@type': 'WebPage', name: 'Free Website Templates', url: absoluteUrl('/free-website-templates') },
+      { '@type': 'WebPage', name: 'Free UI Components', url: absoluteUrl('/free-ui-components') },
+      { '@type': 'WebPage', name: 'Tools', url: absoluteUrl('/tools') },
+      { '@type': 'WebPage', name: 'Prompt Hub', url: absoluteUrl('/prompts') },
+      { '@type': 'WebPage', name: 'Templates', url: absoluteUrl('/templates') },
+      { '@type': 'WebPage', name: 'UI Universe', url: absoluteUrl('/ui') },
+    ],
   },
   {
     '@context': 'https://schema.org',
@@ -116,6 +143,54 @@ const GLOBAL_SITE_SCHEMA = [
     url: SITE_URL,
     logo: absoluteUrl('/SiteLogo.png'),
     sameAs: [SITE_URL],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'mtverse',
+    url: SITE_URL,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    browserRequirements: 'Requires a modern web browser',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    featureList: [
+      'Free online tools',
+      'Free AI prompts',
+      'Free website templates',
+      'Free UI components',
+      'PDF tools',
+      'Image tools',
+      'Developer tools',
+      'SEO tools',
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SiteNavigationElement',
+    name: [
+      'Home',
+      'Tools',
+      'UI Components',
+      'Templates',
+      'Prompts',
+      'Discover',
+      'Fixes',
+      ...SEO_LANDING_PAGES.map((page) => page.title),
+    ],
+    url: [
+      SITE_URL,
+      absoluteUrl('/tools'),
+      absoluteUrl('/ui'),
+      absoluteUrl('/templates'),
+      absoluteUrl('/prompts'),
+      absoluteUrl('/discover'),
+      absoluteUrl('/fixes'),
+      ...SEO_LANDING_PAGES.map((page) => absoluteUrl(`/${page.slug}`)),
+    ],
   },
 ]
 

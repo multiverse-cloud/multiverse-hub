@@ -61,9 +61,69 @@ export default async function TemplatesPage({ searchParams }: TemplatesPageProps
     platform: activePlatform,
     query: searchQuery,
   })
+  const schemaMarkup = [
+    {
+      '@context': 'https://schema.org',
+      '@type': ['WebPage', 'CollectionPage'],
+      name: 'Free Website Templates',
+      headline: 'Free website templates for portfolios, landing pages, dashboards, and SaaS products',
+      description:
+        'Browse free website templates for React, Next.js, portfolios, dashboards, landing pages, ecommerce, agencies, and product launches.',
+      url: absoluteUrl('/templates'),
+      inLanguage: 'en',
+      keywords: [
+        'free website templates',
+        'free portfolio templates',
+        'landing page templates',
+        'dashboard templates',
+        'React templates',
+        'Next.js templates',
+      ].join(', '),
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: library.stats.totalTemplates,
+        itemListElement: library.categories.slice(0, 12).map((category, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: category.title,
+          url: absoluteUrl(`/templates?category=${category.id}`),
+        })),
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Are mtverse website templates free?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. The template library is built for free public browsing, previews, and download workflows.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What template categories are included?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'mtverse includes portfolio templates, landing page templates, dashboard templates, SaaS templates, ecommerce templates, agency pages, and modern product layouts.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can I preview a template before downloading?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. Template pages include live previews, preview images, and related templates where available.',
+          },
+        },
+      ],
+    },
+  ]
 
   return (
-    <PublicLayout variant="source-hub">
+    <PublicLayout variant="source-hub" schemaMarkup={schemaMarkup}>
       <TemplatesHubPage
         categories={library.categories}
         platforms={library.platforms}

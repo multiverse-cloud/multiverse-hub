@@ -20,6 +20,56 @@ export const metadata: Metadata = {
   },
 };
 
+const TOOLS_PAGE_SCHEMA = [
+  {
+    "@context": "https://schema.org",
+    "@type": ["WebPage", "CollectionPage"],
+    name: "Free Online Tools",
+    headline: "Free online tools for PDF, image, video, text, developer, and SEO workflows",
+    description: `Explore ${TOOLS.length}+ free online tools for PDF, image, video, audio, text, and developer workflows.`,
+    url: absoluteUrl("/tools"),
+    inLanguage: "en",
+    keywords: [
+      "free online tools",
+      "PDF tools",
+      "image tools",
+      "developer tools",
+      "SEO tools",
+      "text tools",
+    ].join(", "),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Are mtverse tools free?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes. Public tools on mtverse are free to use and do not require a public account.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What tools are available?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "mtverse includes PDF tools, image tools, text tools, developer tools, SEO tools, calculators, file utilities, and more.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Do the tools work on mobile?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes. Tool pages are responsive and designed for phones, tablets, and desktop browsers.",
+        },
+      },
+    ],
+  },
+];
+
 interface ToolsPageProps {
   searchParams?: Promise<{
     q?: string | string[];
@@ -43,7 +93,7 @@ export default async function ToolsPage({ searchParams }: ToolsPageProps) {
   };
 
   return (
-    <PublicLayout>
+    <PublicLayout schemaMarkup={TOOLS_PAGE_SCHEMA}>
       <UniverseTopBar
         items={[{ label: "Home", href: "/" }, { label: "Tools" }]}
         actionName="Tools"

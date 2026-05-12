@@ -15,11 +15,13 @@ export default function SeoLandingPage({ slug }: { slug: SeoLandingSlug }) {
   const schemaMarkup = [
     {
       "@context": "https://schema.org",
-      "@type": "WebPage",
+      "@type": ["WebPage", "CollectionPage"],
       name: page.metaTitle,
       headline: page.h1,
       description: page.metaDescription,
       url: absoluteUrl(`/${page.slug}`),
+      inLanguage: "en",
+      keywords: page.keywords.join(", "),
       isPartOf: {
         "@type": "WebSite",
         name: "mtverse",
@@ -94,6 +96,16 @@ export default function SeoLandingPage({ slug }: { slug: SeoLandingSlug }) {
                 <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">
                   {page.description}
                 </p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {page.keywords.slice(0, 6).map((keyword) => (
+                    <span
+                      key={keyword}
+                      className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"
+                    >
+                      {keyword}
+                    </span>
+                  ))}
+                </div>
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                   <Link
                     href={page.primaryCta.href}

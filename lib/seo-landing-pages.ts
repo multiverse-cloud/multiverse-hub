@@ -585,12 +585,31 @@ export function createSeoLandingMetadata(slug: SeoLandingSlug): Metadata {
       description: page.metaDescription,
       url: absoluteUrl(`/${page.slug}`),
       type: 'website',
+      images: [
+        {
+          url: absoluteUrl('/opengraph-image'),
+          width: 1200,
+          height: 630,
+          alt: `${page.title} on mtverse`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: page.metaTitle,
       description: page.metaDescription,
+      images: [absoluteUrl('/opengraph-image')],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1,
+      },
     },
   }
 }
-

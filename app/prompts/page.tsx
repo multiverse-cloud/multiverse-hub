@@ -133,9 +133,68 @@ export default async function PromptsPage({ searchParams }: PromptsPageProps) {
     visiblePromptEntries.length < promptHubEntries.length
       ? Math.min(visibleLimit + DEFAULT_PROMPT_TAKE, MAX_PROMPT_TAKE, promptHubEntries.length)
       : null;
+  const schemaMarkup = [
+    {
+      "@context": "https://schema.org",
+      "@type": ["WebPage", "CollectionPage"],
+      name: "Free AI Prompts",
+      headline: "Free AI prompts for ChatGPT, image generation, editing, and creative workflows",
+      description:
+        "Browse free copy-ready AI prompts for ChatGPT, AI image generation, photo editing, Nano Banana trends, and creative workflows.",
+      url: absoluteUrl("/prompts"),
+      inLanguage: "en",
+      keywords: [
+        "free AI prompts",
+        "ChatGPT prompts",
+        "AI image prompts",
+        "Nano Banana prompts",
+        "AI editing prompts",
+      ].join(", "),
+      mainEntity: {
+        "@type": "ItemList",
+        numberOfItems: library.stats.totalPrompts,
+        itemListElement: library.categories.slice(0, 12).map((category, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: category.title,
+          url: absoluteUrl(`/prompts?category=${category.id}`),
+        })),
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Are mtverse AI prompts free?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. Public prompts on mtverse are free to browse, copy, and adapt for your own workflows.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What prompt types are available?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "The prompt hub includes ChatGPT prompts, AI image prompts, photo editing prompts, Nano Banana-style trend prompts, writing prompts, product prompts, and creative workflows.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Can I use prompts with different AI models?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. Many prompts are written so they can be adapted across ChatGPT, Gemini, Midjourney, Flux, image editors, and other AI tools.",
+          },
+        },
+      ],
+    },
+  ];
 
   return (
-    <PublicLayout>
+    <PublicLayout schemaMarkup={schemaMarkup}>
       <UniverseTopBar
         items={[{ label: "Home", href: "/" }, { label: "Prompts" }]}
         actionName="Prompt Hub"
