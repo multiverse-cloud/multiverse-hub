@@ -175,6 +175,84 @@ const SEO_STUDIO_SLUGS = new Set([
 
 const CALCULATOR_STUDIO_SLUGS_SET = new Set(CALCULATOR_STUDIO_SLUGS);
 
+const TOOL_SEO_OVERRIDES: Record<
+  string,
+  {
+    title: string;
+    description: string;
+    keywords: string[];
+    ogTitle?: string;
+    alternateName?: string[];
+    faq?: Array<{ question: string; answer: string }>;
+  }
+> = {
+  "file-hash-checker": {
+    title: "File Hash Checker - Check SHA-256, SHA-512, SHA-1 and MD5 Online",
+    description:
+      "Free file hash checker to verify downloads, backups, and shared files. Upload a file to calculate SHA-256, SHA-512, SHA-1, and MD5 checksums, then compare an expected hash.",
+    keywords: [
+      "file hash checker",
+      "hash file",
+      "file hasher",
+      "hash check online",
+      "check file hash",
+      "SHA-256 checker",
+      "SHA256 file hash",
+      "MD5 checksum checker",
+      "SHA-1 checksum",
+      "file integrity checker",
+      "checksum checker",
+      "free file hash checker",
+    ],
+    ogTitle: "Free File Hash Checker - SHA-256, SHA-512, SHA-1 and MD5",
+    alternateName: [
+      "Hash File",
+      "File Hasher",
+      "Checksum Checker",
+      "SHA-256 Checker",
+      "MD5 Checker",
+    ],
+    faq: [
+      {
+        question: "What is a file hash checker?",
+        answer:
+          "A file hash checker calculates a fingerprint such as SHA-256, SHA-512, SHA-1, or MD5 so you can verify whether a file matches an expected checksum.",
+      },
+      {
+        question: "Can I check a SHA-256 hash online?",
+        answer:
+          "Yes. Upload a file, run the checker, and mtverse will show the SHA-256 checksum along with SHA-512, SHA-1, and MD5 values.",
+      },
+      {
+        question: "How do I verify a downloaded file?",
+        answer:
+          "Copy the official checksum from the download page, paste it into the expected hash field, upload your file, and compare the result.",
+      },
+      {
+        question: "Which hash formats are supported?",
+        answer:
+          "The file hash checker supports SHA-256, SHA-512, SHA-1, and MD5 checksums.",
+      },
+    ],
+  },
+  "qr-code-generator": {
+    title: "Free QR Code Generator - Create QR Codes Online",
+    description:
+      "Create a free QR code online for links, text, contact details, and quick sharing. Generate, preview, and download a clean QR code from mtverse.",
+    keywords: [
+      "qr-verse",
+      "free QR code generator",
+      "QR code maker",
+      "create QR code",
+      "online QR generator",
+      "link QR code",
+      "download QR code",
+    ],
+    ogTitle: "Free QR Code Generator - QR Code Maker Online",
+    alternateName: ["QR Verse", "QR Code Maker", "Online QR Generator"],
+  },
+};
+
 function getRelatedToolsByCategory(
   tools: Tool[],
   categorySlug: string,
@@ -266,11 +344,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `${tool.name} - Free Online ${tool.category} | mtverse`;
   const description = `${tool.description} Free, fast, no login required. Use ${tool.name} online instantly.`;
+  const seoOverride = TOOL_SEO_OVERRIDES[tool.slug];
 
   return {
-    title,
-    description,
+    title: seoOverride?.title || title,
+    description: seoOverride?.description || description,
     keywords: [
+      ...(seoOverride?.keywords || []),
       tool.name.toLowerCase(),
       `${tool.name.toLowerCase()} online`,
       `free ${tool.name.toLowerCase()}`,
@@ -281,8 +361,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: absoluteUrl(`/tools/${tool.categorySlug}/${tool.slug}`),
     },
     openGraph: {
-      title: `${tool.name} - Free Online ${tool.category}`,
-      description: tool.description,
+      title: seoOverride?.ogTitle || `${tool.name} - Free Online ${tool.category}`,
+      description: seoOverride?.description || tool.description,
       type: "website",
       url: absoluteUrl(`/tools/${tool.categorySlug}/${tool.slug}`),
       images: [
@@ -296,8 +376,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${tool.name} - Free Online ${tool.category}`,
-      description: tool.description,
+      title: seoOverride?.ogTitle || `${tool.name} - Free Online ${tool.category}`,
+      description: seoOverride?.description || tool.description,
       images: [absoluteUrl("/og-tool.png")],
     },
   };
@@ -329,7 +409,13 @@ export default async function ToolPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: tool.name,
+    alternateName: TOOL_SEO_OVERRIDES[tool.slug]?.alternateName,
     description: tool.description,
+    keywords: [
+      tool.name.toLowerCase(),
+      ...tool.tags,
+      ...(TOOL_SEO_OVERRIDES[tool.slug]?.keywords || []),
+    ].join(", "),
     applicationCategory: "BrowserApplication",
     operatingSystem: "All",
     offers: {
@@ -374,32 +460,27 @@ export default async function ToolPage({ params }: Props) {
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
+    mainEntity: (TOOL_SEO_OVERRIDES[tool.slug]?.faq || [
       {
-        "@type": "Question",
-        name: `How do I use ${tool.name}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Simply upload your input, adjust settings if needed, and click the process button. Our tool handles everything in-browser for maximum speed and privacy.`,
-        },
+        question: `How do I use ${tool.name}?`,
+        answer: `Simply upload your input, adjust settings if needed, and click the process button. mtverse processes the job only for the current request and returns the result immediately.`,
       },
       {
-        "@type": "Question",
-        name: `Is this ${tool.name} tool free?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Yes, all tools on mtverse are 100% free to use. No registration or credit card is required to access our professional utility features.`,
-        },
+        question: `Is this ${tool.name} tool free?`,
+        answer: `Yes, all tools on mtverse are free to use. No registration or credit card is required to access public utility features.`,
       },
       {
-        "@type": "Question",
-        name: `Is my data secure while using ${tool.name}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Absolutely. We use WASM-based client-side processing, meaning your files never leave your computer. Processing happens locally on your device for total privacy.`,
-        },
+        question: `Is my data secure while using ${tool.name}?`,
+        answer: `mtverse keeps public tools simple and temporary. Where a server step is required, files are processed only for the active request and are not saved to user accounts or history.`,
       },
-    ],
+    ]).map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
   };
 
   const howToSchema = {

@@ -1,9 +1,84 @@
 import { CheckCircle2, HelpCircle, Lightbulb, ShieldCheck } from 'lucide-react'
 import type { Tool } from '@/lib/tools-data'
 
+const TOOL_SEO_COPY: Record<
+  string,
+  {
+    heading: string
+    steps: string[]
+    faqs: Array<{ q: string; a: string }>
+    valueTitle: string
+    valueDescription: string
+  }
+> = {
+  'file-hash-checker': {
+    heading: 'How to check a file hash online',
+    steps: [
+      'Upload the file you want to verify. Any common file type can be checked.',
+      'Paste the expected checksum if you have one from a download page or release note.',
+      'Run the checker to calculate SHA-256, SHA-512, SHA-1, and MD5 hashes.',
+      'Compare the generated hash with the expected value to confirm the file integrity.',
+    ],
+    faqs: [
+      {
+        q: 'What is a file hash checker?',
+        a: 'A file hash checker creates a unique checksum for a file. If even one byte changes, the SHA-256, SHA-512, SHA-1, or MD5 value changes too.',
+      },
+      {
+        q: 'Can I check SHA-256 and MD5 for the same file?',
+        a: 'Yes. mtverse shows SHA-256, SHA-512, SHA-1, and MD5 hashes together so you can verify downloads from different sources.',
+      },
+      {
+        q: 'How do I verify a download?',
+        a: 'Copy the official checksum, paste it into the expected hash field, upload your file, and run the checker. The result will show whether it matched.',
+      },
+      {
+        q: 'Is the file hash checker free?',
+        a: 'Yes. The file hash checker is free to use and does not require a public account.',
+      },
+    ],
+    valueTitle: 'Verify downloads with confidence',
+    valueDescription:
+      'Use SHA-256 for modern verification, SHA-512 for stronger fingerprints, and MD5 or SHA-1 when older software still publishes those checksum formats.',
+  },
+  'qr-code-generator': {
+    heading: 'How to create a free QR code',
+    steps: [
+      'Enter the link, text, or value you want to turn into a QR code.',
+      'Preview the generated QR code on the page.',
+      'Download the QR code image and use it in print, posts, pages, or packaging.',
+      'Test the QR code with your phone camera before publishing it.',
+    ],
+    faqs: [
+      {
+        q: 'Is the QR code generator free?',
+        a: 'Yes. You can create and download QR codes from mtverse without a public account.',
+      },
+      {
+        q: 'What can I put inside a QR code?',
+        a: 'You can create QR codes for links, plain text, contact details, landing pages, and other short shareable content.',
+      },
+      {
+        q: 'Can I use the QR code for business?',
+        a: 'Yes. Download the QR code and use it wherever you need quick access to a URL or short piece of information.',
+      },
+      {
+        q: 'Why search for QR Verse?',
+        a: 'QR Verse is a simple way to find the mtverse QR tool for creating free QR codes online.',
+      },
+    ],
+    valueTitle: 'Simple QR codes for links and sharing',
+    valueDescription:
+      'Create a clean QR code, preview it instantly, and download it for web pages, posters, social posts, product inserts, or internal workflows.',
+  },
+}
+
 export default function SEOContent({ tool }: { tool: Tool }) {
+  const toolCopy = TOOL_SEO_COPY[tool.slug]
   // Generate generic steps based on input type
   const getSteps = () => {
+    if (toolCopy) return toolCopy.steps
+
     const steps = []
     if (tool.inputType === 'file') {
       steps.push(`Select your ${tool.acceptedFormats?.join('/') || 'file'} and upload it to our secure workspace.`)
@@ -26,10 +101,10 @@ export default function SEOContent({ tool }: { tool: Tool }) {
   }
 
   // Common FAQs with tool-specific context
-  const faqs = [
+  const faqs = toolCopy?.faqs || [
     {
       q: `How do I use ${tool.name}?`,
-      a: `Simply upload your input, adjust settings if needed, and click the process button. Our tool handles everything in-browser for maximum speed.`
+      a: `Simply upload your input, adjust settings if needed, and click the process button. mtverse returns the result in a clean output panel.`
     },
     {
       q: `Is this ${tool.name} tool free?`,
@@ -37,7 +112,7 @@ export default function SEOContent({ tool }: { tool: Tool }) {
     },
     {
       q: `Is my data secure?`,
-      a: `Absolutely. We use WASM-based client-side processing, meaning your files never leave your computer. Processing happens locally on your device for total privacy.`
+      a: `We keep public tools simple and temporary. Browser-capable tasks run locally where possible; server-processed files are handled only for the active request and are not saved to public user accounts.`
     },
     {
       q: `Does it work for email and chat apps?`,
@@ -52,7 +127,7 @@ export default function SEOContent({ tool }: { tool: Tool }) {
         <div>
           <p className="premium-kicker">Step-by-step guide</p>
           <h2 className="font-display text-3xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
-            How to use {tool.name}
+            {toolCopy?.heading || `How to use ${tool.name}`}
           </h2>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -99,9 +174,9 @@ export default function SEOContent({ tool }: { tool: Tool }) {
         <div className="relative grid gap-12 lg:grid-cols-3">
           <div className="space-y-4">
             <ShieldCheck className="h-10 w-10 text-indigo-400" />
-            <h3 className="font-display text-xl font-bold">Privacy First</h3>
+            <h3 className="font-display text-xl font-bold">{toolCopy?.valueTitle || 'Privacy First'}</h3>
             <p className="text-sm text-slate-400 leading-relaxed">
-              We never upload your files to our servers. All processing happens locally in your browser using secure WASM and Client-side technology.
+              {toolCopy?.valueDescription || 'mtverse keeps public tools lightweight and temporary, with browser-first processing where possible and no public account history.'}
             </p>
           </div>
           <div className="space-y-4">

@@ -43,6 +43,14 @@ function ensureUniqueFilename(filename: string, used: Map<string, number>): stri
   return ensureUniqueFilename(nextName, used)
 }
 
+function normalizeHashCandidate(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/^(md5|sha-?1|sha-?256|sha-?512|checksum|hash)\s*[:=\-]?\s*/i, '')
+    .replace(/[^a-f0-9]/g, '')
+}
+
 export async function POST(req: NextRequest) {
   const url = new URL(req.url)
   const action = url.searchParams.get('action') || 'zip'
@@ -113,6 +121,11 @@ export async function POST(req: NextRequest) {
       for (const alg of algorithms) {
         hashes[alg] = crypto.createHash(alg).update(file.buffer).digest('hex')
       }
+      const expectedHash = fields.expected ? normalizeHashCandidate(fields.expected) : ''
+      const matchedAlgorithm =
+        expectedHash
+          ? Object.entries(hashes).find(([, value]) => value === expectedHash)?.[0] || null
+          : null
       return Response.json({
         filename: file.filename,
         size: file.buffer.length,
@@ -120,8 +133,13 @@ export async function POST(req: NextRequest) {
         sizeMB: (file.buffer.length / 1024 / 1024).toFixed(4),
         mimeType: file.mimetype,
         hashes,
-        verify: fields.expected
-          ? { expected: fields.expected, match: Object.values(hashes).includes(fields.expected.toLowerCase()) }
+        verify: expectedHash
+          ? {
+              expected: expectedHash,
+              original: fields.expected,
+              match: Boolean(matchedAlgorithm),
+              algorithm: matchedAlgorithm,
+            }
           : null,
       })
     }

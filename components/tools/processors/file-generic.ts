@@ -51,7 +51,16 @@ export async function handleGenericFileTool({
       metrics: [
         { label: 'Type', value: data.mimeType || 'Unknown' },
         { label: 'Size', value: formatBytes(data.size) },
-        ...(data.verify ? [{ label: 'Verify', value: data.verify.match ? 'Matched' : 'Mismatch' }] : []),
+        ...(data.verify
+          ? [
+              {
+                label: 'Verify',
+                value: data.verify.match
+                  ? `Matched ${String(data.verify.algorithm).toUpperCase()}`
+                  : 'Mismatch',
+              },
+            ]
+          : []),
       ],
       output: [
         `File: ${data.filename}`,
@@ -74,6 +83,7 @@ export async function handleGenericFileTool({
               '',
               'Verification',
               `Expected: ${data.verify.expected}`,
+              `Algorithm: ${data.verify.algorithm ? String(data.verify.algorithm).toUpperCase() : 'None'}`,
               `Result: ${data.verify.match ? 'Matched' : 'Mismatch'}`,
             ]
           : []),
