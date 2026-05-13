@@ -76,6 +76,63 @@ export const PROMPT_COLLECTIONS: PromptCollection[] = [
     ],
   },
   {
+    slug: 'midjourney-prompts',
+    title: 'Midjourney Prompts',
+    h1: 'Free Midjourney Prompts',
+    shortTitle: 'Midjourney',
+    description:
+      'Copy free Midjourney prompts for portraits, product shots, cinematic scenes, architecture, fashion, posters, and visual concepts.',
+    metaDescription:
+      'Browse free Midjourney prompts for portraits, product photography, cinematic art, architecture, fashion images, posters, and creative visuals.',
+    keywords: ['free Midjourney prompts', 'Midjourney prompts', 'AI image prompts', 'Midjourney image prompt'],
+    model: 'Midjourney',
+    terms: ['midjourney', 'image', 'portrait', 'product', 'cinematic', 'fashion', 'architecture', 'poster'],
+    howTo: [
+      'Choose a prompt with the visual direction you want.',
+      'Replace the subject, mood, lens, lighting, color, and aspect ratio.',
+      'Generate variations and keep the version with the cleanest composition.',
+    ],
+    faq: [
+      {
+        question: 'Are these Midjourney prompts free?',
+        answer: 'Yes. The Midjourney prompts on mtverse are free to browse, copy, and adapt.',
+      },
+      {
+        question: 'Can I use these prompts in other image generators?',
+        answer: 'Yes. Many prompts can be adapted for Flux, Gemini image tools, and other AI image models by adjusting model-specific syntax.',
+      },
+    ],
+  },
+  {
+    slug: 'chatgpt-image-prompts',
+    title: 'ChatGPT Image Prompts',
+    h1: 'Free ChatGPT Image Prompts',
+    shortTitle: 'ChatGPT Image',
+    description:
+      'Find free ChatGPT image prompts for portraits, product visuals, social media graphics, edits, thumbnails, and creative image workflows.',
+    metaDescription:
+      'Copy free ChatGPT image prompts for AI portraits, product visuals, photo edits, thumbnails, social media images, and creative workflows.',
+    keywords: ['free ChatGPT image prompts', 'ChatGPT image prompts', 'AI photo prompt', 'ChatGPT photo editing prompt'],
+    model: 'ChatGPT',
+    category: 'image-generation',
+    terms: ['chatgpt', 'image', 'photo', 'portrait', 'product', 'thumbnail', 'social media', 'visual'],
+    howTo: [
+      'Pick a ChatGPT image prompt that matches your visual goal.',
+      'Add the subject, setting, style, lighting, crop, and output format.',
+      'Ask for variations, then refine the strongest result with a short edit instruction.',
+    ],
+    faq: [
+      {
+        question: 'Do ChatGPT image prompts need exact wording?',
+        answer: 'No. Use these as structured starting points, then add your own subject, style, and constraints.',
+      },
+      {
+        question: 'Can I use these for social media images?',
+        answer: 'Yes. Many prompts are written for profile photos, thumbnails, product images, posts, and visual content ideas.',
+      },
+    ],
+  },
+  {
     slug: 'nano-banana-prompts',
     title: 'Nano Banana Prompts',
     h1: 'Free Nano Banana Prompts',

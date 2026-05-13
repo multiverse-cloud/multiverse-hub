@@ -112,7 +112,7 @@ export const SEO_LANDING_PAGES: SeoLandingPageData[] = [
       'Explore free AI prompts for ChatGPT, AI images, photo editing, Nano Banana-style trends, product visuals, writing, and creative workflows.',
     keywords: ['free AI prompts', 'ChatGPT prompts', 'AI image prompts', 'free prompt templates', 'Nano Banana prompts', 'AI editing prompts'],
     primaryCta: { label: 'Browse prompts', href: '/prompts' },
-    secondaryCta: { label: 'Image prompts', href: '/prompts?category=image-generation' },
+    secondaryCta: { label: 'Image prompts', href: '/prompts/collections/free-ai-image-prompts' },
     stats: [
       { label: 'Prompt library', value: '1k+' },
       { label: 'Copy-ready', value: 'Yes' },
@@ -123,19 +123,19 @@ export const SEO_LANDING_PAGES: SeoLandingPageData[] = [
         title: 'Prompt categories people search for',
         body: 'The prompt hub is organized around real search intent: viral image edits, social visuals, product photos, ChatGPT writing, and creative workflows.',
         links: [
-          { label: 'AI image prompts', href: '/prompts?category=image-generation', note: 'Portraits, product visuals, posters, and cinematic scenes.' },
-          { label: 'AI editing prompts', href: '/prompts?category=image-editing', note: 'Retouch, background, lighting, and transformation prompts.' },
-          { label: 'ChatGPT prompts', href: '/prompts?model=ChatGPT', note: 'Writing, planning, creative, and productivity workflows.' },
-          { label: 'Nano Banana prompts', href: '/prompts?q=nano%20banana', note: 'Trend-focused creative prompt ideas.' },
+          { label: 'AI image prompts', href: '/prompts/collections/free-ai-image-prompts', note: 'Portraits, product visuals, posters, and cinematic scenes.' },
+          { label: 'AI editing prompts', href: '/prompts/collections/ai-photo-editing-prompts', note: 'Retouch, background, lighting, and transformation prompts.' },
+          { label: 'ChatGPT prompts', href: '/prompts/collections/free-chatgpt-prompts', note: 'Writing, planning, creative, and productivity workflows.' },
+          { label: 'Nano Banana prompts', href: '/prompts/collections/nano-banana-prompts', note: 'Trend-focused creative prompt ideas.' },
         ],
       },
       {
         title: 'How to use free prompts well',
         body: 'Start with a prompt, then add your subject, format, platform, lighting, and style constraints. Better inputs produce more consistent outputs.',
         links: [
-          { label: 'Prompt collections', href: '/prompts/collections/free-ai-image-prompts', note: 'Grouped prompts for faster discovery.' },
-          { label: 'Trending prompts', href: '/prompts?sort=hot', note: 'High-demand prompts for creative testing.' },
-          { label: 'New prompts', href: '/prompts?sort=new', note: 'Recently added prompt ideas.' },
+          { label: 'Midjourney prompts', href: '/prompts/collections/midjourney-prompts', note: 'Image prompt ideas for cinematic and commercial visuals.' },
+          { label: 'ChatGPT image prompts', href: '/prompts/collections/chatgpt-image-prompts', note: 'Visual prompt structures for ChatGPT image workflows.' },
+          { label: 'Viral AI prompts', href: '/prompts/collections/viral-ai-prompts', note: 'High-demand prompts for creative testing.' },
         ],
       },
     ],
@@ -452,6 +452,7 @@ export const SEO_LANDING_PAGES: SeoLandingPageData[] = [
           { label: 'URL Encoder Decoder', href: '/tools/dev/url-encoder-decoder', note: 'Encode and decode URL strings.' },
           { label: 'UUID Generator', href: '/tools/dev/uuid-generator', note: 'Generate unique identifiers.' },
           { label: 'Regex Tester', href: '/tools/dev/regex-tester', note: 'Test patterns quickly.' },
+          { label: 'File Hash Checker', href: '/tools/file/file-hash-checker', note: 'Check SHA-256, SHA-512, SHA-1, and MD5 checksums.' },
         ],
       },
       {
