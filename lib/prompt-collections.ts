@@ -214,6 +214,49 @@ export const PROMPT_COLLECTIONS: PromptCollection[] = [
     ],
   },
   {
+    slug: 'celebrity-style-fashion-prompts',
+    title: 'Celebrity-Style Fashion Prompts',
+    h1: 'Free Celebrity-Style Fashion Prompts',
+    shortTitle: 'Fashion Portraits',
+    description:
+      'Explore free Hollywood and Indian actress-inspired AI fashion portrait prompts with cinematic lighting, editorial styling, and photorealistic image direction.',
+    metaDescription:
+      'Copy free celebrity-style fashion portrait prompts for Hollywood-inspired, Indian actress-inspired, cinematic, editorial, and photorealistic AI images.',
+    keywords: [
+      'celebrity style AI prompts',
+      'Hollywood actress AI prompt',
+      'Indian actress AI prompt',
+      'fashion portrait prompt',
+      'photorealistic portrait prompt',
+      'cinematic fashion AI prompt',
+    ],
+    category: 'image-generation',
+    terms: [
+      'actress style',
+      'hollywood actress',
+      'indian actress',
+      'fashion portrait',
+      'photorealistic portrait',
+      'cinematic portrait',
+      'editorial',
+    ],
+    howTo: [
+      'Pick a prompt with the fashion scene, lighting, or location you want.',
+      'Replace subject details with your own safe, adult, fictional, or consent-based reference.',
+      'Generate variations and refine clothing, camera, lighting, and background instead of using real celebrity names.',
+    ],
+    faq: [
+      {
+        question: 'Are these fashion portrait prompts free?',
+        answer: 'Yes. These celebrity-style fashion prompts are free to browse, copy, and adapt for AI image workflows.',
+      },
+      {
+        question: 'Can I use real celebrity names?',
+        answer: 'Use generic style direction instead of impersonating real people. Keep prompts fictional, consent-based, and respectful.',
+      },
+    ],
+  },
+  {
     slug: 'ai-photo-editing-prompts',
     title: 'AI Photo Editing Prompts',
     h1: 'Free AI Photo Editing Prompts',
