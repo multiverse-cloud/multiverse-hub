@@ -6,11 +6,11 @@ const searchGroups = [
   {
     title: 'Popular tools',
     links: [
+      'compress-image-to-50kb',
       'compress-image-to-100kb',
+      'jpg-to-png',
+      'image-to-pdf',
       'merge-pdf-online',
-      'compress-pdf-online',
-      'word-counter-online',
-      'json-formatter-online',
       'hash-file',
     ],
   },
@@ -33,7 +33,7 @@ const searchGroups = [
       'free-landing-page-templates',
       'free-dashboard-templates',
       'free-ecommerce-templates',
-      'free-ui-components',
+      'free-qr-code-generator',
     ],
   },
 ]
