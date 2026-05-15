@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PublicLayout from "@/components/layout/PublicLayout";
+import SeoLandingPage from "@/components/seo/SeoLandingPage";
 import VideoDownloaderPageSlot from "@/components/tools/VideoDownloaderPageSlot";
 import {
   DOWNLOADER_ROUTES,
@@ -11,6 +12,7 @@ import {
   type DownloaderRouteEntry,
 } from "@/lib/downloader-route-data";
 import { getToolBySlug } from "@/lib/db";
+import { createSeoLandingMetadata, getSeoLandingPage } from "@/lib/seo-landing-pages";
 import type { Tool } from "@/lib/tools-data";
 import { SITE_URL } from "@/lib/site-url";
 
@@ -113,6 +115,9 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { downloader } = await params;
+  const seoPage = getSeoLandingPage(downloader);
+  if (seoPage) return createSeoLandingMetadata(seoPage.slug);
+
   const route = getDownloaderRoute(downloader);
   if (!route) return {};
 
@@ -180,6 +185,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function DownloaderRootPage({ params }: Props) {
   const { downloader } = await params;
+  const seoPage = getSeoLandingPage(downloader);
+  if (seoPage) return <SeoLandingPage slug={seoPage.slug} />;
+
   if (!areDownloaderRoutesEnabled()) notFound();
 
   const route = getDownloaderRoute(downloader);

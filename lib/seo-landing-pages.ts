@@ -1,15 +1,8 @@
 import type { Metadata } from 'next'
 import { absoluteUrl } from '@/lib/site-url'
+import { TRAFFIC_SEO_LANDING_PAGES } from '@/lib/traffic-seo-landing-pages'
 
-export type SeoLandingSlug =
-  | 'free-tools'
-  | 'free-ai-prompts'
-  | 'free-website-templates'
-  | 'free-ui-components'
-  | 'free-pdf-tools'
-  | 'free-image-tools'
-  | 'free-developer-tools'
-  | 'free-seo-tools'
+export type SeoLandingSlug = string
 
 export type SeoLandingPageData = {
   slug: SeoLandingSlug
@@ -33,7 +26,7 @@ export type SeoLandingPageData = {
   related: Array<{ label: string; href: string }>
 }
 
-export const SEO_LANDING_PAGES: SeoLandingPageData[] = [
+const BASE_SEO_LANDING_PAGES: SeoLandingPageData[] = [
   {
     slug: 'free-tools',
     title: 'Free Tools',
@@ -557,6 +550,11 @@ export const SEO_LANDING_PAGES: SeoLandingPageData[] = [
       { label: 'Free tools', href: '/free-tools' },
     ],
   },
+]
+
+export const SEO_LANDING_PAGES: SeoLandingPageData[] = [
+  ...BASE_SEO_LANDING_PAGES,
+  ...TRAFFIC_SEO_LANDING_PAGES,
 ]
 
 export const SEO_LANDING_SLUGS = SEO_LANDING_PAGES.map((page) => page.slug)
