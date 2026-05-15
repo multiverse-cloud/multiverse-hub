@@ -5,6 +5,7 @@ import HeroSection from "@/components/home/HeroSection";
 import HeroStatsSection from "@/components/home/HeroStatsSection";
 import NewToolsSection from "@/components/home/NewToolsSection";
 import NewContentSection from "@/components/home/NewContentSection";
+import PopularSearchesSection from "@/components/home/PopularSearchesSection";
 import TrendingToolsSection from "@/components/home/TrendingToolsSection";
 import UniversesSection from "@/components/home/UniversesSection";
 import WhyMultiverse from "@/components/home/WhyMultiverse";
@@ -160,6 +161,7 @@ export default function HomePage() {
       <div className="[content-visibility:auto] [contain-intrinsic-size:1px_2800px]">
         <HeroStatsSection />
         <UniversesSection />
+        <PopularSearchesSection />
         <Suspense fallback={<ToolGridSkeleton />}>
           <HomeToolSections />
         </Suspense>

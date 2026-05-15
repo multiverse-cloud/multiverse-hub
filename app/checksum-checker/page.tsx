@@ -1,5 +1,11 @@
-import { permanentRedirect } from "next/navigation";
+import type { Metadata } from "next";
+import SeoLandingPage from "@/components/seo/SeoLandingPage";
+import { createSeoLandingMetadata } from "@/lib/seo-landing-pages";
 
 export default function ChecksumCheckerAliasPage() {
-  permanentRedirect("/tools/file/file-hash-checker");
+  return <SeoLandingPage slug="checksum-checker" />;
+}
+
+export function generateMetadata(): Metadata {
+  return createSeoLandingMetadata("checksum-checker");
 }

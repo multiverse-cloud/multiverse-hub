@@ -261,7 +261,87 @@ function templatePage(config: {
   })
 }
 
+function hashPage(config: {
+  slug: string
+  title: string
+  h1: string
+  intent: string
+  keywords: string[]
+}) {
+  return toolPage({
+    slug: config.slug,
+    title: config.title,
+    h1: config.h1,
+    toolName: 'File Hash Checker',
+    toolHref: '/tools/file/file-hash-checker',
+    categoryHref: '/tools/file',
+    job: config.intent,
+    keywords: config.keywords,
+    extraLinks: [
+      { label: 'SHA-256 checker', href: '/sha256-checker', note: 'Verify SHA-256 checksums from a browser.' },
+      { label: 'MD5 checker', href: '/md5-checker', note: 'Check MD5 values for legacy checksum workflows.' },
+      { label: 'Checksum checker', href: '/checksum-checker', note: 'Compare downloaded file checksums safely.' },
+    ],
+  })
+}
+
 export const TRAFFIC_SEO_LANDING_PAGES: SeoLandingPageData[] = [
+  hashPage({
+    slug: 'hash-file',
+    title: 'Hash File',
+    h1: 'Hash file online with SHA-256, SHA-512, SHA-1, or MD5',
+    intent: 'Generate a hash for a file and compare checksums for downloads, software files, archives, and document verification.',
+    keywords: ['hash file', 'file hash', 'hash file online', 'generate file hash', 'file checksum'],
+  }),
+  hashPage({
+    slug: 'file-hash-checker',
+    title: 'File Hash Checker',
+    h1: 'File hash checker for SHA-256, SHA-512, SHA-1, and MD5',
+    intent: 'Check a file hash against a known checksum and verify whether a downloaded file matches the expected value.',
+    keywords: ['file hash checker', 'check file hash', 'file checksum checker', 'SHA256 file checker', 'MD5 file checker'],
+  }),
+  hashPage({
+    slug: 'file-hasher',
+    title: 'File Hasher',
+    h1: 'File hasher online for quick checksum generation',
+    intent: 'Create file hashes in the browser for verification, support tickets, software releases, and archive integrity checks.',
+    keywords: ['file hasher', 'online file hasher', 'file hash generator', 'checksum generator', 'hash generator'],
+  }),
+  hashPage({
+    slug: 'hash-check-online',
+    title: 'Hash Check Online',
+    h1: 'Hash check online for downloaded files',
+    intent: 'Compare a hash value online and confirm whether your file matches the checksum published by a trusted source.',
+    keywords: ['hash check online', 'online hash checker', 'check hash online', 'file hash check', 'verify checksum online'],
+  }),
+  hashPage({
+    slug: 'check-file-hash',
+    title: 'Check File Hash',
+    h1: 'Check file hash online before using a download',
+    intent: 'Verify file integrity by checking SHA-256, SHA-512, SHA-1, or MD5 values before opening or sharing downloads.',
+    keywords: ['check file hash', 'check hash of file', 'verify file hash', 'file integrity checker', 'checksum verify'],
+  }),
+  hashPage({
+    slug: 'md5-checker',
+    title: 'MD5 Checker',
+    h1: 'MD5 checker online for legacy file checksums',
+    intent: 'Check or generate MD5 hashes for legacy checksum workflows while keeping stronger SHA options nearby.',
+    keywords: ['MD5 checker', 'MD5 file checker', 'check MD5 hash', 'MD5 checksum checker', 'MD5 online'],
+  }),
+  hashPage({
+    slug: 'sha256-checker',
+    title: 'SHA256 Checker',
+    h1: 'SHA256 checker online for secure file verification',
+    intent: 'Generate or compare SHA-256 hashes for downloaded files, releases, archives, and security-sensitive file checks.',
+    keywords: ['SHA256 checker', 'SHA-256 checker', 'SHA256 file checker', 'check SHA256 hash', 'SHA256 checksum'],
+  }),
+  hashPage({
+    slug: 'checksum-checker',
+    title: 'Checksum Checker',
+    h1: 'Checksum checker online for files and downloads',
+    intent: 'Use a checksum checker to verify file integrity across SHA-256, SHA-512, SHA-1, and MD5 workflows.',
+    keywords: ['checksum checker', 'file checksum checker', 'verify checksum', 'checksum online', 'download checksum checker'],
+  }),
   toolPage({
     slug: 'compress-image-to-100kb',
     title: 'Compress Image to 100KB',

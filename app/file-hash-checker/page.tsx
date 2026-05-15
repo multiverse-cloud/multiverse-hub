@@ -1,5 +1,11 @@
-import { permanentRedirect } from "next/navigation";
+import type { Metadata } from "next";
+import SeoLandingPage from "@/components/seo/SeoLandingPage";
+import { createSeoLandingMetadata } from "@/lib/seo-landing-pages";
 
 export default function FileHashCheckerAliasPage() {
-  permanentRedirect("/tools/file/file-hash-checker");
+  return <SeoLandingPage slug="file-hash-checker" />;
+}
+
+export function generateMetadata(): Metadata {
+  return createSeoLandingMetadata("file-hash-checker");
 }

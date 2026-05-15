@@ -1,5 +1,11 @@
-import { permanentRedirect } from "next/navigation";
+import type { Metadata } from "next";
+import SeoLandingPage from "@/components/seo/SeoLandingPage";
+import { createSeoLandingMetadata } from "@/lib/seo-landing-pages";
 
 export default function Md5CheckerAliasPage() {
-  permanentRedirect("/tools/file/file-hash-checker");
+  return <SeoLandingPage slug="md5-checker" />;
+}
+
+export function generateMetadata(): Metadata {
+  return createSeoLandingMetadata("md5-checker");
 }
